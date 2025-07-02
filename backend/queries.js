@@ -1,4 +1,3 @@
-//const { wixData } = require('./elevated-modules');
 const { COLLECTIONS } = require('./consts');
 const { items } = require('@wix/data');
 
