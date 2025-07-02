@@ -6,6 +6,7 @@ async function getAllPositions() {
     const query = items.query(COLLECTIONS.JOBS);
     const results = await query.find();
     
+
     return results.items;
    
 }
