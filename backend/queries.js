@@ -1,14 +1,15 @@
 const { wixData } = require('./elevated-modules');
+const { COLLECTIONS } = require('./consts');
 
-async function getAllPositions(collectionID) {
-    const query = wixData.query(collectionID);
+async function getAllPositions() {
+    const query = wixData.query(COLLECTIONS.JOBS);
     const results = await query.find();
     return results.items;
    
 }
 
-async function getPositionsByField(collectionID, field, value) {
-    const query = wixData.query(collectionID)
+async function getPositionsByField(field, value) {
+    const query = wixData.query(COLLECTIONS.JOBS)
         .eq(field, value);
     const results = await query.find();
     return results.items;
