@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/psdevteamenterprise/sr-npm/issues"
   },
-  "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme"
+  "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme",
+  "dependencies": {
+    "@hisense-staging/velo-npm": "^3.0.10"
+  }
 }

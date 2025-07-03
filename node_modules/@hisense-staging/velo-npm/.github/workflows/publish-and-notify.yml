@@ -1,0 +1,65 @@
+name: Publish Pkg & Notify Sites
+
+# This workflow uses Semantic Release to automate versioning and publishing of the pkg.
+# For full docs, see: https://semantic-release.gitbook.io/semantic-release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.publish.outputs.new-release-version }}
+      releaseType: ${{ steps.extract_release_type.outputs.release_type }}
+      isPublished: ${{steps.publish.outputs.new-release-published}}
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+
+      - name: Publish
+        id: publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
+
+      - name: Extract release type
+        id: extract_release_type
+        run: |
+          if [ -f release-info.env ]; then
+            source release-info.env
+            echo "release_type=${RELEASE_TYPE:-none}" >> $GITHUB_OUTPUT
+          else
+            echo "release_type=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Debug Version
+        run: |
+          echo "version: ${{ steps.publish.outputs.new-release-version }}"
+          echo "tag: ${{ steps.publish.outputs.new-release-git-tag }}"
+          echo "Is Published: ${{steps.publish.outputs.new-release-published}}"
+          echo "Release Type: ${{steps.extract_release_type.outputs.release_type}}"
+          if [ -f release-info.env ]; then
+            echo "Release Info Content:"
+            cat release-info.env
+          fi
+
+  notify-sites:
+    needs: publish
+    if: needs.publish.outputs.isPublished == 'true' && needs.publish.outputs.releaseType != 'major'
+    uses: ./.github/workflows/update-sites-npm.yml
+    with:
+      new_version: ${{ needs.publish.outputs.version }}
+    secrets:
+      GH_APP_ID: ${{ secrets.APP_ID }}
+      GH_APP_PRIVATE_KEY: ${{secrets.APP_PRIVATE_KEY}}
+      WIX_CLI_API_KEY: ${{secrets.WIX_CLI_API_KEY}}
