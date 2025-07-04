@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme",
   "dependencies": {
-    "@hisense-staging/velo-npm": "3.0.14"
+    "@hisense-staging/velo-npm": "1.7.249"
   }
 }
