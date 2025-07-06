@@ -337,9 +337,10 @@ async function createApiKeyCollectionAndFillIt() {
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY);
     console.log("Getting the smart token");
     const token = await getSmartToken();
+    console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
     await wixData.insert("ApiKey", {
-        token: token
+        token: token.value
     });
 
     console.log("Smart token inserted into the ApiKey collection");
