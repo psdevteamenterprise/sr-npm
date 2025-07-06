@@ -1,12 +1,11 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 
-async function makeSmartRecruitersRequest(path) {
+async function makeSmartRecruitersRequest(path,token) {
   // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
   const baseUrl = 'https://aoxley54.wixstudio.com/external-template/_functions'; // TEST
     const fullUrl = `${baseUrl}${path}`;
-  const token = await getSmartTokenFromCMS();
-  console.log("token is :  ", token);
+  
     //console.log(`Making request to: ${fullUrl}`);
   try {
     const response = await fetch(fullUrl, {
@@ -37,6 +36,7 @@ async function fetchPositionsFromSRAPI() {
   let nextPageId = null; // Start with no page ID for the first request
   let pageCount = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
+  const token = await getSmartTokenFromCMS();
 
   console.log('Starting to fetch all positions with pagination...');
 
@@ -51,7 +51,7 @@ async function fetchPositionsFromSRAPI() {
       }
       
       console.log(`Fetching page ${pageCount} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath);
+      const response = await makeSmartRecruitersRequest(apiPath,token);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
