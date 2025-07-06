@@ -334,15 +334,15 @@ function getSmartToken() {
 
 async function createApiKeyCollectionAndFillIt() {
     console.log("Creating ApiKey collection and filling it with the smart token");
-    console.log("COLLECTIONS", COLLECTIONS);
-    console.log("COLLECTIONS_FIELDS", COLLECTIONS_FIELDS);
+    console.log("COLLECTIONS    ", COLLECTIONS);
+    console.log("COLLECTIONS_FIELDS     ", COLLECTIONS_FIELDS);
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY);
     console.log("Getting the smart token");
     const token = await getSmartToken();
     console.log("Inserting the smart token into the ApiKey collection");
-    await wixData.insert("ApiKey", {
-        token: token
-    });
+    // await wixData.insert("ApiKey", {
+    //     token: token
+    // });
     console.log("Smart token inserted into the ApiKey collection");
 }
 
