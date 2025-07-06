@@ -1,4 +1,4 @@
-import { fetch } from 'wix-fetch';
+const { fetch } = require('wix-fetch');
 
 async function makeSmartRecruitersRequest(path) {
   // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
@@ -110,7 +110,6 @@ async function fetchJobDescription(jobId) {
 
 
 module.exports = {
-    
     fetchPositionsFromSRAPI,
     fetchJobDescription,
 };
