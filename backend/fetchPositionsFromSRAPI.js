@@ -1,9 +1,12 @@
 const { fetch } = require('wix-fetch');
+const { items: wixData } = require('@wix/data');
 
 async function makeSmartRecruitersRequest(path) {
   // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
   const baseUrl = 'https://aoxley54.wixstudio.com/external-template/_functions'; // TEST
     const fullUrl = `${baseUrl}${path}`;
+  const token = await getSmartTokenFromCMS();
+  console.log("token is :  ", token);
     //console.log(`Making request to: ${fullUrl}`);
   try {
     const response = await fetch(fullUrl, {
@@ -11,7 +14,7 @@ async function makeSmartRecruitersRequest(path) {
       headers: {
         'Accept-Language': 'en',
         'accept': 'application/json',
-        'x-smarttoken': 'DCRA1-1d30ea5fe9be42d9b9ae94ff933ebef5',
+        'x-smarttoken': token,
         'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
       }
     });
@@ -106,6 +109,15 @@ async function fetchPositionsFromSRAPI() {
 
 async function fetchJobDescription(jobId) {
   return await makeSmartRecruitersRequest(`/jobs/${jobId}`);
+}
+
+async function getSmartTokenFromCMS() {
+  const result = await wixData.query("ApiKey").limit(1).find();
+  if (result.items.length > 0) {
+      return result.items[0].token; // This is your string token
+  } else {
+      return null; // No token found
+  }
 }
 
 
