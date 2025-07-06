@@ -2,7 +2,7 @@ const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./consts');
+const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 const { secrets } = require("wix-secrets-backend.v2");
 const { elevate } = require("wix-auth");
 
@@ -340,10 +340,10 @@ async function createApiKeyCollectionAndFillIt() {
     console.log("Getting the smart token");
     const token = await getSmartToken();
     console.log("Inserting the smart token into the ApiKey collection");
-    // await wixData.insert("ApiKey", {
-    //     token: token
-    // });
-    
+    await wixData.insert("ApiKey", {
+        token: token
+    });
+
     console.log("Smart token inserted into the ApiKey collection");
 }
 
