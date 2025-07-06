@@ -1,4 +1,4 @@
-import {saveDataJobsToCMS,saveJobsDescriptionsToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} from './data';
+const {saveDataJobsToCMS,saveJobsDescriptionsToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',

@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
-import { fetchPositionsFromSRAPI, fetchJobDescription } from './fetchPositionsFromSRAPI';
-import { chunkedBulkOperation } from './utils';
+const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
+const { chunkedBulkOperation } = require('./utils');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
