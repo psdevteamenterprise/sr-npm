@@ -4,3 +4,8 @@ async function chunkedBulkOperation({ items, chunkSize, processChunk }) {
         await processChunk(chunk, Math.floor(i / chunkSize) + 1);
     }
 }
+
+
+module.exports = {
+    chunkedBulkOperation,
+};

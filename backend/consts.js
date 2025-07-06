@@ -1,6 +1,6 @@
 import {saveDataJobsToCMS,saveJobsDescriptionsToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} from './data';
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-export const TASKS_NAMES = {
+const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
     INSERT_JOBS_DESCRIPTIONS_TO_CMS: 'insertJobsDescriptionsToCMS',
@@ -14,7 +14,7 @@ export const TASKS_NAMES = {
 }
 
 
-export const TASKS = {
+const TASKS = {
     [TASKS_NAMES.SYNC_JOBS]: {
       name: TASKS_NAMES.SYNC_JOBS,
       childTasks: [
@@ -96,7 +96,7 @@ export const TASKS = {
       }
 }
 
-export const COLLECTIONS = {
+const COLLECTIONS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
     CITIES: 'cities',
     JOBS: 'Jobs',
@@ -136,7 +136,14 @@ const COLLECTIONS_FIELDS = {
   };
 
 
-export const TASK_TYPE = {
+const TASK_TYPE = {
     SCHEDULED: 'scheduled',
     EVENT: 'event',
   };
+
+  module.exports = {
+    TASKS_NAMES,
+    TASK_TYPE,
+    TASKS,
+    COLLECTIONS,
+};

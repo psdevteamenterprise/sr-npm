@@ -28,7 +28,7 @@ async function makeSmartRecruitersRequest(path) {
   }
 }
 
-export async function fetchPositionsFromSRAPI() {
+async function fetchPositionsFromSRAPI() {
   let allPositions = [];
   let totalFound = 0;
   let nextPageId = null; // Start with no page ID for the first request
@@ -104,6 +104,13 @@ export async function fetchPositionsFromSRAPI() {
   return result;
 }
 
-export async function fetchJobDescription(jobId) {
+async function fetchJobDescription(jobId) {
   return await makeSmartRecruitersRequest(`/jobs/${jobId}`);
 }
+
+
+module.exports = {
+    
+    fetchPositionsFromSRAPI,
+    fetchJobDescription,
+};
