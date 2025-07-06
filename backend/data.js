@@ -300,7 +300,12 @@ function fetchJobLocation(jobDetails) {
         },
         city: jobDetails.location.city,
         country: jobDetails.location.country,
-        formatted: "",
+        formatted: [
+            jobDetails.location.city,
+            jobDetails.location.region,
+            jobDetails.location.regionCode,
+            jobDetails.location.country
+        ].filter(Boolean).join(', '),
         streetAddress: {},
         subdivision: "",
         postalCode: ""
