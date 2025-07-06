@@ -11,6 +11,7 @@ const wixData = {
   remove: auth.elevate(items.remove),
   get: auth.elevate(items.get),
   //TODO: add other methods here as needed
+  
 };
 
 
