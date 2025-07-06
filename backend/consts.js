@@ -19,7 +19,6 @@ const TASKS = {
     [TASKS_NAMES.SYNC_JOBS]: {
       name: TASKS_NAMES.SYNC_JOBS,
       childTasks: [
-        { name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT },
         { name: TASKS_NAMES.CREATE_JOBS_COLLECTION },
         { name: TASKS_NAMES.CREATE_CITIES_COLLECTION },
         {name:  TASKS_NAMES.CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION},
@@ -109,6 +108,7 @@ const COLLECTIONS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
     CITIES: 'cities',
     JOBS: 'Jobs',
+    API_KEY: 'ApiKey',
 }
 
 const COLLECTIONS_FIELDS = {
@@ -141,7 +141,9 @@ const COLLECTIONS_FIELDS = {
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities' } } },
     ],  
-  
+    API_KEY: [
+      {key:'key', type: 'TEXT'},
+    ],
   };
 
 
@@ -155,4 +157,5 @@ const TASK_TYPE = {
     TASK_TYPE,
     TASKS,
     COLLECTIONS,
+    COLLECTIONS_FIELDS,
 };
