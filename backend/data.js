@@ -3,8 +3,7 @@ const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositio
 const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
-const { secrets } = require("wix-secrets-backend");
-const { elevate } = require("wix-auth");
+const { getSmartToken } = require('./smartToken');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
@@ -319,16 +318,7 @@ function fetchJobLocation(jobDetails) {
 
 
 
-function getSmartToken() {
-  const elevatedGetSecretValue = elevate(secrets.getSecretValue);
-  return elevatedGetSecretValue("x-smarttoken")
-    .then((secret) => {
-      return secret;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+
 
 
 async function createApiKeyCollectionAndFillIt() {
