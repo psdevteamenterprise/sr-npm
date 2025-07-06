@@ -4,7 +4,7 @@ const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 const { secrets } = require("@wix/secrets");
-const { elevate } = require("wix-auth");
+const { auth } = require('@wix/essentials');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
@@ -320,7 +320,7 @@ function fetchJobLocation(jobDetails) {
 
 
 function getSmartToken() {
-  const elevatedGetSecretValue = elevate(secrets.getSecretValue);
+  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
   return elevatedGetSecretValue("x-smarttoken")
     .then((secret) => {
       return secret;

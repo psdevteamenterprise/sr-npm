@@ -19,6 +19,7 @@
   "dependencies": {
     "@hisense-staging/velo-npm": "1.7.249",
     "@wix/data": "^1.0.211",
+    "@wix/essentials": "^0.1.24",
     "@wix/secrets": "1.0.53"
   }
 }
