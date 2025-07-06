@@ -295,7 +295,6 @@ async function referenceJobsToField({
 }
 
 function fetchJobLocation(jobDetails) {
-    console.log("jobDetails.location is ", jobDetails.location);
     const isZeroLocation = jobDetails.location.latitude === "0.0000" && jobDetails.location.longitude === "0.0000";
     const jobLocation = {
         location: isZeroLocation ? {} : {
@@ -345,6 +344,7 @@ async function createApiKeyCollectionAndFillIt() {
 
     console.log("Smart token inserted into the ApiKey collection");
 }
+
 
 module.exports = {
     saveDataJobsToCMS,
