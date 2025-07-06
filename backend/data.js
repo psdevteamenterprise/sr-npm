@@ -334,6 +334,8 @@ function getSmartToken() {
 
 async function createApiKeyCollectionAndFillIt() {
     console.log("Creating ApiKey collection and filling it with the smart token");
+    console.log("COLLECTIONS", COLLECTIONS);
+    console.log("COLLECTIONS_FIELDS", COLLECTIONS_FIELDS);
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY);
     console.log("Getting the smart token");
     const token = await getSmartToken();
