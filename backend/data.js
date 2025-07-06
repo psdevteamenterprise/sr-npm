@@ -4,7 +4,6 @@ const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./consts');
 const { secrets } = require("wix-secrets-backend.v2");
-const { getJSON } = require("wix-fetch");
 const { elevate } = require("wix-auth");
 
 // Utility function to normalize city names
@@ -332,21 +331,17 @@ function getSmartToken() {
     });
 }
 
-function getFirstSecretValue() {
-  const elevatedListSecretInfo = elevate(secrets.listSecretInfo);
-  return elevatedListSecretInfo()
-    .then((secrets) => {
-      return elevatedGetSecretValue(secrets[0].name);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+
 async function createApiKeyCollectionAndFillIt() {
+    console.log("Creating ApiKey collection and filling it with the smart token");
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY);
-
-
-
+    console.log("Getting the smart token");
+    const token = await getSmartToken();
+    console.log("Inserting the smart token into the ApiKey collection");
+    await wixData.insert("ApiKey", {
+        token: token
+    });
+    console.log("Smart token inserted into the ApiKey collection");
 }
 
 module.exports = {
@@ -355,5 +350,4 @@ module.exports = {
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
     createApiKeyCollectionAndFillIt,
-    getSmartToken,
 };

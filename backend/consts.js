@@ -142,7 +142,7 @@ const COLLECTIONS_FIELDS = {
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities' } } },
     ],  
     API_KEY: [
-      {key:'key', type: 'TEXT'},
+      {key:'token', type: 'TEXT'},
     ],
   };
 
