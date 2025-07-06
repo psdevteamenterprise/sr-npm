@@ -9,7 +9,7 @@ function normalizeCityName(city) {
     return city.normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
 }
 
-export async function saveDataJobsToCMS() {
+async function saveDataJobsToCMS() {
     const positions = await fetchPositionsFromSRAPI();
     // bulk insert to jobs collection without descriptions first
     const jobsData = positions.content.map((position) => {
@@ -55,7 +55,7 @@ export async function saveDataJobsToCMS() {
 
 }
 
-export async function saveJobsDescriptionsToCMS() {
+async function saveJobsDescriptionsToCMS() {
     
     console.log('🚀 Starting job descriptions update process for ALL jobs using pagination...');
     
@@ -157,7 +157,7 @@ export async function saveJobsDescriptionsToCMS() {
     }
 }
 
-export async function aggregateJobsByFieldToCMS({ field, collection }) {
+async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
     let jobsPerField = {};
     let cityLocations = {};
@@ -233,7 +233,7 @@ async function getJobsWithNoDescriptions() {
     return jobswithoutdescriptionsQuery;
 }
 
-export async function referenceJobsToField({
+async function referenceJobsToField({
     referenceField,      // e.g., "city" or "department"
     sourceCollection,    // e.g., "cities" or "departments"
     jobField,            // e.g., "cityText" or "department"
@@ -286,3 +286,10 @@ export async function referenceJobsToField({
 
     return { success: true, updated: jobsToUpdate.length };
 }
+
+module.exports = {
+    saveDataJobsToCMS,
+    saveJobsDescriptionsToCMS,
+    aggregateJobsByFieldToCMS,
+    referenceJobsToField,
+};
