@@ -3,8 +3,8 @@ const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositio
 const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
-import { secrets } from "@wix/secrets";
-const { elevate } = require("wix-auth");
+const { secrets } = require("@wix/secrets");
+//const { elevate } = require("wix-auth");
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
