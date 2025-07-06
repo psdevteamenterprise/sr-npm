@@ -55,9 +55,9 @@ async function saveDataJobsToCMS() {
 
 }
 
-async function saveJobsDescriptionsToCMS() {
+async function saveJobsDescriptionsAndLocationToCMS() {
     
-    console.log('🚀 Starting job descriptions update process for ALL jobs using pagination...');
+   console.log('🚀 Starting job descriptions update process for ALL jobs using pagination...');
     
     try {
         let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
@@ -94,8 +94,11 @@ async function saveJobsDescriptionsToCMS() {
                         try {
                             //   console.log(`    Fetching description for: ${job.title} (${job._id})`);
                             const jobDetails = await fetchJobDescription(job._id);
+                            const jobLocation = fetchJobLocation(jobDetails)
+                            
                             const updatedJob = {
                                 ...job,
+                                locationAddress: jobLocation,
                                 jobDescription: jobDetails.jobAd.sections
                             };
                             await wixData.update("Jobs", updatedJob);
@@ -287,9 +290,30 @@ async function referenceJobsToField({
     return { success: true, updated: jobsToUpdate.length };
 }
 
+function fetchJobLocation(jobDetails) {
+    console.log("jobDetails.location is ", jobDetails.location);
+    const isZeroLocation = jobDetails.location.latitude === "0.0000" && jobDetails.location.longitude === "0.0000";
+    const jobLocation = {
+        location: isZeroLocation ? {} : {
+            latitude: parseFloat(jobDetails.location.latitude),
+            longitude: parseFloat(jobDetails.location.longitude)
+        },
+        city: jobDetails.location.city,
+        country: jobDetails.location.country,
+        formatted: "",
+        streetAddress: {},
+        subdivision: "",
+        postalCode: ""
+    };
+
+    console.log("jobLocation", jobLocation);
+    return jobLocation;
+
+}
+
 module.exports = {
     saveDataJobsToCMS,
-    saveJobsDescriptionsToCMS,
+    saveJobsDescriptionsAndLocationToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
 };

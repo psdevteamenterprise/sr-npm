@@ -1,4 +1,4 @@
-const {saveDataJobsToCMS,saveJobsDescriptionsToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} = require('./data');
+const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
@@ -62,7 +62,7 @@ const TASKS = {
     [TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_TO_CMS]: {
       name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_TO_CMS,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:saveJobsDescriptionsToCMS,
+      process:saveJobsDescriptionsAndLocationToCMS,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
