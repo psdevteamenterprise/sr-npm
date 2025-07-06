@@ -310,8 +310,6 @@ function fetchJobLocation(jobDetails) {
         subdivision: "",
         postalCode: ""
     };
-
-    console.log("jobLocation", jobLocation);
     return jobLocation;
 
 }
