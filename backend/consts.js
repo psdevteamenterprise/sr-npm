@@ -1,4 +1,4 @@
-const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} = require('./data');
+const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
@@ -11,6 +11,7 @@ const TASKS_NAMES = {
     CREATE_JOBS_COLLECTION: 'createJobsCollection',
     CREATE_CITIES_COLLECTION: 'createCitiesCollection',
     CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION: 'createAmountOfJobsPerDepartmentCollection',
+    CREATE_API_KEY_COLLECTION_AND_FILL_IT: 'createApiKeyCollectionAndFillIt',
 }
 
 
@@ -18,6 +19,7 @@ const TASKS = {
     [TASKS_NAMES.SYNC_JOBS]: {
       name: TASKS_NAMES.SYNC_JOBS,
       childTasks: [
+        { name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT },
         { name: TASKS_NAMES.CREATE_JOBS_COLLECTION },
         { name: TASKS_NAMES.CREATE_CITIES_COLLECTION },
         {name:  TASKS_NAMES.CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION},
@@ -91,6 +93,13 @@ const TASKS = {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
         process:()=>referenceJobsToField({ referenceField: 'departmentref', sourceCollection: 'AmountOfJobsPerDepartment', jobField: 'department' }),
+        shouldSkipCheck:()=>false,
+        estimatedDurationSec:3
+      },
+      [TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT]: {
+        name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT,
+        getIdentifier:()=> "SHOULD_NEVER_SKIP",
+        process:()=>createApiKeyCollectionAndFillIt(),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       }

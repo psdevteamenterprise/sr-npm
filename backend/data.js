@@ -314,9 +314,17 @@ function fetchJobLocation(jobDetails) {
 
 }
 
+async function createApiKeyCollectionAndFillIt() {
+    const apiKey = await wixData.create("ApiKey", {
+        _id: "apiKey",
+        key: "apiKey"
+    });
+}
+
 module.exports = {
     saveDataJobsToCMS,
     saveJobsDescriptionsAndLocationToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
+    createApiKeyCollectionAndFillIt,
 };
