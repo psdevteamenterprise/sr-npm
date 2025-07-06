@@ -343,6 +343,7 @@ async function createApiKeyCollectionAndFillIt() {
     // await wixData.insert("ApiKey", {
     //     token: token
     // });
+    
     console.log("Smart token inserted into the ApiKey collection");
 }
 
