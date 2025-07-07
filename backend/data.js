@@ -221,12 +221,13 @@ async function getJobsWithNoDescriptions() {
     return jobswithoutdescriptionsQuery;
 }
 
-async function referenceJobsToField({
-    referenceField,      // e.g., "city" or "department"
-    sourceCollection,    // e.g., "cities" or "departments"
-    jobField,            // e.g., "cityText" or "department"
-    
-}) {
+/**
+ * @param {Object} params
+ * @param {"city"|"departmentref"} params.referenceField
+ * @param {"cities"|"AmountOfJobsPerDepartment"} params.sourceCollection
+ * @param {"cityText"|"department"} params.jobField
+ */
+async function referenceJobsToField({ referenceField, sourceCollection, jobField }) {
     // Fetch all source items (cities or departments)
     const sources = await wixData.query(sourceCollection).limit(QUERY_MAX_LIMIT).find();
     const sourceMap = {};
