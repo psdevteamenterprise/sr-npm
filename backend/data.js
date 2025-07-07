@@ -65,10 +65,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
         let totalFailed = 0;
         let totalProcessed = 0;
         let pageNumber = 1;
-        
-        // Start with the first page query - limit to 100 jobs per page
-       // let jobsQuery = await wixData.query("Jobs").limit(300).find();
-        
+         
         console.log(`Total jobs in database without descriptions:  ${jobsWithNoDescriptions.totalCount}`);
         
         if (jobsWithNoDescriptions.totalCount === 0) {
@@ -81,7 +78,6 @@ async function saveJobsDescriptionsAndLocationToCMS() {
             const currentPageJobs = jobsWithNoDescriptions.items;
             console.log(`\n📄 Processing page ${pageNumber} with ${currentPageJobs.length} jobs...`);
             
-            // Process jobs in smaller chunks of 5 for API calls within each page
             const API_CHUNK_SIZE = 80;
             const pageChunks = Math.ceil(currentPageJobs.length / API_CHUNK_SIZE);
             
@@ -92,7 +88,6 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                     console.log(`  Processing API chunk ${chunkNumber}/${pageChunks} (${chunk.length} jobs)`);
                     const chunkPromises = chunk.map(async (job) => {
                         try {
-                            //   console.log(`    Fetching description for: ${job.title} (${job._id})`);
                             const jobDetails = await fetchJobDescription(job._id);
                             const jobLocation = fetchJobLocation(jobDetails)
                             
@@ -101,8 +96,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                                 locationAddress: jobLocation,
                                 jobDescription: jobDetails.jobAd.sections
                             };
-                            await wixData.update("Jobs", updatedJob);
-                            // console.log(`    ✅ Updated description for: ${job.title}`);
+                            await wixData.update(COLLECTIONS.JOBS, updatedJob);
                             return { success: true, jobId: job._id, title: job.title };
                         } catch (error) {
                             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
@@ -164,7 +158,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
     let jobsPerField = {};
     let cityLocations = {};
-    let query = wixData.query("Jobs").limit(1000);
+    let query = wixData.query(COLLECTIONS.JOBS).limit(1000);
     let results = await query.find();
     let page = 1;
     do {
@@ -185,7 +179,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
         }
     } while (results.hasNext());
     let toSave = [];
-    if (field === 'cityText') {
+    if (field === COLLECTIONS_FIELDS.JOBS[6].key) {
          toSave = Object.entries(jobsPerField).map(([value, amount]) => {
             const loc = cityLocations[value] || {};
             value = normalizeCityName(value);
@@ -232,7 +226,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
     
-    let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
+    let jobswithoutdescriptionsQuery = await wixData.query(COLLECTIONS.JOBS).limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
     return jobswithoutdescriptionsQuery;
 }
 
