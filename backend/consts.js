@@ -1,5 +1,8 @@
 const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationToCMS,aggregateJobsByFieldToCMS,referenceJobsToField} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
+
+const QUERY_MAX_LIMIT = 1000;
+
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
@@ -146,4 +149,5 @@ const TASK_TYPE = {
     TASK_TYPE,
     TASKS,
     COLLECTIONS,
+    QUERY_MAX_LIMIT,
 };

@@ -1,6 +1,7 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation, delay, processJobsForField } = require('./utils');
+const { QUERY_MAX_LIMIT } = require('./consts');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
@@ -158,7 +159,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
     const jobsPerField = {};
     const cityLocations = {};
-    let results = await wixData.query(COLLECTIONS.JOBS).limit(1000).find();
+    let results = await wixData.query(COLLECTIONS.JOBS).limit(QUERY_MAX_LIMIT).find();
     let page = 1;
     do {
         console.log(`Page ${page}: ${results.items.length} jobs.`);
@@ -216,7 +217,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
     
-    let jobswithoutdescriptionsQuery = await wixData.query(COLLECTIONS.JOBS).limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
+    let jobswithoutdescriptionsQuery = await wixData.query(COLLECTIONS.JOBS).limit(QUERY_MAX_LIMIT).isEmpty("jobDescription").find();
     return jobswithoutdescriptionsQuery;
 }
 
@@ -227,14 +228,14 @@ async function referenceJobsToField({
     
 }) {
     // Fetch all source items (cities or departments)
-    const sources = await wixData.query(sourceCollection).limit(1000).find();
+    const sources = await wixData.query(sourceCollection).limit(QUERY_MAX_LIMIT).find();
     const sourceMap = {};
     for (const item of sources.items) {
         sourceMap[item.title] = item._id;
     }
 
     // Fetch all jobs
-    let jobsResults = await wixData.query("Jobs").limit(1000).find();
+    let jobsResults = await wixData.query("Jobs").limit(QUERY_MAX_LIMIT).find();
     let jobsToUpdate = [];
     console.log('jobsResults',jobsResults.items);
 
