@@ -11,6 +11,7 @@ const COLLECTIONS_FIELDS = {
       { key: 'count', type: 'NUMBER' },
     ],
     CITIES: [
+      { key: 'title', type: 'TEXT' },
       { key: 'city', type: 'TEXT' },
       {key:'locationAddress', type: 'ADDRESS'},
       {key:'count', type: 'NUMBER'},

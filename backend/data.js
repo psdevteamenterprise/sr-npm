@@ -198,6 +198,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
             value = normalizeCityName(value);
 
             return {
+                title: value,
                 _id: value.replace(/\s+/g, ''),
                 count: amount,
                 locationAddress: locAddress,
