@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
-const { chunkedBulkOperation } = require('./utils');
+const { chunkedBulkOperation, delay } = require('./utils');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
@@ -112,7 +112,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                     console.log(`  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`);
                     if (chunkNumber * API_CHUNK_SIZE < currentPageJobs.length) {
                         console.log('  Waiting 2 seconds before next API chunk...');
-                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        await delay(2000)
                     }
                 }
             });
@@ -127,7 +127,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                 
                 // Add a delay between pages
                 console.log('Waiting 3 seconds before next page...');
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                await delay(3000)
             }
             
         } while (jobsWithNoDescriptions.hasNext());

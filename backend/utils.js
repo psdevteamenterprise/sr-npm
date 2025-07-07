@@ -5,7 +5,12 @@ async function chunkedBulkOperation({ items, chunkSize, processChunk }) {
     }
 }
 
+async function delay(ms) {
+    await new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 module.exports = {
     chunkedBulkOperation,
+    delay,
 };
