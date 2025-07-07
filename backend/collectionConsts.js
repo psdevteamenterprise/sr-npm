@@ -19,6 +19,7 @@ const COLLECTIONS_FIELDS = {
     ],
     JOBS: [
         {key:'location', type: 'OBJECT'},
+        {key:'title', type: 'TEXT'},
         {key:'locationAddress', type: 'ADDRESS'},
         {key:'postingStatus', type: 'TEXT'},
         {key:'country', type: 'TEXT'},
