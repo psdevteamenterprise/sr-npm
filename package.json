@@ -1,6 +1,6 @@
 {
   "name": "sr-npm",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/psdevteamenterprise/sr-npm/issues"
   },
-  "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme"
+  "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme",
+  "dependencies": {
+    "@wix/data": "^1.0.250"
+  }
 }
