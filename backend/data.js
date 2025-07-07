@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
-const { chunkedBulkOperation, delay } = require('./utils');
+const { chunkedBulkOperation, delay, processJobsForField } = require('./utils');
 
 // Utility function to normalize city names
 function normalizeCityName(city) {
@@ -162,16 +162,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     let page = 1;
     do {
         console.log(`Page ${page}: ${results.items.length} jobs.`);
-        for (const job of results.items) {
-            if (!job[field])
-                {
-                    throw new Error(`Job ${job._id} has no ${field} field`);
-                } 
-            jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
-            if (field === 'cityText' && !cityLocations[job[field]]) {
-                cityLocations[job[field]] = job.location;
-            }
-        }
+        processJobsForField(results.items, field, jobsPerField, cityLocations);
         if (results.hasNext()) {
             results = await results.next();
             page++;
