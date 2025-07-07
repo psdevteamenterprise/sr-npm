@@ -170,6 +170,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     let cityLocations = {};
     let query = wixData.query("Jobs").limit(1000);
     let results = await query.find();
+    const cityLocationAddress={}
     let page = 1;
     do {
         console.log(`Page ${page}: ${results.items.length} jobs.`);
@@ -179,7 +180,8 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
                     throw new Error(`Job ${job._id} has no ${field} field`);
                 } 
             jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
-            if (field === 'cityText' && !cityLocations[job[field]]) {
+            if (field === 'cityText' && !cityLocationAddress[job[field]] && cityLocations[job[field]]) {
+                cityLocationAddress[job[field]] = job.locationAddress;
                 cityLocations[job[field]] = job.location;
             }
         }
@@ -191,23 +193,16 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     let toSave = [];
     if (field === 'cityText') {
          toSave = Object.entries(jobsPerField).map(([value, amount]) => {
+            const locAddress = cityLocationAddress[value] || {};
             const loc = cityLocations[value] || {};
             value = normalizeCityName(value);
 
             return {
-                title: value,
                 _id: value.replace(/\s+/g, ''),
                 count: amount,
-                location: loc,
-                countryCode: loc.countryCode,
+                locationAddress: locAddress,
                 country: loc.country,
-                region: loc.region,
                 city: loc.city,
-                manual: loc.manual.toString(),
-                remote: loc.remote.toString(),
-                regionCode: loc.regionCode,
-                latitude: loc.latitude,
-                longitude: loc.longitude
             };
         });
     }
