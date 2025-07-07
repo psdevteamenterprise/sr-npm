@@ -4,17 +4,12 @@ const { items:wixData } = require('@wix/data');
 
 
 async function getAllPositions() {
-    const query = wixData.query(COLLECTIONS.JOBS);
-    const results = await query.find();
-    return results.items;
+    return wixData.query(COLLECTIONS.JOBS).find().then(result=>result.items) 
    
 }
 
 async function getPositionsByField(field, value) {
-    const query = wixData.query(COLLECTIONS.JOBS)
-        .eq(field, value);
-    const results = await query.find();
-    return results.items;
+    return wixData.query(COLLECTIONS.JOBS).eq(field, value).find().then(result=>result.items) 
 }
 
 
