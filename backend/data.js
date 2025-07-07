@@ -180,7 +180,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
                     throw new Error(`Job ${job._id} has no ${field} field`);
                 } 
             jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
-            if (field === 'cityText' && !cityLocationAddress[job[field]] && cityLocations[job[field]]) {
+            if (field === 'cityText' && !cityLocationAddress[job[field]] && !cityLocations[job[field]]) {
                 cityLocationAddress[job[field]] = job.locationAddress;
                 cityLocations[job[field]] = job.location;
             }
