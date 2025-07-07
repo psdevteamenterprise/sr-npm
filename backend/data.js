@@ -314,7 +314,6 @@ function fetchJobLocation(jobDetails) {
 }
 
 
-
 function getSmartToken() {
   const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
   return elevatedGetSecretValue("x-smarttoken")
