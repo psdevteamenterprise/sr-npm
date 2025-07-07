@@ -250,11 +250,17 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
                 });
             }
         }
+        try{
         if (jobsResults.hasNext()) {
             jobsResults = await jobsResults.next();
         } else {
             break;
         }
+    }
+    catch(error){
+        console.log(' Error in referenceJobsToField:', error);
+        throw error;
+    }
     } while (true);
 
     // Remove system fields that cannot be updated
