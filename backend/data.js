@@ -9,7 +9,7 @@ function normalizeCityName(city) {
     return city.normalize('NFD').replace(/\p{Diacritic}/gu, '').trim();
 }
 
-async function saveDataJobsToCMS() {
+async function saveJobsDataToCMS() {
     const positions = await fetchPositionsFromSRAPI();
     // bulk insert to jobs collection without descriptions first
     const jobsData = positions.content.map((position) => {
@@ -315,7 +315,7 @@ function fetchJobLocation(jobDetails) {
 }
 
 module.exports = {
-    saveDataJobsToCMS,
+    saveJobsDataToCMS,
     saveJobsDescriptionsAndLocationToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
