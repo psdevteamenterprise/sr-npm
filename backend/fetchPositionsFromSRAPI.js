@@ -32,14 +32,14 @@ async function fetchPositionsFromSRAPI() {
   let allPositions = [];
   let totalFound = 0;
   let nextPageId = null; // Start with no page ID for the first request
-  let pageCount = 0;
+  let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
 
   console.log('Starting to fetch all positions with pagination...');
 
   do {
     try {
-      pageCount++;
+      page++;
       
       // Build the API path - first request has no page parameter, subsequent use nextPageId
       let apiPath = '/jobs?limit=50';
@@ -47,17 +47,17 @@ async function fetchPositionsFromSRAPI() {
         apiPath += `&nextPageId=${nextPageId}`;
       }
       
-      console.log(`Fetching page ${pageCount} with path: ${apiPath}`);
+      console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
         allPositions = allPositions.concat(response.content);
-        console.log(`Page ${pageCount}: Found ${response.content.length} positions`);
+        console.log(`Page ${page}: Found ${response.content.length} positions`);
       }
       
       // Update total count from first response
-      if (pageCount === 1) {
+      if (page === 1) {
         totalFound = response.totalFound || 0;
         console.log(`Total positions available: ${totalFound}`);
       }
@@ -72,12 +72,12 @@ async function fetchPositionsFromSRAPI() {
       }
       
     } catch (error) {
-      console.error(`Error fetching page ${pageCount}:`, error);
+      console.error(`Error fetching page ${page}:`, error);
       throw error;
     }
     
     // Safety check to prevent infinite loops
-    if (pageCount >= MAX_PAGES) {
+    if (page >= MAX_PAGES) {
       console.warn(`Reached maximum page limit of ${MAX_PAGES}. Stopping pagination.`);
       break;
     }
