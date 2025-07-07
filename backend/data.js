@@ -158,8 +158,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
     const jobsPerField = {};
     const cityLocations = {};
-    const query = wixData.query(COLLECTIONS.JOBS).limit(1000);
-    let results = await query.find();
+    let results = await wixData.query(COLLECTIONS.JOBS).limit(1000).find();
     let page = 1;
     do {
         console.log(`Page ${page}: ${results.items.length} jobs.`);
