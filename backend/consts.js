@@ -69,28 +69,28 @@ const TASKS = {
     [TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION]: {
         name: TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: 'cityText', collection: 'cities' }),
+        process:()=>aggregateJobsByFieldToCMS({ field: COLLECTIONS_FIELDS.JOBS[6].key, collection: COLLECTIONS.CITIES }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION]: {
         name: TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: 'department', collection: 'AmountOfJobsPerDepartment' }),
+        process:()=>aggregateJobsByFieldToCMS({ field: COLLECTIONS_FIELDS.JOBS[3].key, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS]: {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>referenceJobsToField({ referenceField: 'city', sourceCollection: 'cities', jobField: 'cityText' }),
+        process:()=>referenceJobsToField({ referenceField:  COLLECTIONS_FIELDS.JOBS[8].key, sourceCollection: COLLECTIONS.CITIES, jobField:  COLLECTIONS_FIELDS.JOBS[6].key }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT]: {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>referenceJobsToField({ referenceField: 'departmentref', sourceCollection: 'AmountOfJobsPerDepartment', jobField: 'department' }),
+        process:()=>referenceJobsToField({ referenceField:  COLLECTIONS_FIELDS.JOBS[7].key, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField:  COLLECTIONS_FIELDS.JOBS[3].key }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       }
@@ -129,7 +129,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},         
-        {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } } },
+        {key:'departmentRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities' } } },
     ],  
   
