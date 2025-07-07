@@ -156,9 +156,9 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 
 async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
-    let jobsPerField = {};
-    let cityLocations = {};
-    let query = wixData.query(COLLECTIONS.JOBS).limit(1000);
+    const jobsPerField = {};
+    const cityLocations = {};
+    const query = wixData.query(COLLECTIONS.JOBS).limit(1000);
     let results = await query.find();
     let page = 1;
     do {
