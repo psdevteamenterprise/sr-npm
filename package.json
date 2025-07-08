@@ -19,5 +19,8 @@
   "dependencies": {
     "@hisense-staging/velo-npm": "1.7.249",
     "@wix/data": "^1.0.211"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
