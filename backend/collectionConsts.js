@@ -9,6 +9,7 @@ const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
       {key:'title', type: 'TEXT'},
       { key: 'count', type: 'NUMBER' },
+      { key: 'image', type: 'IMAGE' },
     ],
     CITIES: [
       { key: 'title', type: 'TEXT' },

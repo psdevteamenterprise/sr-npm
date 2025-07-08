@@ -36,7 +36,7 @@ const TASKS = {
     [TASKS_NAMES.CREATE_JOBS_COLLECTION]: {
       name: TASKS_NAMES.CREATE_JOBS_COLLECTION,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:()=>createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS),
+      process:()=>createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
       shouldSkipCheck:()=>false,
       estimatedDurationSec:3
     },
