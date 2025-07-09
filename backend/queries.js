@@ -1,9 +1,10 @@
-const { COLLECTIONS } = require('./consts');
+const { COLLECTIONS,QUERY_MAX_LIMIT} = require('./consts');
 const { items: wixData } = require('@wix/data');
 
 async function getAllPositions() {
   return wixData
     .query(COLLECTIONS.JOBS)
+    .limit(QUERY_MAX_LIMIT)
     .find()
     .then(result => result.items);
 }
