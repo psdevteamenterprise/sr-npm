@@ -59,7 +59,7 @@ async function saveDataJobsToCMS() {
 
 }
 
-async function saveJobsDescriptionsAndLocationToCMS() {
+async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
     
    console.log('🚀 Starting job descriptions update process for ALL jobs using pagination...');
     
@@ -99,11 +99,13 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                             //   console.log(`    Fetching description for: ${job.title} (${job._id})`);
                             const jobDetails = await fetchJobDescription(job._id);
                             const jobLocation = fetchJobLocation(jobDetails)
+                            const applyLink = jobDetails.actions.applyOnWeb.url;
                             
                             const updatedJob = {
                                 ...job,
                                 locationAddress: jobLocation,
-                                jobDescription: jobDetails.jobAd.sections
+                                jobDescription: jobDetails.jobAd.sections,
+                                applyLink: applyLink
                             };
                             await wixData.update("Jobs", updatedJob);
                             // console.log(`    ✅ Updated description for: ${job.title}`);
@@ -232,7 +234,8 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
     
-    let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
+   // let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
+   let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("applyLink").find(); // with 900 as the limit, 429 error won't happen
     return jobswithoutdescriptionsQuery;
 }
 
@@ -343,7 +346,7 @@ async function createApiKeyCollectionAndFillIt() {
 
 module.exports = {
     saveDataJobsToCMS,
-    saveJobsDescriptionsAndLocationToCMS,
+    saveJobsDescriptionsAndLocationApplyUrlToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
     createApiKeyCollectionAndFillIt,

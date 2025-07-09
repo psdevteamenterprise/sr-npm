@@ -1,10 +1,10 @@
-const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt} = require('./data');
+const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
-    INSERT_JOBS_DESCRIPTIONS_TO_CMS: 'insertJobsDescriptionsToCMS',
+    INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS: 'insertJobsDescriptionsLocationApplyUrlToCMS',
     FILL_JOBS_PER_CITY_COLLECTION: 'fillJobsPerCityCollection',
     FILL_JOBS_PER_DEPARTMENT_COLLECTION: 'fillJobsPerDepartmentCollection',
     REFERENCE_JOBS_TO_LOCATIONS: 'referenceJobsToLocations',
@@ -24,7 +24,7 @@ const TASKS = {
         { name: TASKS_NAMES.CREATE_CITIES_COLLECTION },
         {name:  TASKS_NAMES.CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION},
         { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
-        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_TO_CMS },
+        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS },
         { name: TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION },
         { name: TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION },
         { name: TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS },
@@ -61,10 +61,10 @@ const TASKS = {
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
-    [TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_TO_CMS]: {
-      name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_TO_CMS,
+    [TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS]: {
+      name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:saveJobsDescriptionsAndLocationToCMS,
+      process:saveJobsDescriptionsAndLocationApplyUrlToCMS,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
