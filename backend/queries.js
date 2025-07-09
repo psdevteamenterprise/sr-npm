@@ -1,4 +1,4 @@
-const { COLLECTIONS } = require('./consts');
+const { COLLECTIONS } = require('./collectionConsts');
 const { items } = require('@wix/data');
 
 
