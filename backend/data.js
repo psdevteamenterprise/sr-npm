@@ -99,7 +99,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
                             //   console.log(`    Fetching description for: ${job.title} (${job._id})`);
                             const jobDetails = await fetchJobDescription(job._id);
                             const jobLocation = fetchJobLocation(jobDetails)
-                            const applyLink = jobDetails.actions.applyOnWeb.url;
+                            const applyLink = fetchApplyLink(jobDetails);
                             
                             const updatedJob = {
                                 ...job,
@@ -234,8 +234,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
     
-   // let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
-   let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("applyLink").find(); // with 900 as the limit, 429 error won't happen
+   let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
     return jobswithoutdescriptionsQuery;
 }
 
@@ -291,6 +290,10 @@ async function referenceJobsToField({
     });
 
     return { success: true, updated: jobsToUpdate.length };
+}
+
+function fetchApplyLink(jobDetails) {
+    return jobDetails.actions.applyOnWeb.url;
 }
 
 function fetchJobLocation(jobDetails) {
