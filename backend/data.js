@@ -6,7 +6,6 @@ const { getAllPositions } = require('./queries');
 
 
 async function saveJobsDataToCMS() {
-  console.log('test!@##@@#@!#@!!#@@!#@!#@!@!!@#!@#!@!@!@#!@#@#!!@##!@#!@!@#@!#@!##!@');
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
@@ -152,9 +151,6 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   let results = await getAllPositions();
   await iterateOverAllJobs(results, field, jobsPerField, cityLocations);
   const toSave = prepateToSaveArray(jobsPerField, cityLocations, field);
-  console.log('jobsPerField is@@@@@@@@ ', jobsPerField);
-  console.log('cityLocations is@@@@@@@@ ', cityLocations);
-  console.log('toSave is@@@@@@@@ ', toSave);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
@@ -195,8 +191,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   // Fetch all jobs
   let jobsResults = await getAllPositions();
   let jobsToUpdate = [];
-  console.log('jobsResults@@@@@@@@   ', jobsResults);
-
+  
   for (const job of jobsResults) {
     const refId = sourceMap[job[jobField]];
     if (refId) {
