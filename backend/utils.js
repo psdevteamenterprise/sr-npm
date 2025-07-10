@@ -26,7 +26,7 @@ function fillCityLocation(jobs, cityLocations) {
   }
 }
 
-function prepateToSaveArray(jobsPerField, cityLocations, field) {
+function prepareToSaveArray(jobsPerField, cityLocations, field) {
   if (field === 'cityText') {
     return Object.entries(jobsPerField).map(([value, amount]) => {
       const loc = cityLocations[value] || {};
@@ -70,6 +70,6 @@ module.exports = {
   delay,
   countJobsPerGivenField,
   fillCityLocation,
-  prepateToSaveArray,
+  prepateToSaveArray: prepareToSaveArray,
   normalizeCityName,
 };

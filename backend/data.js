@@ -136,20 +136,20 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 }
 
 
-async function iterateOverAllJobs(results, field, jobsPerField, cityLocations) {
+function iterateOverAllJobs(results, field) {
+  const jobsPerField = {};
+  const cityLocations = {};
     countJobsPerGivenField(results, field, jobsPerField);
     if (field === 'cityText') {
       fillCityLocation(results, cityLocations);
     }
-
+    return { jobsPerField, cityLocations };
 }
 
 async function aggregateJobsByFieldToCMS({ field, collection }) {
   console.log(`counting jobs per ${field}.`);
-  const jobsPerField = {};
-  const cityLocations = {};
   let results = await getAllPositions();
-  await iterateOverAllJobs(results, field, jobsPerField, cityLocations);
+  const { jobsPerField, cityLocations } = iterateOverAllJobs(results, field);
   const toSave = prepateToSaveArray(jobsPerField, cityLocations, field);
   if (toSave.length === 0) {
     console.log('No jobs found.');
