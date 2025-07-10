@@ -1,17 +1,10 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
-const { chunkedBulkOperation, delay, processJobsForField } = require('./utils');
+const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
 const { QUERY_MAX_LIMIT } = require('./consts');
+const { getAllPositions } = require('./queries');
 
-// Utility function to normalize city names
-function normalizeCityName(city) {
-  if (!city) return city;
-  // Remove accents/diacritics, trim whitespace
-  return city
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .trim();
-}
+
 
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
@@ -164,55 +157,34 @@ async function saveJobsDescriptionsAndLocationToCMS() {
   }
 }
 
-async function aggregateJobsByFieldToCMS({ field, collection }) {
-  console.log(`counting jobs per ${field}.`);
-  const jobsPerField = {};
-  const cityLocations = {};
-  let results = await wixData.query(COLLECTIONS.JOBS).limit(QUERY_MAX_LIMIT).find();
+
+async function iterateOverAllJobs(results, field, jobsPerField, cityLocations) {
   let page = 1;
   do {
-    console.log(`Page ${page}: ${results.items.length} jobs.`);
-    processJobsForField(results.items, field, jobsPerField, cityLocations);
+    console.log(`Page ${page}: ${results.length} jobs.`);
+    countJobsPerGivenField(results, field, jobsPerField);
+    if (field === 'cityText') {
+      fillCityLocation(results, cityLocations);
+    }
     if (results.hasNext()) {
       results = await results.next();
       page++;
     }
   } while (results.hasNext());
-  let toSave = [];
-  if (field === COLLECTIONS_FIELDS.JOBS[6].key) {
-    toSave = Object.entries(jobsPerField).map(([value, amount]) => {
-      const loc = cityLocations[value] || {};
-      value = normalizeCityName(value);
+}
 
-      return {
-        title: value,
-        _id: value.replace(/\s+/g, ''),
-        count: amount,
-        location: loc,
-        countryCode: loc.countryCode,
-        country: loc.country,
-        region: loc.region,
-        city: loc.city,
-        manual: loc.manual.toString(),
-        remote: loc.remote.toString(),
-        regionCode: loc.regionCode,
-        latitude: loc.latitude,
-        longitude: loc.longitude,
-      };
-    });
-  } else {
-    // Prepare array for bulkSave
-    toSave = Object.entries(jobsPerField).map(([value, amount]) => ({
-      title: value,
-      _id: value.replace(/\s+/g, ''),
-      count: amount,
-    }));
-  }
+async function aggregateJobsByFieldToCMS({ field, collection }) {
+  console.log(`counting jobs per ${field}.`);
+  const jobsPerField = {};
+  const cityLocations = {};
+  let results = await getAllPositions();
+  await iterateOverAllJobs(results, field, jobsPerField, cityLocations);
+  let toSave = [];
+  prepateToSaveArray(jobsPerField, cityLocations, field, toSave);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
   }
-
   try {
     const saveResult = await wixData.bulkSave(collection, toSave);
     console.log(`Saved ${toSave.length} ${field} counts to ${collection}.`);
@@ -247,7 +219,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   }
 
   // Fetch all jobs
-  let jobsResults = await wixData.query('Jobs').limit(QUERY_MAX_LIMIT).find();
+  let jobsResults = await getAllPositions();
   let jobsToUpdate = [];
   console.log('jobsResults', jobsResults.items);
 
@@ -255,7 +227,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   let iterationCount = 0;
 
   do {
-    for (const job of jobsResults.items) {
+    for (const job of jobsResults) {
       const refId = sourceMap[job[jobField]];
       if (refId) {
         jobsToUpdate.push({
