@@ -1,6 +1,6 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
-
+const { COLLECTIONS } = require('./collectionConsts');
 async function makeSmartRecruitersRequest(path,token) {
   // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
   const baseUrl = 'https://aoxley54.wixstudio.com/external-template/_functions'; // TEST
@@ -112,7 +112,7 @@ async function fetchJobDescription(jobId) {
 }
 
 async function getSmartTokenFromCMS() {
-  const result = await wixData.query("ApiKey").limit(1).find();
+  const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
   if (result.items.length > 0) {
       return result.items[0].token; // This is your string token
   } else {
