@@ -221,39 +221,17 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   // Fetch all jobs
   let jobsResults = await getAllPositions();
   let jobsToUpdate = [];
-  console.log('jobsResults', jobsResults.items);
+  console.log('jobsResults', jobsResults);
 
-  let maxIterations = 3000; // Prevent infinite loop
-  let iterationCount = 0;
-
-  do {
-    for (const job of jobsResults) {
-      const refId = sourceMap[job[jobField]];
-      if (refId) {
-        jobsToUpdate.push({
-          ...job,
-          [referenceField]: refId,
-        });
-      }
+  for (const job of jobsResults) {
+    const refId = sourceMap[job[jobField]];
+    if (refId) {
+      jobsToUpdate.push({
+        ...job,
+        [referenceField]: refId,
+      });
     }
-
-    iterationCount++;
-    if (iterationCount >= maxIterations) {
-      console.warn(`Max iterations (${maxIterations}) reached. Stopping to prevent infinite loop.`);
-      break;
-    }
-
-    try {
-      if (jobsResults.hasNext()) {
-        jobsResults = await jobsResults.next();
-      } else {
-        break;
-      }
-    } catch (error) {
-      console.log(' Error in referenceJobsToField:', error);
-      throw error;
-    }
-  } while (true);
+  }
 
   // Remove system fields that cannot be updated
   jobsToUpdate = jobsToUpdate.map(job => {
