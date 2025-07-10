@@ -26,9 +26,9 @@ function fillCityLocation(jobs, cityLocations) {
   }
 }
 
-function prepateToSaveArray(jobsPerField, cityLocations, field, toSave) {
+function prepateToSaveArray(jobsPerField, cityLocations, field) {
   if (field === 'cityText') {
-    toSave = Object.entries(jobsPerField).map(([value, amount]) => {
+    return Object.entries(jobsPerField).map(([value, amount]) => {
       const loc = cityLocations[value] || {};
       value = normalizeCityName(value);
       return {
@@ -48,7 +48,7 @@ function prepateToSaveArray(jobsPerField, cityLocations, field, toSave) {
       };
     });
   } else {
-    toSave = Object.entries(jobsPerField).map(([value, amount]) => ({
+    return Object.entries(jobsPerField).map(([value, amount]) => ({
       title: value,
       _id: value.replace(/\s+/g, ''),
       count: amount,

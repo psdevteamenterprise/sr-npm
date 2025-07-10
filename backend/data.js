@@ -151,10 +151,9 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   const cityLocations = {};
   let results = await getAllPositions();
   await iterateOverAllJobs(results, field, jobsPerField, cityLocations);
-  const toSave = [];
+  const toSave = prepateToSaveArray(jobsPerField, cityLocations, field);
   console.log('jobsPerField is@@@@@@@@ ', jobsPerField);
   console.log('cityLocations is@@@@@@@@ ', cityLocations);
-  prepateToSaveArray(jobsPerField, cityLocations, field, toSave);
   console.log('toSave is@@@@@@@@ ', toSave);
   if (toSave.length === 0) {
     console.log('No jobs found.');
