@@ -64,7 +64,6 @@ async function saveJobsDescriptionsAndLocationToCMS() {
     let totalUpdated = 0;
     let totalFailed = 0;
     let totalProcessed = 0;
-    let pageNumber = 1;
 
     console.log(
       `Total jobs in database without descriptions:  ${jobsWithNoDescriptions?.items?.length}`
@@ -80,7 +79,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
     const pageChunks = Math.ceil(jobsWithNoDescriptions.items.length / API_CHUNK_SIZE);
 
     await chunkedBulkOperation({
-      items: currentPageJobs,
+      items: jobsWithNoDescriptions.items,
       chunkSize: API_CHUNK_SIZE,
       processChunk: async (chunk, chunkNumber) => {
         console.log(`  Processing API chunk ${chunkNumber}/${pageChunks} (${chunk.length} jobs)`);
@@ -110,7 +109,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
         console.log(
           `  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`
         );
-        if (chunkNumber * API_CHUNK_SIZE < currentPageJobs.length) {
+        if (chunkNumber * API_CHUNK_SIZE < jobsWithNoDescriptions.items.length) {
           console.log('  Waiting 2 seconds before next API chunk...');
           await delay(2000);
         }
