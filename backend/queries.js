@@ -1,17 +1,16 @@
-const { COLLECTIONS,QUERY_MAX_LIMIT} = require('./consts');
 const { items: wixData } = require('@wix/data');
 
 async function getAllPositions() {
   return wixData
-    .query(COLLECTIONS.JOBS)
-    .limit(QUERY_MAX_LIMIT)
+    .query('Jobs1')
+    .limit(1000)
     .find()
     .then(result => result.items);
 }
 
 async function getPositionsByField(field, value) {
   return wixData
-    .query(COLLECTIONS.JOBS)
+    .query('Jobs1')
     .eq(field, value)
     .find()
     .then(result => result.items);
