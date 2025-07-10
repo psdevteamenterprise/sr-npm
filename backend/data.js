@@ -1,4 +1,4 @@
-const { items: wixData } = require('@wix/data');
+const { items: wixData, collections } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation } = require('./utils');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
@@ -45,7 +45,7 @@ async function saveDataJobsToCMS() {
         processChunk: async (chunk, chunkNumber) => {
             console.log(`Saving chunk ${chunkNumber}/${totalChunks}: ${chunk.length} jobs`);
             try {
-                const result = await wixData.bulkSave("Jobs", chunk);
+                const result = await wixData.bulkSave(COLLECTIONS.JOBS, chunk);
                 const saved = result.inserted + result.updated || chunk.length;
                 totalSaved += saved;
                 console.log(`✓ Chunk ${chunkNumber} saved successfully. Inserted: ${result.inserted}, Updated: ${result.updated}`);
@@ -106,7 +106,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
                                 locationAddress: jobLocation,
                                 jobDescription: jobDetails.jobAd.sections
                             };
-                            await wixData.update("Jobs", updatedJob);
+                            await wixData.update(COLLECTIONS.JOBS, updatedJob);
                             // console.log(`    ✅ Updated description for: ${job.title}`);
                             return { success: true, jobId: job._id, title: job.title };
                         } catch (error) {
@@ -169,7 +169,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     console.log(`counting jobs per ${field}.`);
     let jobsPerField = {};
     let cityLocations = {};
-    let query = wixData.query("Jobs").limit(1000);
+    let query = wixData.query(COLLECTIONS.JOBS).limit(1000);
     let results = await query.find();
     let page = 1;
     do {
@@ -237,7 +237,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
     
-    let jobswithoutdescriptionsQuery = await wixData.query("Jobs").limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
+    let jobswithoutdescriptionsQuery = await wixData.query(COLLECTIONS.JOBS).limit(1000).isEmpty("jobDescription").find(); // with 900 as the limit, 429 error won't happen
     return jobswithoutdescriptionsQuery;
 }
 
@@ -255,7 +255,7 @@ async function referenceJobsToField({
     }
 
     // Fetch all jobs
-    let jobsResults = await wixData.query("Jobs").limit(1000).find();
+    let jobsResults = await wixData.query(COLLECTIONS.JOBS).limit(1000).find();
     let jobsToUpdate = [];
     console.log('jobsResults',jobsResults.items);
 
@@ -288,7 +288,7 @@ async function referenceJobsToField({
         items: jobsToUpdate,
         chunkSize,
         processChunk: async (chunk) => {
-            await wixData.bulkUpdate("Jobs", chunk);
+            await wixData.bulkUpdate(COLLECTIONS.JOBS, chunk);
         }
     });
 
@@ -339,7 +339,7 @@ async function createApiKeyCollectionAndFillIt() {
     const token = await getSmartToken();
     console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
-    await wixData.insert("ApiKey", {
+    await wixData.insert(COLLECTIONS.API_KEY, {
         token: token.value
     });
 
