@@ -1,7 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
-const { QUERY_MAX_LIMIT } = require('./consts');
 const { getAllPositions } = require('./queries');
 
 
@@ -179,7 +178,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 async function getJobsWithNoDescriptions() {
   let jobswithoutdescriptionsQuery = await wixData
     .query('Jobs1')
-    .limit(QUERY_MAX_LIMIT)
+    .limit(1000)
     .isEmpty('jobDescription')
     .find();
   return jobswithoutdescriptionsQuery;
@@ -193,7 +192,7 @@ async function getJobsWithNoDescriptions() {
  */
 async function referenceJobsToField({ referenceField, sourceCollection, jobField }) {
   // Fetch all source items (cities or departments)
-  const sources = await wixData.query(sourceCollection).limit(QUERY_MAX_LIMIT).find();
+  const sources = await wixData.query(sourceCollection).limit(1000).find();
   const sourceMap = {};
   for (const item of sources.items) {
     sourceMap[item.title] = item._id;
