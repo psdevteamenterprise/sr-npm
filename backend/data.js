@@ -66,7 +66,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
     let pageNumber = 1;
 
     console.log(
-      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions.result.length}`
+      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions.items.length}`
     );
 
     if (jobsWithNoDescriptions.result.length === 0) {
@@ -76,7 +76,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 
 
     const API_CHUNK_SIZE = 80;
-    const pageChunks = Math.ceil(jobsWithNoDescriptions.result.length / API_CHUNK_SIZE);
+    const pageChunks = Math.ceil(jobsWithNoDescriptions.items.length / API_CHUNK_SIZE);
 
     await chunkedBulkOperation({
       items: currentPageJobs,
