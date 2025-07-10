@@ -138,18 +138,11 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 
 
 async function iterateOverAllJobs(results, field, jobsPerField, cityLocations) {
-  let page = 1;
-  do {
-    console.log(`Page ${page}: ${results.length} jobs.`);
     countJobsPerGivenField(results, field, jobsPerField);
     if (field === 'cityText') {
       fillCityLocation(results, cityLocations);
     }
-    if (results.hasNext()) {
-      results = await results.next();
-      page++;
-    }
-  } while (results.hasNext());
+
 }
 
 async function aggregateJobsByFieldToCMS({ field, collection }) {
