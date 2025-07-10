@@ -7,6 +7,7 @@ const { getAllPositions } = require('./queries');
 
 
 async function saveJobsDataToCMS() {
+  console.log('test!@##@@#@!#@!!#@@!#@!#@!@!!@#!@#!@!@!@#!@#@#!!@##!@#!@!@#@!#@!##!@');
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
