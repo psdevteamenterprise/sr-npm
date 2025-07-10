@@ -70,7 +70,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
       `Total jobs in database without descriptions:  ${jobsWithNoDescriptions?.items?.length}`
     );
 
-    if (jobsWithNoDescriptions.result.length === 0) {
+    if (jobsWithNoDescriptions.items.length === 0) {
       console.log('No jobs found in database');
       return { success: true, message: 'No jobs found' };
     }
