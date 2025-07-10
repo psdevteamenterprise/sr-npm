@@ -66,17 +66,17 @@ async function saveJobsDescriptionsAndLocationToCMS() {
     let pageNumber = 1;
 
     console.log(
-      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions.totalCount}`
+      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions.result.length}`
     );
 
-    if (jobsWithNoDescriptions.totalCount === 0) {
+    if (jobsWithNoDescriptions.result.length === 0) {
       console.log('No jobs found in database');
       return { success: true, message: 'No jobs found' };
     }
 
 
     const API_CHUNK_SIZE = 80;
-    const pageChunks = Math.ceil(currentPageJobs.length / API_CHUNK_SIZE);
+    const pageChunks = Math.ceil(jobsWithNoDescriptions.result.length / API_CHUNK_SIZE);
 
     await chunkedBulkOperation({
       items: currentPageJobs,
