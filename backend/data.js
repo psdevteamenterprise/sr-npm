@@ -6,6 +6,7 @@ const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 const { secrets } = require("@wix/secrets");
 const { auth } = require('@wix/essentials');
 
+
 // Utility function to normalize city names
 function normalizeCityName(city) {
     if (!city) return city;
