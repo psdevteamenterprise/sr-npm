@@ -1,4 +1,6 @@
 module.exports = {
-    ...require('./queries'),
-  };
-  
+  ...require('./utils'),
+  ...require('./queries'),
+  ...require('./fetchPositionsFromSRAPI'),
+  ...require('./consts'),
+};

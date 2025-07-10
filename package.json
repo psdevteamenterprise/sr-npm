@@ -1,6 +1,6 @@
 {
   "name": "sr-npm",
-  "version": "1.0.6",
+  "version": "1.7.53",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/psdevteamenterprise/sr-npm#readme",
   "dependencies": {
-    "@wix/data": "^1.0.250"
+    "@hisense-staging/velo-npm": "1.7.249",
+    "@wix/data": "^1.0.211"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
