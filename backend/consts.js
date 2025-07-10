@@ -126,9 +126,9 @@ const TASKS = {
 };
 
 const COLLECTIONS = {
-  AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
-  CITIES: 'cities',
-  JOBS: 'Jobs',
+  AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment1',
+  CITIES: 'cities1',
+  JOBS: 'Jobs1',
 };
 
 const COLLECTIONS_FIELDS = {
@@ -161,12 +161,12 @@ const COLLECTIONS_FIELDS = {
     {
       key: 'departmentRef',
       type: 'REFERENCE',
-      typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } },
+      typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } },
     },
     {
       key: 'city',
       type: 'REFERENCE',
-      typeMetadata: { reference: { referencedCollectionId: 'cities' } },
+      typeMetadata: { reference: { referencedCollectionId: 'cities1' } },
     },
   ],
 };

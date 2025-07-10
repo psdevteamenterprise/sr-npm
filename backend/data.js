@@ -39,7 +39,7 @@ async function saveJobsDataToCMS() {
     processChunk: async (chunk, chunkNumber) => {
       console.log(`Saving chunk ${chunkNumber}/${totalChunks}: ${chunk.length} jobs`);
       try {
-        const result = await wixData.bulkSave('Jobs', chunk);
+        const result = await wixData.bulkSave('Jobs1', chunk);
         const saved = result.inserted + result.updated || chunk.length;
         totalSaved += saved;
         console.log(
@@ -187,7 +187,7 @@ async function getJobsWithNoDescriptions() {
 /**
  * @param {Object} params
  * @param {"city"|"departmentref"} params.referenceField
- * @param {"cities"|"AmountOfJobsPerDepartment"} params.sourceCollection
+ * @param {"cities1"|"AmountOfJobsPerDepartment1"} params.sourceCollection
  * @param {"cityText"|"department"} params.jobField
  */
 async function referenceJobsToField({ referenceField, sourceCollection, jobField }) {
@@ -225,7 +225,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
     items: jobsToUpdate,
     chunkSize,
     processChunk: async chunk => {
-      await wixData.bulkUpdate('Jobs', chunk);
+      await wixData.bulkUpdate('Jobs1', chunk);
     },
   });
 
