@@ -151,8 +151,11 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   const cityLocations = {};
   let results = await getAllPositions();
   await iterateOverAllJobs(results, field, jobsPerField, cityLocations);
-  let toSave = [];
+  const toSave = [];
+  console.log('jobsPerField is@@@@@@@@ ', jobsPerField);
+  console.log('cityLocations is@@@@@@@@ ', cityLocations);
   prepateToSaveArray(jobsPerField, cityLocations, field, toSave);
+  console.log('toSave is@@@@@@@@ ', toSave);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
@@ -193,7 +196,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   // Fetch all jobs
   let jobsResults = await getAllPositions();
   let jobsToUpdate = [];
-  console.log('jobsResults', jobsResults);
+  console.log('jobsResults@@@@@@@@   ', jobsResults);
 
   for (const job of jobsResults) {
     const refId = sourceMap[job[jobField]];
