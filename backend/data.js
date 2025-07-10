@@ -1,7 +1,7 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
-const { QUERY_MAX_LIMIT } = require('./consts');
+const { QUERY_MAX_LIMIT,COLLECTIONS } = require('./consts');
 const { getAllPositions } = require('./queries');
 
 
