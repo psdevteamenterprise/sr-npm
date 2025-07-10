@@ -56,7 +56,7 @@ async function saveJobsDataToCMS() {
 }
 
 async function saveJobsDescriptionsAndLocationToCMS() {
-  console.log('🚀 Starting job descriptions update process for ALL jobs using pagination...');
+  console.log('🚀 Starting job descriptions update process for ALL jobs');
 
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
@@ -74,82 +74,62 @@ async function saveJobsDescriptionsAndLocationToCMS() {
       return { success: true, message: 'No jobs found' };
     }
 
-    // Process all pages using hasNext() pagination
-    do {
-      const currentPageJobs = jobsWithNoDescriptions.items;
-      console.log(`\n📄 Processing page ${pageNumber} with ${currentPageJobs.length} jobs...`);
 
-      const API_CHUNK_SIZE = 80;
-      const pageChunks = Math.ceil(currentPageJobs.length / API_CHUNK_SIZE);
+    const API_CHUNK_SIZE = 80;
+    const pageChunks = Math.ceil(currentPageJobs.length / API_CHUNK_SIZE);
 
-      await chunkedBulkOperation({
-        items: currentPageJobs,
-        chunkSize: API_CHUNK_SIZE,
-        processChunk: async (chunk, chunkNumber) => {
-          console.log(`  Processing API chunk ${chunkNumber}/${pageChunks} (${chunk.length} jobs)`);
-          const chunkPromises = chunk.map(async job => {
-            try {
-              const jobDetails = await fetchJobDescription(job._id);
-              const jobLocation = fetchJobLocation(jobDetails);
+    await chunkedBulkOperation({
+      items: currentPageJobs,
+      chunkSize: API_CHUNK_SIZE,
+      processChunk: async (chunk, chunkNumber) => {
+        console.log(`  Processing API chunk ${chunkNumber}/${pageChunks} (${chunk.length} jobs)`);
+        const chunkPromises = chunk.map(async job => {
+          try {
+            const jobDetails = await fetchJobDescription(job._id);
+            const jobLocation = fetchJobLocation(jobDetails);
 
-              const updatedJob = {
-                ...job,
-                locationAddress: jobLocation,
-                jobDescription: jobDetails.jobAd.sections,
-              };
-              await wixData.update(COLLECTIONS.JOBS, updatedJob);
-              return { success: true, jobId: job._id, title: job.title };
-            } catch (error) {
-              console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
-              return { success: false, jobId: job._id, title: job.title, error: error.message };
-            }
-          });
-          const chunkResults = await Promise.all(chunkPromises);
-          const chunkSuccesses = chunkResults.filter(r => r.success).length;
-          const chunkFailures = chunkResults.filter(r => !r.success).length;
-          totalUpdated += chunkSuccesses;
-          totalFailed += chunkFailures;
-          totalProcessed += chunk.length;
-          console.log(
-            `  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`
-          );
-          if (chunkNumber * API_CHUNK_SIZE < currentPageJobs.length) {
-            console.log('  Waiting 2 seconds before next API chunk...');
-            await delay(2000);
+            const updatedJob = {
+              ...job,
+              locationAddress: jobLocation,
+              jobDescription: jobDetails.jobAd.sections,
+            };
+            await wixData.update(COLLECTIONS.JOBS, updatedJob);
+            return { success: true, jobId: job._id, title: job.title };
+          } catch (error) {
+            console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
+            return { success: false, jobId: job._id, title: job.title, error: error.message };
           }
-        },
-      });
+        });
+        const chunkResults = await Promise.all(chunkPromises);
+        const chunkSuccesses = chunkResults.filter(r => r.success).length;
+        const chunkFailures = chunkResults.filter(r => !r.success).length;
+        totalUpdated += chunkSuccesses;
+        totalFailed += chunkFailures;
+        totalProcessed += chunk.length;
+        console.log(
+          `  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`
+        );
+        if (chunkNumber * API_CHUNK_SIZE < currentPageJobs.length) {
+          console.log('  Waiting 2 seconds before next API chunk...');
+          await delay(2000);
+        }
+      },
+    });
 
-      console.log(
-        `📄 Page ${pageNumber} completed. Updated: ${totalUpdated}, Failed: ${totalFailed}, Total processed: ${totalProcessed}/${jobsWithNoDescriptions.totalCount}`
-      );
 
-      // Check if there are more pages and get the next page
-      if (jobsWithNoDescriptions.hasNext()) {
-        console.log('🔄 Moving to next page...');
-        jobsWithNoDescriptions = await jobsWithNoDescriptions.next();
-        pageNumber++;
 
-        // Add a delay between pages
-        console.log('Waiting 3 seconds before next page...');
-        await delay(3000);
-      }
-    } while (jobsWithNoDescriptions.hasNext());
-
-    console.log(`\n✅ Finished updating ALL job descriptions using pagination!`);
+    console.log(`\n✅ Finished updating ALL job descriptions`);
     console.log(`📊 Final Results:`);
-    console.log(`   Total pages processed: ${pageNumber}`);
     console.log(`   Total jobs processed: ${totalProcessed}`);
     console.log(`   Total updated: ${totalUpdated}`);
     console.log(`   Total failed: ${totalFailed}`);
 
     return {
       success: true,
-      totalPages: pageNumber,
       totalProcessed: totalProcessed,
       totalUpdated: totalUpdated,
       totalFailed: totalFailed,
-      message: `Successfully updated ${totalUpdated} job descriptions out of ${totalProcessed} total jobs across ${pageNumber} pages`,
+      message: `Successfully updated ${totalUpdated} job descriptions out of ${totalProcessed} total jobs`,
     };
   } catch (error) {
     console.error('❌ Error in updateJobDescriptions:', error);
