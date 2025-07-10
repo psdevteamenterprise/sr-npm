@@ -60,13 +60,14 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
+    console.log('jobsWithNoDescriptions is        ', jobsWithNoDescriptions);
     let totalUpdated = 0;
     let totalFailed = 0;
     let totalProcessed = 0;
     let pageNumber = 1;
 
     console.log(
-      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions.items.length}`
+      `Total jobs in database without descriptions:  ${jobsWithNoDescriptions?.items?.length}`
     );
 
     if (jobsWithNoDescriptions.result.length === 0) {
