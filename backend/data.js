@@ -1,7 +1,7 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
-const { QUERY_MAX_LIMIT,COLLECTIONS } = require('./consts');
+const { QUERY_MAX_LIMIT } = require('./consts');
 const { getAllPositions } = require('./queries');
 
 
@@ -94,7 +94,7 @@ async function saveJobsDescriptionsAndLocationToCMS() {
               locationAddress: jobLocation,
               jobDescription: jobDetails.jobAd.sections,
             };
-            await wixData.update(COLLECTIONS.JOBS, updatedJob);
+            await wixData.update('Jobs1', updatedJob);
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
@@ -178,7 +178,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
   let jobswithoutdescriptionsQuery = await wixData
-    .query(COLLECTIONS.JOBS)
+    .query('Jobs1')
     .limit(QUERY_MAX_LIMIT)
     .isEmpty('jobDescription')
     .find();
