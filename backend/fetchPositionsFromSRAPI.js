@@ -43,8 +43,8 @@ async function fetchPositionsFromSRAPI() {
 
   do {
     try {
-      pageCount++;
-      
+      page++;
+
       // Build the API path - first request has no page parameter, subsequent use nextPageId
       let apiPath = '/jobs?limit=50';
       if (nextPageId) {
@@ -57,31 +57,30 @@ async function fetchPositionsFromSRAPI() {
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
         allPositions = allPositions.concat(response.content);
-        console.log(`Page ${pageCount}: Found ${response.content.length} positions`);
+        console.log(`Page ${page}: Found ${response.content.length} positions`);
       }
-      
+
       // Update total count from first response
-      if (pageCount === 1) {
+      if (page === 1) {
         totalFound = response.totalFound || 0;
         console.log(`Total positions available: ${totalFound}`);
       }
-      
+
       // Get the nextPageId for the next iteration
-      nextPageId = response.nextPageId && response.nextPageId !== "" ? response.nextPageId : null;
-      
+      nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
+
       if (nextPageId) {
         console.log(`Next page ID: ${nextPageId}`);
       } else {
         console.log('No more pages to fetch');
       }
-      
     } catch (error) {
-      console.error(`Error fetching page ${pageCount}:`, error);
+      console.error(`Error fetching page ${page}:`, error);
       throw error;
     }
-    
+
     // Safety check to prevent infinite loops
-    if (pageCount >= MAX_PAGES) {
+    if (page >= MAX_PAGES) {
       console.warn(`Reached maximum page limit of ${MAX_PAGES}. Stopping pagination.`);
       break;
     }
@@ -90,12 +89,12 @@ async function fetchPositionsFromSRAPI() {
   console.log(`Finished fetching all pages. Total positions collected: ${allPositions.length}`);
 
   // Return response in the same format as before, but with all positions
-  const result =  {
+  const result = {
     totalFound: totalFound,
     offset: 0,
     limit: allPositions.length,
-    nextPageId: "", // Always empty since we've fetched everything
-    content: allPositions
+    nextPageId: '', // Always empty since we've fetched everything
+    content: allPositions,
   };
 
   const amountOfUniqueJobs = new Set(allPositions.map(job => job.id)).size;
@@ -123,6 +122,6 @@ async function getSmartTokenFromCMS() {
 
 
 module.exports = {
-    fetchPositionsFromSRAPI,
-    fetchJobDescription,
+  fetchPositionsFromSRAPI,
+  fetchJobDescription,
 };
