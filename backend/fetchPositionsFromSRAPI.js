@@ -51,7 +51,7 @@ async function fetchPositionsFromSRAPI() {
         apiPath += `&nextPageId=${nextPageId}`;
       }
       
-      console.log(`Fetching page ${pageCount} with path: ${apiPath}`);
+      console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath,token);
       
       // Add positions from this page to our collection
