@@ -35,7 +35,7 @@ async function fetchPositionsFromSRAPI() {
   let allPositions = [];
   let totalFound = 0;
   let nextPageId = null; // Start with no page ID for the first request
-  let pageCount = 0;
+  let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const token = await getSmartTokenFromCMS();
 
