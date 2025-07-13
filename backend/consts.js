@@ -3,6 +3,7 @@ const {
   saveJobsDescriptionsAndLocationToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
+  createApiKeyCollectionAndFillIt,
 } = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
@@ -126,6 +127,13 @@ const TASKS = {
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
   },
+  [TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT]: {
+    name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT,
+    getIdentifier:()=> "SHOULD_NEVER_SKIP",
+    process:()=>createApiKeyCollectionAndFillIt(),
+    shouldSkipCheck:()=>false,
+    estimatedDurationSec:3
+  }
 };
 
 
