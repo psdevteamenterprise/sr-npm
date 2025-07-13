@@ -180,7 +180,7 @@ async function getJobsWithNoDescriptions() {
 
 /**
  * @param {Object} params
- * @param {"city"|"departmentref"} params.referenceField
+ * @param {"city"|"departmentRef"} params.referenceField
  * @param {"cities1"|"AmountOfJobsPerDepartment1"} params.sourceCollection
  * @param {"cityText"|"department"} params.jobField
  */

@@ -32,7 +32,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},         
-        {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } } },
+        {key:'departmentRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities1' } } },
     ],  
     API_KEY: [
