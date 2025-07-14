@@ -1,20 +1,22 @@
 const { fetch } = require('wix-fetch');
+const { items: wixData } = require('@wix/data');
+const { COLLECTIONS } = require('./collectionConsts');
 
-async function makeSmartRecruitersRequest(path) {
+async function makeSmartRecruitersRequest(path,token) {
   // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
   const baseUrl = 'https://aoxley54.wixstudio.com/external-template/_functions'; // TEST
-  const fullUrl = `${baseUrl}${path}`;
-  //console.log(`Making request to: ${fullUrl}`);
+    const fullUrl = `${baseUrl}${path}`;
+  
+    //console.log(`Making request to: ${fullUrl}`);
   try {
     const response = await fetch(fullUrl, {
       method: 'GET',
       headers: {
         'Accept-Language': 'en',
-        accept: 'application/json',
-        'x-smarttoken': 'DCRA1-1d30ea5fe9be42d9b9ae94ff933ebef5',
-        Cookie:
-          'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d',
-      },
+        'accept': 'application/json',
+        'x-smarttoken': token,
+        'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
+      }
     });
 
     if (response.ok) {
@@ -34,7 +36,8 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let nextPageId = null; // Start with no page ID for the first request
   let page = 0;
-  const MAX_PAGES = 30; // Safety limit to prevent infinite loops
+  const MAX_PAGES = 30 // Safety limit to prevent infinite loops
+  const token = await getSmartTokenFromCMS();
 
   console.log('Starting to fetch all positions with pagination...');
 
@@ -47,10 +50,10 @@ async function fetchPositionsFromSRAPI() {
       if (nextPageId) {
         apiPath += `&nextPageId=${nextPageId}`;
       }
-
+      
       console.log(`Fetching page ${page} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath);
-
+      const response = await makeSmartRecruitersRequest(apiPath,token);
+      
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
         allPositions = allPositions.concat(response.content);
@@ -107,6 +110,16 @@ async function fetchPositionsFromSRAPI() {
 async function fetchJobDescription(jobId) {
   return await makeSmartRecruitersRequest(`/jobs/${jobId}`);
 }
+
+async function getSmartTokenFromCMS() {
+  const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
+  if (result.items.length > 0) {
+      return result.items[0].token; // This is your string token
+  } else {
+      throw new Error('[getSmartTokenFromCMS], No token found');
+  }
+}
+
 
 module.exports = {
   fetchPositionsFromSRAPI,

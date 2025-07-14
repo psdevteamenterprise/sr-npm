@@ -3,23 +3,27 @@ const {
   saveJobsDescriptionsAndLocationToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
+  createApiKeyCollectionAndFillIt,
 } = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
+const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 
 const QUERY_MAX_LIMIT = 1000;
 
 const TASKS_NAMES = {
-  SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
-  INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
-  INSERT_JOBS_DESCRIPTIONS_TO_CMS: 'insertJobsDescriptionsToCMS',
-  FILL_JOBS_PER_CITY_COLLECTION: 'fillJobsPerCityCollection',
-  FILL_JOBS_PER_DEPARTMENT_COLLECTION: 'fillJobsPerDepartmentCollection',
-  REFERENCE_JOBS_TO_LOCATIONS: 'referenceJobsToLocations',
-  REFERENCE_JOBS_TO_DEPARTMENT: 'referenceJobsToDepartment',
-  CREATE_JOBS_COLLECTION: 'createJobsCollection',
-  CREATE_CITIES_COLLECTION: 'createCitiesCollection',
-  CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION: 'createAmountOfJobsPerDepartmentCollection',
-};
+    SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
+    INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
+    INSERT_JOBS_DESCRIPTIONS_TO_CMS: 'insertJobsDescriptionsToCMS',
+    FILL_JOBS_PER_CITY_COLLECTION: 'fillJobsPerCityCollection',
+    FILL_JOBS_PER_DEPARTMENT_COLLECTION: 'fillJobsPerDepartmentCollection',
+    REFERENCE_JOBS_TO_LOCATIONS: 'referenceJobsToLocations',
+    REFERENCE_JOBS_TO_DEPARTMENT: 'referenceJobsToDepartment',
+    CREATE_JOBS_COLLECTION: 'createJobsCollection',
+    CREATE_CITIES_COLLECTION: 'createCitiesCollection',
+    CREATE_AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION: 'createAmountOfJobsPerDepartmentCollection',
+    CREATE_API_KEY_COLLECTION_AND_FILL_IT: 'createApiKeyCollectionAndFillIt',
+}
+
 
 const TASKS = {
   [TASKS_NAMES.SYNC_JOBS]: {
@@ -123,63 +127,25 @@ const TASKS = {
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
   },
+  [TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT]: {
+    name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT,
+    getIdentifier:()=> "SHOULD_NEVER_SKIP",
+    process:()=>createApiKeyCollectionAndFillIt(),
+    shouldSkipCheck:()=>false,
+    estimatedDurationSec:3
+  }
 };
 
-const COLLECTIONS = {
-  AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment1',
-  CITIES: 'cities1',
-  JOBS: 'Jobs1',
-};
 
-const COLLECTIONS_FIELDS = {
-  AMOUNT_OF_JOBS_PER_DEPARTMENT: [
-    { key: 'title', type: 'TEXT' },
-    { key: 'count', type: 'NUMBER' },
-  ],
-  CITIES: [
-    { key: 'title', type: 'TEXT' },
-    { key: 'regionCode', type: 'TEXT' },
-    { key: 'city', type: 'TEXT' },
-    { key: 'location', type: 'OBJECT' },
-    { key: 'count', type: 'NUMBER' },
-    { key: 'country', type: 'TEXT' },
-    { key: 'remote', type: 'TEXT' },
-    { key: 'countryCode', type: 'TEXT' },
-    { key: 'manual', type: 'TEXT' },
-    { key: 'region', type: 'TEXT' },
-    { key: 'latitude', type: 'NUMBER' },
-    { key: 'longitude', type: 'NUMBER' },
-  ],
-  JOBS: [
-    { key: 'location', type: 'OBJECT' },
-    { key: 'postingStatus', type: 'TEXT' },
-    { key: 'country', type: 'TEXT' },
-    { key: 'department', type: 'TEXT' },
-    { key: 'language', type: 'TEXT' },
-    { key: 'jobDescription', type: 'OBJECT' },
-    { key: 'cityText', type: 'TEXT' },
-    {
-      key: 'departmentRef',
-      type: 'REFERENCE',
-      typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } },
-    },
-    {
-      key: 'city',
-      type: 'REFERENCE',
-      typeMetadata: { reference: { referencedCollectionId: 'cities1' } },
-    },
-  ],
-};
 
 const TASK_TYPE = {
   SCHEDULED: 'scheduled',
   EVENT: 'event',
 };
 
-module.exports = {
-  TASKS_NAMES,
-  TASK_TYPE,
-  TASKS,
-  COLLECTIONS,
-  QUERY_MAX_LIMIT,
+  module.exports = {
+    TASKS_NAMES,
+    TASK_TYPE,
+    TASKS,
+    QUERY_MAX_LIMIT
 };

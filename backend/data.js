@@ -1,5 +1,9 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
+const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
+const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
+const { secrets } = require("@wix/secrets");
+const { auth } = require('@wix/essentials');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
 
@@ -176,7 +180,7 @@ async function getJobsWithNoDescriptions() {
 
 /**
  * @param {Object} params
- * @param {"city"|"departmentref"} params.referenceField
+ * @param {"city"|"departmentRef"} params.referenceField
  * @param {"cities1"|"AmountOfJobsPerDepartment1"} params.sourceCollection
  * @param {"cityText"|"department"} params.jobField
  */
@@ -248,9 +252,40 @@ function fetchJobLocation(jobDetails) {
   return jobLocation;
 }
 
+
+
+function getSmartToken() {
+  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
+  return elevatedGetSecretValue("x-smarttoken")
+    .then((secret) => {
+      return secret;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+}
+
+
+async function createApiKeyCollectionAndFillIt() {
+    console.log("Creating ApiKey collection and filling it with the smart token");
+    await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
+    console.log("Getting the smart token");
+    const token = await getSmartToken();
+    console.log("token is :  ", token);
+    console.log("Inserting the smart token into the ApiKey collection");
+    await wixData.insert(COLLECTIONS.API_KEY, {
+        token: token.value
+    });
+
+    console.log("Smart token inserted into the ApiKey collection");
+}
+
+
 module.exports = {
-  saveJobsDataToCMS,
-  saveJobsDescriptionsAndLocationToCMS,
-  aggregateJobsByFieldToCMS,
-  referenceJobsToField,
+    saveJobsDataToCMS,
+    saveJobsDescriptionsAndLocationToCMS,
+    aggregateJobsByFieldToCMS,
+    referenceJobsToField,
+    createApiKeyCollectionAndFillIt,
 };
