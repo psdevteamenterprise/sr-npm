@@ -116,7 +116,7 @@ async function getSmartTokenFromCMS() {
   if (result.items.length > 0) {
       return result.items[0].token; // This is your string token
   } else {
-      return null; // No token found
+      throw new Error('[getSmartTokenFromCMS], No token found');
   }
 }
 
