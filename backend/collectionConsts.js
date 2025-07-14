@@ -38,7 +38,6 @@ const COLLECTIONS_FIELDS = {
   };
 
 
-
   module.exports = {
     COLLECTIONS,
     COLLECTIONS_FIELDS,
