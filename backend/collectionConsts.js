@@ -1,7 +1,7 @@
 const COLLECTIONS = {
-    AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
-    CITIES: 'cities',
-    JOBS: 'Jobs',
+    AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment1',
+    CITIES: 'cities1',
+    JOBS: 'Jobs1',
     API_KEY: 'ApiKey',
 }
 
@@ -29,8 +29,8 @@ const COLLECTIONS_FIELDS = {
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},         
-        {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } } },
-        {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities' } } },
+        {key:'departmentRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } } },
+        {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities1' } } },
     ],  
     API_KEY: [
       {key:'token', type: 'TEXT'},
