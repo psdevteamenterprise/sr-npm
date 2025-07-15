@@ -297,9 +297,8 @@ function fetchApplyLink(jobDetails) {
 }
 
 function fetchJobLocation(jobDetails) {
-    const isZeroLocation = jobDetails.location.latitude === "0.0000" && jobDetails.location.longitude === "0.0000";
     const jobLocation = {
-        location: isZeroLocation ? {} : {
+        location:  {
             latitude: parseFloat(jobDetails.location.latitude),
             longitude: parseFloat(jobDetails.location.longitude)
         },

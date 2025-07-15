@@ -108,7 +108,8 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  return await makeSmartRecruitersRequest(`/jobs/${jobId}`);
+  const token = await getSmartTokenFromCMS();
+  return await makeSmartRecruitersRequest(`/jobs/${jobId}`,token);
 }
 
 async function getSmartTokenFromCMS() {
