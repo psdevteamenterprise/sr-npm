@@ -8,11 +8,27 @@ const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAnd
 const { getAllPositions } = require('./queries');
 
 
+function validatePosition(position) {
+  if (!position.id) {
+    throw new Error('Position id is required');
+  }
+  if (!position.title) {
+    throw new Error('Position title is required');
+  }
+  if (!position.department || !position.department.label) {
+    throw new Error('Position department is required and must have a label');
+  }
+  if (!position.location || !position.location.city || !position.location.remote) {
+    throw new Error('Position location is required and must have a city and remote');
+  }
+
+}
 
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
+    validatePosition(position);
     const basicJob = {
       _id: position.id,
       title: position.title,
