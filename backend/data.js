@@ -4,15 +4,31 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
 const { secrets } = require("@wix/secrets");
 const { auth } = require('@wix/essentials');
-const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocation ,prepateToSaveArray,normalizeCityName} = require('./utils');
+const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
 
 
+function validatePosition(position) {
+  if (!position.id) {
+    throw new Error('Position id is required');
+  }
+  if (!position.title) {
+    throw new Error('Position title is required');
+  }
+  if (!position.department || !position.department.label) {
+    throw new Error('Position department is required and must have a label');
+  }
+  if (!position.location || !position.location.city || !position.location.remote) {
+    throw new Error('Position location is required and must have a city and remote');
+  }
+
+}
 
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
+    validatePosition(position);
     const basicJob = {
       _id: position.id,
       title: position.title,
@@ -143,18 +159,19 @@ async function saveJobsDescriptionsAndLocationToCMS() {
 function iterateOverAllJobs(results, field) {
   const jobsPerField = {};
   const cityLocations = {};
+  const citylocationAddress = {};
     countJobsPerGivenField(results, field, jobsPerField);
     if (field === 'cityText') {
-      fillCityLocation(results, cityLocations);
+      fillCityLocationAndLocationAddress(results, cityLocations,citylocationAddress);
     }
-    return { jobsPerField, cityLocations };
+    return { jobsPerField, cityLocations,citylocationAddress };
 }
 
 async function aggregateJobsByFieldToCMS({ field, collection }) {
   console.log(`counting jobs per ${field}.`);
   let results = await getAllPositions();
-  const { jobsPerField, cityLocations } = iterateOverAllJobs(results, field);
-  const toSave = prepateToSaveArray(jobsPerField, cityLocations, field);
+  const { jobsPerField, cityLocations,citylocationAddress } = iterateOverAllJobs(results, field);
+  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
@@ -251,7 +268,6 @@ function fetchJobLocation(jobDetails) {
   };
   return jobLocation;
 }
-
 
 
 function getSmartToken() {

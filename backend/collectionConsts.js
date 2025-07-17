@@ -9,27 +9,24 @@ const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
       {key:'title', type: 'TEXT'},
       { key: 'count', type: 'NUMBER' },
+      { key: 'image', type: 'IMAGE' },
     ],
     CITIES: [
-      {key:'title', type: 'TEXT'},
-      { key: 'regionCode', type: 'TEXT' },
+      { key: 'title', type: 'TEXT' },
       { key: 'city', type: 'TEXT' },
-      {key:'location', type: 'OBJECT'},
+      {key:'locationAddress', type: 'ADDRESS'},
       {key:'count', type: 'NUMBER'},
       {key:'country', type: 'TEXT'},
-      {key:'remote', type: 'TEXT'},
-      {key:'countryCode', type: 'TEXT'},
-      {key:'manual', type: 'TEXT'},      
-      {key:'region', type: 'TEXT'},
-      {key:'latitude', type: 'NUMBER'},
-      {key:'longitude', type: 'NUMBER'},
     ],
     JOBS: [
         {key:'location', type: 'OBJECT'},
+        {key:'title', type: 'TEXT'},
+        {key:'locationAddress', type: 'ADDRESS'},
         {key:'postingStatus', type: 'TEXT'},
         {key:'country', type: 'TEXT'},
         {key:'department', type: 'TEXT'},
         {key:'language', type: 'TEXT'},
+        {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},         
         {key:'departmentRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment1' } } },
@@ -39,7 +36,6 @@ const COLLECTIONS_FIELDS = {
       {key:'token', type: 'TEXT'},
     ],
   };
-
 
 
   module.exports = {

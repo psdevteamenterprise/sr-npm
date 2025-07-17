@@ -18,34 +18,29 @@ function countJobsPerGivenField(jobs, field,jobsPerField) {
   }
 }
 
-function fillCityLocation(jobs, cityLocations) {
+function fillCityLocationAndLocationAddress(jobs, cityLocations,citylocationAddress) {
   for (const job of jobs) {
-    if (!cityLocations[job.cityText]) {
+    if (!cityLocations[job.cityText] && !citylocationAddress[job.cityText]) {
       cityLocations[job.cityText] = job.location;
+      citylocationAddress[job.cityText] = job.locationAddress;
     }
   }
 }
 
-function prepareToSaveArray(jobsPerField, cityLocations, field) {
+function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress) {
   if (field === 'cityText') {
     return Object.entries(jobsPerField).map(([value, amount]) => {
       const loc = cityLocations[value] || {};
+      const locAddress = citylocationAddress[value] || {};
       value = normalizeCityName(value);
       return {
         title: value,
         _id: value.replace(/\s+/g, ''),
         count: amount,
-        location: loc,
-        countryCode: loc.countryCode,
+        locationAddress: locAddress,
         country: loc.country,
-        region: loc.region,
         city: loc.city,
-        manual: loc.manual.toString(),
-        remote: loc.remote.toString(),
-        regionCode: loc.regionCode,
-        latitude: loc.latitude,
-        longitude: loc.longitude,
-      };
+    };
     });
   } else {
     return Object.entries(jobsPerField).map(([value, amount]) => ({
@@ -69,7 +64,7 @@ module.exports = {
   chunkedBulkOperation,
   delay,
   countJobsPerGivenField,
-  fillCityLocation,
-  prepateToSaveArray: prepareToSaveArray,
+  fillCityLocationAndLocationAddress,
+  prepareToSaveArray,
   normalizeCityName,
 };
