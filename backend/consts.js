@@ -6,7 +6,7 @@ const {
   createApiKeyCollectionAndFillIt,
 } = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 
 const QUERY_MAX_LIMIT = 1000;
 
@@ -86,7 +86,7 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       aggregateJobsByFieldToCMS({
-        field: COLLECTIONS_FIELDS.JOBS[9].key,
+        field: JOBS_COLLECTION_FIELDS.CITY_TEXT,
         collection: COLLECTIONS.CITIES,
       }),
     shouldSkipCheck: () => false,
@@ -97,7 +97,7 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       aggregateJobsByFieldToCMS({
-        field: COLLECTIONS_FIELDS.JOBS[5].key,
+        field: JOBS_COLLECTION_FIELDS.DEPARTMENT,
         collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT,
       }),
     shouldSkipCheck: () => false,
@@ -108,9 +108,9 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       referenceJobsToField({
-        referenceField: COLLECTIONS_FIELDS.JOBS[11].key,
+        referenceField: JOBS_COLLECTION_FIELDS.CITY,
         sourceCollection: COLLECTIONS.CITIES,
-        jobField: COLLECTIONS_FIELDS.JOBS[9].key,
+        jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT,
       }),
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
@@ -120,9 +120,9 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       referenceJobsToField({
-        referenceField: COLLECTIONS_FIELDS.JOBS[10].key,
+        referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF,
         sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT,
-        jobField: COLLECTIONS_FIELDS.JOBS[5].key,
+        jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT,
       }),
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,

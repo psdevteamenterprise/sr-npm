@@ -4,7 +4,32 @@ const COLLECTIONS = {
     JOBS: 'Jobs1',
     API_KEY: 'ApiKey',
 }
-
+const JOBS_COLLECTION_FIELDS = {
+  LOCATION: 'location',
+  TITLE: 'title',
+  LOCATION_ADDRESS: 'locationAddress',
+  POSTING_STATUS: 'postingStatus',
+  COUNTRY: 'country',
+  DEPARTMENT: 'department',
+  LANGUAGE: 'language',
+  REMOTE: 'remote',
+  JOB_DESCRIPTION: 'jobDescription',
+  DEPARTMENT_REF: 'departmentRef',
+  CITY: 'city',
+  CITY_TEXT: 'cityText',
+}
+const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
+  TITLE: 'title',
+  COUNT: 'count',
+  IMAGE: 'image',
+}
+const CITIES_COLLECTION_FIELDS = {
+  TITLE: 'title',
+  CITY: 'city',
+  LOCATION_ADDRESS: 'locationAddress',
+  COUNT: 'count',
+  COUNTRY: 'country',
+}
 const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
       {key:'title', type: 'TEXT'},
@@ -41,4 +66,7 @@ const COLLECTIONS_FIELDS = {
   module.exports = {
     COLLECTIONS,
     COLLECTIONS_FIELDS,
+    JOBS_COLLECTION_FIELDS,
+    AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS,
+    CITIES_COLLECTION_FIELDS,
 };
