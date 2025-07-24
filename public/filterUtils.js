@@ -26,6 +26,8 @@ function debounce(fn, delay = 400,thisObject) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
+        console.log("thisObject is: ", thisObject);
+        console.log("args is: ", args);
         timeout = setTimeout(() => fn.apply(thisObject, args), delay);
     };
 }
