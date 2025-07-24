@@ -72,11 +72,17 @@ async function setPageParamInUrl() {
     console.log("query is: ", query);
     console.log("query.page is: ", query.page);
     console.log(" is: ", Number(query.page) + 1);
-    if(!queryPageVar){
-        queryPageVar=1
+    console.log("queryPageVar is: ", queryPageVar);
+    if(queryPageVar){
+        queryParams.add({ page: Number(queryPageVar) + 1 })
+        queryPageVar=Number(queryPageVar) + 1
+    }
+    else{
+        queryParams.add({ page: 2 })
+        queryPageVar=2
     }
 
-    queryPageVar ? queryParams.add({ page: Number(queryPageVar) + 1 }) : queryParams.add({ page: 2 });
+   
 }
 async function handleUrlParams(_$w) {
    // const query = await location.query();
