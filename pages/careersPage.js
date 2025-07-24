@@ -76,7 +76,7 @@ async function handleUrlParams(_$w) {
         await handleKeyWordParam(_$w,query.keyWord);
     }
     if (query.page) {
-        await handlePageParam(_$w,query.page);
+        await handlePageParam(_$w);
         
     }
 }
@@ -88,22 +88,22 @@ async function handleKeyWordParam(_$w,keyWord) {
     await _$w("#jobsDataset").refresh();
 }
 
-async function handlePageParam(_$w,page) {
+async function handlePageParam(_$w) {
     
-    if(allJobs.length/itemsPerPage<page){
+    if(allJobs.length/itemsPerPage<query.page){
         console.log(`max page is: ${allJobs.length/itemsPerPage}`)
         queryParams.add({ page: allJobs.length/itemsPerPage }) 
     }
-    if(page<=1){
+    if(query.page<=1){
         console.log("min page is  : 2")
         pageParamSet=2;
         queryParams.add({ page: 2 })
     }
-    if (page) {   
-        pageParamSet=page;
+    if (query.page) {   
+        pageParamSet=query.page;
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
-        for (let i = 2; i <= page; i++) {
+        for (let i = 2; i <= query.page; i++) {
            await _$w("#jobsDataset").loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
