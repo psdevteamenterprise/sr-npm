@@ -2,7 +2,7 @@ const { items: wixData } = require('@wix/data');
 
 async function getAllPositions() {
   return wixData
-    .query('Jobs1')
+    .query('Jobs')
     .limit(1000)
     .find()
     .then(result => result.items);
@@ -10,7 +10,7 @@ async function getAllPositions() {
 
 async function getPositionsByField(field, value) {
   return wixData
-    .query('Jobs1')
+    .query('Jobs')
     .eq(field, value)
     .find()
     .then(result => result.items);
