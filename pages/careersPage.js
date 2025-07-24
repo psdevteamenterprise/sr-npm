@@ -1,6 +1,6 @@
 const { getAllPositions } = require('../backend/queries');
 //const { items: wixData } = require('@wix/data');
-const wixData = require('wix-data');
+const {wixData} = require('wix-data');
 const { location,queryParams } = require('@wix/site-location');
 const {
     debounce,
@@ -80,7 +80,7 @@ async function handleUrlParams(_$w) {
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
     //const filter = await wixData.query("Jobs").contains("title", keyWord);
-    await $w("#jobsDataset").setFilter(wixData.filter().contains("title", query.keyWord));
+    await $w("#jobsDataset").setFilter(wixData.filter().contains("title", keyWord));
     await _$w("#jobsDataset").refresh();
 }
 
