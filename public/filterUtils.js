@@ -1,6 +1,6 @@
 const { items:wixData } = require('@wix/data');
 
-export function getFilter(fieldsToSearch = [], mode = 'or') {
+function getFilter(fieldsToSearch = [], mode = 'or') {
     const baseFilter = wixData.filter();
     // if no fields to search, return empty filter
     if (fieldsToSearch.length === 0) {
@@ -22,7 +22,7 @@ export function getFilter(fieldsToSearch = [], mode = 'or') {
     return filter;
 }
 
-export function debounce(fn, delay = 400) {
+function debounce(fn, delay = 400) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
