@@ -69,7 +69,6 @@ async function loadMoreJobs(_$w) {
 
 async function setPageParamInUrl() {
     console.log("query is: ", query);
-    console.log("wixLocationFrontend.query is: ", wixLocationFrontend.query);
     console.log("query.page is: ", query.page);
     console.log(" is: ", Number(query.page) + 1);
 
