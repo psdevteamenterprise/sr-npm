@@ -1,8 +1,6 @@
 const { getAllPositions } = require('../backend/queries');
-//const { items: wixData } = require('@wix/data');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
-//const { location,queryParams } = require('@wix/site-location');
 const { query,queryParams,to } = require("wix-location-frontend");
 const {
     debounce,
@@ -69,10 +67,6 @@ async function loadMoreJobs(_$w) {
 
 
 async function setPageParamInUrl() {
-    console.log("query is: ", query);
-    console.log("query.page is: ", query.page);
-    console.log(" is: ", Number(query.page) + 1);
-    console.log("queryPageVar is: ", queryPageVar);
     if(queryPageVar){
         queryParams.add({ page: Number(queryPageVar) + 1 })
         queryPageVar=Number(queryPageVar) + 1
