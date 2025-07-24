@@ -2,6 +2,7 @@ const {
     debounce,
     getFilter,
   } = require('../public/filterUtils');
+  const { handleOnLocationClick } = require('../public/mapUtils');
 const { location } = require('@wix/site-location');
 
 async function homePageOnReady(_$w) {
@@ -64,7 +65,7 @@ function init(_$w) {
     });
 
     _$w('#locationItem').onClick((event)=>{
-        handleOnLocationClick(event, '#locationsRepeater', '#googleMaps');
+        handleOnLocationClick(event, '#locationsRepeater', '#googleMaps', _$w);
     });
 }
 
