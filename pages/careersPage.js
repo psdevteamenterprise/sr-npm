@@ -68,6 +68,9 @@ async function loadMoreJobs(_$w) {
 
 
 async function setPageParamInUrl() {
+    console.log("query.page is: ", query.page);
+    console.log(" is: ", Number(query.page) + 1);
+
     query.page ? queryParams.add({ page: Number(query.page) + 1 }) : queryParams.add({ page: 2 });
 }
 async function handleUrlParams(_$w) {
