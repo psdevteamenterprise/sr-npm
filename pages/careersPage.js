@@ -199,7 +199,7 @@ async function applyFilters(_$w) {
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
     
-	const count = await updateCount();
+	const count = await updateCount(_$w);
     
     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
     

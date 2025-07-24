@@ -4,8 +4,9 @@ const {
   } = require('../public/filterUtils');
   const { handleOnLocationClick } = require('../public/mapUtils');
 const { location } = require('@wix/site-location');
-
-async function homePageOnReady(_$w) {
+let thisObjectVar;
+async function homePageOnReady(_$w,thisObject) {
+    thisObjectVar=thisObject;
     await bind(_$w);
     await init(_$w);
   }
@@ -38,7 +39,7 @@ async function homePageOnReady(_$w) {
 }
 
 function init(_$w) {
-    const debouncedInput = debounce(handleSearchInput, 400);
+    const debouncedInput = debounce(()=>handleSearchInput(_$w), 400,thisObjectVar);
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
