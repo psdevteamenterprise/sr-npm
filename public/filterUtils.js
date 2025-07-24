@@ -1,4 +1,5 @@
-const { items:wixData } = require('@wix/data');
+//const { items:wixData } = require('@wix/data');
+const {wixData} = require('wix-data');
 
 function getFilter(fieldsToSearch = [], mode = 'or') {
     const baseFilter = wixData.filter();
