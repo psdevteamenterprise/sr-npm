@@ -1,5 +1,6 @@
 const { getAllPositions } = require('../backend/queries');
-const { items: wixData } = require('@wix/data');
+//const { items: wixData } = require('@wix/data');
+import wixData from 'wix-data';
 const { location,queryParams } = require('@wix/site-location');
 const {
     debounce,
@@ -78,10 +79,8 @@ async function handleUrlParams(_$w) {
 
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
-    
-    const filter = await wixData.query("Jobs").contains("title", keyWord);
-    console.log("typeof filter is: ", typeof filter);
-    await _$w("#jobsDataset").setFilter(filter);
+    //const filter = await wixData.query("Jobs").contains("title", keyWord);
+    await $w("#jobsDataset").setFilter(wixData.filter().contains("title", query.keyWord));
     await _$w("#jobsDataset").refresh();
 }
 
@@ -140,11 +139,11 @@ async function bind(_$w) {
 }
 
 function init(_$w) {
-   // const debouncedSearch = debounce(applyFilters, 400);
+    const debouncedSearch = debounce(applyFilters, 400);
     
-   // _$w('#searchInput').onInput(debouncedSearch);
-    //_$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
-	//_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
+    _$w('#searchInput').onInput(debouncedSearch);
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
+	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
 	_$w('#openFiltersButton').onClick(()=>{
 		_$w('#dropdownsContainer, #closeFiltersButton').expand();
@@ -155,55 +154,55 @@ function init(_$w) {
 	});
 }
 
-// async function applyFilters(_$w) {
+async function applyFilters(_$w) {
 
-// 	const dropdownFiltersMapping = [
-// 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
-// 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
-// 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
-// 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
-// 		];
+	const dropdownFiltersMapping = [
+		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
+		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
+		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
+		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
+		];
 
-// 	let filters = [];
-// 	let value;
+	let filters = [];
+	let value;
 	
-// 	dropdownFiltersMapping.forEach(filter => {
-// 		// Handle RESET_ALL values
-// 		if (filter.value === RESET_ALL) {
-// 			_$w(filter.elementId).value = '';
-// 			filter.value = '';
-// 		}
+	dropdownFiltersMapping.forEach(filter => {
+		// Handle RESET_ALL values
+		if (filter.value === RESET_ALL) {
+			_$w(filter.elementId).value = '';
+			filter.value = '';
+		}
 
-// 		// build filters
-// 		if (filter.value && filter.value.trim() !== '') {
-//       if(filter.field === 'title'){
-//          queryParams.queryParams().add({ keyWord: filter.value });
-//       }
-// 			if(filter.field === 'remote') {	
-// 				value = filter.value === 'true';
-// 			} else {
-// 				value = filter.value;
-// 			}
-// 			filters.push({ field: filter.field, searchTerm: value });
-// 		}
-//     else{
-//         queryParams.queryParams().remove(["keyWord" ]);
-//     }
-// 	});
+		// build filters
+		if (filter.value && filter.value.trim() !== '') {
+      if(filter.field === 'title'){
+         queryParams.queryParams().add({ keyWord: filter.value });
+      }
+			if(filter.field === 'remote') {	
+				value = filter.value === 'true';
+			} else {
+				value = filter.value;
+			}
+			filters.push({ field: filter.field, searchTerm: value });
+		}
+    else{
+        queryParams.queryParams().remove(["keyWord" ]);
+    }
+	});
 	
-// 	const filter = await getFilter(filters, 'and');
+	const filter = await getFilter(filters, 'and');
 	
-//     await _$w('#jobsDataset').setFilter(filter);
-//     await _$w('#jobsDataset').refresh();
+    await _$w('#jobsDataset').setFilter(filter);
+    await _$w('#jobsDataset').refresh();
     
-// 	const count = await updateCount();
+	const count = await updateCount();
     
-//     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
+    count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
     
-//     // Update reset button state
-// 	const hasActiveFilters = filters.length > 0;
-// 	hasActiveFilters? _$w('#resetFiltersButton').enable() : _$w('#resetFiltersButton').disable();
-// }
+    // Update reset button state
+	const hasActiveFilters = filters.length > 0;
+	hasActiveFilters? _$w('#resetFiltersButton').enable() : _$w('#resetFiltersButton').disable();
+}
 
 async function resetFilters(_$w) {
 	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType').value = '';
