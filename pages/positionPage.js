@@ -4,7 +4,6 @@ const {
 
   async function positionPageOnReady(_$w) {
 
-    console.log('positionPageOnReady inisde SR-NPM');
     await bind(_$w);
   }
 

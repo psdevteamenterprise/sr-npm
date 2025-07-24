@@ -6,7 +6,6 @@ const {
 const { location } = require('@wix/site-location');
 
 async function homePageOnReady(_$w) {
-    console.log('homePageOnReady inisde SR-NPM');
     await bind(_$w);
     await init(_$w);
   }
