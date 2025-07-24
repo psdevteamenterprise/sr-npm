@@ -6,7 +6,7 @@ const {
   createApiKeyCollectionAndFillIt,
 } = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 
 const QUERY_MAX_LIMIT = 1000;
 
@@ -45,7 +45,7 @@ const TASKS = {
   [TASKS_NAMES.CREATE_JOBS_COLLECTION]: {
     name: TASKS_NAMES.CREATE_JOBS_COLLECTION,
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
-    process: () => createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS),
+    process: () => createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
   },
@@ -86,7 +86,7 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       aggregateJobsByFieldToCMS({
-        field: COLLECTIONS_FIELDS.JOBS[6].key,
+        field: JOBS_COLLECTION_FIELDS.CITY_TEXT,
         collection: COLLECTIONS.CITIES,
       }),
     shouldSkipCheck: () => false,
@@ -97,7 +97,7 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       aggregateJobsByFieldToCMS({
-        field: COLLECTIONS_FIELDS.JOBS[3].key,
+        field: JOBS_COLLECTION_FIELDS.DEPARTMENT,
         collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT,
       }),
     shouldSkipCheck: () => false,
@@ -108,9 +108,9 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       referenceJobsToField({
-        referenceField: COLLECTIONS_FIELDS.JOBS[8].key,
+        referenceField: JOBS_COLLECTION_FIELDS.CITY,
         sourceCollection: COLLECTIONS.CITIES,
-        jobField: COLLECTIONS_FIELDS.JOBS[6].key,
+        jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT,
       }),
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
@@ -120,9 +120,9 @@ const TASKS = {
     getIdentifier: () => 'SHOULD_NEVER_SKIP',
     process: () =>
       referenceJobsToField({
-        referenceField: COLLECTIONS_FIELDS.JOBS[7].key,
+        referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF,
         sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT,
-        jobField: COLLECTIONS_FIELDS.JOBS[3].key,
+        jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT,
       }),
     shouldSkipCheck: () => false,
     estimatedDurationSec: 3,
