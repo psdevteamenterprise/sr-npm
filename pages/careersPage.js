@@ -124,7 +124,7 @@ async function handlePageParam(_$w,page) {
 
 async function bind(_$w) {
 	await _$w('#jobsDataset').onReady(async () => {
-		await updateCount();
+		await updateCount(_$w);
 		
 	});
 
