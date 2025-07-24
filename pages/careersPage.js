@@ -31,7 +31,7 @@ await init(_$w);
 function activateAutoLoad(_$w)
 {
     _$w("#jobsDataset").onReady(() => {
-        updateCount();
+        updateCount(_$w);
         _$w("#section2").onViewportEnter(() => {
             if (currentLoadedItems<_$w("#jobsDataset").getTotalCount()) {
                 loadMoreJobs(_$w);  
