@@ -13,12 +13,14 @@ const {
   let allJobs=[]
   const RESET_ALL = 'RESET_ALL';
   let pageParamSet=0;
+  let thisObjectVar;
 
 
 
 
-async function careersPageOnReady(_$w) {
-
+async function careersPageOnReady(_$w,thisObject) {
+ 
+thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
 await activateAutoLoad(_$w);
@@ -140,7 +142,7 @@ async function bind(_$w) {
 }
 
 function init(_$w) {
-    const debouncedSearch = debounce(applyFilters, 400);
+    const debouncedSearch = debounce(applyFilters, 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
     _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));

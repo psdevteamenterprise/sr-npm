@@ -22,11 +22,11 @@ function getFilter(fieldsToSearch = [], mode = 'or') {
     return filter;
 }
 
-function debounce(fn, delay = 400) {
+function debounce(fn, delay = 400,thisObject) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
-        timeout = setTimeout(() => fn.apply(this, args), delay);
+        timeout = setTimeout(() => fn.apply(thisObject, args), delay);
     };
 }
 
