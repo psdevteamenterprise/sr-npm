@@ -1,6 +1,7 @@
 const { getAllPositions } = require('../backend/queries');
 //const { items: wixData } = require('@wix/data');
 const {wixData} = require('wix-data');
+import { window } from "@wix/site-window";
 const { location,queryParams } = require('@wix/site-location');
 const {
     debounce,
@@ -98,7 +99,7 @@ async function handlePageParam(_$w,page) {
     if (page) {   
         pageParamSet=page;
         //scrolls a bit to load the dataset data
-        await scrollTo(0, 200,{scrollAnimation:false});
+        await window.scrollTo(0, 200,{scrollAnimation:false});
         for (let i = 2; i <= page; i++) {
            await _$w("#jobsDataset").loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
@@ -127,7 +128,7 @@ async function bind(_$w) {
 		
 	});
 
-	if (formFactor === "Mobile") {
+	if (await window.formFactor === "Mobile") {
 		_$w('#dropdownsContainer').collapse();
     } 
 
