@@ -78,7 +78,7 @@ async function handleUrlParams(_$w) {
 
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
-    await _$w("#jobsDataset").setFilter(wixData.filter().contains("title", keyWord));
+    await _$w("#jobsDataset").setFilter(wixData.query("Jobs").contains("title", keyWord));
     await _$w("#jobsDataset").refresh();
 }
 
