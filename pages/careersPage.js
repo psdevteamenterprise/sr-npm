@@ -2,7 +2,8 @@ const { getAllPositions } = require('../backend/queries');
 //const { items: wixData } = require('@wix/data');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
-const { location,queryParams } = require('@wix/site-location');
+//const { location,queryParams } = require('@wix/site-location');
+import { query,queryParams,to } from "wix-location-frontend";
 const {
     debounce,
     getFilter,
@@ -46,7 +47,7 @@ function activateAutoLoad(_$w)
 }
 
 async function loadMoreJobs(_$w) {
-    const query = await location.query();
+    //const query = await location.query();
     let shouldLoad = false;
     if (pageParamSet == 0) {
         shouldLoad = true;
@@ -61,16 +62,16 @@ async function loadMoreJobs(_$w) {
         currentLoadedItems = currentLoadedItems + itemsPerPage;
         const data = _$w("#positionsRepeater").data;
         console.log("data length is :    ", data.length);
-        setPageParamInUrl(query);
+        setPageParamInUrl();
     }
 }
 
 
-async function setPageParamInUrl(query) {
-    query.page ? queryParams.queryParams().add({ page: Number(query.page) + 1 }) : queryParams.queryParams().add({ page: 2 });
+async function setPageParamInUrl() {
+    query.page ? queryParams.add({ page: Number(query.page) + 1 }) : queryParams.add({ page: 2 });
 }
 async function handleUrlParams(_$w) {
-    const query = await location.query();
+   // const query = await location.query();
     if (query.keyWord) {
         await handleKeyWordParam(_$w,query.keyWord);
     }
@@ -136,7 +137,7 @@ async function bind(_$w) {
 
 	_$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
 		$item('#positionItem').onClick(() => {
-			location.to(`${itemData['link-jobs-title']}`);
+			to(`${itemData['link-jobs-title']}`);
 		});
 	});
 }
@@ -179,7 +180,7 @@ async function applyFilters(_$w) {
 		// build filters
 		if (filter.value && filter.value.trim() !== '') {
       if(filter.field === 'title'){
-         queryParams.queryParams().add({ keyWord: filter.value });
+         queryParams.add({ keyWord: filter.value });
       }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
@@ -189,7 +190,7 @@ async function applyFilters(_$w) {
 			filters.push({ field: filter.field, searchTerm: value });
 		}
     else{
-        queryParams.queryParams().remove(["keyWord" ]);
+        queryParams.remove(["keyWord" ]);
     }
 	});
 	
