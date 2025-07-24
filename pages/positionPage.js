@@ -3,8 +3,9 @@ const {
   } = require('../public/utils');
 
   async function positionPageOnReady(_$w) {
-    
-    bind(_$w);
+
+    console.log('positionPageOnReady inisde SR-NPM');
+    await bind(_$w);
   }
 
   async function bind(_$w) {
