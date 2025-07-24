@@ -3,7 +3,7 @@ const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 //const { location,queryParams } = require('@wix/site-location');
-const { query,queryParams,to,wixLocationFrontend } = require("wix-location-frontend");
+const { query,queryParams,to } = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
@@ -15,12 +15,13 @@ const {
   const RESET_ALL = 'RESET_ALL';
   let pageParamSet=0;
   let thisObjectVar;
+  let queryPageVar;
+  let queryKeyWordVar;
 
 
-
-
-async function careersPageOnReady(_$w,thisObject) {
- 
+async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord) {
+queryPageVar=queryPage;
+queryKeyWordVar=queryKeyWord;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -71,15 +72,18 @@ async function setPageParamInUrl() {
     console.log("query is: ", query);
     console.log("query.page is: ", query.page);
     console.log(" is: ", Number(query.page) + 1);
+    if(!queryPageVar){
+        queryPageVar=1
+    }
 
-    query.page ? queryParams.add({ page: Number(query.page) + 1 }) : queryParams.add({ page: 2 });
+    queryPageVar ? queryParams.add({ page: Number(queryPageVar) + 1 }) : queryParams.add({ page: 2 });
 }
 async function handleUrlParams(_$w) {
    // const query = await location.query();
-    if (query.keyWord) {
-        await handleKeyWordParam(_$w,query.keyWord);
+    if (queryKeyWordVar) {
+        await handleKeyWordParam(_$w,queryKeyWordVar);
     }
-    if (query.page) {
+    if (queryPageVar) {
         await handlePageParam(_$w);
         
     }
@@ -94,20 +98,20 @@ async function handleKeyWordParam(_$w,keyWord) {
 
 async function handlePageParam(_$w) {
     
-    if(allJobs.length/itemsPerPage<query.page){
+    if(allJobs.length/itemsPerPage<queryPageVar){
         console.log(`max page is: ${allJobs.length/itemsPerPage}`)
         queryParams.add({ page: allJobs.length/itemsPerPage }) 
     }
-    if(query.page<=1){
+    if(queryPageVar<=1){
         console.log("min page is  : 2")
         pageParamSet=2;
         queryParams.add({ page: 2 })
     }
-    if (query.page) {   
-        pageParamSet=query.page;
+    if (queryPageVar) {   
+        pageParamSet=queryPageVar;
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
-        for (let i = 2; i <= query.page; i++) {
+        for (let i = 2; i <= queryPageVar; i++) {
            await _$w("#jobsDataset").loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
