@@ -1,6 +1,9 @@
-const {saveDataJobsToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt} = require('./data');
+const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
+
+const QUERY_MAX_LIMIT = 1000;
+
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
@@ -57,7 +60,7 @@ const TASKS = {
     [TASKS_NAMES.INSERT_JOBS_TO_CMS]: {
       name: TASKS_NAMES.INSERT_JOBS_TO_CMS,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:saveDataJobsToCMS,
+      process:saveJobsDataToCMS,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
@@ -108,12 +111,13 @@ const TASKS = {
 
 
 const TASK_TYPE = {
-    SCHEDULED: 'scheduled',
-    EVENT: 'event',
-  };
+  SCHEDULED: 'scheduled',
+  EVENT: 'event',
+};
 
   module.exports = {
     TASKS_NAMES,
     TASK_TYPE,
     TASKS,
+    QUERY_MAX_LIMIT
 };
