@@ -1,10 +1,10 @@
 const { COLLECTIONS } = require('./collectionConsts');
-const { items } = require('@wix/data');
+const { items: wixData } = require('@wix/data');
 
 
 async function getAllPositions() {
   return wixData
-    .query('Jobs1')
+    .query(COLLECTIONS.JOBS)
     .limit(1000)
     .find()
     .then(result => result.items);
@@ -12,7 +12,7 @@ async function getAllPositions() {
 
 async function getPositionsByField(field, value) {
   return wixData
-    .query('Jobs1')
+    .query(COLLECTIONS.JOBS)
     .eq(field, value)
     .find()
     .then(result => result.items);

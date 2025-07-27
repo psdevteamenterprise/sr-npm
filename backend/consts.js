@@ -74,28 +74,28 @@ const TASKS = {
     [TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION]: {
         name: TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: 'cityText', collection: COLLECTIONS.CITIES }),
+        process:()=>aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION]: {
         name: TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: 'department', collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
+        process:()=>aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS]: {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>referenceJobsToField({ referenceField: 'city', sourceCollection: COLLECTIONS.CITIES, jobField: 'cityText' }),
+        process:()=>referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },
       [TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT]: {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>referenceJobsToField({ referenceField: 'departmentref', sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: 'department' }),
+        process:()=>referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT }),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },

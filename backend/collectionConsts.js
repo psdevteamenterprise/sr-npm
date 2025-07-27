@@ -55,8 +55,8 @@ const COLLECTIONS_FIELDS = {
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},         
-        {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'AmountOfJobsPerDepartment' } } },
-        {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: 'cities' } } },
+        {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
+        {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
     ],  
     API_KEY: [
       {key:'token', type: 'TEXT'},
