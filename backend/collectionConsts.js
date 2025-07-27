@@ -17,6 +17,8 @@ const JOBS_COLLECTION_FIELDS = {
   DEPARTMENT_REF: 'departmentRef',
   CITY: 'city',
   CITY_TEXT: 'cityText',
+  IMAGE: 'image',
+  APPLY_LINK: 'applyLink',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -57,6 +59,7 @@ const COLLECTIONS_FIELDS = {
         {key:'applyLink', type: 'URL'},         
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
+        { key: 'image', type: 'IMAGE' },
     ],  
     API_KEY: [
       {key:'token', type: 'TEXT'},
