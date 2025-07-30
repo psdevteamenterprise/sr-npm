@@ -1,7 +1,7 @@
-const { items: wixData } = require('@wix/data');
+const { items: wixData, collections } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { secrets } = require("@wix/secrets");
 const { auth } = require('@wix/essentials');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
@@ -58,7 +58,7 @@ async function saveJobsDataToCMS() {
     processChunk: async (chunk, chunkNumber) => {
       console.log(`Saving chunk ${chunkNumber}/${totalChunks}: ${chunk.length} jobs`);
       try {
-        const result = await wixData.bulkSave('Jobs1', chunk);
+        const result = await wixData.bulkSave(COLLECTIONS.JOBS, chunk);
         const saved = result.inserted + result.updated || chunk.length;
         totalSaved += saved;
         console.log(
@@ -74,7 +74,7 @@ async function saveJobsDataToCMS() {
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
-async function saveJobsDescriptionsAndLocationToCMS() {
+async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
   console.log('🚀 Starting job descriptions update process for ALL jobs');
 
   try {
@@ -105,13 +105,16 @@ async function saveJobsDescriptionsAndLocationToCMS() {
           try {
             const jobDetails = await fetchJobDescription(job._id);
             const jobLocation = fetchJobLocation(jobDetails);
+            const applyLink = fetchApplyLink(jobDetails);
+
 
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
               jobDescription: jobDetails.jobAd.sections,
+              applyLink: applyLink,
             };
-            await wixData.update('Jobs1', updatedJob);
+            await wixData.update(COLLECTIONS.JOBS, updatedJob);
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
@@ -188,7 +191,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
 
 async function getJobsWithNoDescriptions() {
   let jobswithoutdescriptionsQuery = await wixData
-    .query('Jobs1')
+    .query(COLLECTIONS.JOBS)
     .limit(1000)
     .isEmpty('jobDescription')
     .find();
@@ -197,9 +200,9 @@ async function getJobsWithNoDescriptions() {
 
 /**
  * @param {Object} params
- * @param {"city"|"departmentRef"} params.referenceField
- * @param {"cities1"|"AmountOfJobsPerDepartment1"} params.sourceCollection
- * @param {"cityText"|"department"} params.jobField
+ * @param {JOBS_COLLECTION_FIELDS.CITY|JOBS_COLLECTION_FIELDS.DEPARTMENT_REF} params.referenceField
+ * @param {COLLECTIONS.CITIES|COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT} params.sourceCollection
+ * @param {JOBS_COLLECTION_FIELDS.CITY_TEXT|JOBS_COLLECTION_FIELDS.DEPARTMENT} params.jobField
  */
 async function referenceJobsToField({ referenceField, sourceCollection, jobField }) {
   // Fetch all source items (cities or departments)
@@ -235,22 +238,22 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
     items: jobsToUpdate,
     chunkSize,
     processChunk: async chunk => {
-      await wixData.bulkUpdate('Jobs1', chunk);
+      await wixData.bulkUpdate(COLLECTIONS.JOBS, chunk);
     },
   });
 
   return { success: true, updated: jobsToUpdate.length };
 }
 
+function fetchApplyLink(jobDetails) {
+    return jobDetails.actions.applyOnWeb.url;
+}
+
 function fetchJobLocation(jobDetails) {
-  const isZeroLocation =
-    jobDetails.location.latitude === '0.0000' && jobDetails.location.longitude === '0.0000';
-  const jobLocation = {
-    location: isZeroLocation
-      ? {}
-      : {
-          latitude: parseFloat(jobDetails.location.latitude),
-          longitude: parseFloat(jobDetails.location.longitude),
+    const jobLocation = {
+        location:  {
+            latitude: parseFloat(jobDetails.location.latitude),
+            longitude: parseFloat(jobDetails.location.longitude)
         },
     city: jobDetails.location.city,
     country: jobDetails.location.country,
@@ -300,7 +303,7 @@ async function createApiKeyCollectionAndFillIt() {
 
 module.exports = {
     saveJobsDataToCMS,
-    saveJobsDescriptionsAndLocationToCMS,
+    saveJobsDescriptionsAndLocationApplyUrlToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
     createApiKeyCollectionAndFillIt,
