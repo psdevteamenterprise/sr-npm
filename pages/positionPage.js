@@ -2,13 +2,13 @@ const {
     htmlToText,
   } = require('../public/utils');
 
-  async function positionPageOnReady(_$w) {
+   function positionPageOnReady(_$w) {
 
-    await bind(_$w);
+     bind(_$w);
   }
 
-  function bind(_$w) {
-    _$w('#datasetJobsItem').onReady(() => {
+   function bind(_$w) {
+    _$w('#datasetJobsItem').onReady( () => {
 
         const item = _$w('#datasetJobsItem').getCurrentItem();
 
@@ -17,7 +17,6 @@ const {
         _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
-
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){

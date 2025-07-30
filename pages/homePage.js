@@ -9,6 +9,7 @@ async function homePageOnReady(_$w,thisObject) {
     thisObjectVar=thisObject;
     await bind(_$w);
     await init(_$w);
+    
   }
 
   function bind(_$w) {
