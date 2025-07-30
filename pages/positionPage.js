@@ -2,15 +2,15 @@ const {
     htmlToText,
   } = require('../public/utils');
 
-  async function positionPageOnReady(_$w) {
+   function positionPageOnReady(_$w) {
 
-    await bind(_$w);
+     bind(_$w);
   }
 
-  async function bind(_$w) {
-    _$w('#datasetJobsItem').onReady(async () => {
+   function bind(_$w) {
+    _$w('#datasetJobsItem').onReady( () => {
 
-        const item = await _$w('#datasetJobsItem').getCurrentItem();
+        const item = _$w('#datasetJobsItem').getCurrentItem();
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
