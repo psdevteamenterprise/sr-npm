@@ -7,10 +7,10 @@ const {
     await bind(_$w);
   }
 
-  function bind(_$w) {
-    _$w('#datasetJobsItem').onReady(() => {
+  async function bind(_$w) {
+    _$w('#datasetJobsItem').onReady(async () => {
 
-        const item = _$w('#datasetJobsItem').getCurrentItem();
+        const item = await _$w('#datasetJobsItem').getCurrentItem();
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
