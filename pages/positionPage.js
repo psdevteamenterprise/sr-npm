@@ -3,8 +3,8 @@ const {
   } = require('../public/utils');
 
   async function positionPageOnReady(_$w) {
-    
-    bind(_$w);
+
+    await bind(_$w);
   }
 
   function bind(_$w) {
