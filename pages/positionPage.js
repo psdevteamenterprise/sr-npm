@@ -17,9 +17,8 @@ const {
         _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
-
-    _$w('#relatedJobsDataset').onReady(async () => {
-        const count = await _$w('#relatedJobsDataset').getTotalCount();
+    _$w('#relatedJobsDataset').onReady(() => {
+        const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){
             _$w('#relatedJobsSection').collapse();
        }
