@@ -37,7 +37,6 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const token = await getSmartTokenFromCMS();
-
   console.log('Starting to fetch all positions with pagination...');
 
   do {
