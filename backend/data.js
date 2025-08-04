@@ -158,7 +158,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
   }
 }
 
-
 function iterateOverAllJobs(results, field) {
   const jobsPerField = {};
   const cityLocations = {};
