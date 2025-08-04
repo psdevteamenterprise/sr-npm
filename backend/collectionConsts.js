@@ -1,7 +1,7 @@
 const COLLECTIONS = {
-    AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment1',
-    CITIES: 'cities1',
-    JOBS: 'Jobs1',
+    AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
+    CITIES: 'cities',
+    JOBS: 'Jobs',
     API_KEY: 'ApiKey',
 }
 const JOBS_COLLECTION_FIELDS = {
