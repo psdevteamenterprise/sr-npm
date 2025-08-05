@@ -2,8 +2,8 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 async function makeSmartRecruitersRequest(path,token) {
-   const baseUrl = 'https://api.smartrecruiters.com'; // PROD
-  //const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST
+   //const baseUrl = 'https://api.smartrecruiters.com'; // PROD
+  const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST
   const fullUrl = `${baseUrl}${path}`;
   
     //console.log(`Making request to: ${fullUrl}`);
