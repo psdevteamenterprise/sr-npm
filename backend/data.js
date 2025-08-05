@@ -18,7 +18,7 @@ function validatePosition(position) {
   if (!position.department || !position.department.label) {
     throw new Error('Position department is required and must have a label');
   }
-  if (!position.location || !position.location.city || !position.location.remote) {
+  if (!position.location || !position.location.city || typeof position.location.remote !== 'boolean') {
     throw new Error('Position location is required and must have a city and remote');
   }
 
@@ -157,7 +157,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
     throw error;
   }
 }
-
 
 function iterateOverAllJobs(results, field) {
   const jobsPerField = {};

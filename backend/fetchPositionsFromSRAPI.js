@@ -2,8 +2,8 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 async function makeSmartRecruitersRequest(path,token) {
-  // const baseUrl = 'https://api.smartrecruiters.com'; // PROD
-  const baseUrl = 'https://aoxley54.wixstudio.com/test-site/_functions'; // TEST
+   const baseUrl = 'https://api.smartrecruiters.com'; // PROD
+  //const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST
   const fullUrl = `${baseUrl}${path}`;
   
     //console.log(`Making request to: ${fullUrl}`);
@@ -37,7 +37,6 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const token = await getSmartTokenFromCMS();
-
   console.log('Starting to fetch all positions with pagination...');
 
   do {
