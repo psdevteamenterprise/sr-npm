@@ -130,10 +130,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
         console.log(
           `  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`
         );
-        if (chunkNumber * API_CHUNK_SIZE < jobsWithNoDescriptions.items.length) {
-          console.log('  Waiting 2 seconds before next API chunk...');
-          await delay(2000);
-        }
       },
     });
 
