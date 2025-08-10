@@ -18,7 +18,7 @@ function validatePosition(position) {
   if (!position.department || !position.department.label) {
     throw new Error('Position department is required and must have a label');
   }
-  if (!position.location || !position.location.city || typeof position.location.remote !== 'boolean') {
+  if (!position.location || !position.location.city ||  typeof position.location.remote !== 'boolean') {
     throw new Error('Position location is required and must have a city and remote');
   }
 
@@ -32,7 +32,7 @@ async function saveJobsDataToCMS() {
     const basicJob = {
       _id: position.id,
       title: position.title,
-      department: position.department.label,
+      department: position.department.label.replace('&', ' and '),
       cityText: normalizeCityName(position.location.city),
       location: position.location,
       country: position.location.country,
@@ -130,10 +130,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
         console.log(
           `  API chunk ${chunkNumber} completed: ${chunkSuccesses} success, ${chunkFailures} failed`
         );
-        if (chunkNumber * API_CHUNK_SIZE < jobsWithNoDescriptions.items.length) {
-          console.log('  Waiting 2 seconds before next API chunk...');
-          await delay(2000);
-        }
       },
     });
 
@@ -157,6 +153,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
     throw error;
   }
 }
+
 
 function iterateOverAllJobs(results, field) {
   const jobsPerField = {};
