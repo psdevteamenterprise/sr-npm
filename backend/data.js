@@ -299,8 +299,19 @@ async function createApiKeyCollectionAndFillIt() {
     console.log("Smart token inserted into the ApiKey collection");
 }
 
+async function createCollections() {
+  console.log("Creating collections");
+  Promise.all(
+  [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
+  createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
+  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
+]);
+  console.log("finished creating Collections");
+}
+
 
 module.exports = {
+  createCollections,
     saveJobsDataToCMS,
     saveJobsDescriptionsAndLocationApplyUrlToCMS,
     aggregateJobsByFieldToCMS,
