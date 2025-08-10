@@ -26,7 +26,7 @@ const TASKS = {
         {name: TASKS_NAMES.REFERENCE_JOBS},
       ],
       scheduleChildrenSequentially: true,
-      estimatedDurationSec: 30,
+      estimatedDurationSec: 60,
     },
     [TASKS_NAMES.CREATE_COLLECTIONS]: {
       name: TASKS_NAMES.CREATE_COLLECTIONS,
