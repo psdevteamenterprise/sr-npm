@@ -309,8 +309,17 @@ async function createCollections() {
   console.log("finished creating Collections");
 }
 
+async function aggregateJobs() {
+  console.log("Aggregating jobs");
+  Promise.all([
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT })
+  ]);
+  console.log("finished aggregating jobs");
+}
 
 module.exports = {
+  aggregateJobs,
   createCollections,
     saveJobsDataToCMS,
     saveJobsDescriptionsAndLocationApplyUrlToCMS,

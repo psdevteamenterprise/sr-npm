@@ -1,4 +1,4 @@
-const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt,createCollections} = require('./data');
+const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt,createCollections,aggregateJobs} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 
@@ -8,8 +8,7 @@ const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
     INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS: 'insertJobsDescriptionsLocationApplyUrlToCMS',
-    FILL_JOBS_PER_CITY_COLLECTION: 'fillJobsPerCityCollection',
-    FILL_JOBS_PER_DEPARTMENT_COLLECTION: 'fillJobsPerDepartmentCollection',
+    AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
     REFERENCE_JOBS_TO_LOCATIONS: 'referenceJobsToLocations',
     REFERENCE_JOBS_TO_DEPARTMENT: 'referenceJobsToDepartment',
     CREATE_COLLECTIONS: 'createCollections',
@@ -24,9 +23,7 @@ const TASKS = {
         { name: TASKS_NAMES.CREATE_COLLECTIONS},
         { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
         { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS },
-        //**************************************************** */
-        { name: TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION },
-        { name: TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION },
+        { name: TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS },
         //**************************************************** */
         { name: TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS },
         { name: TASKS_NAMES.REFERENCE_JOBS_TO_DEPARTMENT },
@@ -56,20 +53,13 @@ const TASKS = {
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
-    [TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION]: {
-        name: TASKS_NAMES.FILL_JOBS_PER_CITY_COLLECTION,
-        getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
-        shouldSkipCheck:()=>false,
-        estimatedDurationSec:3
-      },
-      [TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION]: {
-        name: TASKS_NAMES.FILL_JOBS_PER_DEPARTMENT_COLLECTION,
-        getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
-        shouldSkipCheck:()=>false,
-        estimatedDurationSec:3
-      },
+    [TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS]: {
+      name: TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS,
+      getIdentifier:()=> "SHOULD_NEVER_SKIP",
+      process:aggregateJobs,
+      shouldSkipCheck:()=>false,
+      estimatedDurationSec:6
+    },
       [TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS]: {
         name: TASKS_NAMES.REFERENCE_JOBS_TO_LOCATIONS,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
