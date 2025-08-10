@@ -14,7 +14,7 @@ const JOBS_COLLECTION_FIELDS = {
   LANGUAGE: 'language',
   REMOTE: 'remote',
   JOB_DESCRIPTION: 'jobDescription',
-  DEPARTMENT_REF: 'departmentRef',
+  DEPARTMENT_REF: 'departmentref',
   CITY: 'city',
   CITY_TEXT: 'cityText',
   IMAGE: 'image',
