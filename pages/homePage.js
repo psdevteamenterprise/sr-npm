@@ -15,17 +15,18 @@ async function homePageOnReady(_$w,thisObject) {
   function bind(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-        $item('#teamButton').onClick(async ()=>{
-            const currentUrl = await location.url();
-            console.log("currentUrl@@@@@@@@", currentUrl);
+        $item('#teamButton').onClick(()=>{
+            location.to(`/positions?department=${itemData._id}`);
+            // const currentUrl = await location.url();
+            // console.log("currentUrl@@@@@@@@", currentUrl);
             
-            // Get existing query params from current URL
-            const urlObj = new URL(currentUrl);
-            const existingParams = urlObj.search;
+            // // Get existing query params from current URL
+            // const urlObj = new URL(currentUrl);
+            // const existingParams = urlObj.search;
             
-            // Navigate to /positions with existing params + department
-            const separator = existingParams ? '&' : '?';
-            await location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
+            // // Navigate to /positions with existing params + department
+            // const separator = existingParams ? '&' : '?';
+            // await location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
         });
     });
 
