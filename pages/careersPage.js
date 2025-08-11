@@ -271,6 +271,7 @@ async function handleDepartmentParam(_$w,department) {
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        
         dropdownOptions={
             label: "All",
             value: "RESET_ALL"
