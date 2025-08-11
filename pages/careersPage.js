@@ -23,6 +23,9 @@ queryKeyWordVar=query.keyWord;
 queryDepartmentVar=query.department;
 console.log("query", query);
 thisObjectVar=thisObject;
+_$w('#dataset2').onReady(async () => {
+    await _$w('#dataset2').refresh();
+    });
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
 await activateAutoLoad(_$w);
@@ -264,9 +267,7 @@ async function handleDepartmentParam(_$w,department) {
     console.log("department inside handleDepartmentParam", departmentValue);
     
     // Debug: Check dropdown options
-    await _$w('#dataset2').onReadyAsync(async () => {
-    await _$w('#dataset2').refresh();
-    });
+    
     console.log("after refresh");
     const dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
