@@ -21,7 +21,6 @@ async function careersPageOnReady(_$w,thisObject,query) {
 queryPageVar=query.page;
 queryKeyWordVar=query.keyWord;
 queryDepartmentVar=query.department;
-console.log("query", query);
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -179,7 +178,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
     
-        console.log("dropdownFiltersMapping:###### ", dropdownFiltersMapping);
+
 
 	let filters = [];
 	let value;
@@ -260,11 +259,9 @@ async function updateCount(_$w) {
 
 async function handleDepartmentParam(_$w,department) {
     const departmentValue = department.replace('-', ' ');
-    console.log("department inside handleDepartmentParam", departmentValue);
     
-    // Debug: Check dropdown options
+        
     
-    console.log("after refresh");
     let dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
@@ -284,16 +281,9 @@ async function handleDepartmentParam(_$w,department) {
         console.warn("something is wrong with the dropdown options, fixing it");
     }
 
-    
-    // Try setting the value
     _$w('#dropdownDepartment').value = departmentValue;
-    console.log("after setting, dropdown value:", _$w('#dropdownDepartment').value);
     
-    console.log("before applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
-
      await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
-    // console.log("url", url);
-    // await to(url);
 }
 
 
