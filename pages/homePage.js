@@ -16,7 +16,11 @@ async function homePageOnReady(_$w,thisObject) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         $item('#teamButton').onClick(()=>{
-            location.to(`/positions?department=${itemData._id}`);
+            console.log("itemDataid3########", itemData._id);
+            const department=itemData._id;
+            console.log(typeof department);
+            location.to(`/positions?department=${department}`);
+            
             // const currentUrl = await location.url();
             // console.log("currentUrl@@@@@@@@", currentUrl);
             
