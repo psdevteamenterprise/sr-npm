@@ -280,6 +280,7 @@ async function handleDepartmentParam(_$w,department) {
             label: item.title,
             value: item.title
         })));
+        _$w('#dropdownDepartment').options=dropdownOptions;
         console.warn("something is wrong with the dropdown options, fixing it");
     }
 
