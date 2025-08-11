@@ -22,8 +22,6 @@ queryPageVar=query.page;
 queryKeyWordVar=query.keyWord;
 queryDepartmentVar=query.department;
 console.log("query", query);
-console.log("query.department", query.department);
-console.log("queryDepartmentVar", queryDepartmentVar);
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -255,12 +253,12 @@ async function updateCount(_$w) {
 
 async function handleDepartmentParam(_$w,department) {
     console.log("department inside handleDepartmentParam", department.replace('-', ' '));
-   // _$w('#dropdownDepartment').value = department.replace('-', ' ');
-   _$w("#dataset2").onReady(async () => {
-    _$w('#dataset2').setFieldValue("title", department.replace('-', ' '));
+    _$w('#dropdownDepartment').value = department.replace('-', ' ');
+//    _$w("#dataset2").onReady(async () => {
+//     _$w('#dataset2').setFieldValue("title", department.replace('-', ' '));
 
-    await applyFilters(_$w);
-   });
+//     await applyFilters(_$w);
+//    });
 }
 
 
