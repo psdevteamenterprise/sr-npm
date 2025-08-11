@@ -260,8 +260,33 @@ async function updateCount(_$w) {
 }
 
 async function handleDepartmentParam(_$w,department) {
-    console.log("department inside handleDepartmentParam", department.replace('-', ' '));
-    _$w('#dropdownDepartment').value = department.replace('-', ' ');
+    const departmentValue = department.replace('-', ' ');
+    console.log("department inside handleDepartmentParam", departmentValue);
+    
+    // Debug: Check dropdown options
+    const dropdownOptions = _$w('#dropdownDepartment').options;
+    console.log("dropdown options:", dropdownOptions);
+    
+    // Try setting the value
+    _$w('#dropdownDepartment').value = departmentValue;
+    console.log("after setting, dropdown value:", _$w('#dropdownDepartment').value);
+    
+    // If value didn't set, try finding exact match
+    if (!_$w('#dropdownDepartment').value) {
+        const matchingOption = dropdownOptions.find(option => 
+            option.label.toLowerCase() === departmentValue.toLowerCase() ||
+            option.value.toLowerCase() === departmentValue.toLowerCase()
+        );
+        
+        if (matchingOption) {
+            console.log("found matching option:", matchingOption);
+            _$w('#dropdownDepartment').value = matchingOption.value;
+            console.log("after setting matching option, dropdown value:", _$w('#dropdownDepartment').value);
+        } else {
+            console.log("no matching option found for:", departmentValue);
+        }
+    }
+    
     console.log("before applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 
      await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
