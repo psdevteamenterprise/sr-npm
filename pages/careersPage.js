@@ -224,7 +224,8 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 	});
 	
 	const filter = await getFilter(filters, 'and');
-	
+	console.log("filter", filter);
+    debugger;
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
     
