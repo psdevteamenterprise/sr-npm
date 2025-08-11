@@ -18,8 +18,14 @@ async function homePageOnReady(_$w,thisObject) {
         $item('#teamButton').onClick(async ()=>{
             const currentUrl = await location.url();
             console.log("currentUrl@@@@@@@@", currentUrl);
-            const separator = currentUrl.includes('?') ? '&' : '?';
-            location.to(`${currentUrl}${separator}department=${itemData._id}`);
+            
+            // Get existing query params from current URL
+            const urlObj = new URL(currentUrl);
+            const existingParams = urlObj.search;
+            
+            // Navigate to /positions with existing params + department
+            const separator = existingParams ? '&' : '?';
+            location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
         });
     });
 
