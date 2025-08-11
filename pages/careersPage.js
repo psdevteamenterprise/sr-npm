@@ -17,7 +17,7 @@ const {
   let queryKeyWordVar;
 
 
-async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord,query) {
+async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord) {
 queryPageVar=queryPage;
 queryKeyWordVar=queryKeyWord;
 console.log("query", query);
