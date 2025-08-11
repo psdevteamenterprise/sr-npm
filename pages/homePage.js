@@ -25,7 +25,7 @@ async function homePageOnReady(_$w,thisObject) {
             
             // Navigate to /positions with existing params + department
             const separator = existingParams ? '&' : '?';
-            location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
+            await location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
         });
     });
 
