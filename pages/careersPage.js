@@ -268,17 +268,7 @@ async function handleDepartmentParam(_$w,department) {
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-
-        dropdownOptions=[{
-            label: "All",
-            value: "RESET_ALL"
-        }]
-        dropdownOptions.push(...optionsFromCMS.items.map(item=>({
-            label: item.title,
-            value: item.title
-        })));
-        _$w('#dropdownDepartment').options=dropdownOptions;
-        console.warn("something is wrong with the dropdown options, fixing it");
+        fixDropdownOptions(optionsFromCMS, _$w);
     }
 
     _$w('#dropdownDepartment').value = departmentValue;
@@ -286,6 +276,20 @@ async function handleDepartmentParam(_$w,department) {
      await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
+function fixDropdownOptions(optionsFromCMS, _$w){
+    let dropdownOptions = [];
+    dropdownOptions=[{
+        label: "All",
+        value: "RESET_ALL"
+    }]
+    dropdownOptions.push(...optionsFromCMS.items.map(item=>({
+        label: item.title,
+        value: item.title
+    })));
+    _$w('#dropdownDepartment').options=dropdownOptions;
+    console.warn("something is wrong with the dropdown options, fixing it");
+
+}
 
 
 
