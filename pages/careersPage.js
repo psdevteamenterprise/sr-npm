@@ -1,7 +1,7 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
-const { query,queryParams,to } = require("wix-location-frontend");
+const { query,queryParams,to,url } = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
@@ -23,9 +23,6 @@ queryKeyWordVar=query.keyWord;
 queryDepartmentVar=query.department;
 console.log("query", query);
 thisObjectVar=thisObject;
-_$w('#dataset2').onReady(async () => {
-    await _$w('#dataset2').refresh();
-    });
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
 await activateAutoLoad(_$w);
@@ -276,25 +273,11 @@ async function handleDepartmentParam(_$w,department) {
     _$w('#dropdownDepartment').value = departmentValue;
     console.log("after setting, dropdown value:", _$w('#dropdownDepartment').value);
     
-    // If value didn't set, try finding exact match
-    if (!_$w('#dropdownDepartment').value) {
-        const matchingOption = dropdownOptions.find(option => 
-            option.label.toLowerCase() === departmentValue.toLowerCase() ||
-            option.value.toLowerCase() === departmentValue.toLowerCase()
-        );
-        
-        if (matchingOption) {
-            console.log("found matching option:", matchingOption);
-            _$w('#dropdownDepartment').value = matchingOption.value;
-            console.log("after setting matching option, dropdown value:", _$w('#dropdownDepartment').value);
-        } else {
-            console.log("no matching option found for:", departmentValue);
-        }
-    }
-    
     console.log("before applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 
      await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+     console.log("url", url);
+     await to(url);
 }
 
 
