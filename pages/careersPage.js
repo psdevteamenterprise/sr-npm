@@ -158,7 +158,7 @@ function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
+  //  _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
 	_$w('#openFiltersButton').onClick(()=>{
