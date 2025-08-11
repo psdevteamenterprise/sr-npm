@@ -1,7 +1,7 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
-const { query,queryParams,to,url } = require("wix-location-frontend");
+const { query,queryParams,to } = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
