@@ -15,8 +15,8 @@ async function homePageOnReady(_$w,thisObject) {
   function bind(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-        $item('#teamButton').onClick(()=>{
-            const currentUrl = location.url;
+        $item('#teamButton').onClick(async ()=>{
+            const currentUrl = await location.url();
             console.log("currentUrl@@@@@@@@", currentUrl);
             const separator = currentUrl.includes('?') ? '&' : '?';
             location.to(`${currentUrl}${separator}department=${itemData._id}`);
