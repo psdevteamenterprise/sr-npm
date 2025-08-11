@@ -271,11 +271,11 @@ async function handleDepartmentParam(_$w,department) {
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        
-        dropdownOptions={
+
+        dropdownOptions=[{
             label: "All",
             value: "RESET_ALL"
-        }
+        }]
         dropdownOptions.push(...optionsFromCMS.items.map(item=>({
             label: item.title,
             value: item.title
