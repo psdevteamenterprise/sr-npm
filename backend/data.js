@@ -299,8 +299,36 @@ async function createApiKeyCollectionAndFillIt() {
     console.log("Smart token inserted into the ApiKey collection");
 }
 
+async function createCollections() {
+  console.log("Creating collections");
+  Promise.all(
+  [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
+  createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
+  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
+]);
+  console.log("finished creating Collections");
+}
+
+async function aggregateJobs() {
+  console.log("Aggregating jobs");
+  Promise.all([
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT })
+  ]);
+  console.log("finished aggregating jobs");
+}
+
+async function referenceJobs() {
+  console.log("Reference jobs");
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT })
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT }),
+  console.log("finished referencing jobs");
+}
 
 module.exports = {
+  referenceJobs,
+  aggregateJobs,
+  createCollections,
     saveJobsDataToCMS,
     saveJobsDescriptionsAndLocationApplyUrlToCMS,
     aggregateJobsByFieldToCMS,
