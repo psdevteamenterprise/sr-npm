@@ -18,8 +18,11 @@ async function homePageOnReady(_$w,thisObject) {
         $item('#teamButton').onClick(()=>{
             console.log("itemDataid3########", itemData._id);
             const department=itemData._id;
-            console.log(typeof department);
-            location.to(`/positions?department=${department}`);
+            console.log("department length", department.length);
+            const trimmedDepartment = department.trim();
+
+            console.log("trimmedDepartment length", trimmedDepartment.length);
+            location.to(`/positions?department=${trimmedDepartment}`);
             
             // const currentUrl = await location.url();
             // console.log("currentUrl@@@@@@@@", currentUrl);
