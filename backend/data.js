@@ -29,8 +29,6 @@ async function saveJobsDataToCMS() {
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
     validatePosition(position);
-    console.log("before: position.department.label", position.department.label);
-    console.log("after: position.department.label", position.department.label.replace('&', ' and '));
     const basicJob = {
       _id: position.id,
       title: position.title,
@@ -45,7 +43,6 @@ async function saveJobsDataToCMS() {
     };
     return basicJob;
   });
-  console.log("jobsData@@@@@@@", jobsData);
 
   const chunkSize = 1000;
   let totalSaved = 0;
