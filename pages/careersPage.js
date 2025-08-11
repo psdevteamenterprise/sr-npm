@@ -180,6 +180,8 @@ async function applyFilters(_$w) {
 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
+    
+        console.log("dropdownFiltersMapping:###### ", dropdownFiltersMapping);
 
 	let filters = [];
 	let value;
@@ -189,12 +191,16 @@ async function applyFilters(_$w) {
 		if (filter.value === RESET_ALL) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
+            queryParams.remove(["keyWord", "department","page"]);
 		}
 
 		// build filters
 		if (filter.value && filter.value.trim() !== '') {
       if(filter.field === 'title'){
          queryParams.add({ keyWord: filter.value });
+      }
+      if(filter.field === 'department'){
+        queryParams.add({ department: filter.value });
       }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
@@ -204,7 +210,12 @@ async function applyFilters(_$w) {
 			filters.push({ field: filter.field, searchTerm: value });
 		}
     else{
-        queryParams.remove(["keyWord" ]);
+        if(filter.field === 'title'){
+            queryParams.remove(["keyWord" ]);
+        }
+        if(filter.field === 'department'){
+            queryParams.remove(["department" ]);
+        }
     }
 	});
 	
