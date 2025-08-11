@@ -95,9 +95,8 @@ async function handleUrlParams(_$w) {
 
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
-    //const filter = await wixData.query("Jobs").contains("title", keyWord);
-    await $w("#jobsDataset").setFilter(wixData.filter().contains("title", keyWord));
-    await _$w("#jobsDataset").refresh();
+    // Use applyFilters to maintain consistency instead of directly setting filter
+    await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handlePageParam(_$w) {
@@ -158,7 +157,7 @@ function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
-  //  _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
 	_$w('#openFiltersButton').onClick(()=>{
@@ -170,7 +169,7 @@ function init(_$w) {
 	});
 }
 
-async function applyFilters(_$w) {
+async function applyFilters(_$w, skipUrlUpdate = false) {
     console.log("applyFilters");
     console.log("after applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 	const dropdownFiltersMapping = [
@@ -190,17 +189,21 @@ async function applyFilters(_$w) {
 		if (filter.value === RESET_ALL) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
-            queryParams.remove(["keyWord", "department","page"]);
+            if (!skipUrlUpdate) {
+                queryParams.remove(["keyWord", "department","page"]);
+            }
 		}
 
 		// build filters
 		if (filter.value && filter.value.trim() !== '') {
-      if(filter.field === 'title'){
-         queryParams.add({ keyWord: filter.value });
-      }
-      if(filter.field === 'department'){
-        queryParams.add({ department: filter.value });
-      }
+            if (!skipUrlUpdate) {
+                if(filter.field === 'title'){
+                    queryParams.add({ keyWord: filter.value });
+                }
+                if(filter.field === 'department'){
+                    queryParams.add({ department: filter.value });
+                }
+            }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
 			} else {
@@ -209,11 +212,13 @@ async function applyFilters(_$w) {
 			filters.push({ field: filter.field, searchTerm: value });
 		}
     else{
-        if(filter.field === 'title'){
-            queryParams.remove(["keyWord" ]);
-        }
-        if(filter.field === 'department'){
-            queryParams.remove(["department" ]);
+        if (!skipUrlUpdate) {
+            if(filter.field === 'title'){
+                queryParams.remove(["keyWord" ]);
+            }
+            if(filter.field === 'department'){
+                queryParams.remove(["department" ]);
+            }
         }
     }
 	});
@@ -259,7 +264,7 @@ async function handleDepartmentParam(_$w,department) {
     _$w('#dropdownDepartment').value = department.replace('-', ' ');
     console.log("before applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 
-     await applyFilters(_$w);
+     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 
