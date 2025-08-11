@@ -243,7 +243,8 @@ async function updateCount(_$w) {
 }
 
 async function handleDepartmentParam(_$w,department) {
-    _$w('#dropdownDepartment').value = department;
+    console.log("department inside handleDepartmentParam", department.replace('-', ' '));
+    _$w('#dropdownDepartment').value = department.replace('-', ' ');
     await applyFilters(_$w);
 }
 
