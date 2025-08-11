@@ -224,8 +224,6 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 	});
 	
 	const filter = await getFilter(filters, 'and');
-	console.log("filter", filter);
-    debugger;
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
     
@@ -269,6 +267,11 @@ async function handleDepartmentParam(_$w,department) {
     console.log("after refresh");
     const dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
+    if(dropdownOptions.length!==optionsFromCMS.items.length){
+        throw new Error("dropdownOptions.length!==optionsFromCMS.items.length");
+    }
+
     
     // Try setting the value
     _$w('#dropdownDepartment').value = departmentValue;
