@@ -265,12 +265,21 @@ async function handleDepartmentParam(_$w,department) {
     // Debug: Check dropdown options
     
     console.log("after refresh");
-    const dropdownOptions = _$w('#dropdownDepartment').options;
+    let dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
     //+1 because of the "All" option
+
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        throw new Error("dropdownOptions.length!==optionsFromCMS.items.length");
+        dropdownOptions={
+            label: "All",
+            value: "RESET_ALL"
+        }
+        dropdownOptions.push(...optionsFromCMS.items.map(item=>({
+            label: item.title,
+            value: item.title
+        })));
+        console.warn("something is wrong with the dropdown options, fixing it");
     }
 
     
