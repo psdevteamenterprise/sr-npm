@@ -264,6 +264,7 @@ async function handleDepartmentParam(_$w,department) {
     console.log("department inside handleDepartmentParam", departmentValue);
     
     // Debug: Check dropdown options
+    await _$w('#dataset2').refresh();
     const dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
     
