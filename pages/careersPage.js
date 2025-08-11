@@ -253,13 +253,13 @@ async function updateCount(_$w) {
 
 async function handleDepartmentParam(_$w,department) {
     console.log("department inside handleDepartmentParam", department.replace('-', ' '));
-   // _$w('#dropdownDepartment').value = department.replace('-', ' ');
-   _$w("#dataset2").onReady(async () => {
-    _$w('#dataset2').setFieldValue("title", department.replace('-', ' '));
-    await _$w('#dataset2').save();
+    _$w('#dropdownDepartment').value = department.replace('-', ' ');
+//    _$w("#dataset2").onReady(async () => {
+//     _$w('#dataset2').setFieldValue("title", department.replace('-', ' '));
+//     await _$w('#dataset2').save();
 
-    await applyFilters(_$w);
-   });
+     await applyFilters(_$w);
+//    });
 }
 
 
