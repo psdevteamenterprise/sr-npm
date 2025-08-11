@@ -276,8 +276,8 @@ async function handleDepartmentParam(_$w,department) {
     console.log("before applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 
      await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
-     console.log("url", url);
-     await to(url);
+    // console.log("url", url);
+    // await to(url);
 }
 
 
