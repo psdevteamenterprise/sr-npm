@@ -16,24 +16,7 @@ async function homePageOnReady(_$w,thisObject) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         $item('#teamButton').onClick(()=>{
-            console.log("itemDataid3########", itemData._id);
-            const department=itemData._id;
-            console.log("department length", department.length);
-            const trimmedDepartment = department.trim();
-
-            console.log("trimmedDepartment length", trimmedDepartment.length);
-            location.to(`/positions?department=${trimmedDepartment}`);
-            
-            // const currentUrl = await location.url();
-            // console.log("currentUrl@@@@@@@@", currentUrl);
-            
-            // // Get existing query params from current URL
-            // const urlObj = new URL(currentUrl);
-            // const existingParams = urlObj.search;
-            
-            // // Navigate to /positions with existing params + department
-            // const separator = existingParams ? '&' : '?';
-            // await location.to(`/positions${existingParams}${separator}department=${itemData._id}`);
+            location.to(`/positions?department=${itemData._id}`);
         });
     });
 

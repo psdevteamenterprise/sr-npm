@@ -15,13 +15,15 @@ const {
   let thisObjectVar;
   let queryPageVar;
   let queryKeyWordVar;
-
+  let queryDepartmentVar;
 
 async function careersPageOnReady(_$w,thisObject,query) {
 queryPageVar=query.page;
 queryKeyWordVar=query.keyWord;
+queryDepartmentVar=query.department;
 console.log("query", query);
 console.log("query.department", query.department);
+console.log("queryDepartmentVar", queryDepartmentVar);
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -86,8 +88,10 @@ async function handleUrlParams(_$w) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
     if (queryPageVar) {
-        await handlePageParam(_$w);
-        
+        await handlePageParam(_$w);    
+    }
+    if (queryDepartmentVar) {
+        await handleDepartmentParam(_$w,queryDepartmentVar);
     }
 }
 
@@ -236,6 +240,11 @@ async function updateCount(_$w) {
     _$w('#numOfPositionText').text = `Showing ${count} Open Positions`;
 
 	return count;
+}
+
+async function handleDepartmentParam(_$w,department) {
+    _$w('#dropdownDepartment').value = department;
+    await applyFilters(_$w);
 }
 
 
