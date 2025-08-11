@@ -268,7 +268,8 @@ async function handleDepartmentParam(_$w,department) {
     const dropdownOptions = _$w('#dropdownDepartment').options;
     console.log("dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
-    if(dropdownOptions.length!==optionsFromCMS.items.length){
+    //+1 because of the "All" option
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
         throw new Error("dropdownOptions.length!==optionsFromCMS.items.length");
     }
 
