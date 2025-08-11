@@ -15,6 +15,9 @@ async function homePageOnReady(_$w,thisObject) {
   function bind(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
+        $item('#teamButton').onClick(()=>{
+            location.to(`/positions?department=${itemData._id}`);
+        });
     });
 
     _$w('#citiesDataset').onReady(async () => {

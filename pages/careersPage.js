@@ -17,9 +17,11 @@ const {
   let queryKeyWordVar;
 
 
-async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord) {
+async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord,query) {
 queryPageVar=queryPage;
 queryKeyWordVar=queryKeyWord;
+console.log("query", query);
+console.log("query.department", query.department);
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
