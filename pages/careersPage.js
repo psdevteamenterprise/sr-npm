@@ -316,7 +316,7 @@ function fixDropdownOptions(dropdown,optionsFromCMS, _$w){
 async function handleLocationParam(_$w,location) {
     let dropdownOptions = _$w('#dropdownLocation').options;
     console.log("location dropdown options:", dropdownOptions);
-    const optionsFromCMS=await wixData.query("Cities").find();
+    const optionsFromCMS=await wixData.query("cities").find();
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
