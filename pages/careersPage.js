@@ -92,8 +92,6 @@ async function handleUrlParams(_$w) {
         await handleDepartmentParam(_$w,queryDepartmentVar);
     }
     if (queryLocationVar) {
-
-        console.log("queryLocationVar:@!#$#@%^%$&%&^%&^% ", queryLocationVar);
         await handleLocationParam(_$w,queryLocationVar);
     }
 }
@@ -175,8 +173,6 @@ function init(_$w) {
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
-    console.log("applyFilters");
-    console.log("dropdownLocation value: ", _$w('#dropdownLocation').value);
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
