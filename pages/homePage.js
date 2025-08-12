@@ -45,7 +45,7 @@ async function homePageOnReady(_$w,thisObject) {
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
     });
-    _$w('#googleMaps').onClick((event) => {
+    _$w('#googleMaps').onMarkerClicked((event) => {
         console.log("event: ", event);
         // if (event.marker && event.marker.linkUrl) {
         //     location.to(event.marker.linkUrl);
