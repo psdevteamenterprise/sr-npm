@@ -55,7 +55,6 @@ function init(_$w) {
         }
     });
 
-    
     _$w('#searchInput').onKeyPress((event) => {
         if (event.key === 'Enter') {
             handleEnterPress(_$w('#searchInput').value);
