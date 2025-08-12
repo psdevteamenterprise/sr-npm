@@ -195,7 +195,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
             if (!skipUrlUpdate) {
-                queryParams.remove(["keyWord", "department","page"]);
+                queryParams.remove(["keyWord", "department","page","location"]);
             }
 		}
 
@@ -330,8 +330,8 @@ async function handleLocationParam(_$w,location) {
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
-        console.warn("department value not found in dropdown options");
-        queryParams.remove(["department" ]);
+        console.warn("location value not found in dropdown options");
+        queryParams.remove(["location" ]);
 
     }
     
