@@ -45,6 +45,12 @@ async function homePageOnReady(_$w,thisObject) {
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
     });
+    _$w('#googleMaps').onClick((event) => {
+        console.log("event: ", event);
+        // if (event.marker && event.marker.linkUrl) {
+        //     location.to(event.marker.linkUrl);
+        // }
+    });
 }
 
 function init(_$w) {
