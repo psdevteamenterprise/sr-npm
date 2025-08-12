@@ -28,11 +28,10 @@ async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
-    validatePosition(position);
     const basicJob = {
       _id: position.id,
       title: position.title,
-      department: position.department.label.replace('&', ' and '),
+      department: position.department.label,
       cityText: normalizeCityName(position.location.city),
       location: position.location,
       country: position.location.country,
