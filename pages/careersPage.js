@@ -17,10 +17,10 @@ const {
   let queryKeyWordVar;
   let queryDepartmentVar;
 
-async function careersPageOnReady(_$w,thisObject,query) {
-queryPageVar=query.page;
-queryKeyWordVar=query.keyWord;
-queryDepartmentVar=query.department;
+async function careersPageOnReady(_$w,thisObject,querypage,querykeyWord,querydepartment) {
+queryPageVar=querypage;
+queryKeyWordVar=querykeyWord;
+queryDepartmentVar=querydepartment;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -258,6 +258,7 @@ async function updateCount(_$w) {
 }
 
 async function handleDepartmentParam(_$w,department) {
+    console.log("handleDepartmentParam@@@@@", department);
     const departmentValue = department.replace('-', ' ');
     
         
