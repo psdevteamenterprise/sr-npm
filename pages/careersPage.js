@@ -169,8 +169,6 @@ function init(_$w) {
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
-    console.log("applyFilters");
-    console.log("after applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
@@ -258,7 +256,6 @@ async function updateCount(_$w) {
 }
 
 async function handleDepartmentParam(_$w,department) {
-    console.log("handleDepartmentParam@@@@@", department);
     const departmentValue = decodeURIComponent(department);
     
         

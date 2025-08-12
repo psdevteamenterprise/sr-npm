@@ -16,10 +16,7 @@ async function homePageOnReady(_$w,thisObject) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         $item('#teamButton').onClick(()=>{
-            console.log("teamButton clicked@@@@@", itemData.title);
             const department = encodeURIComponent(itemData.title);
-            console.log("department##########", department);
-            
             location.to(`/positions?department=${department}`);
         });
     });
