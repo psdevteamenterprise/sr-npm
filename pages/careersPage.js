@@ -277,7 +277,7 @@ async function handleDepartmentParam(_$w,department) {
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
-        console.log("department value not found in dropdown options");
+        console.warn("department value not found in dropdown options");
         queryParams.remove(["department" ]);
 
     }

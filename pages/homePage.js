@@ -48,7 +48,7 @@ function init(_$w) {
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
-    _$w('#button1').onClick(()=>{
+    _$w('#searchButton').onClick(()=>{
         const trimmedInput = _$w('#searchInput').value.trim();
         if (trimmedInput) {
             location.to(`/positions?keyWord=${trimmedInput}`);
