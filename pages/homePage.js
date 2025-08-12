@@ -39,7 +39,8 @@ async function homePageOnReady(_$w,thisObject) {
                  address: item.locationAddress.formatted,
                 description: `View ${item.count} Open Positions`,
                 title: item.title, // Show the actual city name in title
-                linkUrl: cityLinkUrl
+                link: cityLinkUrl,
+                linkTitle:"shit"
             };
         });
         //@ts-ignore
