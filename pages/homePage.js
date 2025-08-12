@@ -36,9 +36,9 @@ async function homePageOnReady(_$w,thisObject) {
                 },
                  address: item.locationAddress.formatted,
                 // description: `<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`
-                description: "bayan",
+                description: '<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a><a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>',
                 random:"random",
-                title:"title"
+                title:'title'
             };
         });
         //@ts-ignore
