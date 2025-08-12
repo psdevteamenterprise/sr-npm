@@ -47,9 +47,22 @@ async function homePageOnReady(_$w,thisObject) {
     });
     _$w('#googleMaps').onMarkerClicked((event) => {
         console.log("event: ", event);
-        // if (event.marker && event.marker.linkUrl) {
-        //     location.to(event.marker.linkUrl);
-        // }
+        
+        // Get all markers from the map
+        const allMarkers = _$w('#googleMaps').markers;
+        console.log("allMarkers: ", allMarkers);
+        const getMarker = _$w('#googleMaps').getMarkers();
+        console.log("getMarker: ", getMarker);
+        
+        // Find the clicked marker by matching coordinates
+        const clickedMarker = allMarkers.find(marker => 
+            marker.location.latitude === event.location.latitude &&
+            marker.location.longitude === event.location.longitude
+        );
+        
+        if (clickedMarker && clickedMarker.linkUrl) {
+            location.to(clickedMarker.linkUrl);
+        }
     });
 }
 
