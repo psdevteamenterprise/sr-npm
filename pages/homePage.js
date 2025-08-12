@@ -29,21 +29,30 @@ async function homePageOnReady(_$w,thisObject) {
         console.log("items#@#@$$#@#$$$#######");
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
+            const cityName = encodeURIComponent(item.title);
             return {
                 location: {
                     latitude: location.latitude,
                     longitude: location.longitude
                 },
-                 address: item.locationAddress.formatted,
-                // description: `<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`
-                description: `<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`,
-                random:"random",
-                title:"213123231",
-                linkUrl:linkUrl
+                address: item.locationAddress.formatted,
+                description: `View ${item.count} Open Positions in ${item.title}`,
+                title: item.title,
+                cityName: item.title, // Store city name for click handler
+                _id: item._id
             };
         });
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
+        
+        // Add click handler for map markers
+        _$w('#googleMaps').onMarkerClick((event) => {
+            const marker = event.marker;
+            if (marker.cityName) {
+                const cityName = encodeURIComponent(marker.cityName);
+                location.to(`/positions?keyWord=${cityName}`);
+            }
+        });
     });
 }
 
