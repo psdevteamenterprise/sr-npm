@@ -25,11 +25,10 @@ async function homePageOnReady(_$w,thisObject) {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
         let baseUrl = await location.baseUrl();
-        const linkUrl = `${baseUrl}/positions`;
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
             const cityName = encodeURIComponent(item.title); // Use the city name from the item
-            const cityLinkUrl = `${linkUrl}?keyWord=${cityName}`; // Add city as search parameter
+            const cityLinkUrl = `${baseUrl}/positions?location=${cityName}`; // Add city as search parameter
             return {
                 location: {
                     latitude: location.latitude,
@@ -42,25 +41,6 @@ async function homePageOnReady(_$w,thisObject) {
         });
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
-    });
-    _$w('#googleMaps').onMarkerClicked((event) => {
-        console.log("event: ", event);
-        
-        // Get all markers from the map
-        const allMarkers = _$w('#googleMaps').markers;
-        console.log("allMarkers: ", allMarkers);
-        const getMarker = _$w('#googleMaps').getMarkers();
-        console.log("getMarker: ", getMarker);
-        
-        // Find the clicked marker by matching coordinates
-        const clickedMarker = allMarkers.find(marker => 
-            marker.location.latitude === event.location.latitude &&
-            marker.location.longitude === event.location.longitude
-        );
-        
-        if (clickedMarker && clickedMarker.linkUrl) {
-            location.to(clickedMarker.linkUrl);
-        }
     });
 }
 
