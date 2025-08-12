@@ -26,15 +26,15 @@ async function homePageOnReady(_$w,thisObject) {
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
         let baseUrl = await location.baseUrl();
         const linkUrl = `${baseUrl}/positions`;
-        console.log("items$%#%$#%#$%$#$%$##$%#$$#$%%#$%#$");
+        console.log("items#@#@$$#@#$$$#######");
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
             return {
                 location: {
                     latitude: location.latitude,
                     longitude: location.longitude
-                }
-                // address: item.locationAddress.formatted,
+                },
+                 address: item.locationAddress.formatted,
                 // description: `<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`
             };
         });
