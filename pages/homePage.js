@@ -18,6 +18,7 @@ async function homePageOnReady(_$w,thisObject) {
         $item('#teamButton').onClick(()=>{
             console.log("teamButton clicked@@@@@", itemData.title);
             const department=itemData.title.replace(' ', '-');
+            console.log("department##########", department);
             location.to(`/positions?department=${department}`);
         });
     });
