@@ -26,7 +26,7 @@ async function homePageOnReady(_$w,thisObject) {
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
         let baseUrl = await location.baseUrl();
         const linkUrl = `${baseUrl}/positions`;
-
+        console.log("items$%#%$#%#$%$#$%$##$%#$$#$%%#$%#$");
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
             return {
