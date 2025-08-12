@@ -35,6 +35,7 @@ async function homePageOnReady(_$w,thisObject) {
                     longitude: location.longitude
                 },
                  address: item.locationAddress.formatted,
+                 title: item.title,
                 link: cityLinkUrl,
                 linkTitle:`View ${item.count} Open Positions`
             };

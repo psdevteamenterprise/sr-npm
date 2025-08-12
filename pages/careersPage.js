@@ -92,6 +92,7 @@ async function handleUrlParams(_$w) {
         await handleDepartmentParam(_$w,queryDepartmentVar);
     }
     if (queryLocationVar) {
+        console.log("queryLocationVar:@!#$#@%^%$&%&^%&^% ", queryLocationVar);
         await handleLocationParam(_$w,queryLocationVar);
     }
 }
