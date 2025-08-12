@@ -26,7 +26,6 @@ async function homePageOnReady(_$w,thisObject) {
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
         let baseUrl = await location.baseUrl();
         const linkUrl = `${baseUrl}/positions`;
-        console.log("items#@#@$$#@#$$$#######");
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
             const cityName = encodeURIComponent(item.title); // Use the city name from the item
@@ -37,10 +36,8 @@ async function homePageOnReady(_$w,thisObject) {
                     longitude: location.longitude
                 },
                  address: item.locationAddress.formatted,
-                description: `View ${item.count} Open Positions`,
-                title: item.title, // Show the actual city name in title
                 link: cityLinkUrl,
-                linkTitle:"shit"
+                linkTitle:`View ${item.count} Open Positions`
             };
         });
         //@ts-ignore
