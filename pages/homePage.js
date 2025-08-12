@@ -48,6 +48,13 @@ function init(_$w) {
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
+    _$w('#button1').onClick(()=>{
+        const trimmedInput = _$w('#searchInput').value.trim();
+        if (trimmedInput) {
+            location.to(`/positions?keyWord=${trimmedInput}`);
+        }
+    });
+
     
     _$w('#searchInput').onKeyPress((event) => {
         if (event.key === 'Enter') {

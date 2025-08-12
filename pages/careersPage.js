@@ -271,9 +271,19 @@ async function handleDepartmentParam(_$w,department) {
         fixDropdownOptions(optionsFromCMS, _$w);
     }
 
-    _$w('#dropdownDepartment').value = departmentValue;
+    if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
+    {
+        _$w('#dropdownDepartment').value = departmentValue;
+        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    }
+    else{
+        console.log("department value not found in dropdown options");
+        queryParams.remove(["department" ]);
+
+    }
     
-     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    
+     
 }
 
 function fixDropdownOptions(optionsFromCMS, _$w){
