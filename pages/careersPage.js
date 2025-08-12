@@ -200,7 +200,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                     queryParams.add({ keyWord: filter.value });
                 }
                 if(filter.field === 'department'){
-                    queryParams.add({ department: filter.value });
+                    queryParams.add({ department: encodeURIComponent(filter.value) });
                 }
             }
 			if(filter.field === 'remote') {	
@@ -259,7 +259,7 @@ async function updateCount(_$w) {
 
 async function handleDepartmentParam(_$w,department) {
     console.log("handleDepartmentParam@@@@@", department);
-    const departmentValue = department.replace('-', ' ');
+    const departmentValue = decodeURIComponent(department);
     
         
     
