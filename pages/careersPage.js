@@ -314,6 +314,7 @@ function fixDropdownOptions(dropdown,optionsFromCMS, _$w){
 }
 
 async function handleLocationParam(_$w,location) {
+    const locationValue = decodeURIComponent(location);
     let dropdownOptions = _$w('#dropdownLocation').options;
     console.log("location dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("cities").find();
