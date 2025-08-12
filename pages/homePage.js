@@ -29,30 +29,21 @@ async function homePageOnReady(_$w,thisObject) {
         console.log("items#@#@$$#@#$$$#######");
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
-            const cityName = encodeURIComponent(item.title);
+            const cityName = encodeURIComponent(item.title); // Use the city name from the item
+            const cityLinkUrl = `${linkUrl}?keyWord=${cityName}`; // Add city as search parameter
             return {
                 location: {
                     latitude: location.latitude,
                     longitude: location.longitude
                 },
-                address: item.locationAddress.formatted,
-                description: `View ${item.count} Open Positions in ${item.title}`,
-                title: item.title,
-                cityName: item.title, // Store city name for click handler
-                _id: item._id
+                 address: item.locationAddress.formatted,
+                description: `<a href="${cityLinkUrl}" target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`,
+                title: item.title, // Show the actual city name in title
+                linkUrl: cityLinkUrl
             };
         });
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
-        
-        // Add click handler for map markers
-        _$w('#googleMaps').onMarkerClick((event) => {
-            const marker = event.marker;
-            if (marker.cityName) {
-                const cityName = encodeURIComponent(marker.cityName);
-                location.to(`/positions?keyWord=${cityName}`);
-            }
-        });
     });
 }
 
