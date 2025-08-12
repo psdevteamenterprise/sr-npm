@@ -15,6 +15,10 @@ async function homePageOnReady(_$w,thisObject) {
   function bind(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
+        $item('#teamButton').onClick(()=>{
+            const department=itemData.title.replace(' ', '-');
+            location.to(`/positions?department=${department}`);
+        });
     });
 
     _$w('#citiesDataset').onReady(async () => {
@@ -44,7 +48,13 @@ function init(_$w) {
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
-    
+    _$w('#searchButton').onClick(()=>{
+        const trimmedInput = _$w('#searchInput').value.trim();
+        if (trimmedInput) {
+            location.to(`/positions?keyWord=${trimmedInput}`);
+        }
+    });
+
     _$w('#searchInput').onKeyPress((event) => {
         if (event.key === 'Enter') {
             handleEnterPress(_$w('#searchInput').value);

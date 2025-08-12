@@ -1,4 +1,4 @@
-const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt,createCollections,aggregateJobs,referenceJobs} = require('./data');
+const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt,createCollections,aggregateJobs,referenceJobs,syncJobsFast} = require('./data');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 
@@ -12,6 +12,7 @@ const TASKS_NAMES = {
     REFERENCE_JOBS: 'referenceJobs',
     CREATE_COLLECTIONS: 'createCollections',
     CREATE_API_KEY_COLLECTION_AND_FILL_IT: 'createApiKeyCollectionAndFillIt',
+    SYNC_JOBS_FAST: 'syncJobsFast',
 }
 
 
@@ -69,6 +70,13 @@ const TASKS = {
         process:()=>createApiKeyCollectionAndFillIt(),
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
+      },
+      [TASKS_NAMES.SYNC_JOBS_FAST]: {
+        name: TASKS_NAMES.SYNC_JOBS_FAST,
+        getIdentifier:()=> "SHOULD_NEVER_SKIP",
+        process:syncJobsFast,
+        shouldSkipCheck:()=>false,
+        estimatedDurationSec:60
       }
 }
 

@@ -322,7 +322,28 @@ async function referenceJobs() {
   console.log("finished referencing jobs");
 }
 
+async function syncJobsFast() {
+  console.log("Syncing jobs fast");
+  console.log("Creating collections");
+  await createCollections();
+  console.log("created collections successfully");
+  console.log("saving jobs data to CMS");
+  await saveJobsDataToCMS();
+  console.log("saved jobs data to CMS successfully");
+  console.log("saving jobs descriptions and location apply url to CMS");
+  await saveJobsDescriptionsAndLocationApplyUrlToCMS();
+  console.log("saved jobs descriptions and location apply url to CMS successfully");
+  console.log("aggregating jobs");
+  await aggregateJobs();
+  console.log("aggregated jobs successfully");
+  console.log("referencing jobs");
+  await referenceJobs();
+  console.log("referenced jobs successfully");
+  console.log("syncing jobs fast finished successfully");
+}
+
 module.exports = {
+  syncJobsFast,
   referenceJobs,
   aggregateJobs,
   createCollections,

@@ -15,11 +15,12 @@ const {
   let thisObjectVar;
   let queryPageVar;
   let queryKeyWordVar;
+  let queryDepartmentVar;
 
-
-async function careersPageOnReady(_$w,thisObject,queryPage,queryKeyWord) {
-queryPageVar=queryPage;
-queryKeyWordVar=queryKeyWord;
+async function careersPageOnReady(_$w,thisObject,query) {
+queryPageVar=query.page;
+queryKeyWordVar=query.keyWord;
+queryDepartmentVar=query.department;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -84,16 +85,17 @@ async function handleUrlParams(_$w) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
     if (queryPageVar) {
-        await handlePageParam(_$w);
-        
+        await handlePageParam(_$w);    
+    }
+    if (queryDepartmentVar) {
+        await handleDepartmentParam(_$w,queryDepartmentVar);
     }
 }
 
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
-    //const filter = await wixData.query("Jobs").contains("title", keyWord);
-    await $w("#jobsDataset").setFilter(wixData.filter().contains("title", keyWord));
-    await _$w("#jobsDataset").refresh();
+    // Use applyFilters to maintain consistency instead of directly setting filter
+    await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handlePageParam(_$w) {
@@ -166,14 +168,17 @@ function init(_$w) {
 	});
 }
 
-async function applyFilters(_$w) {
-
+async function applyFilters(_$w, skipUrlUpdate = false) {
+    console.log("applyFilters");
+    console.log("after applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
+    
+
 
 	let filters = [];
 	let value;
@@ -183,13 +188,21 @@ async function applyFilters(_$w) {
 		if (filter.value === RESET_ALL) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
+            if (!skipUrlUpdate) {
+                queryParams.remove(["keyWord", "department","page"]);
+            }
 		}
 
 		// build filters
 		if (filter.value && filter.value.trim() !== '') {
-      if(filter.field === 'title'){
-         queryParams.add({ keyWord: filter.value });
-      }
+            if (!skipUrlUpdate) {
+                if(filter.field === 'title'){
+                    queryParams.add({ keyWord: filter.value });
+                }
+                if(filter.field === 'department'){
+                    queryParams.add({ department: filter.value });
+                }
+            }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
 			} else {
@@ -198,12 +211,18 @@ async function applyFilters(_$w) {
 			filters.push({ field: filter.field, searchTerm: value });
 		}
     else{
-        queryParams.remove(["keyWord" ]);
+        if (!skipUrlUpdate) {
+            if(filter.field === 'title'){
+                queryParams.remove(["keyWord" ]);
+            }
+            if(filter.field === 'department'){
+                queryParams.remove(["department" ]);
+            }
+        }
     }
 	});
 	
 	const filter = await getFilter(filters, 'and');
-	
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
     
@@ -226,6 +245,8 @@ async function resetFilters(_$w) {
 
 	_$w('#resetFiltersButton').disable();
 
+    queryParams.remove(["keyWord", "department","page"]);
+
 	await updateCount(_$w);
 }
 
@@ -236,6 +257,49 @@ async function updateCount(_$w) {
 	return count;
 }
 
+async function handleDepartmentParam(_$w,department) {
+    const departmentValue = department.replace('-', ' ');
+    
+        
+    
+    let dropdownOptions = _$w('#dropdownDepartment').options;
+    console.log("dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
+    //+1 because of the "All" option
+
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        fixDropdownOptions(optionsFromCMS, _$w);
+    }
+
+    if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
+    {
+        _$w('#dropdownDepartment').value = departmentValue;
+        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    }
+    else{
+        console.warn("department value not found in dropdown options");
+        queryParams.remove(["department" ]);
+
+    }
+    
+    
+     
+}
+
+function fixDropdownOptions(optionsFromCMS, _$w){
+    let dropdownOptions = [];
+    dropdownOptions=[{
+        label: "All",
+        value: "RESET_ALL"
+    }]
+    dropdownOptions.push(...optionsFromCMS.items.map(item=>({
+        label: item.title,
+        value: item.title
+    })));
+    _$w('#dropdownDepartment').options=dropdownOptions;
+    console.warn("something is wrong with the dropdown options, fixing it");
+
+}
 
 
 
