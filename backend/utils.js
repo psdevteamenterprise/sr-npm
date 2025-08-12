@@ -38,7 +38,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
       value = normalizeCityName(value);
       return {
         title: value,
-        _id: value.replace(/\s+/g, '').replace(/&/g, 'and'),
+        _id: value.replace(/\s+/g, ''),
         count: amount,
         locationAddress: locAddress,
         country: loc.country,
@@ -48,7 +48,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
   } else {
     return Object.entries(jobsPerField).map(([value, amount]) => ({
       title: value,
-      _id: value.replace(/\s+/g, ''),
+      _id: value.replace(/\s+/g, '').replace(/&/g, 'and'),
       count: amount,
     }));
   }
