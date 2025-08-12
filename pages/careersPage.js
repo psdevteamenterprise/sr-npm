@@ -16,11 +16,12 @@ const {
   let queryPageVar;
   let queryKeyWordVar;
   let queryDepartmentVar;
-
-async function careersPageOnReady(_$w,thisObject,querypage,querykeyWord,querydepartment) {
+  let queryLocationVar;
+async function careersPageOnReady(_$w,thisObject,querypage,querykeyWord,querydepartment,querylocation) {
 queryPageVar=querypage;
 queryKeyWordVar=querykeyWord;
 queryDepartmentVar=querydepartment;
+queryLocationVar=querylocation;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -89,6 +90,9 @@ async function handleUrlParams(_$w) {
     }
     if (queryDepartmentVar) {
         await handleDepartmentParam(_$w,queryDepartmentVar);
+    }
+    if (queryLocationVar) {
+        await handleLocationParam(_$w,queryLocationVar);
     }
 }
 
@@ -200,6 +204,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                 if(filter.field === 'department'){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
                 }
+                if(filter.field === 'cityText'){
+                    queryParams.add({ location:  encodeURIComponent(filter.value) });
+                }
             }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
@@ -215,6 +222,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             }
             if(filter.field === 'department'){
                 queryParams.remove(["department" ]);
+            }
+            if(filter.field === 'cityText'){
+                queryParams.remove(["location" ]);
             }
         }
     }
@@ -266,7 +276,7 @@ async function handleDepartmentParam(_$w,department) {
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        fixDropdownOptions(optionsFromCMS, _$w);
+        fixDropdownOptions('#dropdownDepartment',optionsFromCMS, _$w);
     }
 
     if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
@@ -284,7 +294,7 @@ async function handleDepartmentParam(_$w,department) {
      
 }
 
-function fixDropdownOptions(optionsFromCMS, _$w){
+function fixDropdownOptions(dropdown,optionsFromCMS, _$w){
     let dropdownOptions = [];
     dropdownOptions=[{
         label: "All",
@@ -294,9 +304,32 @@ function fixDropdownOptions(optionsFromCMS, _$w){
         label: item.title,
         value: item.title
     })));
-    _$w('#dropdownDepartment').options=dropdownOptions;
+    _$w(dropdown).options=dropdownOptions;
     console.warn("something is wrong with the dropdown options, fixing it");
 
+}
+
+async function handleLocationParam(_$w,location) {
+    let dropdownOptions = _$w('#dropdownLocation').options;
+    console.log("location dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query("Cities").find();
+    //+1 because of the "All" option
+
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
+    }
+
+    if (_$w('#dropdownLocation').options.find(option => option.value === locationValue))
+    {
+        _$w('#dropdownLocation').value = locationValue;
+        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    }
+    else{
+        console.warn("department value not found in dropdown options");
+        queryParams.remove(["department" ]);
+
+    }
+    
 }
 
 
