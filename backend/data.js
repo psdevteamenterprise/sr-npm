@@ -27,7 +27,6 @@ function validatePosition(position) {
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
-  console.log("positions@@@@@", positions);
   const jobsData = positions.content.map(position => {
     const basicJob = {
       _id: position.id,
@@ -40,7 +39,7 @@ async function saveJobsDataToCMS() {
       // language: position.language.label,
       // postingStatus: position.postingStatus,
       title: position.title || '',
-      department: position.department?.label || '',
+      department: position.department?.label || 'Other',
       cityText: normalizeCityName(position.location?.city),
       location: position.location || {},
       country: position.location?.country || '',
