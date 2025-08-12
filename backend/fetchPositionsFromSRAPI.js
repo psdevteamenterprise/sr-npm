@@ -54,8 +54,12 @@ async function fetchPositionsFromSRAPI() {
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
-        allPositions = allPositions.concat(response.content);
-        console.log(`Page ${page}: Found ${response.content.length} positions`);
+        // Filter out positions with postingStatus "NOT_PUBLISHED"
+        const publishedPositions = response.content.filter(position => 
+          position.postingStatus !== "NOT_PUBLISHED"
+        );
+        allPositions = allPositions.concat(publishedPositions);
+        console.log(`Page ${page}: Found ${response.content.length} positions, ${publishedPositions.length} published`);
       }
 
       // Update total count from first response
