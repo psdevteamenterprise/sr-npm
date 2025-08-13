@@ -362,8 +362,6 @@ async function updateMapMarkers(_$w){
     console.log("type of markers: ", typeof markers);
     //@ts-ignore
     _$w('#googleMaps').setMarkers(markers);
-    let getmarkers=await _$w('#googleMaps').getMarkers();
-    console.log("getmarkers: ", getmarkers);
     let getmarkers2=await _$w('#googleMaps').markers;
     console.log("getmarkers2: ", getmarkers2);
     //}
