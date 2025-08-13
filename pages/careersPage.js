@@ -158,7 +158,7 @@ async function bind(_$w) {
 	});
 }
 
-async function init(_$w) {
+function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
