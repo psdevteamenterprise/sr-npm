@@ -258,7 +258,7 @@ async function resetFilters(_$w) {
 
 	_$w('#resetFiltersButton').disable();
 
-    queryParams.remove(["keyWord", "department","page"]);
+    queryParams.remove(["keyWord", "department","page","location"]);
 
 	await updateCount(_$w);
 }
