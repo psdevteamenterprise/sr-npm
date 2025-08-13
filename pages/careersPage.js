@@ -345,7 +345,7 @@ async function handleLocationParam(_$w,location) {
 
 async function updateMapMarkers(_$w){
     const numOfItems = await _$w('#jobsDataset').getTotalCount();
-    if(numOfItems>0){
+  //  if(numOfItems>0){
     const items = await _$w('#jobsDataset').getItems(0, numOfItems);
     const markers = items.items.map(item => {
         const location = item.locationAddress.location;
@@ -362,17 +362,17 @@ async function updateMapMarkers(_$w){
     console.log("type of markers: ", typeof markers);
     //@ts-ignore
     _$w('#googleMaps').setMarkers(markers);
-    }
-    else{
-        console.log("no positions found");
-        _$w('#googleMaps').setMarkers([{
-            location: {
-                latitude: 0,
-                longitude: 0
-            },
-            address: "No positions found",
-        }]);
-    }
+    //}
+    // else{
+    //     console.log("no positions found");
+    //     _$w('#googleMaps').setMarkers([{
+    //         location: {
+    //             latitude: 0,
+    //             longitude: 0
+    //         },
+    //         address: "No positions found",
+    //     }]);
+    // }
 }
 
 
