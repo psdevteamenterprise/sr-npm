@@ -235,8 +235,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     await _$w('#jobsDataset').refresh();
     
 	const count = await updateCount(_$w);
-    
+    updateMapMarkers(_$w,count);
     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
+    
     
     // Update reset button state
 	const hasActiveFilters = filters.length > 0;
@@ -333,6 +334,28 @@ async function handleLocationParam(_$w,location) {
     
 }
 
+async function updateMapMarkers(_$w,count){
+    if(count>0){
+    const numOfItems = await _$w('#jobsDataset').getTotalCount();
+    const items = await _$w('#jobsDataset').getItems(0, numOfItems);
+    const markers = items.items.map(item => {
+        const location = item.locationAddress.location;
+        return {
+            location: {
+                latitude: location.latitude,
+                longitude: location.longitude
+            },
+             address: item.locationAddress.formatted,
+             title: item.title,
+        };
+    });
+    //@ts-ignore
+    _$w('#googleMaps').setMarkers(markers);
+    }
+    else{
+        _$w('#googleMaps').setMarkers([]);
+    }
+}
 
 
 module.exports = {
