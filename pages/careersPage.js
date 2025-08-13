@@ -361,6 +361,7 @@ async function updateMapMarkers(_$w){
     }
     else{
         console.log("no positions found");
+        
         _$w('#googleMaps').setMarkers([{
             location: {
                 latitude: 0,
