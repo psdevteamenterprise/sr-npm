@@ -354,11 +354,20 @@ async function updateMapMarkers(_$w){
              title: item.title,
         };
     });
+    console.log("markers: ", markers);
+    console.log("type of markers: ", typeof markers);
     //@ts-ignore
     _$w('#googleMaps').setMarkers(markers);
     }
     else{
-        _$w('#googleMaps').setMarkers([]);
+        console.log("no positions found");
+        _$w('#googleMaps').setMarkers([{
+            location: {
+                latitude: 0,
+                longitude: 0
+            },
+            address: "No positions found",
+        }]);
     }
 }
 
