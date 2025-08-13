@@ -326,9 +326,7 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  console.log("Creating collections");
   await createCollections();
-  console.log("created collections successfully");
   await clearCollections();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
@@ -336,22 +334,18 @@ async function syncJobsFast() {
   console.log("saving jobs descriptions and location apply url to CMS");
   await saveJobsDescriptionsAndLocationApplyUrlToCMS();
   console.log("saved jobs descriptions and location apply url to CMS successfully");
-  console.log("aggregating jobs");
   await aggregateJobs();
-  console.log("aggregated jobs successfully");
-  console.log("referencing jobs");
   await referenceJobs();
-  console.log("referenced jobs successfully");
   console.log("syncing jobs fast finished successfully");
 }
 
 async function clearCollections() {
-  console.log("clearing cities collection");
-  await wixData.truncate(COLLECTIONS.CITIES);
-  console.log("clearing amount of jobs per department collection");
-  await wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT);
-  console.log("clearing jobs collection");
-  await wixData.truncate(COLLECTIONS.JOBS);
+  console.log("clearing collections");
+  await Promise.all([
+    wixData.truncate(COLLECTIONS.CITIES),
+    wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
+    wixData.truncate(COLLECTIONS.JOBS)
+  ]);
   console.log("cleared collections successfully");
 }
 
