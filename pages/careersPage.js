@@ -259,9 +259,10 @@ async function resetFilters(_$w) {
 	_$w('#resetFiltersButton').disable();
 
     queryParams.remove(["keyWord", "department","page","location"]);
-    await updateMapMarkers(_$w);
+    
 
 	await updateCount(_$w);
+    await updateMapMarkers(_$w);
 }
 
 async function updateCount(_$w) {
@@ -357,11 +358,11 @@ async function updateMapMarkers(_$w){
     console.log("markers: ", markers);
     console.log("type of markers: ", typeof markers);
     //@ts-ignore
-   await  _$w('#googleMaps').setMarkers(markers);
+    _$w('#googleMaps').setMarkers(markers);
     }
     else{
         console.log("no positions found");
-        await _$w('#googleMaps').setMarkers({
+        _$w('#googleMaps').setMarkers({
             location: {
                 latitude: 0,
                 longitude: 0
