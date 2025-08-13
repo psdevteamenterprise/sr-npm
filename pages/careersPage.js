@@ -174,7 +174,8 @@ async function init(_$w) {
 	});
 
     if (await window.formFactor === "Mobile") {
-        _$w('#closeFiltersButton').expand();
+        console.log("expanding filters button");
+        await _$w('#closeFiltersButton').expand();
     }
 }
 
