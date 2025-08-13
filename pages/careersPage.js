@@ -158,7 +158,7 @@ async function bind(_$w) {
 	});
 }
 
-function init(_$w) {
+async function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
@@ -172,6 +172,10 @@ function init(_$w) {
 	_$w('#closeFiltersButton').onClick(()=>{
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
+
+    if (await window.formFactor === "Mobile") {
+        _$w('#closeFiltersButton').expand();
+    }
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
