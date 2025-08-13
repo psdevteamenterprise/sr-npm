@@ -17,6 +17,7 @@ const {
   let queryKeyWordVar;
   let queryDepartmentVar;
   let queryLocationVar;
+  let searchInputFocused = false;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location } = queryParams;
@@ -162,6 +163,8 @@ function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     
     _$w('#searchInput').onInput(debouncedSearch);
+    _$w('#searchInput').onFocus(() => { searchInputFocused = true; });
+    _$w('#searchInput').onBlur(() => { searchInputFocused = false; });
     _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
@@ -175,6 +178,7 @@ function init(_$w) {
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
+	
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
@@ -235,6 +239,11 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 	const filter = await getFilter(filters, 'and');
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
+    
+	// Restore focus to search input if it had focus before refresh
+	if (searchInputFocused) {
+		_$w('#searchInput').focus();
+	}
     
 	const count = await updateCount(_$w);
     console.log("updating map markers");
