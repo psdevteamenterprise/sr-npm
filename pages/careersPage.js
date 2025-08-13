@@ -173,10 +173,10 @@ async function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    // if (await window.formFactor() === "Mobile") {
-    //     console.log("expanding filters button");
-    //     await _$w('#closeFiltersButton').expand();
-    // }
+    if (await window.formFactor() === "Mobile") {
+        console.log("expanding filters button");
+        await _$w('#closeFiltersButton').expand();
+    }
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
