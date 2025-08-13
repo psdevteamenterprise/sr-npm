@@ -335,12 +335,7 @@ async function syncJobsFast() {
   console.log("Creating collections");
   await createCollections();
   console.log("created collections successfully");
-  console.log("truncating cities collection");
-  await wixData.truncate(COLLECTIONS.CITIES);
-  console.log("truncating amount of jobs per department collection");
-  await wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT);
-  console.log("truncating jobs collection");
-  await wixData.truncate(COLLECTIONS.JOBS);
+  await clearCollections();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
@@ -354,6 +349,16 @@ async function syncJobsFast() {
   await referenceJobs();
   console.log("referenced jobs successfully");
   console.log("syncing jobs fast finished successfully");
+}
+
+async function clearCollections() {
+  console.log("clearing cities collection");
+  await wixData.truncate(COLLECTIONS.CITIES);
+  console.log("clearing amount of jobs per department collection");
+  await wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT);
+  console.log("clearing jobs collection");
+  await wixData.truncate(COLLECTIONS.JOBS);
+  console.log("cleared collections successfully");
 }
 
 module.exports = {
