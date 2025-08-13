@@ -262,7 +262,9 @@ async function resetFilters(_$w) {
     
 
 	await updateCount(_$w);
+    console.log("reseting map markers");
     await updateMapMarkers(_$w);
+    console.log("reseting map markers completed");
 }
 
 async function updateCount(_$w) {
@@ -362,13 +364,13 @@ async function updateMapMarkers(_$w){
     }
     else{
         console.log("no positions found");
-        _$w('#googleMaps').setMarkers({
+        _$w('#googleMaps').setMarkers([{
             location: {
                 latitude: 0,
                 longitude: 0
             },
             address: "No positions found",
-        });
+        }]);
     }
 }
 
