@@ -176,6 +176,8 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     return { success: true, message: 'No jobs to save.' };
   }
   try {
+    console.log("saving to collection: ", collection);
+    console.log("toSave: ", toSave);
     const saveResult = await wixData.bulkSave(collection, toSave);
     console.log(`Saved ${toSave.length} ${field} counts to ${collection}.`);
     return { success: true, saved: toSave.length, result: saveResult };
