@@ -172,14 +172,14 @@ async function init(_$w) {
 	_$w('#closeFiltersButton').onClick(()=>{
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
-    console.log("printing stuff")
-    let formFactor = await window.formFactor();
-    console.log("formFactor: ", formFactor);
+    // console.log("printing stuff")
+    // let formFactor = await window.formFactor();
+    // console.log("formFactor: ", formFactor);
 
-    if (formFactor === "Mobile") {
-        console.log("expanding filters button");
-        await _$w('#closeFiltersButton').expand();
-    }
+    // if (formFactor === "Mobile") {
+    //     console.log("expanding filters button");
+    //     await _$w('#closeFiltersButton').expand();
+    // }
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
