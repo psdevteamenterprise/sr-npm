@@ -238,7 +238,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     
 	const count = await updateCount(_$w);
     console.log("updating map markers");
-    await updateMapMarkers(_$w,count);
+    await updateMapMarkers(_$w);
     console.log("updating map markers completed");
     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
     
@@ -259,6 +259,7 @@ async function resetFilters(_$w) {
 	_$w('#resetFiltersButton').disable();
 
     queryParams.remove(["keyWord", "department","page","location"]);
+    await updateMapMarkers(_$w);
 
 	await updateCount(_$w);
 }
@@ -338,9 +339,9 @@ async function handleLocationParam(_$w,location) {
     
 }
 
-async function updateMapMarkers(_$w,count){
-    if(count>0){
+async function updateMapMarkers(_$w){
     const numOfItems = await _$w('#jobsDataset').getTotalCount();
+    if(numOfItems>0){
     const items = await _$w('#jobsDataset').getItems(0, numOfItems);
     const markers = items.items.map(item => {
         const location = item.locationAddress.location;
