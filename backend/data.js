@@ -33,7 +33,18 @@ async function saveJobsDataToCMS() {
       title: position.title || '',
       department: position.department?.label || 'Other',
       cityText: normalizeCityName(position.location?.city),
-      location: position.location || {},
+      location: position.location && Object.keys(position.location).length > 0
+        ? position.location
+        : {
+            countryCode: "",
+            country: "",
+            city: "",
+            postalCode: "",
+            address: "",
+            manual: false,
+            remote: false,
+            regionCode: ""
+          },
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
