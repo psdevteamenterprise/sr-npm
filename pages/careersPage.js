@@ -144,6 +144,7 @@ async function handlePageParam(_$w) {
 async function bind(_$w) {
 	await _$w('#jobsDataset').onReady(async () => {
 		await updateCount(_$w);
+        await updateMapMarkers(_$w);
 		
 	});
 
