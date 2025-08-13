@@ -30,14 +30,6 @@ async function saveJobsDataToCMS() {
   const jobsData = positions.content.map(position => {
     const basicJob = {
       _id: position.id,
-      // title: position.title,
-      // department: position.department.label,
-      // cityText: normalizeCityName(position.location.city),
-      // location: position.location,
-      // country: position.location.country,
-      // remote: position.location.remote,
-      // language: position.language.label,
-      // postingStatus: position.postingStatus,
       title: position.title || '',
       department: position.department?.label || 'Other',
       cityText: normalizeCityName(position.location?.city),
