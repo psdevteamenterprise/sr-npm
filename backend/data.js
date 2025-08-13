@@ -300,7 +300,7 @@ async function createApiKeyCollectionAndFillIt() {
 
 async function createCollections() {
   console.log("Creating collections");
-  Promise.all(
+  await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
@@ -309,24 +309,20 @@ async function createCollections() {
 }
 
 async function aggregateJobs() {
-  console.log("truncating cities collection");
-  //await wixData.truncate(COLLECTIONS.CITIES);
-  console.log("truncating amount of jobs per department collection");
-  //await wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT);
   console.log("Aggregating jobs");
-  await aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT });
-  await aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES });
+  await Promise.all([
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES })
+  ]);
   console.log("finished aggregating jobs");
 }
 
 async function referenceJobs() {
-  console.log("truncating cities collection");
-  //await wixData.truncate(COLLECTIONS.CITIES);
-  console.log("truncating amount of jobs per department collection");
-  //await wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT);
   console.log("Reference jobs");
-  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT })
-  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT }),
+  await Promise.all([
+   referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT }),
+   referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT }),
+  ]);
   console.log("finished referencing jobs");
 }
 
