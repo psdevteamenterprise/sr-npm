@@ -364,17 +364,7 @@ async function updateMapMarkers(_$w){
     _$w('#googleMaps').setMarkers(markers);
     let getmarkers2=await _$w('#googleMaps').markers;
     console.log("getmarkers2: ", getmarkers2);
-    //}
-    // else{
-    //     console.log("no positions found");
-    //     _$w('#googleMaps').setMarkers([{
-    //         location: {
-    //             latitude: 0,
-    //             longitude: 0
-    //         },
-    //         address: "No positions found",
-    //     }]);
-    // }
+
 }
 
 
