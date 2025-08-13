@@ -12,8 +12,8 @@ async function delay(ms) {
 function countJobsPerGivenField(jobs, field,jobsPerField) {
   for (const job of jobs) {
     if (!job[field]) {
-      //throw new Error(`Job ${job._id} has no ${field} field`);
-      //skip for now
+      console.warn(`Job ${job._id} missing required field '${field}' - continue`);
+      continue;
     }
     else{
       jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
