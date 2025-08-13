@@ -240,7 +240,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
     
-	// Restore focus to search input if it had focus before refresh
+
 	if (searchInputFocused) {
 		_$w('#searchInput').focus();
 	}
