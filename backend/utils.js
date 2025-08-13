@@ -12,9 +12,12 @@ async function delay(ms) {
 function countJobsPerGivenField(jobs, field,jobsPerField) {
   for (const job of jobs) {
     if (!job[field]) {
-      throw new Error(`Job ${job._id} has no ${field} field`);
+      console.warn(`Job ${job._id} missing required field '${field}' - continue`);
+      continue;
     }
-    jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
+    else{
+      jobsPerField[job[field]] = (jobsPerField[job[field]] || 0) + 1;
+    }
   }
 }
 
@@ -45,7 +48,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
   } else {
     return Object.entries(jobsPerField).map(([value, amount]) => ({
       title: value,
-      _id: value.replace(/\s+/g, ''),
+      _id: value.replace(/\s+/g, '').replace(/&/g, 'and'),
       count: amount,
     }));
   }

@@ -16,7 +16,7 @@ async function homePageOnReady(_$w,thisObject) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         $item('#teamButton').onClick(()=>{
-            const department=itemData.title.replace(' ', '-');
+            const department = encodeURIComponent(itemData.title);
             location.to(`/positions?department=${department}`);
         });
     });
@@ -25,17 +25,19 @@ async function homePageOnReady(_$w,thisObject) {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
         let baseUrl = await location.baseUrl();
-        const linkUrl = `${baseUrl}/positions`;
-
         const markers = items.items.map(item => {
             const location = item.locationAddress.location;
+            const cityName = encodeURIComponent(item.title); // Use the city name from the item
+            const cityLinkUrl = `${baseUrl}/positions?location=${cityName}`; // Add city as search parameter
             return {
                 location: {
                     latitude: location.latitude,
                     longitude: location.longitude
                 },
-                address: item.locationAddress.formatted,
-                description: `<a href=${linkUrl} target="_parent" rel="noopener noreferrer" style="color:#000000;text-decoration:underline;font-weight:bold;">View ${item.count} Open Positions</a>`
+                 address: item.locationAddress.formatted,
+                 title: item.title,
+                link: cityLinkUrl,
+                linkTitle:`View ${item.count} Open Positions`
             };
         });
         //@ts-ignore

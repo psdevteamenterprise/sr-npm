@@ -16,11 +16,14 @@ const {
   let queryPageVar;
   let queryKeyWordVar;
   let queryDepartmentVar;
-
-async function careersPageOnReady(_$w,thisObject,query) {
-queryPageVar=query.page;
-queryKeyWordVar=query.keyWord;
-queryDepartmentVar=query.department;
+  let queryLocationVar;
+async function careersPageOnReady(_$w,thisObject,queryParams) {
+console.log("queryParams: ", queryParams);
+const { page, keyWord, department, location } = queryParams;
+queryPageVar=page;
+queryKeyWordVar=keyWord;
+queryDepartmentVar=department;
+queryLocationVar=location;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await handleUrlParams(_$w);
@@ -89,6 +92,9 @@ async function handleUrlParams(_$w) {
     }
     if (queryDepartmentVar) {
         await handleDepartmentParam(_$w,queryDepartmentVar);
+    }
+    if (queryLocationVar) {
+        await handleLocationParam(_$w,queryLocationVar);
     }
 }
 
@@ -169,8 +175,6 @@ function init(_$w) {
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
-    console.log("applyFilters");
-    console.log("after applyFilters_$w('#dropdownDepartment').value", _$w('#dropdownDepartment').value);
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
@@ -189,7 +193,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
             if (!skipUrlUpdate) {
-                queryParams.remove(["keyWord", "department","page"]);
+                queryParams.remove(["keyWord", "department","page","location"]);
             }
 		}
 
@@ -200,7 +204,10 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                     queryParams.add({ keyWord: filter.value });
                 }
                 if(filter.field === 'department'){
-                    queryParams.add({ department: filter.value });
+                    queryParams.add({ department: encodeURIComponent(filter.value) });
+                }
+                if(filter.field === 'cityText'){
+                    queryParams.add({ location:  encodeURIComponent(filter.value) });
                 }
             }
 			if(filter.field === 'remote') {	
@@ -218,6 +225,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             if(filter.field === 'department'){
                 queryParams.remove(["department" ]);
             }
+            if(filter.field === 'cityText'){
+                queryParams.remove(["location" ]);
+            }
         }
     }
 	});
@@ -227,8 +237,11 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     await _$w('#jobsDataset').refresh();
     
 	const count = await updateCount(_$w);
-    
+    console.log("updating map markers");
+    await updateMapMarkers(_$w,count);
+    console.log("updating map markers completed");
     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
+    
     
     // Update reset button state
 	const hasActiveFilters = filters.length > 0;
@@ -258,7 +271,7 @@ async function updateCount(_$w) {
 }
 
 async function handleDepartmentParam(_$w,department) {
-    const departmentValue = department.replace('-', ' ');
+    const departmentValue = decodeURIComponent(department);
     
         
     
@@ -268,7 +281,7 @@ async function handleDepartmentParam(_$w,department) {
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        fixDropdownOptions(optionsFromCMS, _$w);
+        fixDropdownOptions('#dropdownDepartment',optionsFromCMS, _$w);
     }
 
     if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
@@ -286,7 +299,7 @@ async function handleDepartmentParam(_$w,department) {
      
 }
 
-function fixDropdownOptions(optionsFromCMS, _$w){
+function fixDropdownOptions(dropdown,optionsFromCMS, _$w){
     let dropdownOptions = [];
     dropdownOptions=[{
         label: "All",
@@ -296,11 +309,57 @@ function fixDropdownOptions(optionsFromCMS, _$w){
         label: item.title,
         value: item.title
     })));
-    _$w('#dropdownDepartment').options=dropdownOptions;
+    _$w(dropdown).options=dropdownOptions;
     console.warn("something is wrong with the dropdown options, fixing it");
 
 }
 
+async function handleLocationParam(_$w,location) {
+    const locationValue = decodeURIComponent(location);
+    let dropdownOptions = _$w('#dropdownLocation').options;
+    console.log("location dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query("cities").find();
+    //+1 because of the "All" option
+
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
+    }
+
+    if (_$w('#dropdownLocation').options.find(option => option.value === locationValue))
+    {
+        _$w('#dropdownLocation').value = locationValue;
+        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    }
+    else{
+        console.warn("location value not found in dropdown options");
+        queryParams.remove(["location" ]);
+
+    }
+    
+}
+
+async function updateMapMarkers(_$w,count){
+    if(count>0){
+    const numOfItems = await _$w('#jobsDataset').getTotalCount();
+    const items = await _$w('#jobsDataset').getItems(0, numOfItems);
+    const markers = items.items.map(item => {
+        const location = item.locationAddress.location;
+        return {
+            location: {
+                latitude: location.latitude,
+                longitude: location.longitude
+            },
+             address: item.locationAddress.formatted,
+             title: item.title,
+        };
+    });
+    //@ts-ignore
+    _$w('#googleMaps').setMarkers(markers);
+    }
+    else{
+        _$w('#googleMaps').setMarkers([]);
+    }
+}
 
 
 module.exports = {

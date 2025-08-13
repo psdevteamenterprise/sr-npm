@@ -44,7 +44,7 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = '/jobs?limit=50';
+      let apiPath = '/jobs?limit=50&postingStatus=PUBLIC';
       if (nextPageId) {
         apiPath += `&nextPageId=${nextPageId}`;
       }
@@ -54,6 +54,7 @@ async function fetchPositionsFromSRAPI() {
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
+        // No filtering, just dump all the damn positions in
         allPositions = allPositions.concat(response.content);
         console.log(`Page ${page}: Found ${response.content.length} positions`);
       }

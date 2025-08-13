@@ -28,17 +28,27 @@ async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   // bulk insert to jobs collection without descriptions first
   const jobsData = positions.content.map(position => {
-    validatePosition(position);
     const basicJob = {
       _id: position.id,
-      title: position.title,
-      department: position.department.label.replace('&', ' and '),
-      cityText: normalizeCityName(position.location.city),
-      location: position.location,
-      country: position.location.country,
-      remote: position.location.remote,
-      language: position.language.label,
-      postingStatus: position.postingStatus,
+      title: position.title || '',
+      department: position.department?.label || 'Other',
+      cityText: normalizeCityName(position.location?.city),
+      location: position.location && Object.keys(position.location).length > 0
+        ? position.location
+        : {
+            countryCode: "",
+            country: "",
+            city: "",
+            postalCode: "",
+            address: "",
+            manual: false,
+            remote: false,
+            regionCode: ""
+          },
+      country: position.location?.country || '',
+      remote: position.location?.remote || false,
+      language: position.language?.label || '',
+      postingStatus: position.postingStatus || '',
       jobDescription: null, // Will be filled later
     };
     return basicJob;
@@ -51,7 +61,8 @@ async function saveJobsDataToCMS() {
   console.log(
     `Processing ${jobsData.length} jobs in ${totalChunks} chunks of max ${chunkSize} items each`
   );
-
+  console.log("truncating jobs collection");
+  await wixData.truncate(COLLECTIONS.JOBS);
   await chunkedBulkOperation({
     items: jobsData,
     chunkSize,
@@ -176,6 +187,8 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     return { success: true, message: 'No jobs to save.' };
   }
   try {
+    console.log("saving to collection: ", collection);
+    console.log("toSave: ", toSave);
     const saveResult = await wixData.bulkSave(collection, toSave);
     console.log(`Saved ${toSave.length} ${field} counts to ${collection}.`);
     return { success: true, saved: toSave.length, result: saveResult };
@@ -298,7 +311,7 @@ async function createApiKeyCollectionAndFillIt() {
 
 async function createCollections() {
   console.log("Creating collections");
-  Promise.all(
+  await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
@@ -308,38 +321,43 @@ async function createCollections() {
 
 async function aggregateJobs() {
   console.log("Aggregating jobs");
-  Promise.all([
-    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
-    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT })
+  await Promise.all([
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES })
   ]);
   console.log("finished aggregating jobs");
 }
 
 async function referenceJobs() {
   console.log("Reference jobs");
-  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT })
-  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT }),
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
   console.log("finished referencing jobs");
 }
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  console.log("Creating collections");
   await createCollections();
-  console.log("created collections successfully");
+  await clearCollections();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
   console.log("saving jobs descriptions and location apply url to CMS");
   await saveJobsDescriptionsAndLocationApplyUrlToCMS();
   console.log("saved jobs descriptions and location apply url to CMS successfully");
-  console.log("aggregating jobs");
   await aggregateJobs();
-  console.log("aggregated jobs successfully");
-  console.log("referencing jobs");
   await referenceJobs();
-  console.log("referenced jobs successfully");
   console.log("syncing jobs fast finished successfully");
+}
+
+async function clearCollections() {
+  console.log("clearing collections");
+  await Promise.all([
+    wixData.truncate(COLLECTIONS.CITIES),
+    wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
+    wixData.truncate(COLLECTIONS.JOBS)
+  ]);
+  console.log("cleared collections successfully");
 }
 
 module.exports = {
