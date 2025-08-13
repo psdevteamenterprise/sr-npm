@@ -235,7 +235,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     await _$w('#jobsDataset').refresh();
     
 	const count = await updateCount(_$w);
-    updateMapMarkers(_$w,count);
+    console.log("updating map markers");
+    await updateMapMarkers(_$w,count);
+    console.log("updating map markers completed");
     count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
     
     
