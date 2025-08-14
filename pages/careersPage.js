@@ -18,6 +18,7 @@ const {
   let queryDepartmentVar;
   let queryLocationVar;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
+console.log("careersPageOn@!$%#$%##$%$#$#$%#$%#Ready");
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location } = queryParams;
 queryPageVar=page;
