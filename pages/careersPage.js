@@ -153,6 +153,9 @@ async function bind(_$w) {
 
 	_$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
 		$item('#positionItem').onClick(() => {
+            console.log("itemData: ", itemData);
+            console.log("$item: ", $item);
+            console.log("itemData['link-jobs-title']: ", itemData['link-jobs-title']);
 			to(`${itemData['link-jobs-title']}`);
 		});
 	});
