@@ -1,5 +1,6 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
+const { location } = require('@wix/site-location');
 const { window } = require('@wix/site-window');
 const { query,queryParams,to } = require("wix-location-frontend");
 const {
@@ -50,7 +51,6 @@ function activateAutoLoad(_$w)
 }
 
 async function loadMoreJobs(_$w) {
-    //const query = await location.query();
     let shouldLoad = false;
     if (pageParamSet == 0) {
         shouldLoad = true;
@@ -83,7 +83,6 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
-   // const query = await location.query();
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
@@ -153,8 +152,9 @@ async function bind(_$w) {
     } 
 
 	_$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
-		$item('#positionItem').onClick(() => {
-			to(`${itemData['link-jobs-title']}`);
+		$item('#positionItem').onClick(async () => {
+            let baseUrl = await location.baseUrl();
+			to(`${baseUrl}/jobs/${itemData._id}`);
 		});
 	});
 }
