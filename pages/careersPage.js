@@ -348,17 +348,30 @@ async function handleLocationParam(_$w,location) {
 async function updateMapMarkers(_$w){
     const numOfItems = await _$w('#jobsDataset').getTotalCount();
     const items = await _$w('#jobsDataset').getItems(0, numOfItems);
-    const markers = items.items.map(item => {
-        const location = item.locationAddress.location;
-        return {
-            location: {
-                latitude: location.latitude,
-                longitude: location.longitude
-            },
-             address: item.locationAddress.formatted,
-             title: item.title,
-        };
-    });
+    const markers = items.items
+        .filter(item => {
+            const locationAddress = item.locationAddress;
+            const location = locationAddress && locationAddress.location;
+            return (
+                location !== undefined &&
+                location !== null &&
+                location.latitude !== undefined &&
+                location.latitude !== null &&
+                location.longitude !== undefined &&
+                location.longitude !== null
+            );
+        })
+        .map(item => {
+            const location = item.locationAddress.location;
+            return {
+                location: {
+                    latitude: location.latitude,
+                    longitude: location.longitude
+                },
+                address: item.locationAddress.formatted,
+                title: item.title
+            };
+        });
     console.log("markers: ", markers);
     console.log("type of markers: ", typeof markers);
     //@ts-ignore
