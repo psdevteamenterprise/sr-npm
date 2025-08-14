@@ -374,7 +374,7 @@ async function updateMapMarkers(_$w){
             };
         });
     //@ts-ignore
-    await _$w('#googleMaps').setMarkers(markers);
+    _$w('#googleMaps').setMarkers(markers);
 
 }
 
