@@ -1,8 +1,8 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
-//const { location } = require('@wix/site-location');
+const { location } = require('@wix/site-location');
 const { window } = require('@wix/site-window');
-const { query,queryParams,to,wixLocationFrontend } = require("wix-location-frontend");
+const { query,queryParams,to } = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
@@ -155,7 +155,7 @@ async function bind(_$w) {
 
 	_$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
 		$item('#positionItem').onClick(async () => {
-            let baseUrl = wixLocationFrontend.baseUrl();
+            let baseUrl = await location.baseUrl();
 			to(`${baseUrl}/jobs/${itemData._id}`);
 		});
 	});
