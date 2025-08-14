@@ -48,7 +48,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
   } else {
     return Object.entries(jobsPerField).map(([value, amount]) => ({
       title: value,
-      _id: value.replace(/\s+/g, '').replace(/&/g, 'and'),
+      _id: sanitizeId(value),
       count: amount,
     }));
   }
@@ -63,6 +63,15 @@ function normalizeCityName(city) {
     .trim();
 }
 
+function sanitizeId(input) {
+  if (!input) return '';
+  const withoutDiacritics = String(input)
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '');
+  const withAnd = withoutDiacritics.replace(/&/g, 'and');
+  return withAnd.replace(/[^A-Za-z0-9-]/g, '');
+}
+
 module.exports = {
   chunkedBulkOperation,
   delay,
@@ -70,4 +79,5 @@ module.exports = {
   fillCityLocationAndLocationAddress,
   prepareToSaveArray,
   normalizeCityName,
+  sanitizeId,
 };
