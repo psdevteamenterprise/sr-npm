@@ -46,7 +46,7 @@ async function fetchPositionsFromSRAPI() {
       // Build the API path - first request has no page parameter, subsequent use nextPageId
       let apiPath = '/jobs?limit=50&postingStatus=PUBLIC';
       if (nextPageId) {
-        apiPath += `&nextPageId=${nextPageId}`;
+        apiPath += `&pageId=${nextPageId}`;
       }
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
