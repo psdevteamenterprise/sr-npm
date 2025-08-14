@@ -2,7 +2,6 @@ const {
     debounce,
     getFilter,
   } = require('../public/filterUtils');
-  const { filterBrokenMarkers } = require('../public/utils');
   const { handleOnLocationClick } = require('../public/mapUtils');
 const { location } = require('@wix/site-location');
 let thisObjectVar;
@@ -25,15 +24,18 @@ async function homePageOnReady(_$w,thisObject) {
     _$w('#citiesDataset').onReady(async () => {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
         const items = await _$w('#citiesDataset').getItems(0, numOfItems);
-        const markers=filterBrokenMarkers(items.items).map(item => {
+        let baseUrl = await location.baseUrl();
+        const markers = filterBrokenMarkers(items.items).map(item => {
             const location = item.locationAddress.location;
+            const cityName = encodeURIComponent(item.title); // Use the city name from the item
+            const cityLinkUrl = `${baseUrl}/positions?location=${cityName}`; // Add city as search parameter
             return {
                 location: {
                     latitude: location.latitude,
                     longitude: location.longitude
                 },
-                address: item.locationAddress.formatted,
-                title: item.title,
+                 address: item.locationAddress.formatted,
+                 title: item.title,
                 link: cityLinkUrl,
                 linkTitle:`View ${item.count} Open Positions`
             };
