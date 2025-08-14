@@ -148,7 +148,7 @@ async function bind(_$w) {
 		
 	});
 
-	if (await window.formFactor === "Mobile") {
+	if (await window.formFactor() === "Mobile") {
 		_$w('#dropdownsContainer').collapse();
     } 
 
@@ -173,6 +173,7 @@ function init(_$w) {
 	_$w('#closeFiltersButton').onClick(()=>{
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
+
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {

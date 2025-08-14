@@ -54,6 +54,13 @@ async function saveJobsDataToCMS() {
     return basicJob;
   });
 
+  // Sort jobs by title (ascending, case-insensitive, numeric-aware)
+  jobsData.sort((a, b) => {
+    const titleA = a.title || '';
+    const titleB = b.title || '';
+    return titleA.localeCompare(titleB, undefined, { sensitivity: 'base', numeric: true });
+  });
+
   const chunkSize = 1000;
   let totalSaved = 0;
   const totalChunks = Math.ceil(jobsData.length / chunkSize);
