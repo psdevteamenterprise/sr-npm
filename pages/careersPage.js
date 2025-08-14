@@ -176,12 +176,14 @@ function init(_$w) {
 }
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
+    console.log("applying filters");
 	const dropdownFiltersMapping = [
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
+    console.log("dropdownFiltersMapping: ", dropdownFiltersMapping);
     
 
 
@@ -345,7 +347,6 @@ async function handleLocationParam(_$w,location) {
 
 async function updateMapMarkers(_$w){
     const numOfItems = await _$w('#jobsDataset').getTotalCount();
-  //  if(numOfItems>0){
     const items = await _$w('#jobsDataset').getItems(0, numOfItems);
     const markers = items.items.map(item => {
         const location = item.locationAddress.location;
