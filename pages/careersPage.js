@@ -51,7 +51,6 @@ function activateAutoLoad(_$w)
 }
 
 async function loadMoreJobs(_$w) {
-    //const query = await location.query();
     let shouldLoad = false;
     if (pageParamSet == 0) {
         shouldLoad = true;
@@ -84,7 +83,6 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
-   // const query = await location.query();
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
