@@ -18,9 +18,7 @@ const {
   let queryKeyWordVar;
   let queryDepartmentVar;
   let queryLocationVar;
-  let baseUrl;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
-baseUrl = await location.baseUrl();
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location } = queryParams;
 queryPageVar=page;
@@ -156,6 +154,7 @@ async function bind(_$w) {
 
 	_$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
 		$item('#positionItem').onClick(async () => {
+            let baseUrl = await location.baseUrl();
 			to(`${baseUrl}/jobs/${itemData._id}`);
 		});
 	});
