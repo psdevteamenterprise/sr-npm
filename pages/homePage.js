@@ -3,6 +3,7 @@ const {
     getFilter,
   } = require('../public/filterUtils');
   const { handleOnLocationClick } = require('../public/mapUtils');
+  const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
 let thisObjectVar;
 async function homePageOnReady(_$w,thisObject) {
