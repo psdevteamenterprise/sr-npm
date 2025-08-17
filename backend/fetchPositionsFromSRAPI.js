@@ -47,10 +47,7 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}`;
-      if (nextPageId) {
-        apiPath += `&pageId=${nextPageId}`;
-      }
+      let apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}&limit=10`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath,token);
@@ -69,13 +66,9 @@ async function fetchPositionsFromSRAPI() {
       }
 
       // Get the nextPageId for the next iteration
-      nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
-
-      if (nextPageId) {
-        console.log(`Next page ID: ${nextPageId}`);
-      } else {
-        console.log('No more pages to fetch');
-      }
+     // nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
+     offset+=10;
+     
     } catch (error) {
       console.error(`Error fetching page ${page}:`, error);
       throw error;
@@ -86,7 +79,7 @@ async function fetchPositionsFromSRAPI() {
       console.warn(`Reached maximum page limit of ${MAX_PAGES}. Stopping pagination.`);
       break;
     }
-  } while (nextPageId); // Continue while there's a nextPageId
+  } while (offset<totalFound); // Continue while there's a nextPageId
 
   console.log(`Finished fetching all pages. Total positions collected: ${allPositions.length}`);
 
