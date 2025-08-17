@@ -18,6 +18,7 @@ const {
   let queryKeyWordVar;
   let queryDepartmentVar;
   let queryLocationVar;
+  let searchInputBlurredFirstTime=true;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location } = queryParams;
@@ -163,8 +164,12 @@ function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     _$w('#searchInput').onInput(debouncedSearch);
     _$w('#searchInput').onBlur(()=>{
+        if(searchInputBlurredFirstTime)
+        {
         console.log("search input blurred");
         _$w('#searchInput').focus();
+        searchInputBlurredFirstTime=false;
+        }
     });
     _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
@@ -179,15 +184,6 @@ function init(_$w) {
 
 }
 
-function onchangeSearchInput(_$w){
-    const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
-    debouncedSearch();
-    _$w('#searchInput').focus();
-    
-
-    console.log("onchangeSearchInput");
-    searchInputIsUsed=true;
-}
 
 async function applyFilters(_$w, skipUrlUpdate = false) {
     console.log("applying filters");
