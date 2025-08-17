@@ -40,13 +40,14 @@ async function fetchPositionsFromSRAPI() {
   const token = await getSmartTokenFromCMS();
   const companyId=await getCompanyId();
   console.log('Starting to fetch all positions with pagination...');
+  let offset=0;
 
   do {
     try {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = `/v1/companies/${companyId}/postings?offset=0`;
+      let apiPath = `/v1/companies/${companyId}/postings?offset=${offset}`;
       if (nextPageId) {
         apiPath += `&pageId=${nextPageId}`;
       }
