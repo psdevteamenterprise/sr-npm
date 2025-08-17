@@ -2,11 +2,9 @@ const { items: wixData, collections } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
-const { secrets } = require("@wix/secrets");
-const { auth } = require('@wix/essentials');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-
+const { getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -30,7 +28,7 @@ async function saveJobsDataToCMS() {
   const jobsData = positions.content.map(position => {
     const basicJob = {
       _id: position.id,
-      title: position.title || '',
+      title: position.name || '',
       department: position.department?.label || 'Other',
       cityText: normalizeCityName(position.location?.city),
       location: position.location && Object.keys(position.location).length > 0
@@ -48,7 +46,6 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      postingStatus: position.postingStatus || '',
       jobDescription: null, // Will be filled later
     };
     return basicJob;
@@ -129,7 +126,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
-              jobDescription: jobDetails.jobAd.sections,
+              jobDescription: jobDetails.jobAd.sections.jobDescription,
               applyLink: applyLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
@@ -262,7 +259,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
 }
 
 function fetchApplyLink(jobDetails) {
-    return jobDetails.actions.applyOnWeb.url;
+    return jobDetails.applyUrl;
 }
 
 function fetchJobLocation(jobDetails) {
@@ -289,31 +286,30 @@ function fetchJobLocation(jobDetails) {
 }
 
 
-function getSmartToken() {
-  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
-  return elevatedGetSecretValue("x-smarttoken")
-    .then((secret) => {
-      return secret;
-    })
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
-}
 
 
 async function createApiKeyCollectionAndFillIt() {
     console.log("Creating ApiKey collection and filling it with the smart token");
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
-    console.log("Getting the smart token");
+    console.log("Getting the smart token ");
     const token = await getSmartToken();
     console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
-    await wixData.insert(COLLECTIONS.API_KEY, {
-        token: token.value
-    });
+    try {
+      await wixData.insert(COLLECTIONS.API_KEY, {
+          token: token.value
+      });
+      console.log("Smart token inserted into the ApiKey collection");
+    } catch (error) {
+      if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
+        console.log("Smart token already exists in the ApiKey collection");
+      }
+      else {
+        throw error;
+      }
+    }
 
-    console.log("Smart token inserted into the ApiKey collection");
+    
 }
 
 async function createCollections() {
@@ -344,6 +340,7 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
+  await createApiKeyCollectionAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");

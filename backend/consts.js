@@ -67,7 +67,7 @@ const TASKS = {
       [TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT]: {
         name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT,
         getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:()=>createApiKeyCollectionAndFillIt(),
+        process:createApiKeyCollectionAndFillIt,
         shouldSkipCheck:()=>false,
         estimatedDurationSec:3
       },

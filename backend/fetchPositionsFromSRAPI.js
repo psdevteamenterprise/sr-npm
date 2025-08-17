@@ -1,12 +1,11 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
+const secretsData = require('./secretsData');
 async function makeSmartRecruitersRequest(path,token) {
-   const baseUrl = 'https://api.smartrecruiters.com'; // PROD
-//  const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST
+   const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
-    //console.log(`Making request to: ${fullUrl}`);
   try {
     const response = await fetch(fullUrl, {
       method: 'GET',
@@ -33,28 +32,25 @@ async function makeSmartRecruitersRequest(path,token) {
 async function fetchPositionsFromSRAPI() {
   let allPositions = [];
   let totalFound = 0;
-  let nextPageId = null; // Start with no page ID for the first request
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const token = await getSmartTokenFromCMS();
+  const companyId = await secretsData.getCompanyId();
   console.log('Starting to fetch all positions with pagination...');
+  let offset=0;
 
   do {
     try {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = '/jobs?limit=50&postingStatus=PUBLIC';
-      if (nextPageId) {
-        apiPath += `&pageId=${nextPageId}`;
-      }
+      const apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath,token);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
-        // No filtering, just dump all the damn positions in
         allPositions = allPositions.concat(response.content);
         console.log(`Page ${page}: Found ${response.content.length} positions`);
       }
@@ -65,14 +61,8 @@ async function fetchPositionsFromSRAPI() {
         console.log(`Total positions available: ${totalFound}`);
       }
 
-      // Get the nextPageId for the next iteration
-      nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
-
-      if (nextPageId) {
-        console.log(`Next page ID: ${nextPageId}`);
-      } else {
-        console.log('No more pages to fetch');
-      }
+     offset+=100;
+     
     } catch (error) {
       console.error(`Error fetching page ${page}:`, error);
       throw error;
@@ -83,7 +73,7 @@ async function fetchPositionsFromSRAPI() {
       console.warn(`Reached maximum page limit of ${MAX_PAGES}. Stopping pagination.`);
       break;
     }
-  } while (nextPageId); // Continue while there's a nextPageId
+  } while (offset<totalFound); // Continue while there's a nextPageId
 
   console.log(`Finished fetching all pages. Total positions collected: ${allPositions.length}`);
 
@@ -108,13 +98,14 @@ async function fetchPositionsFromSRAPI() {
 
 async function fetchJobDescription(jobId) {
   const token = await getSmartTokenFromCMS();
-  return await makeSmartRecruitersRequest(`/jobs/${jobId}`,token);
+  const companyId = await secretsData.getCompanyId();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId.value}/postings/${jobId}`,token);
 }
 
 async function getSmartTokenFromCMS() {
   const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].token; // This is your string token
+      return result.items[0].token; 
   } else {
       throw new Error('[getSmartTokenFromCMS], No token found');
   }
