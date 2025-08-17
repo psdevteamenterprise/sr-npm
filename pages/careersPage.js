@@ -164,9 +164,8 @@ function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     _$w('#searchInput').onInput(debouncedSearch);
     _$w('#searchInput').onBlur(()=>{
-        if(searchInputBlurredFirstTime)
+        if(searchInputBlurredFirstTime && _$w('#searchInput').value.trim() !== '')
         {
-        console.log("search input blurred");
         _$w('#searchInput').focus();
         searchInputBlurredFirstTime=false;
         }
