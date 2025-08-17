@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getSmartToken } = require('./secretsData');
+const secretsData = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -293,7 +293,7 @@ async function createApiKeyCollectionAndFillIt() {
     console.log("Creating ApiKey collection and filling it with the smart token");
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
     console.log("Getting the smart token");
-    const token = await getSmartToken();
+    const token = await secretsData.getSmartToken();
     console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
     await wixData.insert(COLLECTIONS.API_KEY, {
