@@ -2,11 +2,9 @@ const { items: wixData, collections } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
-const { secrets } = require("@wix/secrets");
-const { auth } = require('@wix/essentials');
 const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-
+const { getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -289,29 +287,6 @@ function fetchJobLocation(jobDetails) {
 }
 
 
-function getSmartToken() {
-  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
-  return elevatedGetSecretValue("x-smarttoken")
-    .then((secret) => {
-      return secret;
-    })
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
-}
-
-function getCompanyId() {
-  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
-  return elevatedGetSecretValue("companyID")
-    .then((secret) => {
-      return secret;
-    })
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
-}
 
 
 async function createApiKeyCollectionAndFillIt() {
@@ -389,5 +364,4 @@ module.exports = {
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
     createApiKeyCollectionAndFillIt,
-    getCompanyId
 };
