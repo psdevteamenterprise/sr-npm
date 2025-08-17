@@ -295,11 +295,21 @@ async function createApiKeyCollectionAndFillIt() {
     const token = await getSmartToken();
     console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
-    await wixData.insert(COLLECTIONS.API_KEY, {
-        token: token.value
-    });
+    try {
+      await wixData.insert(COLLECTIONS.API_KEY, {
+          token: token.value
+      });
+      console.log("Smart token inserted into the ApiKey collection");
+    } catch (error) {
+      if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
+        console.log("Smart token already exists in the ApiKey collection");
+      }
+      else {
+        throw error;
+      }
+    }
 
-    console.log("Smart token inserted into the ApiKey collection");
+    
 }
 
 async function createCollections() {
@@ -330,6 +340,7 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
+  await createApiKeyCollectionAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");
