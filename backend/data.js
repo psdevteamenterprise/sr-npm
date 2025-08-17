@@ -46,7 +46,6 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      //postingStatus: position.postingStatus || '',
       jobDescription: null, // Will be filled later
     };
     return basicJob;
