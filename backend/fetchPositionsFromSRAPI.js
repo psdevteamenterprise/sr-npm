@@ -1,6 +1,7 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
+const { getCompanyId } = require('./data');
 async function makeSmartRecruitersRequest(path,token) {
    const baseUrl = 'https://api.smartrecruiters.com'; // PROD
 //  const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST

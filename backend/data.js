@@ -389,4 +389,5 @@ module.exports = {
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
     createApiKeyCollectionAndFillIt,
+    getCompanyId
 };
