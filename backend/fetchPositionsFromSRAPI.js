@@ -37,6 +37,7 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const token = await getSmartTokenFromCMS();
+  const companyId=await getCompanyId();
   console.log('Starting to fetch all positions with pagination...');
 
   do {
@@ -44,7 +45,8 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = '/jobs?limit=50&postingStatus=PUBLIC';
+      //let apiPath = '/jobs?limit=50&postingStatus=PUBLIC';
+      let apiPath = `/v1/companies/${companyId}/postings?offset=0`;
       if (nextPageId) {
         apiPath += `&pageId=${nextPageId}`;
       }

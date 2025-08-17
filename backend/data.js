@@ -30,7 +30,7 @@ async function saveJobsDataToCMS() {
   const jobsData = positions.content.map(position => {
     const basicJob = {
       _id: position.id,
-      title: position.title || '',
+      title: position.name || '',
       department: position.department?.label || 'Other',
       cityText: normalizeCityName(position.location?.city),
       location: position.location && Object.keys(position.location).length > 0
@@ -48,7 +48,7 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      postingStatus: position.postingStatus || '',
+      //postingStatus: position.postingStatus || '',
       jobDescription: null, // Will be filled later
     };
     return basicJob;
@@ -292,6 +292,18 @@ function fetchJobLocation(jobDetails) {
 function getSmartToken() {
   const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
   return elevatedGetSecretValue("x-smarttoken")
+    .then((secret) => {
+      return secret;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+}
+
+function getCompanyId() {
+  const elevatedGetSecretValue = auth.elevate(secrets.getSecretValue);
+  return elevatedGetSecretValue("companyID")
     .then((secret) => {
       return secret;
     })
