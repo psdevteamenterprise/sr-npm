@@ -291,7 +291,7 @@ function fetchJobLocation(jobDetails) {
 async function createApiKeyCollectionAndFillIt() {
     console.log("Creating ApiKey collection and filling it with the smart token");
     await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
-    console.log("Getting the smart token");
+    console.log("Getting the smart token ");
     const token = await getSmartToken();
     console.log("token is :  ", token);
     console.log("Inserting the smart token into the ApiKey collection");
