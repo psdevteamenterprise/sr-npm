@@ -250,6 +250,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     // Update reset button state
 	const hasActiveFilters = filters.length > 0;
 	hasActiveFilters? _$w('#resetFiltersButton').enable() : _$w('#resetFiltersButton').disable();
+    if(_$w('#searchInput').foc)
 }
 
 async function resetFilters(_$w) {
