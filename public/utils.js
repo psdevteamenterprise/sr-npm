@@ -22,7 +22,24 @@ function htmlToText(html) {
   return text.replace(/\n\s*\n+/g, '\n\n').replace(/[ \t]+\n/g, '\n').trim();
 }
 
+function filterBrokenMarkers(items) {
+  return items
+        .filter(item => {
+            const locationAddress = item.locationAddress;
+            const location = locationAddress && locationAddress.location;
+            return (
+                location !== undefined &&
+                location !== null &&
+                location.latitude !== undefined &&
+                location.latitude !== null &&
+                location.longitude !== undefined &&
+                location.longitude !== null
+            );
+        })
+}
+
 
   module.exports = {
-    htmlToText
+    htmlToText,
+    filterBrokenMarkers
   };

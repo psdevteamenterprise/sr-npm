@@ -7,7 +7,7 @@ const {
     debounce,
     getFilter,
   } = require('../public/filterUtils');
-
+  const { filterBrokenMarkers } = require('../public/utils');
   let currentLoadedItems =100;
   const itemsPerPage = 100;
   let allJobs=[]
@@ -349,20 +349,7 @@ async function handleLocationParam(_$w,location) {
 async function updateMapMarkers(_$w){
     const numOfItems = await _$w('#jobsDataset').getTotalCount();
     const items = await _$w('#jobsDataset').getItems(0, numOfItems);
-    const markers = items.items
-        .filter(item => {
-            const locationAddress = item.locationAddress;
-            const location = locationAddress && locationAddress.location;
-            return (
-                location !== undefined &&
-                location !== null &&
-                location.latitude !== undefined &&
-                location.latitude !== null &&
-                location.longitude !== undefined &&
-                location.longitude !== null
-            );
-        })
-        .map(item => {
+    const markers = filterBrokenMarkers(items.items).map(item => {
             const location = item.locationAddress.location;
             return {
                 location: {
