@@ -3,11 +3,9 @@ const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 const secretsData = require('./secretsData');
 async function makeSmartRecruitersRequest(path,token) {
-   const baseUrl = 'https://api.smartrecruiters.com'; // PROD
-//  const baseUrl = 'https://bayank2.wixstudio.com/my-site-3//_functions'; // TEST
+   const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
-    //console.log(`Making request to: ${fullUrl}`); 
   try {
     const response = await fetch(fullUrl, {
       method: 'GET',
@@ -63,8 +61,6 @@ async function fetchPositionsFromSRAPI() {
         console.log(`Total positions available: ${totalFound}`);
       }
 
-      // Get the nextPageId for the next iteration
-     // nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
      offset+=100;
      
     } catch (error) {
@@ -109,7 +105,7 @@ async function fetchJobDescription(jobId) {
 async function getSmartTokenFromCMS() {
   const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].token; // This is your string token
+      return result.items[0].token; 
   } else {
       throw new Error('[getSmartTokenFromCMS], No token found');
   }
