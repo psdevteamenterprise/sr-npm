@@ -47,7 +47,7 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      let apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}&limit=10`;
+      let apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath,token);
@@ -67,7 +67,7 @@ async function fetchPositionsFromSRAPI() {
 
       // Get the nextPageId for the next iteration
      // nextPageId = response.nextPageId && response.nextPageId !== '' ? response.nextPageId : null;
-     offset+=10;
+     offset+=100;
      
     } catch (error) {
       console.error(`Error fetching page ${page}:`, error);
@@ -104,7 +104,8 @@ async function fetchPositionsFromSRAPI() {
 
 async function fetchJobDescription(jobId) {
   const token = await getSmartTokenFromCMS();
-  return await makeSmartRecruitersRequest(`/jobs/${jobId}`,token);
+  const companyId = await secretsData.getCompanyId();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId.value}/postings/${jobId}`,token);
 }
 
 async function getSmartTokenFromCMS() {

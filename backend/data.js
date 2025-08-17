@@ -127,7 +127,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
-              jobDescription: jobDetails.jobAd.sections,
+              jobDescription: jobDetails.jobAd.sections.jobDescription,
               applyLink: applyLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
@@ -260,7 +260,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
 }
 
 function fetchApplyLink(jobDetails) {
-    return jobDetails.actions.applyOnWeb.url;
+    return jobDetails.applyUrl;
 }
 
 function fetchJobLocation(jobDetails) {
