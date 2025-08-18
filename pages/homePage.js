@@ -88,10 +88,6 @@ async function handleSearchInput(_$w) {
     const searchByTitle=[{field: 'title', searchTerm: trimmedInput}];
     const searchByCity=[{field: 'cityText', searchTerm: trimmedInput}];
 
-    // const fieldsToSearch = [
-    //     { field: 'title', searchTerm: trimmedInput }, 
-    //     { field: 'cityText', searchTerm: trimmedInput }
-    // ];
     
     let filter = await getFilter(searchByTitle);
 
@@ -124,7 +120,6 @@ async function handleSearchInput(_$w) {
 
 function handleSearch(searchInput) {
     const trimmedInput = searchInput.trim();
-    
     if (trimmedInput) {
         if(searchByCityFlag){
             location.to(`/positions?location=${trimmedInput}`);
