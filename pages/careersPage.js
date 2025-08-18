@@ -344,9 +344,9 @@ async function handleLocationParam(_$w,location) {
     console.log("dropdown options after fix: ", _$w('#dropdownLocation').options);
 
     const option=_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
-    
+
     if(option){
-        _$w('#dropdownLocation').value = checkme.value;
+        _$w('#dropdownLocation').value = option.value;
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
