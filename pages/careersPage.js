@@ -346,6 +346,7 @@ async function handleLocationParam(_$w,location) {
     if (_$w('#dropdownLocation').options.find(option => option.value === locationValue))
     {
         _$w('#dropdownLocation').value = locationValue;
+        console.log("i am here!@@##!@#")
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
