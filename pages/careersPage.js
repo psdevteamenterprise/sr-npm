@@ -338,12 +338,13 @@ async function handleLocationParam(_$w,location) {
     console.log("location dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("cities").find();
     //+1 because of the "All" option
-
+    console.log("i am here####################")
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
         fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
     }
+    console.log("dropdown options after fix: ", _$w('#dropdownLocation').options);
 
-    if (_$w('#dropdownLocation').options.find(option => option.value === locationValue))
+    if (_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase()))
     {
         _$w('#dropdownLocation').value = locationValue;
         console.log("i am here!@@##!@#")
