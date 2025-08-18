@@ -343,27 +343,15 @@ async function handleLocationParam(_$w,location) {
     }
     console.log("dropdown options after fix: ", _$w('#dropdownLocation').options);
 
-    let appliedFilter=false;
-    let checkme;
-    console.log("location value is: ", locationValue);
-    if (_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase()))
-    {
-        checkme=option;
-    }
-    console.log("checkme is: ", checkme);
-    
+    let checkme=_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
 
-    _$w('#dropdownLocation').options.find(async (option) => 
-        {
-            if (option.value.toLowerCase() === locationValue.toLowerCase()){
-            appliedFilter=true;
-            console.log("option value is: ", option);
-            _$w('#dropdownLocation').value = option.value;
-            console.log("i am here!@@##!@#")
-            await applyFilters(_$w, true); // Skip URL 
-        }
-        })
-    if (!appliedFilter) {
+    console.log("checkme is: ", checkme);
+    if(checkme){
+        console.log("location value found in dropdown options");
+        _$w('#dropdownLocation').value = checkme.value;
+        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+    }
+    else{
         console.warn("location value not found in dropdown options");
         queryParams.remove(["location"]);
     }
