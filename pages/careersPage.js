@@ -338,20 +338,19 @@ async function handleLocationParam(_$w,location) {
     console.log("location dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("cities").find();
     //+1 because of the "All" option
-
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
         fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
     }
+    
+    const option=_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
 
-    if (_$w('#dropdownLocation').options.find(option => option.value === locationValue))
-    {
-        _$w('#dropdownLocation').value = locationValue;
+    if(option){
+        _$w('#dropdownLocation').value = option.value;
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("location value not found in dropdown options");
-        queryParams.remove(["location" ]);
-
+        queryParams.remove(["location"]);
     }
     
 }

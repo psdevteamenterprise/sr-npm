@@ -20,7 +20,6 @@ function getFilter(fieldsToSearch = [], mode = 'or') {
             ? (mode === 'or' ? filter.or(condition) : filter.and(condition))
             : condition;
     });
-
     return filter;
 }
 
