@@ -344,6 +344,14 @@ async function handleLocationParam(_$w,location) {
     console.log("dropdown options after fix: ", _$w('#dropdownLocation').options);
 
     let appliedFilter=false;
+    let checkme;
+    console.log("location value is: ", locationValue);
+    if (_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase()))
+    {
+        checkme=option;
+    }
+    console.log("checkme is: ", checkme);
+    
 
     _$w('#dropdownLocation').options.find(async (option) => 
         {
