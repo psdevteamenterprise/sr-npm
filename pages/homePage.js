@@ -91,7 +91,7 @@ async function handleSearchInput(_$w) {
     const trimmedInput = searchInput.trim();
 
     const fieldsToSearch = [
-      //  { field: 'title', searchTerm: trimmedInput }, 
+        { field: 'title', searchTerm: trimmedInput }, 
         { field: 'cityText', searchTerm: trimmedInput }
     ];
     
