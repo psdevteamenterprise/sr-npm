@@ -126,7 +126,7 @@ function handleSearch(searchInput) {
     const trimmedInput = searchInput.trim();
     
     if (trimmedInput) {
-        if(searchByCity){
+        if(searchByCityFlag){
             location.to(`/positions?location=${trimmedInput}`);
         }
         else{
