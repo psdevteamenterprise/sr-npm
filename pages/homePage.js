@@ -6,6 +6,7 @@ const {
   const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
 let thisObjectVar;
+let searchByCityFlag=false;
 async function homePageOnReady(_$w,thisObject) {
     thisObjectVar=thisObject;
     await bind(_$w);
@@ -51,16 +52,11 @@ function init(_$w) {
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
-    _$w('#searchButton').onClick(()=>{
-        const trimmedInput = _$w('#searchInput').value.trim();
-        if (trimmedInput) {
-            location.to(`/positions?keyWord=${trimmedInput}`);
-        }
-    });
+    _$w('#searchButton').onClick(()=>handleSearch(_$w('#searchInput').value));
 
     _$w('#searchInput').onKeyPress((event) => {
         if (event.key === 'Enter') {
-            handleEnterPress(_$w('#searchInput').value);
+            handleSearch(_$w('#searchInput').value);
         }
     });
 
@@ -89,13 +85,15 @@ async function handleSearchInput(_$w) {
 
     searchInput = _$w('#searchInput').value;
     const trimmedInput = searchInput.trim();
+    const searchByTitle=[{field: 'title', searchTerm: trimmedInput}];
+    const searchByCity=[{field: 'cityText', searchTerm: trimmedInput}];
 
-    const fieldsToSearch = [
-        { field: 'title', searchTerm: trimmedInput }, 
-        { field: 'cityText', searchTerm: trimmedInput }
-    ];
+    // const fieldsToSearch = [
+    //     { field: 'title', searchTerm: trimmedInput }, 
+    //     { field: 'cityText', searchTerm: trimmedInput }
+    // ];
     
-    const filter = await getFilter(fieldsToSearch, 'or');
+    const filter = await getFilter(searchByTitle);
 
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
@@ -103,20 +101,40 @@ async function handleSearchInput(_$w) {
     count = _$w('#jobsDataset').getTotalCount();
 
     if (count > 0) {
+        searchByCityFlag=false;
         _$w('#resultsContainer').expand();
         _$w('#searchMultiStateBox').changeState('results');
-    } else {
-        _$w('#searchMultiStateBox').changeState('noResults');
+    } else {    
+        filter=await getFilter(searchByCity);
+        await _$w('#jobsDataset').setFilter(filter);
+        await _$w('#jobsDataset').refresh();
+        count = _$w('#jobsDataset').getTotalCount();
+        if(count > 0)
+        {
+            searchByCityFlag=true;
+            _$w('#resultsContainer').expand();
+            _$w('#searchMultiStateBox').changeState('results');
+        }
+        else{
+            searchByCityFlag=false;
+            _$w('#searchMultiStateBox').changeState('noResults');
+        }
     }
 }
 
-function handleEnterPress(searchInput) {
+function handleSearch(searchInput) {
     const trimmedInput = searchInput.trim();
     
     if (trimmedInput) {
-        location.to(`/positions?keyWord=${trimmedInput}`);
+        if(searchByCity){
+            location.to(`/positions?location=${trimmedInput}`);
+        }
+        else{
+            location.to(`/positions?keyWord=${trimmedInput}`);
+        }
     }
 }
+
 
 module.exports = {
     homePageOnReady,
