@@ -93,7 +93,7 @@ async function handleSearchInput(_$w) {
     //     { field: 'cityText', searchTerm: trimmedInput }
     // ];
     
-    const filter = await getFilter(searchByTitle);
+    let filter = await getFilter(searchByTitle);
 
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
