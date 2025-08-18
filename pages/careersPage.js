@@ -341,8 +341,7 @@ async function handleLocationParam(_$w,location) {
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
         fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
     }
-    console.log("dropdown options after fix: ", _$w('#dropdownLocation').options);
-
+    
     const option=_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
 
     if(option){
