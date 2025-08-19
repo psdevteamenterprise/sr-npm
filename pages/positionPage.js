@@ -13,6 +13,7 @@ const {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         console.log("item is: ", item);
+        console.log("item.jobDescription.text is: ", item.jobDescription.text);
 
         _$w('#companyDescriptionText').text = "htmlToText(item.jobDescription.companyDescription.text);"        
         _$w('#responsibilitiesText').text = "htmlToText(item.jobDescription.jobDescription.text);"
