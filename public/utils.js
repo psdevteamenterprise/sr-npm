@@ -3,7 +3,8 @@ const { secrets } = require("@wix/secrets");
 
 
 async function getServerlessAuth() {
-  const serverlessAuth =  await secrets.getSecret("serverless_auth")
+  const serverlessAuth =  await secrets.getSecretValue("serverless_auth")
+  console.log("serverlessAuth **********",serverlessAuth)
   return serverlessAuth;
 
 }
