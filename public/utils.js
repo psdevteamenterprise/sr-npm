@@ -1,14 +1,11 @@
 const { fetch } = require('wix-fetch');
 const { secrets } = require("@wix/secrets");
-const { auth } = require('@wix/essentials');
 
-const getSecretValue = auth.elevate(secrets.getSecretValue);
 
 async function getServerlessAuth() {
-  const serverlessAuth =  await getSecretValue("serverless_auth")
+  const serverlessAuth =  await secrets.getSecretValue("serverless_auth")
   console.log("serverlessAuth **********",serverlessAuth)
   return serverlessAuth;
-
 }
 
 function htmlToText(html) {
