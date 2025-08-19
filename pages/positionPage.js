@@ -8,6 +8,7 @@ const {
   }
 
   async function bind(_$w) {
+    console.log("i am here");
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
@@ -26,6 +27,7 @@ const {
             _$w('#relatedJobsSection').collapse();
        }
     });
+    console.log("i am here 2");
 }
 
   
