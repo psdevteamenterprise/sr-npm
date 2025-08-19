@@ -37,9 +37,7 @@ async function htmlToRichContent(htmlString) {
 
     },
     body: raw
-  };
-
-  
+  };  
   try{
         const response = await fetch("https://www.wixapis.com/data-sync/v1/abmp-content-converter", requestOptions);
         if (response.ok) {
