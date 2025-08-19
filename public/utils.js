@@ -1,5 +1,11 @@
 const { fetch } = require('wix-fetch');
-const { getServerlessAuth } = require('../backend/secretsData');
+const { wixSecretsBackend } = require('wix-secrets-backend');
+
+
+async function getServerlessAuth() {
+  const serverlessAuth =  await wixSecretsBackend.getSecret("serverless_auth")
+  return serverlessAuth
+}
 
 function htmlToText(html) {
   if (!html) return '';
