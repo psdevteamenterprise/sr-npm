@@ -1,4 +1,4 @@
-
+const { fetch } = require('wix-fetch');
 
 function htmlToText(html) {
   if (!html) return '';
@@ -21,6 +21,43 @@ function htmlToText(html) {
   return text.replace(/\n\s*\n+/g, '\n\n').replace(/[ \t]+\n/g, '\n').trim();
 }
 
+async function htmlToRichContent(htmlString) {
+  console.log("htmlString **********",htmlString)
+  const raw = JSON.stringify({
+    "content": htmlString
+  });
+
+
+  const requestOptions = {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+      "Cookie": "XSRF-TOKEN=1753949844|p--a7HsuVjR4",
+      "Authorization": "Bearer 2e19efe5f44d29d74480f5b744a5a90f19ba6ca7012ced19e7b14edb1ad6a641"
+
+    },
+    body: raw
+  };
+  
+  try{
+        const response = await fetch("https://www.wixapis.com/data-sync/v1/abmp-content-converter", requestOptions);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("data.richContent **********",data.richContent)
+          return data.richContent;
+      }
+
+      else
+      {
+        console.error(`error in fetching data, response: ${response}`);
+        
+      }
+  }
+  catch(error){
+    console.error("error in fetching data",error);
+  }
+}
+
 function filterBrokenMarkers(items) {
   return items
         .filter(item => {
@@ -40,5 +77,6 @@ function filterBrokenMarkers(items) {
 
   module.exports = {
     htmlToText,
-    filterBrokenMarkers
+    filterBrokenMarkers,
+    htmlToRichContent
   };
