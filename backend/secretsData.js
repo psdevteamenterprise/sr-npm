@@ -16,7 +16,16 @@ function getSmartToken() {
         return secret;
       })
   }
+
+  function getServerlessAuth() {
+    return getSecretValue("serverless_auth")
+      .then((secret) => {
+        return secret;
+      })
+  }
+
   module.exports = {
     getSmartToken,
-    getCompanyId
+    getCompanyId,
+    getServerlessAuth
   };

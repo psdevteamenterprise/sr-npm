@@ -1,4 +1,5 @@
 const { fetch } = require('wix-fetch');
+const { getServerlessAuth } = require('../backend/secretsData');
 
 function htmlToText(html) {
   if (!html) return '';
@@ -33,7 +34,7 @@ async function htmlToRichContent(htmlString) {
     headers: {
       "Content-Type": "application/json",
       "Cookie": "XSRF-TOKEN=1753949844|p--a7HsuVjR4",
-      "Authorization": "Bearer 2e19efe5f44d29d74480f5b744a5a90f19ba6ca7012ced19e7b14edb1ad6a641"
+      "Authorization": "Bearer "+await getServerlessAuth()
 
     },
     body: raw
