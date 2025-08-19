@@ -152,12 +152,6 @@ async function bind(_$w) {
 		_$w('#dropdownsContainer').collapse();
     } 
 
-	// _$w('#positionsRepeater').onItemReady(async ($item, itemData) => {
-	// 	$item('#positionItem').onClick(async () => {
-    //         let baseUrl = await location.baseUrl();
-	// 		to(`${baseUrl}/jobs/${itemData._id}`);
-	// 	});
-	// });
 }
 
 function init(_$w) {
