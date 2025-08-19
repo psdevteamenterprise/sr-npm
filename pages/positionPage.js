@@ -8,7 +8,6 @@ const {
   }
 
   async function bind(_$w) {
-    console.log("i am here");
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
@@ -18,7 +17,7 @@ const {
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
         _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
-        _$w('#richContent').text = item.jobDescription.jobDescription.text;
+        _$w('#richContent').content = item.jobDescription.jobDescription.text;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
 
@@ -28,7 +27,6 @@ const {
             _$w('#relatedJobsSection').collapse();
        }
     });
-    console.log("i am here 2");
 }
 
   
