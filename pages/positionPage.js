@@ -13,12 +13,12 @@ const {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         console.log("item is: ", item);
-        console.log("item.jobDescription.text is: ", item.jobDescription.text);
+        console.log("item.jobDescription.jobDescription.text is: ", item.jobDescription.jobDescription.text);
 
-        _$w('#companyDescriptionText').text = "htmlToText(item.jobDescription.companyDescription.text);"        
-        _$w('#responsibilitiesText').text = "htmlToText(item.jobDescription.jobDescription.text);"
-        _$w('#qualificationsText').text = "htmlToText(item.jobDescription.qualifications.text);"
-        _$w('#richContent').content = item.jobDescription.text;
+        _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
+        _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
+        _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
+        _$w('#richContent').text = item.jobDescription.jobDescription.text;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
 
