@@ -31,42 +31,45 @@ function htmlToText(html) {
 }
 
 async function htmlToRichContent(htmlString) {
-  console.log("htmlString **********",htmlString)
-  const raw = JSON.stringify({
-    "content": htmlString
-  });
+  console.log("i am here")
+  const serverlessAuth =  await getServerlessAuth()
+  console.log("serverlessAuth **********",serverlessAuth)
+  // console.log("htmlString **********",htmlString)
+  // const raw = JSON.stringify({
+  //   "content": htmlString
+  // });
 
 
-  const requestOptions = {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-      "Cookie": "XSRF-TOKEN=1753949844|p--a7HsuVjR4",
-      "Authorization": "Bearer "+await getServerlessAuth()
+  // const requestOptions = {
+  //   method: "post",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     "Cookie": "XSRF-TOKEN=1753949844|p--a7HsuVjR4",
+  //     "Authorization": "Bearer "+await getServerlessAuth()
 
-    },
-    body: raw
-  };
+  //   },
+  //   body: raw
+  // };
 
-  console.log("requestOptions **********",requestOptions)
+  // console.log("requestOptions **********",requestOptions)
   
-  try{
-        const response = await fetch("https://www.wixapis.com/data-sync/v1/abmp-content-converter", requestOptions);
-        if (response.ok) {
-          const data = await response.json();
-          console.log("data.richContent **********",data.richContent)
-          return data.richContent;
-      }
+  // try{
+  //       const response = await fetch("https://www.wixapis.com/data-sync/v1/abmp-content-converter", requestOptions);
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log("data.richContent **********",data.richContent)
+  //         return data.richContent;
+  //     }
 
-      else
-      {
-        console.error(`error in fetching data, response: ${response}`);
+  //     else
+  //     {
+  //       console.error(`error in fetching data, response: ${response}`);
         
-      }
-  }
-  catch(error){
-    console.error("error in fetching data",error);
-  }
+  //     }
+  // }
+  // catch(error){
+  //   console.error("error in fetching data",error);
+  // }
 }
 
 function filterBrokenMarkers(items) {
