@@ -17,7 +17,7 @@ const {
         _$w('#companyDescriptionText').text = "htmlToText(item.jobDescription.companyDescription.text);"        
         _$w('#responsibilitiesText').text = "htmlToText(item.jobDescription.jobDescription.text);"
         _$w('#qualificationsText').text = "htmlToText(item.jobDescription.qualifications.text);"
-        _$w('#richContent').content = item.jobDescription.jobDescription.text;
+        _$w('#richContent').content = item.jobDescription.text;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
 
