@@ -1,6 +1,5 @@
 const {
-    htmlToText,
-    htmlToRichContent
+    htmlToText
   } = require('../public/utils');
 
   async function positionPageOnReady(_$w) {
@@ -16,7 +15,6 @@ const {
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
         _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
-        _$w('#richContent').content = await htmlToRichContent(item.jobDescription.jobDescription.text);
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
     });
 
