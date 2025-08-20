@@ -32,7 +32,7 @@ thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
 await bind(_$w);
-await init(_$w,thisObject,queryParams);
+await init(_$w);
 await handleUrlParams(_$w);
 
 }
@@ -102,12 +102,14 @@ async function handleUrlParams(_$w) {
     if (queryLocationVar) {
         await handleLocationParam(_$w,queryLocationVar);
     }
+
+    await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
     // Use applyFilters to maintain consistency instead of directly setting filter
-    await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+   // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handlePageParam(_$w) {
@@ -160,7 +162,7 @@ async function bind(_$w) {
 
 }
 
-function init(_$w,thisObject,queryParams) {
+function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     _$w('#searchInput').onInput(debouncedSearch);
     _$w('#searchInput').onBlur(()=>{
@@ -183,10 +185,31 @@ function init(_$w,thisObject,queryParams) {
 
     //URL onChange
     onChange(async ()=>{
+        let deletedParam=false
         const newQueryParams=await location.query();
         console.log("onChange triggering on ready");
         console.log("newQueryParams: ", newQueryParams);
-        location.to(`/positions?KeyWord=123}`);
+        if(newQueryParams.department){
+            queryDepartmentVar=newQueryParams.department;
+        }
+        else{
+            queryDepartmentVar=undefined;
+            deletedParam=true;
+            _$w('#dropdownDepartment').value = '';
+        }
+        if(newQueryParams.location){
+            queryLocationVar=newQueryParams.location;
+        }
+        else{
+            queryLocationVar=undefined;
+            deletedParam=true
+            _$w('#dropdownLocation').value = '';
+        }
+        await handleUrlParams(_$w);
+        // if(deletedParam){
+        //     await applyFilters(_$w,true);
+        // }
+        
 
 
 
@@ -379,7 +402,7 @@ async function handleDepartmentParam(_$w,department) {
     {
         console.log("department value found in dropdown options ",departmentValue);
         _$w('#dropdownDepartment').value = departmentValue;
-        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("department value not found in dropdown options");
@@ -420,7 +443,7 @@ async function handleLocationParam(_$w,location) {
 
     if(option){
         _$w('#dropdownLocation').value = option.value;
-        await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("location value not found in dropdown options");
