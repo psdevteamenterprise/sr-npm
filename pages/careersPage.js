@@ -181,7 +181,7 @@ function init(_$w) {
 	});
 
     onChange(async (location1)=>{
-        console.log("URL changed onChange ", location1);
+        console.log("URL changed  onChange ", location1);
         console.log("query.location: ", query.location);
         console.log("query.keyWord: ", query.keyWord);
         console.log("query.department: ", query.department);
