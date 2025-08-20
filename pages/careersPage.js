@@ -220,7 +220,7 @@ function init(_$w) {
         await handleUrlParams(_$w);
         if(deletedParam)
         {
-            applyFilters(_$w);
+            await applyFilters(_$w,true);
             deletedParam=false;
         }
     });
