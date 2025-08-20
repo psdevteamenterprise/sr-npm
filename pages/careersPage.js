@@ -183,7 +183,7 @@ function init(_$w) {
 
     //URL onChange
     onChange(async ()=>{
-        
+        handleBackAndForth(_$w);
         const newQueryParams=await location.query();
         console.log("location.query(): ", newQueryParams);
         if(newQueryParams.keyWord){
@@ -360,6 +360,7 @@ async function handleDepartmentParam(_$w,department) {
 
     if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
     {
+        console.log("department value found in dropdown options ",departmentValue);
         _$w('#dropdownDepartment').value = departmentValue;
         await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
