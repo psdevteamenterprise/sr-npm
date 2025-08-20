@@ -179,7 +179,7 @@ function init(_$w) {
 	});
 
     onChange((location)=>{
-        console.log("URL changed onChange", location);
+        console.log("URL changed onChange ", location);
         handleUrlParams(_$w);
     });
 
