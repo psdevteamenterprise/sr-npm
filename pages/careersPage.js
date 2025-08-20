@@ -180,6 +180,7 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
+    //URL onChange
     onChange(async ()=>{
         
         const newQueryParams=await location.query();
