@@ -180,16 +180,26 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    onChange(async (location1)=>{
-        console.log("URL changed  onChange ", location1);
-        console.log("query.location: ", query.location);
-        console.log("query.keyWord: ", query.keyWord);
-        console.log("query.department: ", query.department);
-        console.log("query.page: ", query.page);
-        console.log("query ",query);
-        console.log("testing n ew ");
-        const my_test=await location.query();
-        console.log("location.query(): ", my_test);
+    onChange(async ()=>{
+        
+        const newQueryParams=await location.query();
+        console.log("location.query(): ", newQueryParams);
+        if(newQueryParams.keyWord){
+            console.log("setting querykeypaaram")
+            queryKeyWordVar=newQueryParams.keyWord;
+        }
+        if(newQueryParams.department){
+            console.log("setting queryDepartmentVar")
+            queryDepartmentVar=newQueryParams.department;
+        }
+        if(newQueryParams.location){
+            console.log("setting queryLocationVar")
+            queryLocationVar=newQueryParams.location;
+        }
+        if(newQueryParams.page){
+            console.log("setting queryPageVar")
+            queryPageVar=newQueryParams.page;
+        }
         handleUrlParams(_$w);
     });
 
