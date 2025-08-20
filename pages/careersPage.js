@@ -2,6 +2,8 @@ const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
+import { location } from "@wix/site-location";
+
 const {
     debounce,
     getFilter,
@@ -178,13 +180,16 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    onChange((location)=>{
+    onChange(async (location)=>{
         console.log("URL changed onChange ", location);
         console.log("query.location: ", query.location);
         console.log("query.keyWord: ", query.keyWord);
         console.log("query.department: ", query.department);
         console.log("query.page: ", query.page);
         console.log("query ",query);
+        console.log("testing new ");
+        const my_test=await location.query();
+        console.log("location.query(): ", my_test);
         handleUrlParams(_$w);
     });
 
