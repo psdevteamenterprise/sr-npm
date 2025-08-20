@@ -200,6 +200,8 @@ function init(_$w) {
         else
         {
             queryDepartmentVar=undefined;
+            _$w('#dropdownDepartment').value = '';
+
         }
         if(newQueryParams.location){
             console.log("setting queryLocationVar")
@@ -208,6 +210,7 @@ function init(_$w) {
         else
         {
             queryLocationVar=undefined;
+            _$w('#dropdownLocation').value = '';
         }
         if(newQueryParams.page){
             console.log("setting queryPageVar")
