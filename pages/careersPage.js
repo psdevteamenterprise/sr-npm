@@ -1,8 +1,7 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
-//const { query,queryParams} = require("wix-location-frontend");
-const {wixLocationFrontend} = require("wix-location-frontend");
+const { query,queryParams,onChange} = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
@@ -55,7 +54,7 @@ async function loadMoreJobs(_$w) {
     let shouldLoad = false;
     if (pageParamSet == 0) {
         shouldLoad = true;
-    } else if (wixLocationFrontend.query.page % 2 == pageParamSet % 2) {
+    } else if (query.page % 2 == pageParamSet % 2) {
         shouldLoad = true;
     } else {
         pageParamSet = Number(pageParamSet) + 1;
@@ -108,12 +107,12 @@ async function handlePageParam(_$w) {
     
     if(allJobs.length/itemsPerPage<queryPageVar){
         console.log(`max page is: ${allJobs.length/itemsPerPage}`)
-        wixLocationFrontend.queryParams.add({ page: allJobs.length/itemsPerPage }) 
+        queryParams.add({ page: allJobs.length/itemsPerPage }) 
     }
     if(queryPageVar<=1){
         console.log("min page is  : 2")
         pageParamSet=2;
-        wixLocationFrontend.queryParams.add({ page: 2 })
+        queryParams.add({ page: 2 })
     }
     if (queryPageVar) {   
         pageParamSet=queryPageVar;
@@ -175,8 +174,9 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    wixLocationFrontend.onChange((location)=>{
-        console.log("onChange#@!@!@#@#@!#",location);
+    onChange(()=>{
+        console.log("URL changed onChange");
+        handleUrlParams(_$w);
     });
 
 
@@ -206,7 +206,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
             if (!skipUrlUpdate) {
-                wixLocationFrontend.queryParams.remove(["keyWord", "department","page","location"]);
+                queryParams.remove(["keyWord", "department","page","location"]);
             }
 		}
 
@@ -214,13 +214,13 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		if (filter.value && filter.value.trim() !== '') {
             if (!skipUrlUpdate) {
                 if(filter.field === 'title'){
-                    wixLocationFrontend.queryParams.add({ keyWord: filter.value });
+                    queryParams.add({ keyWord: filter.value });
                 }
                 if(filter.field === 'department'){
-                    wixLocationFrontend.queryParams.add({ department: encodeURIComponent(filter.value) });
+                    queryParams.add({ department: encodeURIComponent(filter.value) });
                 }
                 if(filter.field === 'cityText'){
-                    wixLocationFrontend.queryParams.add({ location:  encodeURIComponent(filter.value) });
+                    queryParams.add({ location:  encodeURIComponent(filter.value) });
                 }
             }
 			if(filter.field === 'remote') {	
@@ -233,13 +233,13 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
     else{
         if (!skipUrlUpdate) {
             if(filter.field === 'title'){
-                wixLocationFrontend.queryParams.remove(["keyWord" ]);
+                queryParams.remove(["keyWord" ]);
             }
             if(filter.field === 'department'){
-                wixLocationFrontend.queryParams.remove(["department" ]);
+                queryParams.remove(["department" ]);
             }
             if(filter.field === 'cityText'){
-                wixLocationFrontend.queryParams.remove(["location" ]);
+                queryParams.remove(["location" ]);
             }
         }
     }
@@ -273,7 +273,7 @@ async function resetFilters(_$w) {
 
 	_$w('#resetFiltersButton').disable();
 
-    wixLocationFrontend.queryParams.remove(["keyWord", "department","page","location"]);
+    queryParams.remove(["keyWord", "department","page","location"]);
     
 
 	await updateCount(_$w);
@@ -310,7 +310,7 @@ async function handleDepartmentParam(_$w,department) {
     }
     else{
         console.warn("department value not found in dropdown options");
-        wixLocationFrontend.queryParams.remove(["department" ]);
+        queryParams.remove(["department" ]);
 
     }
     
@@ -351,7 +351,7 @@ async function handleLocationParam(_$w,location) {
     }
     else{
         console.warn("location value not found in dropdown options");
-        wixLocationFrontend.queryParams.remove(["location"]);
+        queryParams.remove(["location"]);
     }
     
 }
