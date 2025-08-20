@@ -187,7 +187,7 @@ function init(_$w) {
         console.log("query.department: ", query.department);
         console.log("query.page: ", query.page);
         console.log("query ",query);
-        console.log("testing new ");
+        console.log("testing n ew ");
         const my_test=await location.query();
         console.log("location.query(): ", my_test);
         handleUrlParams(_$w);
