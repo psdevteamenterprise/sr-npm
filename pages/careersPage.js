@@ -323,19 +323,20 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             if (!skipUrlUpdate) {
                 if(filter.field === 'title'){
                     queryParams.add({ keyWord: filter.value });
-                   // queryKeyWordVar=filter.value;
                 }
                 if(filter.field === 'department'){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
-                    //queryDepartmentVar=filter.value;
                 }
                 if(filter.field === 'cityText'){
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
-                    //queryLocationVar=filter.value;
                 }
                 if(filter.field === 'remote'){
-                    queryParams.add({ jobType: encodeURIComponent(filter.value) });
-                    //queryJobTypeVar=filter.value;
+                    if(filter.value === 'true'){
+                        queryParams.add({ jobType: encodeURIComponent("remote") });
+                    }
+                    else{
+                        queryParams.add({ jobType: encodeURIComponent("onsite") });
+                    }
                 }
             }
 			if(filter.field === 'remote') {	
@@ -349,22 +350,18 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
         if (!skipUrlUpdate) {
             if(filter.field === 'title'){
                 queryParams.remove(["keyWord" ]);
-               // queryKeyWordVar=undefined;
             }
             if(filter.field === 'department'){
                 console.log("removing department from url")
                 queryParams.remove(["department" ]);
-               // queryDepartmentVar=undefined;
             }
             if(filter.field === 'cityText'){
                 console.log("removing location from url")
                 queryParams.remove(["location" ]);
-               // queryLocationVar=undefined;
             }
             if(filter.field === 'remote'){
                 console.log("removing jobType from url")
                 queryParams.remove(["jobType" ]);
-               // queryJobTypeVar=undefined;
             }
         }
     }
