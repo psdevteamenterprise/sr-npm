@@ -83,6 +83,10 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
+    console.log("queryKeyWordVar: ", queryKeyWordVar);
+    console.log("queryPageVar: ", queryPageVar);
+    console.log("queryDepartmentVar: ", queryDepartmentVar);
+    console.log("queryLocationVar: ", queryLocationVar);
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
