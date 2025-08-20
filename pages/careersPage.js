@@ -180,6 +180,11 @@ function init(_$w) {
 
     onChange((location)=>{
         console.log("URL changed onChange ", location);
+        console.log("query.location: ", query.location);
+        console.log("query.keyWord: ", query.keyWord);
+        console.log("query.department: ", query.department);
+        console.log("query.page: ", query.page);
+        console.log("query",query);
         handleUrlParams(_$w);
     });
 
