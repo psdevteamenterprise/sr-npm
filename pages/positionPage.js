@@ -1,5 +1,5 @@
 const {
-    htmlToText,
+    htmlToText
   } = require('../public/utils');
 
   async function positionPageOnReady(_$w) {

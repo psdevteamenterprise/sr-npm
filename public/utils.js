@@ -1,5 +1,4 @@
 
-
 function htmlToText(html) {
   if (!html) return '';
 
@@ -17,10 +16,11 @@ function htmlToText(html) {
       .replace(/&#39;/g, "'")
       .replace(/&nbsp;/g, ' ');
 
-  console.log(text);
   // Clean up whitespace
   return text.replace(/\n\s*\n+/g, '\n\n').replace(/[ \t]+\n/g, '\n').trim();
 }
+
+
 
 function filterBrokenMarkers(items) {
   return items
