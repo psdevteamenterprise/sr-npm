@@ -183,7 +183,7 @@ function init(_$w) {
 
     //URL onChange
     onChange(async ()=>{
-        handleBackAndForth(_$w);
+        // handleBackAndForth(_$w);
         const newQueryParams=await location.query();
         console.log("location.query(): ", newQueryParams);
         if(newQueryParams.keyWord){
