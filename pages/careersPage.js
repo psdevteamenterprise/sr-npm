@@ -183,46 +183,51 @@ function init(_$w) {
 
     //URL onChange
     onChange(async ()=>{
-        // handleBackAndForth(_$w);
-        const newQueryParams=await location.query();
-        console.log("location.query(): ", newQueryParams);
-        if(newQueryParams.keyWord){
-            console.log("setting querykeyparam")
-            queryKeyWordVar=newQueryParams.keyWord;
-        }
-        else
-        {
-            queryKeyWordVar=undefined;
-            _$w('#searchInput').value = '';
-            deletedParam=true;
-        }
-        if(newQueryParams.department){
-            console.log("setting queryDepartmentVar")
-            queryDepartmentVar=newQueryParams.department;
-        }
-        else
-        {
-            queryDepartmentVar=undefined;
-            _$w('#dropdownDepartment').value = '';
-            deletedParam=true;
-        }
-        if(newQueryParams.location){
-            console.log("setting queryLocationVar")
-            queryLocationVar=newQueryParams.location;
-        }
-        else
-        {
-            queryLocationVar=undefined;
-            _$w('#dropdownLocation').value = '';
-            deletedParam=true;
-        }
+        
 
-        await handleUrlParams(_$w);
-        if(deletedParam)
-        {
-            await applyFilters(_$w,true);
-            deletedParam=false;
-        }
+
+
+
+        // handleBackAndForth(_$w);
+        // const newQueryParams=await location.query();
+        // console.log("location.query(): ", newQueryParams);
+        // if(newQueryParams.keyWord){
+        //     console.log("setting querykeyparam")
+        //     queryKeyWordVar=newQueryParams.keyWord;
+        // }
+        // else
+        // {
+        //     queryKeyWordVar=undefined;
+        //     _$w('#searchInput').value = '';
+        //     deletedParam=true;
+        // }
+        // if(newQueryParams.department){
+        //     console.log("setting queryDepartmentVar")
+        //     queryDepartmentVar=newQueryParams.department;
+        // }
+        // else
+        // {
+        //     queryDepartmentVar=undefined;
+        //     _$w('#dropdownDepartment').value = '';
+        //     deletedParam=true;
+        // }
+        // if(newQueryParams.location){
+        //     console.log("setting queryLocationVar")
+        //     queryLocationVar=newQueryParams.location;
+        // }
+        // else
+        // {
+        //     queryLocationVar=undefined;
+        //     _$w('#dropdownLocation').value = '';
+        //     deletedParam=true;
+        // }
+
+        // await handleUrlParams(_$w);
+        // if(deletedParam)
+        // {
+        //     await applyFilters(_$w,true);
+        //     deletedParam=false;
+        // }
     });
 
 
@@ -253,9 +258,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			filter.value = '';
             if (!skipUrlUpdate) {
                 queryParams.remove(["keyWord", "department","page","location"]);
-                queryKeyWordVar=undefined;
-                queryDepartmentVar=undefined;
-                queryLocationVar=undefined;
+                // queryKeyWordVar=undefined;
+                // queryDepartmentVar=undefined;
+                // queryLocationVar=undefined;
             }
 		}
 
@@ -264,15 +269,15 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             if (!skipUrlUpdate) {
                 if(filter.field === 'title'){
                     queryParams.add({ keyWord: filter.value });
-                    queryKeyWordVar=filter.value;
+                   // queryKeyWordVar=filter.value;
                 }
                 if(filter.field === 'department'){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
-                    queryDepartmentVar=filter.value;
+                    //queryDepartmentVar=filter.value;
                 }
                 if(filter.field === 'cityText'){
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
-                    queryLocationVar=filter.value;
+                    //queryLocationVar=filter.value;
                 }
             }
 			if(filter.field === 'remote') {	
@@ -286,15 +291,17 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
         if (!skipUrlUpdate) {
             if(filter.field === 'title'){
                 queryParams.remove(["keyWord" ]);
-                queryKeyWordVar=undefined;
+               // queryKeyWordVar=undefined;
             }
             if(filter.field === 'department'){
+                console.log("removing department from url")
                 queryParams.remove(["department" ]);
-                queryDepartmentVar=undefined;
+               // queryDepartmentVar=undefined;
             }
             if(filter.field === 'cityText'){
+                console.log("removing location from url")
                 queryParams.remove(["location" ]);
-                queryLocationVar=undefined;
+               // queryLocationVar=undefined;
             }
         }
     }
