@@ -180,8 +180,8 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    onChange(async (location)=>{
-        console.log("URL changed onChange ", location);
+    onChange(async (location1)=>{
+        console.log("URL changed onChange ", location1);
         console.log("query.location: ", query.location);
         console.log("query.keyWord: ", query.keyWord);
         console.log("query.department: ", query.department);
