@@ -216,6 +216,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			filter.value = '';
             if (!skipUrlUpdate) {
                 queryParams.remove(["keyWord", "department","page","location"]);
+                queryKeyWordVar=undefined;
+                queryDepartmentVar=undefined;
+                queryLocationVar=undefined;
             }
 		}
 
@@ -224,12 +227,15 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             if (!skipUrlUpdate) {
                 if(filter.field === 'title'){
                     queryParams.add({ keyWord: filter.value });
+                    queryKeyWordVar=filter.value;
                 }
                 if(filter.field === 'department'){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
+                    queryDepartmentVar=filter.value;
                 }
                 if(filter.field === 'cityText'){
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
+                    queryLocationVar=filter.value;
                 }
             }
 			if(filter.field === 'remote') {	
@@ -243,12 +249,15 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
         if (!skipUrlUpdate) {
             if(filter.field === 'title'){
                 queryParams.remove(["keyWord" ]);
+                queryKeyWordVar=undefined;
             }
             if(filter.field === 'department'){
                 queryParams.remove(["department" ]);
+                queryDepartmentVar=undefined;
             }
             if(filter.field === 'cityText'){
                 queryParams.remove(["location" ]);
+                queryLocationVar=undefined;
             }
         }
     }
