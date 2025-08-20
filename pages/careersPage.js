@@ -88,11 +88,6 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
-    console.log("queryKeyWordVar: ", queryKeyWordVar);
-    console.log("queryPageVar: ", queryPageVar);
-    console.log("queryDepartmentVar: ", queryDepartmentVar);
-    console.log("queryLocationVar: ", queryLocationVar);
-    console.log("queryJobTypeVar: ", queryJobTypeVar);
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
@@ -114,7 +109,6 @@ async function handleUrlParams(_$w) {
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
     // Use applyFilters to maintain consistency instead of directly setting filter
-   // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handlePageParam(_$w) {
@@ -178,7 +172,7 @@ function init(_$w) {
         }
     });
     _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>{
-        console.log("onChange triggering on dropdown@@@@@@");
+        console.log("dropdown onChange is triggered");
         applyFilters(_$w);
     });
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
@@ -194,64 +188,7 @@ function init(_$w) {
     //URL onChange
     onChange(async ()=>{
        await handleBackAndForth(_$w);
-
-       
-
-
-
-
-        //try onready first
-        //try location to
-        
-
-
-
-
-        // handleBackAndForth(_$w);
-        // const newQueryParams=await location.query();
-        // console.log("location.query(): ", newQueryParams);
-        // if(newQueryParams.keyWord){
-        //     console.log("setting querykeyparam")
-        //     queryKeyWordVar=newQueryParams.keyWord;
-        // }
-        // else
-        // {
-        //     queryKeyWordVar=undefined;
-        //     _$w('#searchInput').value = '';
-        //     deletedParam=true;
-        // }
-        // if(newQueryParams.department){
-        //     console.log("setting queryDepartmentVar")
-        //     queryDepartmentVar=newQueryParams.department;
-        // }
-        // else
-        // {
-        //     queryDepartmentVar=undefined;
-        //     _$w('#dropdownDepartment').value = '';
-        //     deletedParam=true;
-        // }
-        // if(newQueryParams.location){
-        //     console.log("setting queryLocationVar")
-        //     queryLocationVar=newQueryParams.location;
-        // }
-        // else
-        // {
-        //     queryLocationVar=undefined;
-        //     _$w('#dropdownLocation').value = '';
-        //     deletedParam=true;
-        // }
-
-        // await handleUrlParams(_$w);
-        // if(deletedParam)
-        // {
-        //     await applyFilters(_$w,true);
-        //     deletedParam=false;
-        // }
     });
-
-
-
-
 }
 
 
@@ -291,9 +228,6 @@ async function handleBackAndForth(_$w){
             _$w('#dropdownJobType').value = '';
         }
         await handleUrlParams(_$w);
-        // if(deletedParam){
-        //     await applyFilters(_$w,true);
-        // }
         
 }
 
@@ -324,15 +258,12 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
             if (!skipUrlUpdate) {
                 if(filter.field === 'title'){
                     queryParams.add({ keyWord: filter.value });
-                   // queryKeyWordVar=filter.value;
                 }
                 if(filter.field === 'department'){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
-                    //queryDepartmentVar=filter.value;
                 }
                 if(filter.field === 'cityText'){
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
-                    //queryLocationVar=filter.value;
                 }
                 if(filter.field === 'remote'){
                     if(filter.value === 'true'){
@@ -341,7 +272,6 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                     else{
                         queryParams.add({ jobType: encodeURIComponent("onsite") });
                     }
-                    //queryJobTypeVar=filter.value;
                 }
             }
 			if(filter.field === 'remote') {	
@@ -355,22 +285,18 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
         if (!skipUrlUpdate) {
             if(filter.field === 'title'){
                 queryParams.remove(["keyWord" ]);
-               // queryKeyWordVar=undefined;
             }
             if(filter.field === 'department'){
                 console.log("removing department from url")
                 queryParams.remove(["department" ]);
-               // queryDepartmentVar=undefined;
             }
             if(filter.field === 'cityText'){
                 console.log("removing location from url")
                 queryParams.remove(["location" ]);
-               // queryLocationVar=undefined;
             }
             if(filter.field === 'remote'){
                 console.log("removing jobType from url")
                 queryParams.remove(["jobType" ]);
-               // queryJobTypeVar=undefined;
             }
         }
     }
@@ -438,7 +364,6 @@ async function handleDepartmentParam(_$w,department) {
     {
         console.log("department value found in dropdown options ",departmentValue);
         _$w('#dropdownDepartment').value = departmentValue;
-       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("department value not found in dropdown options");
@@ -479,7 +404,6 @@ async function handleLocationParam(_$w,location) {
 
     if(option){
         _$w('#dropdownLocation').value = option.value;
-       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("location value not found in dropdown options");
@@ -499,9 +423,7 @@ async function handleJobTypeParam(_$w,jobType) {
     if(jobTypeValue.toLowerCase()==="onsite"){
         option="false";
     }
-    //const option=_$w('#dropdownJobType').options.find(option => option.value.toLowerCase() === jobTypeValue.toLowerCase())
     if(option){
-
         _$w('#dropdownJobType').value = option;
     }
     else{
