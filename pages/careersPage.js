@@ -217,7 +217,7 @@ function init(_$w) {
             deletedParam=true;
         }
 
-        handleUrlParams(_$w);
+        await handleUrlParams(_$w);
         if(deletedParam)
         {
             applyFilters(_$w);
