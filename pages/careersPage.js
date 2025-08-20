@@ -102,8 +102,6 @@ async function handleUrlParams(_$w) {
     if (queryLocationVar) {
         await handleLocationParam(_$w,queryLocationVar);
     }
-
-    if()
 }
 
 async function handleKeyWordParam(_$w,keyWord) {
