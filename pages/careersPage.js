@@ -20,6 +20,7 @@ const {
   let queryDepartmentVar;
   let queryLocationVar;
   let searchInputBlurredFirstTime=true;
+  let deletedParam=false;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location } = queryParams;
@@ -101,6 +102,8 @@ async function handleUrlParams(_$w) {
     if (queryLocationVar) {
         await handleLocationParam(_$w,queryLocationVar);
     }
+
+    if()
 }
 
 async function handleKeyWordParam(_$w,keyWord) {
@@ -192,6 +195,8 @@ function init(_$w) {
         else
         {
             queryKeyWordVar=undefined;
+            _$w('#searchInput').value = '';
+            deletedParam=true;
         }
         if(newQueryParams.department){
             console.log("setting queryDepartmentVar")
@@ -201,7 +206,7 @@ function init(_$w) {
         {
             queryDepartmentVar=undefined;
             _$w('#dropdownDepartment').value = '';
-
+            deletedParam=true;
         }
         if(newQueryParams.location){
             console.log("setting queryLocationVar")
@@ -211,16 +216,15 @@ function init(_$w) {
         {
             queryLocationVar=undefined;
             _$w('#dropdownLocation').value = '';
+            deletedParam=true;
         }
-        if(newQueryParams.page){
-            console.log("setting queryPageVar")
-            queryPageVar=newQueryParams.page;
-        }
-        else
-        {
-            queryPageVar=undefined;
-        }
+
         handleUrlParams(_$w);
+        if(deletedParam)
+        {
+            applyFilters(_$w);
+            deletedParam=false;
+        }
     });
 
 
