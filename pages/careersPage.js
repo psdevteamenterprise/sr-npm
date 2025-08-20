@@ -293,7 +293,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 			_$w(filter.elementId).value = '';
 			filter.value = '';
             if (!skipUrlUpdate) {
-                queryParams.remove(["keyWord", "department","page","location"]);
+                //queryParams.remove(["keyWord", "department","page","location"]);
                 // queryKeyWordVar=undefined;
                 // queryDepartmentVar=undefined;
                 // queryLocationVar=undefined;
