@@ -333,6 +333,10 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
                     //queryLocationVar=filter.value;
                 }
+                if(filter.field === 'remote'){
+                    queryParams.add({ jobType: encodeURIComponent(filter.value) });
+                    //queryJobTypeVar=filter.value;
+                }
             }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
@@ -356,6 +360,11 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                 console.log("removing location from url")
                 queryParams.remove(["location" ]);
                // queryLocationVar=undefined;
+            }
+            if(filter.field === 'remote'){
+                console.log("removing jobType from url")
+                queryParams.remove(["jobType" ]);
+               // queryJobTypeVar=undefined;
             }
         }
     }
