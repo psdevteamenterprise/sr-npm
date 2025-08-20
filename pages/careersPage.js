@@ -14,13 +14,21 @@ const {
   let allJobs=[]
   const RESET_ALL = 'RESET_ALL';
   let pageParamSet=0;
-  let myQueryParams;
   let thisObjectVar;
-
+  let queryPageVar;
+  let queryKeyWordVar;
+  let queryDepartmentVar;
+  let queryLocationVar;
+  let queryJobTypeVar;
   let searchInputBlurredFirstTime=true;
-async function careersPageOnReady(_$w,thisObject,myQueryParams) {
-
-myQueryParams=myQueryParams;
+async function careersPageOnReady(_$w,thisObject,queryParams) {
+console.log("queryParams: ", queryParams);
+const { page, keyWord, department, location,jobType } = queryParams;
+queryPageVar=page;
+queryKeyWordVar=keyWord;
+queryDepartmentVar=department;
+queryLocationVar=location;
+queryJobTypeVar=jobType;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
@@ -79,20 +87,20 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
-    if (myQueryParams.keyWord) {
-        await handleKeyWordParam(_$w,myQueryParams.keyWord);
+    if (queryKeyWordVar) {
+        await handleKeyWordParam(_$w,queryKeyWordVar);
     }
-    if (myQueryParams.page) {
+    if (queryPageVar) {
         await handlePageParam(_$w);    
     }
-    if (myQueryParams.department) {
-        await handleDepartmentParam(_$w,myQueryParams.department);
+    if (queryDepartmentVar) {
+        await handleDepartmentParam(_$w,queryDepartmentVar);
     }
-    if (myQueryParams.location) {
-        await handleLocationParam(_$w,myQueryParams.location);
+    if (queryLocationVar) {
+        await handleLocationParam(_$w,queryLocationVar);
     }
-    if (myQueryParams.jobType) {
-        await handleJobTypeParam(_$w,myQueryParams.jobType);
+    if (queryJobTypeVar) {
+        await handleJobTypeParam(_$w,queryJobTypeVar);
     }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
@@ -105,20 +113,20 @@ async function handleKeyWordParam(_$w,keyWord) {
 
 async function handlePageParam(_$w) {
     
-    if(allJobs.length/itemsPerPage<myQueryParams.page){
+    if(allJobs.length/itemsPerPage<queryPageVar){
         console.log(`max page is: ${allJobs.length/itemsPerPage}`)
         queryParams.add({ page: allJobs.length/itemsPerPage }) 
     }
-    if(myQueryParams.page<=1){
+    if(queryPageVar<=1){
         console.log("min page is  : 2")
         pageParamSet=2;
         queryParams.add({ page: 2 })
     }
-    if (myQueryParams.page) {   
-        pageParamSet=myQueryParams.page;
+    if (queryPageVar) {   
+        pageParamSet=queryPageVar;
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
-        for (let i = 2; i <= myQueryParams.page; i++) {
+        for (let i = 2; i <= queryPageVar; i++) {
            await _$w("#jobsDataset").loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
@@ -189,34 +197,34 @@ async function handleBackAndForth(_$w){
         const newQueryParams=await location.query();
         console.log("newQueryParams: ", newQueryParams);
         if(newQueryParams.department){
-            myQueryParams.department=newQueryParams.department;
+            queryDepartmentVar=newQueryParams.department;
         }
         else{
-            myQueryParams.department=undefined;
+            queryDepartmentVar=undefined;
             deletedParam=true;
             _$w('#dropdownDepartment').value = '';
         }
         if(newQueryParams.location){
-            myQueryParams.location=newQueryParams.location;
+            queryLocationVar=newQueryParams.location;
         }
         else{
-            myQueryParams.location=undefined;
+            queryLocationVar=undefined;
             deletedParam=true
             _$w('#dropdownLocation').value = '';
         }
         if(newQueryParams.keyWord){
-            myQueryParams.keyWord=newQueryParams.keyWord;
+            queryKeyWordVar=newQueryParams.keyWord;
         }
         else{
-            myQueryParams.keyWord=undefined;
+            queryKeyWordVar=undefined;
             deletedParam=true;
             _$w('#searchInput').value = '';
         }
         if(newQueryParams.jobType){
-            myQueryParams.jobType=newQueryParams.jobType;
+            queryJobTypeVar=newQueryParams.jobType;
         }
         else{
-            myQueryParams.jobType=undefined;
+            queryJobTypeVar=undefined;
             deletedParam=true;
             _$w('#dropdownJobType').value = '';
         }
