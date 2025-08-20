@@ -178,8 +178,8 @@ function init(_$w) {
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
 
-    onChange(()=>{
-        console.log("URL changed onChange");
+    onChange((location)=>{
+        console.log("URL changed onChange", location);
         handleUrlParams(_$w);
     });
 
