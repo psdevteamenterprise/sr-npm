@@ -183,8 +183,12 @@ function init(_$w,thisObject,queryParams) {
 
     //URL onChange
     onChange(async ()=>{
+        const newQueryParams=await location.query();
         console.log("onChange triggering on ready");
-        await careersPageOnReady(_$w,thisObject,queryParams);
+        console.log("newQueryParams: ", newQueryParams);
+        location.to(`/positions?KeyWord=123}`);
+
+
 
 
         //try onready first
