@@ -14,22 +14,13 @@ const {
   let allJobs=[]
   const RESET_ALL = 'RESET_ALL';
   let pageParamSet=0;
+  let myQueryParams;
   let thisObjectVar;
-  let queryPageVar;
-  let queryKeyWordVar;
-  let queryDepartmentVar;
-  let queryLocationVar;
-  let queryJobTypeVar;
+
   let searchInputBlurredFirstTime=true;
-  let deletedParam=false;
-async function careersPageOnReady(_$w,thisObject,queryParams) {
-console.log("queryParams: ", queryParams);
-const { page, keyWord, department, location,jobType } = queryParams;
-queryPageVar=page;
-queryKeyWordVar=keyWord;
-queryDepartmentVar=department;
-queryLocationVar=location;
-queryJobTypeVar=jobType;
+async function careersPageOnReady(_$w,thisObject,myQueryParams) {
+
+myQueryParams=myQueryParams;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
@@ -88,24 +79,20 @@ async function setPageParamInUrl() {
    
 }
 async function handleUrlParams(_$w) {
-    console.log("queryKeyWordVar: ", queryKeyWordVar);
-    console.log("queryPageVar: ", queryPageVar);
-    console.log("queryDepartmentVar: ", queryDepartmentVar);
-    console.log("queryLocationVar: ", queryLocationVar);
-    if (queryKeyWordVar) {
-        await handleKeyWordParam(_$w,queryKeyWordVar);
+    if (myQueryParams.keyWord) {
+        await handleKeyWordParam(_$w,myQueryParams.keyWord);
     }
-    if (queryPageVar) {
+    if (myQueryParams.page) {
         await handlePageParam(_$w);    
     }
-    if (queryDepartmentVar) {
-        await handleDepartmentParam(_$w,queryDepartmentVar);
+    if (myQueryParams.department) {
+        await handleDepartmentParam(_$w,myQueryParams.department);
     }
-    if (queryLocationVar) {
-        await handleLocationParam(_$w,queryLocationVar);
+    if (myQueryParams.location) {
+        await handleLocationParam(_$w,myQueryParams.location);
     }
-    if (queryJobTypeVar) {
-        await handleJobTypeParam(_$w,queryJobTypeVar);
+    if (myQueryParams.jobType) {
+        await handleJobTypeParam(_$w,myQueryParams.jobType);
     }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
@@ -113,25 +100,25 @@ async function handleUrlParams(_$w) {
 async function handleKeyWordParam(_$w,keyWord) {
     _$w('#searchInput').value = keyWord;
     // Use applyFilters to maintain consistency instead of directly setting filter
-   // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
+
 }
 
 async function handlePageParam(_$w) {
     
-    if(allJobs.length/itemsPerPage<queryPageVar){
+    if(allJobs.length/itemsPerPage<myQueryParams.page){
         console.log(`max page is: ${allJobs.length/itemsPerPage}`)
         queryParams.add({ page: allJobs.length/itemsPerPage }) 
     }
-    if(queryPageVar<=1){
+    if(myQueryParams.page<=1){
         console.log("min page is  : 2")
         pageParamSet=2;
         queryParams.add({ page: 2 })
     }
-    if (queryPageVar) {   
-        pageParamSet=queryPageVar;
+    if (myQueryParams.page) {   
+        pageParamSet=myQueryParams.page;
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
-        for (let i = 2; i <= queryPageVar; i++) {
+        for (let i = 2; i <= myQueryParams.page; i++) {
            await _$w("#jobsDataset").loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
@@ -176,10 +163,7 @@ function init(_$w) {
         searchInputBlurredFirstTime=false;
         }
     });
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>{
-        console.log("onChange triggering on dropdown@@@@@@");
-        applyFilters(_$w);
-    });
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(applyFilters(_$w));
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
 	_$w('#openFiltersButton').onClick(()=>{
@@ -193,59 +177,6 @@ function init(_$w) {
     //URL onChange
     onChange(async ()=>{
        await handleBackAndForth(_$w);
-
-       
-
-
-
-
-        //try onready first
-        //try location to
-        
-
-
-
-
-        // handleBackAndForth(_$w);
-        // const newQueryParams=await location.query();
-        // console.log("location.query(): ", newQueryParams);
-        // if(newQueryParams.keyWord){
-        //     console.log("setting querykeyparam")
-        //     queryKeyWordVar=newQueryParams.keyWord;
-        // }
-        // else
-        // {
-        //     queryKeyWordVar=undefined;
-        //     _$w('#searchInput').value = '';
-        //     deletedParam=true;
-        // }
-        // if(newQueryParams.department){
-        //     console.log("setting queryDepartmentVar")
-        //     queryDepartmentVar=newQueryParams.department;
-        // }
-        // else
-        // {
-        //     queryDepartmentVar=undefined;
-        //     _$w('#dropdownDepartment').value = '';
-        //     deletedParam=true;
-        // }
-        // if(newQueryParams.location){
-        //     console.log("setting queryLocationVar")
-        //     queryLocationVar=newQueryParams.location;
-        // }
-        // else
-        // {
-        //     queryLocationVar=undefined;
-        //     _$w('#dropdownLocation').value = '';
-        //     deletedParam=true;
-        // }
-
-        // await handleUrlParams(_$w);
-        // if(deletedParam)
-        // {
-        //     await applyFilters(_$w,true);
-        //     deletedParam=false;
-        // }
     });
 
 
@@ -258,41 +189,38 @@ async function handleBackAndForth(_$w){
         const newQueryParams=await location.query();
         console.log("newQueryParams: ", newQueryParams);
         if(newQueryParams.department){
-            queryDepartmentVar=newQueryParams.department;
+            myQueryParams.department=newQueryParams.department;
         }
         else{
-            queryDepartmentVar=undefined;
+            myQueryParams.department=undefined;
             deletedParam=true;
             _$w('#dropdownDepartment').value = '';
         }
         if(newQueryParams.location){
-            queryLocationVar=newQueryParams.location;
+            myQueryParams.location=newQueryParams.location;
         }
         else{
-            queryLocationVar=undefined;
+            myQueryParams.location=undefined;
             deletedParam=true
             _$w('#dropdownLocation').value = '';
         }
         if(newQueryParams.keyWord){
-            queryKeyWordVar=newQueryParams.keyWord;
+            myQueryParams.keyWord=newQueryParams.keyWord;
         }
         else{
-            queryKeyWordVar=undefined;
+            myQueryParams.keyWord=undefined;
             deletedParam=true;
             _$w('#searchInput').value = '';
         }
         if(newQueryParams.jobType){
-            queryJobTypeVar=newQueryParams.jobType;
+            myQueryParams.jobType=newQueryParams.jobType;
         }
         else{
-            queryJobTypeVar=undefined;
+            myQueryParams.jobType=undefined;
             deletedParam=true;
             _$w('#dropdownJobType').value = '';
         }
         await handleUrlParams(_$w);
-        // if(deletedParam){
-        //     await applyFilters(_$w,true);
-        // }
         
 }
 
@@ -429,7 +357,6 @@ async function handleDepartmentParam(_$w,department) {
     {
         console.log("department value found in dropdown options ",departmentValue);
         _$w('#dropdownDepartment').value = departmentValue;
-       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("department value not found in dropdown options");
@@ -470,7 +397,6 @@ async function handleLocationParam(_$w,location) {
 
     if(option){
         _$w('#dropdownLocation').value = option.value;
-       // await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
     }
     else{
         console.warn("location value not found in dropdown options");
