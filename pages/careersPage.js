@@ -184,7 +184,7 @@ function init(_$w) {
         console.log("query.keyWord: ", query.keyWord);
         console.log("query.department: ", query.department);
         console.log("query.page: ", query.page);
-        console.log("query",query);
+        console.log("query ",query);
         handleUrlParams(_$w);
     });
 
