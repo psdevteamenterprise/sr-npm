@@ -1,8 +1,7 @@
 const { getAllPositions } = require('../backend/queries');
 const {wixData} = require('wix-data');
-//const { location } = require('@wix/site-location');
 const { window } = require('@wix/site-window');
-const { query,queryParams} = require("wix-location-frontend");
+const { query,queryParams,wixLocationFrontend} = require("wix-location-frontend");
 const {
     debounce,
     getFilter,
@@ -174,6 +173,11 @@ function init(_$w) {
 	_$w('#closeFiltersButton').onClick(()=>{
 		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
 	});
+    
+    wixLocationFrontend.onChange(()=>{
+        console.log("wixLocationFrontend.onChange");
+    });
+
 
 }
 
