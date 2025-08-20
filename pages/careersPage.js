@@ -493,10 +493,10 @@ async function handleJobTypeParam(_$w,jobType) {
     let dropdownOptions = _$w('#dropdownJobType').options;
     console.log("jobType dropdown options:", dropdownOptions);
     let option;
-    if(jobTypeValue.toLocaleLowerCase==="remote"){
+    if(jobTypeValue.toLowerCase()==="remote"){
         option="true";
     }
-    if(jobTypeValue.toLocaleLowerCase==="onsite"){
+    if(jobTypeValue.toLowerCase()==="onsite"){
         option="false";
     }
     //const option=_$w('#dropdownJobType').options.find(option => option.value.toLowerCase() === jobTypeValue.toLowerCase())
