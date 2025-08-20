@@ -186,7 +186,7 @@ function init(_$w) {
         const newQueryParams=await location.query();
         console.log("location.query(): ", newQueryParams);
         if(newQueryParams.keyWord){
-            console.log("setting querykeypaaram")
+            console.log("setting querykeyparam")
             queryKeyWordVar=newQueryParams.keyWord;
         }
         else
