@@ -32,7 +32,7 @@ thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
 await bind(_$w);
-await init(_$w);
+await init(_$w,thisObject,queryParams);
 await handleUrlParams(_$w);
 
 }
@@ -160,7 +160,7 @@ async function bind(_$w) {
 
 }
 
-function init(_$w) {
+function init(_$w,thisObject,queryParams) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
     _$w('#searchInput').onInput(debouncedSearch);
     _$w('#searchInput').onBlur(()=>{
@@ -183,6 +183,12 @@ function init(_$w) {
 
     //URL onChange
     onChange(async ()=>{
+        console.log("onChange triggering on ready");
+        await careersPageOnReady(_$w,thisObject,queryParams);
+
+
+        //try onready first
+        //try location to
         
 
 
