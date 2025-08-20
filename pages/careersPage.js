@@ -92,6 +92,7 @@ async function handleUrlParams(_$w) {
     console.log("queryPageVar: ", queryPageVar);
     console.log("queryDepartmentVar: ", queryDepartmentVar);
     console.log("queryLocationVar: ", queryLocationVar);
+    console.log("queryJobTypeVar: ", queryJobTypeVar);
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
@@ -491,9 +492,17 @@ async function handleJobTypeParam(_$w,jobType) {
     const jobTypeValue = decodeURIComponent(jobType);
     let dropdownOptions = _$w('#dropdownJobType').options;
     console.log("jobType dropdown options:", dropdownOptions);
-    const option=_$w('#dropdownJobType').options.find(option => option.value.toLowerCase() === jobTypeValue.toLowerCase())
+    let option;
+    if(jobTypeValue.toLocaleLowerCase==="remote"){
+        option="true";
+    }
+    if(jobTypeValue.toLocaleLowerCase==="onsite"){
+        option="false";
+    }
+    //const option=_$w('#dropdownJobType').options.find(option => option.value.toLowerCase() === jobTypeValue.toLowerCase())
     if(option){
-        _$w('#dropdownJobType').value = option.value;
+
+        _$w('#dropdownJobType').value = option;
     }
     else{
         console.warn("jobType value not found in dropdown options");
