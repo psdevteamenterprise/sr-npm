@@ -172,7 +172,10 @@ function init(_$w) {
         searchInputBlurredFirstTime=false;
         }
     });
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>applyFilters(_$w));
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>{
+        console.log("onChange triggering on dropdown@@@@@@");
+        applyFilters(_$w);
+    });
 	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
 
 	_$w('#openFiltersButton').onClick(()=>{
