@@ -189,17 +189,33 @@ function init(_$w) {
             console.log("setting querykeypaaram")
             queryKeyWordVar=newQueryParams.keyWord;
         }
+        else
+        {
+            queryKeyWordVar=undefined;
+        }
         if(newQueryParams.department){
             console.log("setting queryDepartmentVar")
             queryDepartmentVar=newQueryParams.department;
+        }
+        else
+        {
+            queryDepartmentVar=undefined;
         }
         if(newQueryParams.location){
             console.log("setting queryLocationVar")
             queryLocationVar=newQueryParams.location;
         }
+        else
+        {
+            queryLocationVar=undefined;
+        }
         if(newQueryParams.page){
             console.log("setting queryPageVar")
             queryPageVar=newQueryParams.page;
+        }
+        else
+        {
+            queryPageVar=undefined;
         }
         handleUrlParams(_$w);
     });
