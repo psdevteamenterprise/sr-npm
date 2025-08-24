@@ -10,7 +10,6 @@ describe('Job details fetch from SR API Tests', () => {
     });
   
       test('should successfully fetch job details from SR API', async () => {
-        
         const randomPosition = getRandomPosition(positions.data.result.content);
         expect(positions.data.result.totalFound).toBeGreaterThan(0);
         expect(positions.data.result.content.length).toBeGreaterThan(0);
