@@ -32,5 +32,4 @@ describe('Job details fetch from SR API Tests', () => {
       });
   
   
-
   });
