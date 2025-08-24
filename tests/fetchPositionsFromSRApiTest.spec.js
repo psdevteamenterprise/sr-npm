@@ -4,9 +4,9 @@ const { stringifyWithFunctions, executeApiRequest } = require('tests-utils');
 
 describe('Job details fetch from SR API Tests', () => {
   
-    beforeEach(async () => {
-      await cleanCollection(); 
-    });
+    // beforeEach(async () => {
+    //   await cleanCollection(); 
+    // });
   
     describe('fetching job details from SR API', () => {
       test('should successfully fetch job details from SR API', async () => {
