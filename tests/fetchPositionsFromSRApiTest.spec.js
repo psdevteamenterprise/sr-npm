@@ -1,5 +1,4 @@
-const { generateUniqueId, generateBatchIds } = require('tests-utils');
-const { stringifyWithFunctions, executeApiRequest } = require('tests-utils');
+const { executeApiRequest } = require('tests-utils');
 
 
 describe('Job details fetch from SR API Tests', () => {
