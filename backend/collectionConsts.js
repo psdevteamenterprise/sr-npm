@@ -2,7 +2,7 @@ const COLLECTIONS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
     CITIES: 'cities',
     JOBS: 'Jobs',
-    API_KEY: 'ApiKey',
+    COMPANY_ID: 'CompanyId',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -59,8 +59,8 @@ const COLLECTIONS_FIELDS = {
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         { key: 'image', type: 'IMAGE' },
     ],  
-    API_KEY: [
-      {key:'token', type: 'TEXT'},
+    COMPANY_ID: [
+      {key:'companyId', type: 'TEXT'},
     ],
   };
 

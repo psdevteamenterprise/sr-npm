@@ -33,7 +33,7 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const companyId = await secretsData.getCompanyId();
+  const companyId = await getCompanyIdFromCMS();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -95,16 +95,16 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const companyId = await secretsData.getCompanyId();
+  const companyId = await getCompanyIdFromCMS();
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId.value}/postings/${jobId}`);
 }
 
-async function getSmartTokenFromCMS() {
-  const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
+async function getCompanyIdFromCMS() {
+  const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].token; 
+      return result.items[0].companyId; 
   } else {
-      throw new Error('[getSmartTokenFromCMS], No token found');
+      throw new Error('[getCompanyIdFromCMS], No companyId found');
   }
 }
 
@@ -112,4 +112,5 @@ async function getSmartTokenFromCMS() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
+  getCompanyIdFromCMS
 };
