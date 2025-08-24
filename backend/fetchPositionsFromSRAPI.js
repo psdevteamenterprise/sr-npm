@@ -42,7 +42,7 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      const apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}`;
+      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath);
