@@ -22,7 +22,9 @@
     "@wix/essentials": "^0.1.24",
     "@wix/secrets": "^1.0.53",
     "@wix/site-location": "^1.0.0",
-    "@wix/site-window": "^1.0.0"
+    "@wix/site-window": "^1.0.0",
+    "jest": "^30.0.5",
+    "tests-utils": "^1.0.7"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
