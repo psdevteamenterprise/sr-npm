@@ -2,7 +2,7 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 const secretsData = require('./secretsData');
-async function makeSmartRecruitersRequest(path,token) {
+async function makeSmartRecruitersRequest(path) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
@@ -12,7 +12,6 @@ async function makeSmartRecruitersRequest(path,token) {
       headers: {
         'Accept-Language': 'en',
         'accept': 'application/json',
-        'x-smarttoken': token,
         'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
       }
     });
@@ -34,8 +33,7 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const token = await getSmartTokenFromCMS();
-  const companyId = await secretsData.getCompanyId();
+  const companyId = await getCompanyIdFromCMS();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -44,10 +42,10 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      const apiPath = `/v1/companies/${companyId.value}/postings?offset=${offset}`;
+      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath,token);
+      const response = await makeSmartRecruitersRequest(apiPath);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
@@ -97,17 +95,16 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const token = await getSmartTokenFromCMS();
-  const companyId = await secretsData.getCompanyId();
-  return await makeSmartRecruitersRequest(`/v1/companies/${companyId.value}/postings/${jobId}`,token);
+  const companyId = await getCompanyIdFromCMS();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`);
 }
 
-async function getSmartTokenFromCMS() {
-  const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
+async function getCompanyIdFromCMS() {
+  const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].token; 
+      return result.items[0].companyId; 
   } else {
-      throw new Error('[getSmartTokenFromCMS], No token found');
+      throw new Error('[getCompanyIdFromCMS], No companyId found');
   }
 }
 
@@ -115,4 +112,5 @@ async function getSmartTokenFromCMS() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
+  getCompanyIdFromCMS
 };

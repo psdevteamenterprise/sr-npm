@@ -1,6 +1,5 @@
-const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,aggregateJobsByFieldToCMS,referenceJobsToField,createApiKeyCollectionAndFillIt,createCollections,aggregateJobs,referenceJobs,syncJobsFast} = require('./data');
-const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS, JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
+const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,createCollections,aggregateJobs,referenceJobs,syncJobsFast} = require('./data')
+
 
 const QUERY_MAX_LIMIT = 1000;
 
@@ -11,7 +10,7 @@ const TASKS_NAMES = {
     AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
     REFERENCE_JOBS: 'referenceJobs',
     CREATE_COLLECTIONS: 'createCollections',
-    CREATE_API_KEY_COLLECTION_AND_FILL_IT: 'createApiKeyCollectionAndFillIt',
+    CREATE_COMPANY_ID_COLLECTION_AND_FILL_IT: 'createCompanyIdCollectionAndFillIt',
     SYNC_JOBS_FAST: 'syncJobsFast',
 }
 
@@ -64,20 +63,13 @@ const TASKS = {
       shouldSkipCheck:()=>false,
       estimatedDurationSec:6
     },
-      [TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT]: {
-        name: TASKS_NAMES.CREATE_API_KEY_COLLECTION_AND_FILL_IT,
-        getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:createApiKeyCollectionAndFillIt,
-        shouldSkipCheck:()=>false,
-        estimatedDurationSec:3
-      },
-      [TASKS_NAMES.SYNC_JOBS_FAST]: {
-        name: TASKS_NAMES.SYNC_JOBS_FAST,
-        getIdentifier:()=> "SHOULD_NEVER_SKIP",
-        process:syncJobsFast,
-        shouldSkipCheck:()=>false,
-        estimatedDurationSec:60
-      }
+    [TASKS_NAMES.SYNC_JOBS_FAST]: {
+      name: TASKS_NAMES.SYNC_JOBS_FAST,
+      getIdentifier:()=> "SHOULD_NEVER_SKIP",
+      process:syncJobsFast,
+      shouldSkipCheck:()=>false,
+      estimatedDurationSec:60
+    }
 }
 
 

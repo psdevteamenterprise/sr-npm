@@ -1,10 +1,10 @@
-const { items: wixData, collections } = require('@wix/data');
+const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
-const { chunkedBulkOperation, delay, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
+const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getSmartToken } = require('./secretsData');
+const { getCompanyId } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -288,21 +288,21 @@ function fetchJobLocation(jobDetails) {
 
 
 
-async function createApiKeyCollectionAndFillIt() {
-    console.log("Creating ApiKey collection and filling it with the smart token");
-    await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
-    console.log("Getting the smart token ");
-    const token = await getSmartToken();
-    console.log("token is :  ", token);
-    console.log("Inserting the smart token into the ApiKey collection");
+async function createCompanyIdCollectionAndFillIt() {
+    console.log("Creating CompanyId collection and filling it with the company ID");
+    await createCollectionIfMissing(COLLECTIONS.COMPANY_ID, COLLECTIONS_FIELDS.COMPANY_ID,null,'singleItem');
+    console.log("Getting the company ID ");
+    const companyId = await getCompanyId();
+    console.log("companyId is :  ", companyId);
+    console.log("Inserting the company ID into the CompanyId collection");
     try {
-      await wixData.insert(COLLECTIONS.API_KEY, {
-          token: token.value
+      await wixData.insert(COLLECTIONS.COMPANY_ID, {
+        companyId: companyId.value
       });
-      console.log("Smart token inserted into the ApiKey collection");
+      console.log("company ID inserted into the CompanyId collection");
     } catch (error) {
       if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
-        console.log("Smart token already exists in the ApiKey collection");
+        console.log("company ID already exists in the CompanyId collection");
       }
       else {
         throw error;
@@ -340,7 +340,7 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  await createApiKeyCollectionAndFillIt();
+  await createCompanyIdCollectionAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");
@@ -373,5 +373,5 @@ module.exports = {
     saveJobsDescriptionsAndLocationApplyUrlToCMS,
     aggregateJobsByFieldToCMS,
     referenceJobsToField,
-    createApiKeyCollectionAndFillIt,
+    createCompanyIdCollectionAndFillIt,
 };

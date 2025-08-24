@@ -1,10 +1,10 @@
 {
   "name": "sr-npm",
-  "version": "1.7.361",
+  "version": "1.7.375",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,7 +22,10 @@
     "@wix/essentials": "^0.1.24",
     "@wix/secrets": "^1.0.53",
     "@wix/site-location": "^1.0.0",
-    "@wix/site-window": "^1.0.0"
+    "@wix/site-window": "^1.0.0",
+    "axios": "^1.11.0",
+    "jest": "^30.0.5",
+    "tests-utils": "^1.0.7"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
