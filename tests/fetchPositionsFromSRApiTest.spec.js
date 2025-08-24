@@ -2,13 +2,18 @@ const { executeApiRequest } = require('tests-utils');
 const { getRandomPosition } = require('./testsUtils');
 
 describe('Job details fetch from SR API Tests', () => {
+
+    let positions;
+    beforeAll(async () => {
+        const requestBody = `fetchPositionsFromSRAPI();`;
+        positions = await executeApiRequest(requestBody);
+    });
   
       test('should successfully fetch job details from SR API', async () => {
-        const requestBody = `fetchPositionsFromSRAPI();`;
-        const fetchJobsResponse = await executeApiRequest(requestBody);
-        const randomPosition = getRandomPosition(fetchJobsResponse.data.result.content);
-        expect(fetchJobsResponse.data.result.totalFound).toBeGreaterThan(0);
-        expect(fetchJobsResponse.data.result.content.length).toBeGreaterThan(0);
+        
+        const randomPosition = getRandomPosition(positions.data.result.content);
+        expect(positions.data.result.totalFound).toBeGreaterThan(0);
+        expect(positions.data.result.content.length).toBeGreaterThan(0);
         expect(randomPosition.id.length).toBeGreaterThan(0);
         expect(randomPosition.name.length).toBeGreaterThan(0);
         expect(randomPosition.jobAdId.length).toBeGreaterThan(0);
@@ -17,8 +22,6 @@ describe('Job details fetch from SR API Tests', () => {
       });
 
       test('should successfully fetch job description from SR API', async () => {
-        const fetchPositionsRequestBody = `fetchPositionsFromSRAPI();`;
-        const positions = await executeApiRequest(fetchPositionsRequestBody);
         const randomPosition = getRandomPosition(positions.data.result.content);
         const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id});`;
         const jobFetchResponse = await executeApiRequest(fetchJobDescriptionRequestBody);
