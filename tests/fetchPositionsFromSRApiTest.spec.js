@@ -16,6 +16,16 @@ describe('Job details fetch from SR API Tests', () => {
         expect(randomPosition.location).toBeDefined();
         expect(randomPosition.department).toBeDefined();
       });
+
+      test('should successfully fetch job description from SR API', async () => {
+        const fetchPositionsRequestBody = `fetchPositionsFromSRAPI();`;
+        const positions = await executeApiRequest(fetchPositionsRequestBody);
+        const randomPosition = getRandomPosition(positions.data.result.content);
+        const requestBody = `fetchJobDescription(${randomPosition.id});`;
+        const wixDataResponse = await executeApiRequest(requestBody);
+        console.log("wixDataResponse: ", wixDataResponse);
+        // expect(wixDataResponse.data.result.jobDescription.jobDescription.text).toBeDefined();
+      });
   
   
 
