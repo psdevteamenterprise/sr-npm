@@ -340,6 +340,7 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
+  await createCompanyIdCollectionAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");
