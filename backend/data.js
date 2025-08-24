@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getCompanyIdFromCMS } = require('./fetchPositionsFromSRAPI');
+const { getCompanyId } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -292,7 +292,7 @@ async function createCompanyIdCollectionAndFillIt() {
     console.log("Creating CompanyId collection and filling it with the company ID");
     await createCollectionIfMissing(COLLECTIONS.COMPANY_ID, COLLECTIONS_FIELDS.COMPANY_ID,null,'singleItem');
     console.log("Getting the company ID ");
-    const companyId = await getCompanyIdFromCMS();
+    const companyId = await getCompanyId();
     console.log("companyId is :  ", companyId);
     console.log("Inserting the company ID into the CompanyId collection");
     try {
