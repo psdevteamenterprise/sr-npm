@@ -102,6 +102,7 @@ async function fetchJobDescription(jobId) {
 
 async function getCompanyIdFromCMS() {
   const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
+  console.log('result = ', result);
   if (result.items.length > 0) {
       return result.items[0].companyId; 
   } else {
