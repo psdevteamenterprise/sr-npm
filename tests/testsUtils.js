@@ -1,3 +1,5 @@
+const { executeApiRequest } = require('tests-utils');
+
 function getRandomPosition(positions) {
     return positions[Math.floor(Math.random() * positions.length)];
 }
