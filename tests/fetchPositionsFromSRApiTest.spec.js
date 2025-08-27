@@ -34,7 +34,7 @@ describe('Job details fetch from SR API Tests', () => {
 
 describe('fetchPositionsFromSRAPI error handling', () => {
   test('should return 0 positions if invalid companyId is found', async () => {
-    const requestBody = `fetchPositionsFromSRAPI(invalid_company_id);`;
+    const requestBody = `fetchPositionsFromSRAPI('invalid_company_id');`;
     positions = await executeApiRequest(requestBody);
     expect(positions.data.result.totalFound).toBe(0);
     expect(positions.data.result.content.length).toBe(0);
