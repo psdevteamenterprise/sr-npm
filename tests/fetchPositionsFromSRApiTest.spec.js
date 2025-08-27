@@ -45,7 +45,7 @@ describe('fetchPositionsFromSRAPI error handling', () => {
     response = await executeApiRequest(requestBody);
     console.log(response);
     expect(response.status).toBe(500);
-
+  });
 
 
 
