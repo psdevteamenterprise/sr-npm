@@ -32,11 +32,13 @@ async function fetchPositionsFromSRAPI(companyID=undefined) {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
+  console.log('companyID =', companyID);
   let companyId=companyID
   if(!companyID)
   {
    companyId = await getCompanyIdFromCMS();
   }
+  console.log('companyId =', companyId);
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
