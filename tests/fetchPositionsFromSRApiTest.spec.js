@@ -1,3 +1,5 @@
+const { fetch } = require('wix-fetch');
+const { items: wixData } = require('@wix/data');
 const { executeApiRequest } = require('tests-utils');
 const { getRandomPosition } = require('./testsUtils');
 
