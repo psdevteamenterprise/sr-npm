@@ -30,6 +30,43 @@ describe('Job details fetch from SR API Tests', () => {
         expect(jobFetchResponse.data.result.applyUrl.length).toBeGreaterThan(0);
         expect(jobFetchResponse.data.result.location).toBeDefined();
       });
+
+      
   
   
   });
+
+describe('fetchPositionsFromSRAPI error handling', () => {
+    let mockFetch;
+
+    beforeEach(() => {
+        jest.resetModules();
+        mockFetch = jest.fn();
+
+        jest.doMock('wix-fetch', () => ({
+            fetch: mockFetch,
+        }));
+
+        jest.doMock('@wix/data', () => ({
+            items: {
+                query: () => ({
+                    limit: () => ({
+                        find: () => Promise.resolve({ items: [{ companyId: 'company-123' }] }),
+                    }),
+                }),
+            },
+        }));
+    });
+
+    test('throws on 400 Bad Request from SmartRecruiters', async () => {
+        mockFetch.mockResolvedValue({ ok: false, status: 400 });
+        const { fetchPositionsFromSRAPI } = require('../backend/fetchPositionsFromSRAPI');
+        await expect(fetchPositionsFromSRAPI()).rejects.toThrow('HTTP error! status: 400');
+    });
+
+    test('throws on network failure while fetching positions', async () => {
+        mockFetch.mockRejectedValue(new Error('Network failure'));
+        const { fetchPositionsFromSRAPI } = require('../backend/fetchPositionsFromSRAPI');
+        await expect(fetchPositionsFromSRAPI()).rejects.toThrow('Network failure');
+    });
+});
