@@ -34,6 +34,7 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const companyId = await getCompanyIdFromCMS();
+  const templateType = await getTemplateTypeFromCMS();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -42,7 +43,7 @@ async function fetchPositionsFromSRAPI() {
       page++;
 
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}`;
+      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}&destination=${templateType}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
       const response = await makeSmartRecruitersRequest(apiPath);
@@ -105,6 +106,14 @@ async function getCompanyIdFromCMS() {
       return result.items[0].companyId; 
   } else {
       throw new Error('[getCompanyIdFromCMS], No companyId found');
+  }
+}
+async function getTemplateTypeFromCMS() {
+  const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
+  if (result.items.length > 0) {
+      return result.items[0].templateType; 
+  } else {
+      throw new Error('[getTemplateTypeFromCMS], No templateType found');
   }
 }
 

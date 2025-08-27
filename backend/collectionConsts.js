@@ -3,6 +3,7 @@ const COLLECTIONS = {
     CITIES: 'cities',
     JOBS: 'Jobs',
     COMPANY_ID: 'CompanyId',
+    TEMPLATE_TYPE: 'TemplateType',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -63,6 +64,9 @@ const COLLECTIONS_FIELDS = {
     ],  
     COMPANY_ID: [
       {key:'companyId', type: 'TEXT'},
+    ],
+    TEMPLATE_TYPE: [
+      {key:'templateType', type: 'TEXT'},
     ],
   };
 
