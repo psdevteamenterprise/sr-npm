@@ -1,7 +1,6 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
-const secretsData = require('./secretsData');
 async function makeSmartRecruitersRequest(path) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
@@ -116,5 +115,6 @@ async function getCompanyIdFromCMS() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getCompanyIdFromCMS
+  getCompanyIdFromCMS,
+  makeSmartRecruitersRequest
 };
