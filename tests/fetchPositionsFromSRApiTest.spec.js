@@ -1,5 +1,3 @@
-const { fetch } = require('wix-fetch');
-const { items: wixData } = require('@wix/data');
 const { executeApiRequest } = require('tests-utils');
 const { getRandomPosition } = require('./testsUtils');
 
@@ -32,43 +30,23 @@ describe('Job details fetch from SR API Tests', () => {
         expect(jobFetchResponse.data.result.applyUrl.length).toBeGreaterThan(0);
         expect(jobFetchResponse.data.result.location).toBeDefined();
       });
-
-      
-  
-  
   });
 
 describe('fetchPositionsFromSRAPI error handling', () => {
-    let mockFetch;
+  test('should return 0 positions if invalid companyId is found', async () => {
+    const requestBody = `fetchPositionsFromSRAPI(invalid_company_id);`;
+    positions = await executeApiRequest(requestBody);
+    expect(positions.data.result.totalFound).toBe(0);
+    expect(positions.data.result.content.length).toBe(0);
+  });
 
-    beforeEach(() => {
-        jest.resetModules();
-        mockFetch = jest.fn();
+  test('throw error when bad request', async () => {
+    const requestBody = `makeSmartRecruitersRequest('/v1/error/companyId/postings');`;
+    response = await executeApiRequest(requestBody);
+    console.log(response);
+    expect(response.status).toBe(500);
 
-        jest.doMock('wix-fetch', () => ({
-            fetch: mockFetch,
-        }));
 
-        jest.doMock('@wix/data', () => ({
-            items: {
-                query: () => ({
-                    limit: () => ({
-                        find: () => Promise.resolve({ items: [{ companyId: 'company-123' }] }),
-                    }),
-                }),
-            },
-        }));
-    });
 
-    test('throws on 400 Bad Request from SmartRecruiters', async () => {
-        mockFetch.mockResolvedValue({ ok: false, status: 400 });
-        const { fetchPositionsFromSRAPI } = require('../backend/fetchPositionsFromSRAPI');
-        await expect(fetchPositionsFromSRAPI()).rejects.toThrow('HTTP error! status: 400');
-    });
 
-    test('throws on network failure while fetching positions', async () => {
-        mockFetch.mockRejectedValue(new Error('Network failure'));
-        const { fetchPositionsFromSRAPI } = require('../backend/fetchPositionsFromSRAPI');
-        await expect(fetchPositionsFromSRAPI()).rejects.toThrow('Network failure');
-    });
 });

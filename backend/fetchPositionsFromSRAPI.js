@@ -28,12 +28,16 @@ async function makeSmartRecruitersRequest(path) {
   }
 }
 
-async function fetchPositionsFromSRAPI() {
+async function fetchPositionsFromSRAPI(companyID=undefined) {
   let allPositions = [];
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const companyId = await getCompanyIdFromCMS();
+  let companyId=companyID
+  if(!companyID)
+  {
+   companyId = await getCompanyIdFromCMS();
+  }
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
