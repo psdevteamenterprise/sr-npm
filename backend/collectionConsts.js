@@ -3,7 +3,7 @@ const COLLECTIONS = {
     CITIES: 'cities',
     JOBS: 'Jobs',
     COMPANY_ID: 'CompanyId',
-    TEMPLATE_TYPE: 'TemplateType',
+    TEMPLATE_TYPE: 'templateType',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
