@@ -34,7 +34,6 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const companyId = await getCompanyIdFromCMS();
-  console.log('companyId = ', companyId);
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -102,7 +101,6 @@ async function fetchJobDescription(jobId) {
 
 async function getCompanyIdFromCMS() {
   const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
-  console.log('result = ', result);
   if (result.items.length > 0) {
       return result.items[0].companyId; 
   } else {
