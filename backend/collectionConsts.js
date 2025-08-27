@@ -18,6 +18,7 @@ const JOBS_COLLECTION_FIELDS = {
   CITY_TEXT: 'cityText',
   IMAGE: 'image',
   APPLY_LINK: 'applyLink',
+  REFER_FRIEND_LINK: 'referFriendLink',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
