@@ -48,11 +48,11 @@ describe('fetchPositionsFromSRAPI error handling', () => {
 });
 
 describe('fetchJobDescription error handling', () => {
-  test('should throw error if invalid jobId is found', async () => {
+  test('should throw error if invalid jobId is given', async () => {
     const requestBody = `fetchJobDescription('invalid_job_id');`;
     executeRequestAndTest(requestBody)
   });
-  test('should throw error when given a valid jobId but no jobAdId is found', async () => {
+  test('should throw error when given a valid but wrong jobId is given', async () => {
     const requestBody = `fetchJobDescription('1234567890');`;
     executeRequestAndTest(requestBody)
   });
