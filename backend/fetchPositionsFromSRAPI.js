@@ -34,6 +34,7 @@ async function fetchPositionsFromSRAPI() {
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
   const companyId = await getCompanyIdFromCMS();
+  console.log('companyId = ', companyId);
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
