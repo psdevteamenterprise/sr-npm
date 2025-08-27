@@ -56,3 +56,24 @@ describe('fetchPositionsFromSRAPI error handling', () => {
 
 
 });
+
+describe('fetchJobDescription error handling', () => {
+  test('should throw error if invalid jobId is found', async () => {
+    const requestBody = `fetchJobDescription('invalid_job_id');`;
+    try{
+      response = await executeApiRequest(requestBody);
+      expect(response.status).not.toBe(500);
+    }catch(error){
+      expect(error.message).toBe('Request failed with status code 500');
+    }
+  });
+  test('should throw error when given a valid jobId but no jobAdId is found', async () => {
+    const requestBody = `fetchJobDescription('1234567890');`;
+    try{
+      response = await executeApiRequest(requestBody);
+      expect(response.status).not.toBe(500);
+    }catch(error){
+      expect(error.message).toBe('Request failed with status code 500');
+    }
+  });
+});
