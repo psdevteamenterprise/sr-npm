@@ -39,8 +39,6 @@ describe('fetchPositionsFromSRAPI error handling', () => {
     response = await executeApiRequest(requestBody);
     expect(response.status).not.toBe(500);
     }catch(error){
-      console.log(error);
-      
       expect(error.message).toBe('Request failed with status code 500');
     }
   });
@@ -51,7 +49,6 @@ describe('fetchPositionsFromSRAPI error handling', () => {
       response = await executeApiRequest(requestBody);
       expect(response.status).not.toBe(500);
     }catch(error){
-      console.log(error);
       expect(error.message).toBe('Request failed with status code 500');
     }
   });
