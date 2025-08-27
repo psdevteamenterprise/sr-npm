@@ -1,5 +1,5 @@
 const { executeApiRequest } = require('tests-utils');
-const { getRandomPosition } = require('./testsUtils');
+const { getRandomPosition, executeRequestAndTest } = require('./testsUtils');
 
 describe('Job details fetch from SR API Tests', () => {
 
@@ -34,23 +34,13 @@ describe('Job details fetch from SR API Tests', () => {
 
 describe('fetchPositionsFromSRAPI error handling', () => {
   test('should throw error if invalid companyId is found', async () => {
-    try{
     const requestBody = `fetchPositionsFromSRAPI('invalid_company_id');`;
-    response = await executeApiRequest(requestBody);
-    expect(response.status).not.toBe(500);
-    }catch(error){
-      expect(error.message).toBe('Request failed with status code 500');
-    }
+    executeRequestAndTest(requestBody)
   });
 
   test('should throw error when a bad URL is used', async () => {
     const requestBody = `makeSmartRecruitersRequest('/v1/error/companyId/postings');`;
-    try{
-      response = await executeApiRequest(requestBody);
-      expect(response.status).not.toBe(500);
-    }catch(error){
-      expect(error.message).toBe('Request failed with status code 500');
-    }
+    executeRequestAndTest(requestBody)
   });
 
 
@@ -60,20 +50,10 @@ describe('fetchPositionsFromSRAPI error handling', () => {
 describe('fetchJobDescription error handling', () => {
   test('should throw error if invalid jobId is found', async () => {
     const requestBody = `fetchJobDescription('invalid_job_id');`;
-    try{
-      response = await executeApiRequest(requestBody);
-      expect(response.status).not.toBe(500);
-    }catch(error){
-      expect(error.message).toBe('Request failed with status code 500');
-    }
+    executeRequestAndTest(requestBody)
   });
   test('should throw error when given a valid jobId but no jobAdId is found', async () => {
     const requestBody = `fetchJobDescription('1234567890');`;
-    try{
-      response = await executeApiRequest(requestBody);
-      expect(response.status).not.toBe(500);
-    }catch(error){
-      expect(error.message).toBe('Request failed with status code 500');
-    }
+    executeRequestAndTest(requestBody)
   });
 });
