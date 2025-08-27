@@ -120,7 +120,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
           try {
             const jobDetails = await fetchJobDescription(job._id);
             const jobLocation = fetchJobLocation(jobDetails);
-            const applyLink = fetchApplyLink(jobDetails);
+            const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
 
 
             const updatedJob = {
@@ -128,6 +128,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
               locationAddress: jobLocation,
               jobDescription: jobDetails.jobAd.sections,
               applyLink: applyLink,
+              referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
             return { success: true, jobId: job._id, title: job.title };
@@ -258,8 +259,8 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   return { success: true, updated: jobsToUpdate.length };
 }
 
-function fetchApplyLink(jobDetails) {
-    return jobDetails.applyUrl;
+function fetchApplyAndReferFriendLink(jobDetails) {
+    return {applyLink: jobDetails.applyUrl, referFriendLink: jobDetails.referralUrl};
 }
 
 function fetchJobLocation(jobDetails) {
