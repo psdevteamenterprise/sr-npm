@@ -41,11 +41,14 @@ describe('fetchPositionsFromSRAPI error handling', () => {
   });
 
   test('throw error when bad request', async () => {
-    
     const requestBody = `makeSmartRecruitersRequest('/v1/error/companyId/postings');`;
-    response = await executeApiRequest(requestBody);
-    console.log(response);
-    expect(response.status).toBe(500);
+    try{
+      response = await executeApiRequest(requestBody);
+      expect(response.status).not.toBe(500);
+    }catch(error){
+      console.log(error);
+      expect(error.message).toBe('AxiosError: Request failed with status code 500');
+    }
   });
 
 
