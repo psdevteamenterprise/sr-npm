@@ -33,7 +33,7 @@ describe('Job details fetch from SR API Tests', () => {
   });
 
 describe('fetchPositionsFromSRAPI error handling', () => {
-  test('should return 0 positions if invalid companyId is found', async () => {
+  test('should throw error if invalid companyId is found', async () => {
     try{
     const requestBody = `fetchPositionsFromSRAPI('invalid_company_id');`;
     response = await executeApiRequest(requestBody);
@@ -43,7 +43,7 @@ describe('fetchPositionsFromSRAPI error handling', () => {
     }
   });
 
-  test('throw error when bad request', async () => {
+  test('should throw error when a bad URL is used', async () => {
     const requestBody = `makeSmartRecruitersRequest('/v1/error/companyId/postings');`;
     try{
       response = await executeApiRequest(requestBody);
