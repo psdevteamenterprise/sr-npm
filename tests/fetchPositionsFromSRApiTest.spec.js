@@ -41,6 +41,7 @@ describe('fetchPositionsFromSRAPI error handling', () => {
   });
 
   test('throw error when bad request', async () => {
+    
     const requestBody = `makeSmartRecruitersRequest('/v1/error/companyId/postings');`;
     response = await executeApiRequest(requestBody);
     console.log(response);
