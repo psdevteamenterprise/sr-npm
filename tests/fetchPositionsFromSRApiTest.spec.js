@@ -40,6 +40,7 @@ describe('fetchPositionsFromSRAPI error handling', () => {
     expect(response.status).not.toBe(500);
     }catch(error){
       console.log(error);
+      
       expect(error.message).toBe('Request failed with status code 500');
     }
   });
