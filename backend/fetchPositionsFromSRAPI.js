@@ -34,9 +34,7 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const companyId = await getCompanyIdFromCMS();
-  const templateType = await getTemplateTypeFromCMS();
-  const smartToken = templateType==='INTERNAL' ? await getSmartTokenFromCMS():undefined;
+  const {companyId,templateType,smartToken} = await getApiKeysFromCMS();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -98,8 +96,8 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const companyId = await getCompanyIdFromCMS();
-  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`);
+  const {companyId,smartToken} = await getApiKeysFromCMS();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,smartToken);
 }
 
 async function getCompanyIdFromCMS() {
@@ -129,6 +127,12 @@ async function getTemplateTypeFromCMS() {
   }
 }
 
+async function getApiKeys() {
+  const companyId = await getCompanyIdFromCMS();
+  const templateType = await getTemplateTypeFromCMS();
+  const smartToken = templateType==='INTERNAL' ? await getSmartTokenFromCMS():undefined;
+  return {companyId,templateType,smartToken};
+}
 
 module.exports = {
   fetchPositionsFromSRAPI,
