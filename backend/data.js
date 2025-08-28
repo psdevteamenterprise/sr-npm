@@ -359,9 +359,7 @@ async function referenceJobs() {
   console.log("finished referencing jobs");
 }
 
-async function syncJobsFast(templateType='something') {
-  console.log("templateType is : ", templateType);
-
+async function syncJobsFast(templateType) {
   console.log("Syncing jobs fast");
   await createCompanyIdCollectionAndFillIt();
   if(templateType==='INTERNAL')

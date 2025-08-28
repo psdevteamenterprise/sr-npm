@@ -65,8 +65,8 @@ const TASKS = {
     },
     [TASKS_NAMES.SYNC_JOBS_FAST]: {
       name: TASKS_NAMES.SYNC_JOBS_FAST,
-      getIdentifier:task=>task.data,
-      process:task=>syncJobsFast(task),
+      getIdentifier:task=>task.data.templateType,
+      process:templateType=>syncJobsFast(templateType),
       shouldSkipCheck:()=>false,
       estimatedDurationSec:60
     }
