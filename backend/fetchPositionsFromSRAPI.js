@@ -41,7 +41,6 @@ async function fetchPositionsFromSRAPI() {
   do {
     try {
       page++;
-
       // Build the API path - first request has no page parameter, subsequent use nextPageId
       const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}&destination=${templateType}`;
       
