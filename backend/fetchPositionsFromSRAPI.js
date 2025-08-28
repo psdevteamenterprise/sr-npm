@@ -34,7 +34,7 @@ async function makeSmartRecruitersRequest(path,templateType) {
   }
 }
 
-async function fetchPositionsFromSRAPI() {
+async function fetchPositionsFromSRAPI(companyID=undefined) {
   let allPositions = [];
   let totalFound = 0;
   let page = 0;
