@@ -318,9 +318,6 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  //database
-
-  
   await createCollections();
   await clearCollections();
   await fillSecretManagerMirror();

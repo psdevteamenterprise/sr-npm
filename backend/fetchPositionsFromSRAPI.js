@@ -8,13 +8,11 @@ async function makeSmartRecruitersRequest(path,templateType) {
   const fullUrl = `${baseUrl}${path}`;
   
   try {
-    //if templatetype is internal make headers object with x-smarttoken
     const headers = {
       'Accept-Language': 'en',
       'accept': 'application/json',
       'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
     };
-    //here is the only place where we check templateType
     if (templateType === TEMPLATE_TYPE.INTERNAL) {
       const smartToken = await getTokenFromCMS(TOKEN_NAME.SMART_TOKEN);
       headers['x-smarttoken'] = smartToken;
