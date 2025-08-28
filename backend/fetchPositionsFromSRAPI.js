@@ -2,19 +2,24 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 
-async function makeSmartRecruitersRequest(path,smartToken) {
+async function makeSmartRecruitersRequest(path,templateTYpe) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
   try {
+    //if templatetype is internal make headers object with x-smarttoken
+    const headers = {
+      'Accept-Language': 'en',
+      'accept': 'application/json',
+      'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
+    };
+    //here is the only place where we check templateType
+    if (templateType === 'INTERNAL') {
+      headers['x-smarttoken'] = smartToken;
+    }
     const response = await fetch(fullUrl, {
       method: 'GET',
-      headers: {
-        'Accept-Language': 'en',
-        'accept': 'application/json',
-        'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d',
-        'x-smarttoken': smartToken
-      }
+      headers: headers
     });
 
     if (response.ok) {

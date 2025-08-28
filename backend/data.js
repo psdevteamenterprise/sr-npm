@@ -361,6 +361,8 @@ async function referenceJobs() {
 
 async function syncJobsFast(templateType) {
   console.log("Syncing jobs fast");
+  //database
+  
   await createCompanyIdCollectionAndFillIt();
   if(templateType==='INTERNAL')
   {
@@ -389,14 +391,31 @@ async function clearCollections() {
   console.log("cleared collections successfully");
 }
 
+async function markTemplateAsExternal() {
+  await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+    templateType: "PUBLIC"
+  });
+}
+
+async function markTemplateAsInternal() {
+  await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+    templateType: "INTERNAL"
+  });
+}
+
+
 module.exports = {
   syncJobsFast,
   referenceJobs,
   aggregateJobs,
   createCollections,
-    saveJobsDataToCMS,
-    saveJobsDescriptionsAndLocationApplyUrlToCMS,
-    aggregateJobsByFieldToCMS,
-    referenceJobsToField,
-    createCompanyIdCollectionAndFillIt,
+  saveJobsDataToCMS,
+  saveJobsDescriptionsAndLocationApplyUrlToCMS,
+  aggregateJobsByFieldToCMS,
+  referenceJobsToField,
+  createCompanyIdCollectionAndFillIt,
+  markTemplateAsExternal,
+  markTemplateAsInternal,
 };
