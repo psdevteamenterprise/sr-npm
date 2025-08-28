@@ -1,6 +1,7 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
+const { TEMPLATE_TYPE,TOKEN_NAME } = require('./consts');
 
 async function makeSmartRecruitersRequest(path,templateType) {
    const baseUrl = 'https://api.smartrecruiters.com';
@@ -14,8 +15,8 @@ async function makeSmartRecruitersRequest(path,templateType) {
       'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
     };
     //here is the only place where we check templateType
-    if (templateType === 'INTERNAL') {
-      const smartToken = await getSmartTokenFromCMS();
+    if (templateType === TEMPLATE_TYPE.INTERNAL) {
+      const smartToken = await getTokenFromCMS(TOKEN_NAME.SMART_TOKEN);
       headers['x-smarttoken'] = smartToken;
     }
     const response = await fetch(fullUrl, {
@@ -105,21 +106,13 @@ async function fetchJobDescription(jobId) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function getCompanyIdFromCMS() {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName','companyId').find();
-  if (result.items.length > 0) {
-      return result.items[0].tokenValue; 
-  } else {
-      throw new Error('[getCompanyIdFromCMS], No companyId found');
-  }
-}
 
-async function getSmartTokenFromCMS() {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName','x-smarttoken').find();
+async function getTokenFromCMS(tokenName) {
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
   if (result.items.length > 0) {
       return result.items[0].tokenValue; 
   } else {
-      throw new Error('[getSmartTokenFromCMS], No smarttoken found');
+      throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
   }
 }
 async function getTemplateTypeFromCMS() {
@@ -132,7 +125,7 @@ async function getTemplateTypeFromCMS() {
 }
 
 async function getApiKeys() {
-  const companyId = await getCompanyIdFromCMS();
+  const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
   const templateType = await getTemplateTypeFromCMS();
   return {companyId,templateType};
 }
@@ -140,5 +133,5 @@ async function getApiKeys() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getCompanyIdFromCMS
+  getTokenFromCMS
 };

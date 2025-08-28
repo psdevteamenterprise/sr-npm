@@ -4,6 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
+const{TEMPLATE_TYPE,TOKEN_NAME} = require('./consts');
 const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
@@ -348,14 +349,14 @@ async function clearCollections() {
 async function markTemplateAsExternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
   await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
-    templateType: "PUBLIC"
+    templateType: TEMPLATE_TYPE.EXTERNAL
   });
 }
 
 async function markTemplateAsInternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
   await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
-    templateType: "INTERNAL"
+    templateType: TEMPLATE_TYPE.INTERNAL
   });
 }
 
@@ -364,14 +365,14 @@ async function fillSecretManagerMirror() {
   const companyId = await getCompanyId();
   console.log("companyId is :  ", companyId);
   await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-    tokenName: "companyId",
+    tokenName: TOKEN_NAME.COMPANY_ID,
     tokenValue: companyId.value
   });
   console.log("companyId inserted into the SecretManagerMirror collection");
   try{
     const token = await getSmartToken();
     await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-      tokenName: "x-smarttoken",
+      tokenName: TOKEN_NAME.SMART_TOKEN,
       tokenValue: token.value
     });
     console.log("x-smarttoken inserted into the SecretManagerMirror collection");
