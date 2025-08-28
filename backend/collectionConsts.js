@@ -3,6 +3,7 @@ const COLLECTIONS = {
     CITIES: 'cities',
     JOBS: 'Jobs',
     COMPANY_ID: 'CompanyId',
+    API_KEY: 'ApiKey',
     TEMPLATE_TYPE: 'templateType',
 }
 const JOBS_COLLECTION_FIELDS = {
@@ -64,6 +65,9 @@ const COLLECTIONS_FIELDS = {
     ],  
     COMPANY_ID: [
       {key:'companyId', type: 'TEXT'},
+    ],
+    API_KEY: [
+      {key:'token', type: 'TEXT'},
     ],
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},

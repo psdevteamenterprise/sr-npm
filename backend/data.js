@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getCompanyId } = require('./secretsData');
+const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -286,7 +286,27 @@ function fetchJobLocation(jobDetails) {
   return jobLocation;
 }
 
-
+async function createApiKeyCollectionAndFillIt() {
+  console.log("Creating ApiKey collection and filling it with the smart token");
+  await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
+  console.log("Getting the smart token ");
+  const token = await getSmartToken();
+  console.log("token is :  ", token);
+  console.log("Inserting the smart token into the ApiKey collection");
+  try {
+    await wixData.insert(COLLECTIONS.API_KEY, {
+        token: token.value
+    });
+    console.log("Smart token inserted into the ApiKey collection");
+  } catch (error) {
+    if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
+      console.log("Smart token already exists in the ApiKey collection");
+    }
+    else {
+      throw error;
+    }
+  }
+}
 
 
 async function createCompanyIdCollectionAndFillIt() {
@@ -339,9 +359,11 @@ async function referenceJobs() {
   console.log("finished referencing jobs");
 }
 
-async function syncJobsFast() {
+async function syncJobsFast(templateType) {
+  console.log("templateType is : ", templateType);
   console.log("Syncing jobs fast");
   await createCompanyIdCollectionAndFillIt();
+  await createApiKeyCollectionAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");

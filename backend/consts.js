@@ -66,7 +66,7 @@ const TASKS = {
     [TASKS_NAMES.SYNC_JOBS_FAST]: {
       name: TASKS_NAMES.SYNC_JOBS_FAST,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:syncJobsFast,
+      process:task=>syncJobsFast(task.data),
       shouldSkipCheck:()=>false,
       estimatedDurationSec:60
     }
