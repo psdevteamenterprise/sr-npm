@@ -1,7 +1,6 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
-const secretsData = require('./secretsData');
 async function makeSmartRecruitersRequest(path) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
@@ -28,12 +27,16 @@ async function makeSmartRecruitersRequest(path) {
   }
 }
 
-async function fetchPositionsFromSRAPI() {
+async function fetchPositionsFromSRAPI(companyID=undefined) {
   let allPositions = [];
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const companyId = await getCompanyIdFromCMS();
+  let companyId=companyID
+  if(!companyID)
+  {
+   companyId = await getCompanyIdFromCMS();
+  }
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -112,5 +115,6 @@ async function getCompanyIdFromCMS() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getCompanyIdFromCMS
+  getCompanyIdFromCMS,
+  makeSmartRecruitersRequest
 };
