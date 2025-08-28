@@ -2,9 +2,8 @@ const COLLECTIONS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
     CITIES: 'cities',
     JOBS: 'Jobs',
-    COMPANY_ID: 'CompanyId',
-    API_KEY: 'ApiKey',
     TEMPLATE_TYPE: 'templateType',
+    SECRET_MANAGER_MIRROR: 'SecretManagerMirror',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -63,14 +62,12 @@ const COLLECTIONS_FIELDS = {
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         { key: 'image', type: 'IMAGE' },
     ],  
-    COMPANY_ID: [
-      {key:'companyId', type: 'TEXT'},
-    ],
-    API_KEY: [
-      {key:'token', type: 'TEXT'},
-    ],
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
+    ],
+    SECRET_MANAGER_MIRROR: [
+      {key:'tokenName', type: 'TEXT'},
+      {key:'tokenValue', type: 'TEXT'},
     ],
   };
 

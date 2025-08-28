@@ -286,52 +286,7 @@ function fetchJobLocation(jobDetails) {
   return jobLocation;
 }
 
-async function createApiKeyCollectionAndFillIt() {
-  console.log("Creating ApiKey collection and filling it with the smart token");
-  await createCollectionIfMissing(COLLECTIONS.API_KEY, COLLECTIONS_FIELDS.API_KEY,null,'singleItem');
-  console.log("Getting the smart token ");
-  const token = await getSmartToken();
-  console.log("token is :  ", token);
-  console.log("Inserting the smart token into the ApiKey collection");
-  try {
-    await wixData.insert(COLLECTIONS.API_KEY, {
-        token: token.value
-    });
-    console.log("Smart token inserted into the ApiKey collection");
-  } catch (error) {
-    if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
-      console.log("Smart token already exists in the ApiKey collection");
-    }
-    else {
-      throw error;
-    }
-  }
-}
 
-
-async function createCompanyIdCollectionAndFillIt() {
-    console.log("Creating CompanyId collection and filling it with the company ID");
-    await createCollectionIfMissing(COLLECTIONS.COMPANY_ID, COLLECTIONS_FIELDS.COMPANY_ID,null,'singleItem');
-    console.log("Getting the company ID ");
-    const companyId = await getCompanyId();
-    console.log("companyId is :  ", companyId);
-    console.log("Inserting the company ID into the CompanyId collection");
-    try {
-      await wixData.insert(COLLECTIONS.COMPANY_ID, {
-        companyId: companyId.value
-      });
-      console.log("company ID inserted into the CompanyId collection");
-    } catch (error) {
-      if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
-        console.log("company ID already exists in the CompanyId collection");
-      }
-      else {
-        throw error;
-      }
-    }
-
-    
-}
 
 async function createCollections() {
   console.log("Creating collections");
@@ -359,15 +314,11 @@ async function referenceJobs() {
   console.log("finished referencing jobs");
 }
 
-async function syncJobsFast(templateType) {
+async function syncJobsFast() {
   console.log("Syncing jobs fast");
   //database
-  
-  await createCompanyIdCollectionAndFillIt();
-  if(templateType==='INTERNAL')
-  {
-  await createApiKeyCollectionAndFillIt();
-  }
+
+  await createSecretManagerMirrorAndFillIt();
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");
@@ -405,6 +356,29 @@ async function markTemplateAsInternal() {
   });
 }
 
+async function createSecretManagerMirrorAndFillIt() {
+  console.log("Creating SecretManagerMirror collection and filling it");
+  await createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR);
+  console.log("Getting the company ID ");
+  const companyId = await getCompanyId();
+  console.log("companyId is :  ", companyId);
+  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+    tokenName: "companyId",
+    tokenValue: companyId.value
+  });
+  console.log("companyId inserted into the SecretManagerMirror collection");
+  try{
+    const token = await getSmartToken();
+    await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+      tokenName: "x-smarttoken",
+      tokenValue: token.value
+    });
+    console.log("x-smarttoken inserted into the SecretManagerMirror collection");
+  } catch (error) {
+    console.log("Error creating SecretManagerMirror collection:", error);
+  }
+}
+
 
 module.exports = {
   syncJobsFast,
@@ -415,7 +389,7 @@ module.exports = {
   saveJobsDescriptionsAndLocationApplyUrlToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
-  createCompanyIdCollectionAndFillIt,
+  createSecretManagerMirrorAndFillIt,
   markTemplateAsExternal,
   markTemplateAsInternal,
 };

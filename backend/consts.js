@@ -10,7 +10,7 @@ const TASKS_NAMES = {
     AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
     REFERENCE_JOBS: 'referenceJobs',
     CREATE_COLLECTIONS: 'createCollections',
-    CREATE_COMPANY_ID_COLLECTION_AND_FILL_IT: 'createCompanyIdCollectionAndFillIt',
+    CREATE_SECRET_MANAGER_MIRROR_AND_FILL_IT: 'createSecretManagerMirrorAndFillIt',
     SYNC_JOBS_FAST: 'syncJobsFast',
 }
 
@@ -65,8 +65,8 @@ const TASKS = {
     },
     [TASKS_NAMES.SYNC_JOBS_FAST]: {
       name: TASKS_NAMES.SYNC_JOBS_FAST,
-      getIdentifier:task=>task.data.templateType,
-      process:templateType=>syncJobsFast(templateType),
+      getIdentifier:()=>"SHOULD_NEVER_SKIP",
+      process:syncJobsFast,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:60
     }
