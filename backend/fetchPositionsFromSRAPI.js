@@ -16,7 +16,6 @@ async function makeSmartRecruitersRequest(path,templateType) {
     //here is the only place where we check templateType
     if (templateType === 'INTERNAL') {
       const smartToken = await getSmartTokenFromCMS();
-      console.log("smartToken is ",smartToken);
       headers['x-smarttoken'] = smartToken;
     }
     const response = await fetch(fullUrl, {
