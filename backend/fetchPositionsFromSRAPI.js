@@ -102,8 +102,8 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const {companyId} = await getApiKeys();
-  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`);
+  const {companyId,templateType} = await getApiKeys();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
 async function getCompanyIdFromCMS() {
