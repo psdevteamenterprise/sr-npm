@@ -2,7 +2,7 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 
-async function makeSmartRecruitersRequest(path,templateTYpe) {
+async function makeSmartRecruitersRequest(path) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
@@ -14,7 +14,9 @@ async function makeSmartRecruitersRequest(path,templateTYpe) {
       'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
     };
     //here is the only place where we check templateType
+    const templateType = await getTemplateTypeFromCMS();
     if (templateType === 'INTERNAL') {
+      const smartToken = await getSmartTokenFromCMS();
       headers['x-smarttoken'] = smartToken;
     }
     const response = await fetch(fullUrl, {
@@ -39,7 +41,7 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const {companyId,templateType,smartToken} = await getApiKeys();
+  const {companyId,templateType} = await getApiKeys();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -50,7 +52,7 @@ async function fetchPositionsFromSRAPI() {
       const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}&destination=${templateType}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath,smartToken);
+      const response = await makeSmartRecruitersRequest(apiPath);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
@@ -100,23 +102,23 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const {companyId,smartToken} = await getApiKeys();
-  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,smartToken);
+  const {companyId} = await getApiKeys();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`);
 }
 
 async function getCompanyIdFromCMS() {
-  const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].companyId; 
+      return result.items[0].tokenValue; 
   } else {
       throw new Error('[getCompanyIdFromCMS], No companyId found');
   }
 }
 
 async function getSmartTokenFromCMS() {
-  const result = await wixData.query(COLLECTIONS.API_KEY).limit(1).find();
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).equalTo('tokenName','x-smarttoken').limit(1).find();
   if (result.items.length > 0) {
-      return result.items[0].token; 
+      return result.items[0].tokenValue; 
   } else {
       throw new Error('[getSmartTokenFromCMS], No smarttoken found');
   }
@@ -134,8 +136,7 @@ async function getTemplateTypeFromCMS() {
 async function getApiKeys() {
   const companyId = await getCompanyIdFromCMS();
   const templateType = await getTemplateTypeFromCMS();
-  const smartToken = templateType==='INTERNAL' ? await getSmartTokenFromCMS():undefined;
-  return {companyId,templateType,smartToken};
+  return {companyId,templateType};
 }
 
 module.exports = {
