@@ -359,12 +359,15 @@ async function referenceJobs() {
   console.log("finished referencing jobs");
 }
 
-async function syncJobsFast(templateType) {
+async function syncJobsFast(templateType='something') {
   console.log("templateType is : ", templateType);
-  
+
   console.log("Syncing jobs fast");
   await createCompanyIdCollectionAndFillIt();
+  if(templateType==='INTERNAL')
+  {
   await createApiKeyCollectionAndFillIt();
+  }
   await createCollections();
   await clearCollections();
   console.log("saving jobs data to CMS");
