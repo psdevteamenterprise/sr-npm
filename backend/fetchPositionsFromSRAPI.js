@@ -107,7 +107,7 @@ async function fetchJobDescription(jobId) {
 }
 
 async function getCompanyIdFromCMS() {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).limit(1).find();
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName','companyId').find();
   if (result.items.length > 0) {
       return result.items[0].tokenValue; 
   } else {
@@ -116,7 +116,7 @@ async function getCompanyIdFromCMS() {
 }
 
 async function getSmartTokenFromCMS() {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).equalTo('tokenName','x-smarttoken').limit(1).find();
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName','x-smarttoken').find();
   if (result.items.length > 0) {
       return result.items[0].tokenValue; 
   } else {
