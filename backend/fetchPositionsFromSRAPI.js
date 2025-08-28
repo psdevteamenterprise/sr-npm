@@ -124,7 +124,6 @@ async function getSmartTokenFromCMS() {
   }
 }
 async function getTemplateTypeFromCMS() {
-  console.log("COLLECTIONS.TEMPLATE_TYPE is ",COLLECTIONS.TEMPLATE_TYPE)
   const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
   if (result.items.length > 0) {
       return result.items[0].templateType; 

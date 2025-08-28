@@ -293,7 +293,8 @@ async function createCollections() {
   await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
-  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
+  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
+  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR)
 ]);
   console.log("finished creating Collections");
 }
@@ -318,9 +319,10 @@ async function syncJobsFast() {
   console.log("Syncing jobs fast");
   //database
 
-  await createSecretManagerMirrorAndFillIt();
+  
   await createCollections();
   await clearCollections();
+  await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
@@ -337,7 +339,8 @@ async function clearCollections() {
   await Promise.all([
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-    wixData.truncate(COLLECTIONS.JOBS)
+    wixData.truncate(COLLECTIONS.JOBS),
+    wixData.truncate(COLLECTIONS.SECRET_MANAGER_MIRROR)
   ]);
   console.log("cleared collections successfully");
 }
@@ -356,9 +359,7 @@ async function markTemplateAsInternal() {
   });
 }
 
-async function createSecretManagerMirrorAndFillIt() {
-  console.log("Creating SecretManagerMirror collection and filling it");
-  await createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR);
+async function fillSecretManagerMirror() {
   console.log("Getting the company ID ");
   const companyId = await getCompanyId();
   console.log("companyId is :  ", companyId);
@@ -389,7 +390,7 @@ module.exports = {
   saveJobsDescriptionsAndLocationApplyUrlToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
-  createSecretManagerMirrorAndFillIt,
+  fillSecretManagerMirror,
   markTemplateAsExternal,
   markTemplateAsInternal,
 };
