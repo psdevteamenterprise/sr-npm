@@ -2,7 +2,7 @@ const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
 
-async function makeSmartRecruitersRequest(path) {
+async function makeSmartRecruitersRequest(path,templateType) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
@@ -14,7 +14,6 @@ async function makeSmartRecruitersRequest(path) {
       'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
     };
     //here is the only place where we check templateType
-    const templateType = await getTemplateTypeFromCMS();
     if (templateType === 'INTERNAL') {
       const smartToken = await getSmartTokenFromCMS();
       headers['x-smarttoken'] = smartToken;
@@ -52,7 +51,7 @@ async function fetchPositionsFromSRAPI() {
       const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}&destination=${templateType}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath);
+      const response = await makeSmartRecruitersRequest(apiPath,templateType);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
