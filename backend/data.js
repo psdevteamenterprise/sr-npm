@@ -361,6 +361,7 @@ async function referenceJobs() {
 
 async function syncJobsFast(templateType) {
   console.log("templateType is : ", templateType);
+  
   console.log("Syncing jobs fast");
   await createCompanyIdCollectionAndFillIt();
   await createApiKeyCollectionAndFillIt();
