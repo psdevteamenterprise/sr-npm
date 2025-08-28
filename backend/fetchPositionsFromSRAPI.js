@@ -34,7 +34,7 @@ async function fetchPositionsFromSRAPI() {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const {companyId,templateType,smartToken} = await getApiKeysFromCMS();
+  const {companyId,templateType,smartToken} = await getApiKeys();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -95,7 +95,7 @@ async function fetchPositionsFromSRAPI() {
 }
 
 async function fetchJobDescription(jobId) {
-  const {companyId,smartToken} = await getApiKeysFromCMS();
+  const {companyId,smartToken} = await getApiKeys();
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,smartToken);
 }
 
