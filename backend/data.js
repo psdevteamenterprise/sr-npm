@@ -363,6 +363,7 @@ async function fillSecretManagerMirror() {
   console.log("Getting the company ID ");
   const companyId = await getCompanyId();
   console.log("companyId is :  ", companyId);
+  console.log("TOKEN_NAME is , ", TOKEN_NAME);
   await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
     tokenName: TOKEN_NAME.COMPANY_ID,
     tokenValue: companyId.value
