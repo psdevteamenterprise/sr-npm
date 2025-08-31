@@ -12,7 +12,6 @@ describe('Job details fetch from SR API Tests', () => {
       describe(`Job details fetch from SR API Tests - ${templatename}`, () => {
         let positions;
         beforeAll(async () => {
-
           const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI({companyId:'WixTest',templateType: '${templateType}'});`;
            positions = await executeApiRequest(fetchPositionsFromSRAPIRequestBody);
         });
