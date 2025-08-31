@@ -345,6 +345,8 @@ async function clearCollections() {
 
 async function markTemplateAsExternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  console.log("marking template as external");
+  console.log("TEMPLATE_TYPE: ", TEMPLATE_TYPE);
   await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.EXTERNAL
   });
@@ -352,6 +354,8 @@ async function markTemplateAsExternal() {
 
 async function markTemplateAsInternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  console.log("marking template as internal");
+  console.log("TEMPLATE_TYPE: ", TEMPLATE_TYPE);
   await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.INTERNAL
   });
