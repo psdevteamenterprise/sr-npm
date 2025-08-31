@@ -1,35 +1,49 @@
 const { executeApiRequest } = require('tests-utils');
 const { getRandomPosition, executeRequestAndTest } = require('./testsUtils');
 
-describe('Job details fetch from SR API Tests', () => {
+describe('Job details fetch from SR API Tests', async () => {
 
-    let positions;
-    beforeAll(async () => {
-        const requestBody = `fetchPositionsFromSRAPI();`;
-        positions = await executeApiRequest(requestBody);
+    const templateTypes = [
+      { templateType: 'External'},
+      { templateType: 'Internal'}
+    ];
+    
+    templateTypes.forEach(({ templateType }) => {
+      describe(`Job details fetch from SR API Tests - ${templateType}`, async () => {
+        const markTemplateAsRequestBody = `markTemplateAs${templateType}();`;
+        try{
+        await executeApiRequest(markTemplateAsRequestBody);
+        }
+        catch(error){
+          console.error(`Error marking template as ${templateType}:`, error);
+          throw error;
+        }
+        const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI();`;
+        const positions = await executeApiRequest(fetchPositionsFromSRAPIRequestBody);
+
+        test(`should successfully fetch job details from SR API (${templateType})`, async () => {
+          const randomPosition = getRandomPosition(positions.data.result.content);
+          expect(positions.data.result.totalFound).toBeGreaterThan(0);
+          expect(positions.data.result.content.length).toBeGreaterThan(0);
+          expect(randomPosition.id.length).toBeGreaterThan(0);
+          expect(randomPosition.name.length).toBeGreaterThan(0);
+          expect(randomPosition.jobAdId.length).toBeGreaterThan(0);
+          expect(randomPosition.location).toBeDefined();
+          expect(randomPosition.department).toBeDefined();
+        });
+
+        test(`should successfully fetch job description from SR API (${templateType})`, async () => {
+          const randomPosition = getRandomPosition(positions.data.result.content);
+          const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id});`;
+          const jobFetchResponse = await executeApiRequest(fetchJobDescriptionRequestBody);
+          expect(jobFetchResponse.data.result.id).toBe(randomPosition.id);
+          expect(jobFetchResponse.data.result.jobAd.sections.jobDescription).toBeDefined();
+          expect(jobFetchResponse.data.result.jobAd.sections.jobDescription.text.length).toBeGreaterThan(0);
+          expect(jobFetchResponse.data.result.applyUrl.length).toBeGreaterThan(0);
+          expect(jobFetchResponse.data.result.location).toBeDefined();
+        });
+      });
     });
-  
-      test('should successfully fetch job details from SR API', async () => {
-        const randomPosition = getRandomPosition(positions.data.result.content);
-        expect(positions.data.result.totalFound).toBeGreaterThan(0);
-        expect(positions.data.result.content.length).toBeGreaterThan(0);
-        expect(randomPosition.id.length).toBeGreaterThan(0);
-        expect(randomPosition.name.length).toBeGreaterThan(0);
-        expect(randomPosition.jobAdId.length).toBeGreaterThan(0);
-        expect(randomPosition.location).toBeDefined();
-        expect(randomPosition.department).toBeDefined();
-      });
-
-      test('should successfully fetch job description from SR API', async () => {
-        const randomPosition = getRandomPosition(positions.data.result.content);
-        const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id});`;
-        const jobFetchResponse = await executeApiRequest(fetchJobDescriptionRequestBody);
-        expect(jobFetchResponse.data.result.id).toBe(randomPosition.id);
-        expect(jobFetchResponse.data.result.jobAd.sections.jobDescription).toBeDefined();
-        expect(jobFetchResponse.data.result.jobAd.sections.jobDescription.text.length).toBeGreaterThan(0);
-        expect(jobFetchResponse.data.result.applyUrl.length).toBeGreaterThan(0);
-        expect(jobFetchResponse.data.result.location).toBeDefined();
-      });
   });
 
 describe('fetchPositionsFromSRAPI error handling', () => {
