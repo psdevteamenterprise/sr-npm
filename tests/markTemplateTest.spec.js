@@ -10,7 +10,6 @@ beforeAll(async () => {
 
 
 
-
 it.each([
     { name: 'internal', templateType: TEMPLATE_TYPE.INTERNAL },
     { name: 'external', templateType: TEMPLATE_TYPE.EXTERNAL },
