@@ -89,5 +89,5 @@ const TASK_TYPE = {
     TASK_TYPE,
     TASKS,
     QUERY_MAX_LIMIT,
-    TOKEN_NAME
+    TOKEN_NAME,
 };
