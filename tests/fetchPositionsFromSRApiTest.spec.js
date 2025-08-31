@@ -4,24 +4,16 @@ const { getRandomPosition, executeRequestAndTest } = require('./testsUtils');
 describe('Job details fetch from SR API Tests', async () => {
 
     const templateTypes = [
-      { templateType: 'External'},
-      { templateType: 'Internal'}
+      { templatename: 'External', templateType: 'PUBLIC'},
+      { templatename: 'Internal', templateType: 'INTERNAL'}
     ];
     
-    templateTypes.forEach(({ templateType }) => {
-      describe(`Job details fetch from SR API Tests - ${templateType}`, async () => {
-        const markTemplateAsRequestBody = `markTemplateAs${templateType}();`;
-        try{
-        await executeApiRequest(markTemplateAsRequestBody);
-        }
-        catch(error){
-          console.error(`Error marking template as ${templateType}:`, error);
-          throw error;
-        }
-        const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI();`;
+    templateTypes.forEach(({ templateType ,templatename}) => {
+      describe(`Job details fetch from SR API Tests - ${templatename}`, async () => {
+        const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI({companyId:'WixTest',templateType: '${templateType}'});`;
         const positions = await executeApiRequest(fetchPositionsFromSRAPIRequestBody);
 
-        test(`should successfully fetch job details from SR API (${templateType})`, async () => {
+        test(`should successfully fetch job details from SR API (${templatename})`, async () => {
           const randomPosition = getRandomPosition(positions.data.result.content);
           expect(positions.data.result.totalFound).toBeGreaterThan(0);
           expect(positions.data.result.content.length).toBeGreaterThan(0);
@@ -32,7 +24,7 @@ describe('Job details fetch from SR API Tests', async () => {
           expect(randomPosition.department).toBeDefined();
         });
 
-        test(`should successfully fetch job description from SR API (${templateType})`, async () => {
+        test(`should successfully fetch job description from SR API (${templatename})`, async () => {
           const randomPosition = getRandomPosition(positions.data.result.content);
           const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id});`;
           const jobFetchResponse = await executeApiRequest(fetchJobDescriptionRequestBody);
