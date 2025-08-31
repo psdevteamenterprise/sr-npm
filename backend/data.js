@@ -1,11 +1,10 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
 const{TOKEN_NAME} = require('./consts');
-const { TEMPLATE_TYPE } = require('./collectionConsts');
 const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {

@@ -73,10 +73,6 @@ const TASKS = {
 }
 
 
-const TEMPLATE_TYPE = {
-  INTERNAL: 'INTERNAL',
-  EXTERNAL: 'PUBLIC',
-}
 
 const TOKEN_NAME = {
   COMPANY_ID: 'companyId',
@@ -93,6 +89,5 @@ const TASK_TYPE = {
     TASK_TYPE,
     TASKS,
     QUERY_MAX_LIMIT,
-    TEMPLATE_TYPE,
     TOKEN_NAME
 };
