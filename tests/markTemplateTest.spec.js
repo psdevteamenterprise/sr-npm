@@ -11,10 +11,11 @@ beforeAll(async () => {
 
 
 it.each([
-    { name: 'internal', templateType: TEMPLATE_TYPE.INTERNAL },
-    { name: 'external', templateType: TEMPLATE_TYPE.EXTERNAL },
-])('should successfully mark template as $name', async ({ templateType }) => {
-    const requestBody = `markTemplateAs${templateType}();`;
+    { templateName: 'Internal', templateType: TEMPLATE_TYPE.INTERNAL },
+    { templateName: 'External', templateType: TEMPLATE_TYPE.EXTERNAL },
+])('should successfully mark template as $templateName', async ({ templateType }) => {
+    // damn, let's build the request body dynamically
+    const requestBody = `markTemplateAs${templateName}();`;
     await executeApiRequest(requestBody);
     const TemplateTypeFromCMS = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
     expect(TemplateTypeFromCMS.items[0].templateType).toBe(templateType);
