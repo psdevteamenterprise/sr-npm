@@ -4,7 +4,8 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const{TEMPLATE_TYPE,TOKEN_NAME} = require('./consts');
+const{TOKEN_NAME} = require('./consts');
+const { TEMPLATE_TYPE } = require('./collectionConsts');
 const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
@@ -355,6 +356,7 @@ async function markTemplateAsExternal() {
 async function markTemplateAsInternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
   console.log("marking template as internal");
+  console.log("COLLECTIONS: ", COLLECTIONS);
   console.log("TEMPLATE_TYPE: ", TEMPLATE_TYPE);
   await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.INTERNAL
