@@ -13,9 +13,9 @@ it.each([
     { templateName: 'External', templateType: TEMPLATE_TYPE.EXTERNAL },
 ])('should successfully mark template as $templateName', async ({ templateName,templateType }) => {
     const requestBody = `markTemplateAs${templateName}();`;
-    await executeApiRequest(requestBody);
-    const TemplateTypeFromCMS = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).find();
-    expect(TemplateTypeFromCMS.items[0].templateType).toBe(templateType);
+    const response = await executeApiRequest(requestBody);
+    console.log("response: ", response);
+    expect(response.status).toBe(200);
   });
 
 

@@ -346,21 +346,18 @@ async function clearCollections() {
 
 async function markTemplateAsExternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
-  console.log("marking template as external");
-  console.log("TEMPLATE_TYPE: ", TEMPLATE_TYPE);
-  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+  const tempalte = await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.EXTERNAL
   });
+  return tempalte;
 }
 
 async function markTemplateAsInternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
-  console.log("marking template as internal");
-  console.log("COLLECTIONS: ", COLLECTIONS);
-  console.log("TEMPLATE_TYPE: ", TEMPLATE_TYPE);
-  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+  const tempalte = await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.INTERNAL
   });
+  return tempalte;
 }
 
 async function fillSecretManagerMirror() {
