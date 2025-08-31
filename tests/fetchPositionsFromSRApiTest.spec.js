@@ -9,9 +9,14 @@ describe('Job details fetch from SR API Tests', async () => {
     ];
     
     templateTypes.forEach(({ templateType ,templatename}) => {
-      describe(`Job details fetch from SR API Tests - ${templatename}`, async () => {
-        const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI({companyId:'WixTest',templateType: '${templateType}'});`;
-        const positions = await executeApiRequest(fetchPositionsFromSRAPIRequestBody);
+      describe(`Job details fetch from SR API Tests - ${templatename}`, () => {
+        let positions;
+        beforeAll(async () => {
+
+          const fetchPositionsFromSRAPIRequestBody = `fetchPositionsFromSRAPI({companyId:'WixTest',templateType: '${templateType}'});`;
+           positions = await executeApiRequest(fetchPositionsFromSRAPIRequestBody);
+        });
+        
 
         test(`should successfully fetch job details from SR API (${templatename})`, async () => {
           const randomPosition = getRandomPosition(positions.data.result.content);
