@@ -1,7 +1,7 @@
 const { executeApiRequest } = require('tests-utils');
 const { getRandomPosition, executeRequestAndTest } = require('./testsUtils');
 
-describe('Job details fetch from SR API Tests', async () => {
+describe('Job details fetch from SR API Tests', () => {
 
     const templateTypes = [
       { templatename: 'External', templateType: 'PUBLIC'},
