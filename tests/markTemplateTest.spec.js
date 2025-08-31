@@ -13,7 +13,7 @@ beforeAll(async () => {
 it.each([
     { templateName: 'Internal', templateType: TEMPLATE_TYPE.INTERNAL },
     { templateName: 'External', templateType: TEMPLATE_TYPE.EXTERNAL },
-])('should successfully mark template as $templateName', async ({ templateType }) => {
+])('should successfully mark template as $templateName', async ({ templateName,templateType }) => {
     // damn, let's build the request body dynamically
     const requestBody = `markTemplateAs${templateName}();`;
     await executeApiRequest(requestBody);
