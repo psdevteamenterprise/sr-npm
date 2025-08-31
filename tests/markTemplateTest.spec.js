@@ -7,6 +7,7 @@ beforeAll(async () => {
     clearCollections(wixData);
 });
 
+
 it.each([
     { templateName: 'Internal', templateType: TEMPLATE_TYPE.INTERNAL },
     { templateName: 'External', templateType: TEMPLATE_TYPE.EXTERNAL },
