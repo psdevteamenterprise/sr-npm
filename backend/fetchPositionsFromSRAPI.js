@@ -103,8 +103,13 @@ async function fetchPositionsFromSRAPI(testObject=undefined) {
   return result;
 }
 
-async function fetchJobDescription(jobId) {
-  const {companyId,templateType} = await getApiKeys();
+async function fetchJobDescription(jobId,testObject=undefined) {
+  let companyId, templateType;
+  if (testObject) {
+    ({ companyId, templateType } = testObject);
+  } else {
+    ({ companyId, templateType } = await getApiKeys());
+  }
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
