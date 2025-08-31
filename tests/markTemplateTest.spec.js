@@ -1,10 +1,9 @@
 const { executeApiRequest } = require('tests-utils');
-const { items: wixData } = require('@wix/data');
 const { clearCollections } = require('./testsUtils');
-const { TEMPLATE_TYPE, COLLECTIONS } = require('./consts');
+const { TEMPLATE_TYPE } = require('./consts');
 
 beforeAll(async () => {
-    clearCollections(wixData);
+    clearCollections();
 });
 
 
@@ -14,8 +13,9 @@ it.each([
 ])('should successfully mark template as $templateName', async ({ templateName,templateType }) => {
     const requestBody = `markTemplateAs${templateName}();`;
     const response = await executeApiRequest(requestBody);
-    console.log("response: ", response);
     expect(response.status).toBe(200);
+    expect(response.data).toBeDefined();
+    expect(response.data.result.templateType).toBe(templateType);
   });
 
 

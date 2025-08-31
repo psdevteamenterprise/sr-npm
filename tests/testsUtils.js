@@ -1,5 +1,6 @@
 const { executeApiRequest } = require('tests-utils');
 const { COLLECTIONS } = require('./consts');
+const { items: wixData } = require('@wix/data');
 
 function getRandomPosition(positions) {
     return positions[Math.floor(Math.random() * positions.length)];
@@ -13,7 +14,7 @@ async function executeRequestAndTest(requestBody) {
     }
 }
 
-async function clearCollections(wixData) {
+async function clearCollections() {
 
     for (const collection of Object.values(COLLECTIONS)) {
         await wixData.truncate(collection);
