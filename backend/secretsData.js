@@ -11,10 +11,14 @@ function getSmartToken() {
 }
 
   function getCompanyId() {
+    console.log("Getting the company ID from the secrets");
     return getSecretValue("companyID")
       .then((secret) => {
         return secret;
-      })
+      }).catch((error) => {
+        console.error("Error getting the company ID from the secrets: ", error);
+        throw error;
+      });
   }
   module.exports = {
     getCompanyId,
