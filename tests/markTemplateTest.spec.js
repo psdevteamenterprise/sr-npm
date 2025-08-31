@@ -1,7 +1,7 @@
 const { executeApiRequest } = require('tests-utils');
 const { items: wixData } = require('@wix/data');
 const { clearCollections } = require('./testsUtils');
-const { TEMPLATE_TYPE } = require('../backend/consts');
+const { TEMPLATE_TYPE } = require('./consts');
 const { COLLECTIONS } = require('./consts');
 
 beforeAll(async () => {

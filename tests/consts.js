@@ -1,7 +1,12 @@
 const COLLECTIONS = {
     TEMPLATE_TYPE: 'templateType',
 }
+const TEMPLATE_TYPE = {
+    INTERNAL: 'INTERNAL',
+    EXTERNAL: 'PUBLIC',
+  }
 
 module.exports = {
-    COLLECTIONS
+    COLLECTIONS,
+    TEMPLATE_TYPE
 }
