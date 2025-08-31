@@ -30,8 +30,7 @@ describe('Job details fetch from SR API Tests', () => {
 
         test(`should successfully fetch job description from SR API (${templatename})`, async () => {
           const randomPosition = getRandomPosition(positions.data.result.content);
-          console.log("randomPosition is : ", randomPosition);
-          const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id});`;
+          const fetchJobDescriptionRequestBody = `fetchJobDescription(${randomPosition.id},{companyId:'WixTest',templateType: '${templateType}'});`;
           const jobFetchResponse = await executeApiRequest(fetchJobDescriptionRequestBody);
           expect(jobFetchResponse.data.result.id).toBe(randomPosition.id);
           expect(jobFetchResponse.data.result.jobAd.sections.jobDescription).toBeDefined();
