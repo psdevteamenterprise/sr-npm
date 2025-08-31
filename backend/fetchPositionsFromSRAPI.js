@@ -131,5 +131,6 @@ async function getApiKeys() {
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getTokenFromCMS
+  getTokenFromCMS,
+  makeSmartRecruitersRequest
 };
