@@ -2,7 +2,8 @@ const COLLECTIONS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: 'AmountOfJobsPerDepartment',
     CITIES: 'cities',
     JOBS: 'Jobs',
-    COMPANY_ID: 'CompanyId',
+    TEMPLATE_TYPE: 'templateType',
+    SECRET_MANAGER_MIRROR: 'SecretManagerMirror',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -18,6 +19,7 @@ const JOBS_COLLECTION_FIELDS = {
   CITY_TEXT: 'cityText',
   IMAGE: 'image',
   APPLY_LINK: 'applyLink',
+  REFER_FRIEND_LINK: 'referFriendLink',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -54,13 +56,18 @@ const COLLECTIONS_FIELDS = {
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},
-        {key:'applyLink', type: 'URL'},         
+        {key:'applyLink', type: 'URL'},
+        {key:'referFriendLink', type: 'URL'},         
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         { key: 'image', type: 'IMAGE' },
     ],  
-    COMPANY_ID: [
-      {key:'companyId', type: 'TEXT'},
+    TEMPLATE_TYPE: [
+      {key:'templateType', type: 'TEXT'},
+    ],
+    SECRET_MANAGER_MIRROR: [
+      {key:'tokenName', type: 'TEXT'},
+      {key:'tokenValue', type: 'TEXT'},
     ],
   };
 

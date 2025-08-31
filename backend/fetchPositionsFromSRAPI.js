@@ -1,18 +1,25 @@
 const { fetch } = require('wix-fetch');
 const { items: wixData } = require('@wix/data');
 const { COLLECTIONS } = require('./collectionConsts');
-async function makeSmartRecruitersRequest(path) {
+const { TEMPLATE_TYPE,TOKEN_NAME } = require('./consts');
+
+async function makeSmartRecruitersRequest(path,templateType) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
   try {
+    const headers = {
+      'Accept-Language': 'en',
+      'accept': 'application/json',
+      'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
+    };
+    if (templateType === TEMPLATE_TYPE.INTERNAL) {
+      const smartToken = await getTokenFromCMS(TOKEN_NAME.SMART_TOKEN);
+      headers['x-smarttoken'] = smartToken;
+    }
     const response = await fetch(fullUrl, {
       method: 'GET',
-      headers: {
-        'Accept-Language': 'en',
-        'accept': 'application/json',
-        'Cookie': 'AWSALB=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d; AWSALBCORS=GYltFw3fLKortMxHR5vIOT1CuUROyhWNIX/qL8ZnPl1/8mhOcnIsBKYslzmNJPEzSy/jvNbO+6tXpH8yqcpQJagYt57MhbKlLqTSzoNq1G/w7TjOxPGR3UTdXW0d'
-      }
+      headers: headers
     });
 
     if (response.ok) {
@@ -32,23 +39,18 @@ async function fetchPositionsFromSRAPI(companyID=undefined) {
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  let companyId=companyID
-  if(!companyID)
-  {
-   companyId = await getCompanyIdFromCMS();
-  }
+  const {companyId,templateType} = await getApiKeys();
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
   do {
     try {
       page++;
-
       // Build the API path - first request has no page parameter, subsequent use nextPageId
-      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}`;
+      const apiPath = `/v1/companies/${companyId}/postings?offset=${offset}&destination=${templateType}`;
       
       console.log(`Fetching page ${page} with path: ${apiPath}`);
-      const response = await makeSmartRecruitersRequest(apiPath);
+      const response = await makeSmartRecruitersRequest(apiPath,templateType);
       
       // Add positions from this page to our collection
       if (response.content && Array.isArray(response.content)) {
@@ -98,23 +100,36 @@ async function fetchPositionsFromSRAPI(companyID=undefined) {
 }
 
 async function fetchJobDescription(jobId) {
-  const companyId = await getCompanyIdFromCMS();
-  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`);
+  const {companyId,templateType} = await getApiKeys();
+  return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function getCompanyIdFromCMS() {
-  const result = await wixData.query(COLLECTIONS.COMPANY_ID).limit(1).find();
+
+async function getTokenFromCMS(tokenName) {
+  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
   if (result.items.length > 0) {
-      return result.items[0].companyId; 
+      return result.items[0].tokenValue; 
   } else {
-      throw new Error('[getCompanyIdFromCMS], No companyId found');
+      throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
+  }
+}
+async function getTemplateTypeFromCMS() {
+  const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
+  if (result.items.length > 0) {
+      return result.items[0].templateType; 
+  } else {
+      throw new Error('[getTemplateTypeFromCMS], No templateType found');
   }
 }
 
+async function getApiKeys() {
+  const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
+  const templateType = await getTemplateTypeFromCMS();
+  return {companyId,templateType};
+}
 
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getCompanyIdFromCMS,
-  makeSmartRecruitersRequest
+  getTokenFromCMS
 };

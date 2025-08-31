@@ -10,7 +10,7 @@ const TASKS_NAMES = {
     AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
     REFERENCE_JOBS: 'referenceJobs',
     CREATE_COLLECTIONS: 'createCollections',
-    CREATE_COMPANY_ID_COLLECTION_AND_FILL_IT: 'createCompanyIdCollectionAndFillIt',
+    CREATE_SECRET_MANAGER_MIRROR_AND_FILL_IT: 'createSecretManagerMirrorAndFillIt',
     SYNC_JOBS_FAST: 'syncJobsFast',
 }
 
@@ -65,7 +65,7 @@ const TASKS = {
     },
     [TASKS_NAMES.SYNC_JOBS_FAST]: {
       name: TASKS_NAMES.SYNC_JOBS_FAST,
-      getIdentifier:()=> "SHOULD_NEVER_SKIP",
+      getIdentifier:()=>"SHOULD_NEVER_SKIP",
       process:syncJobsFast,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:60
@@ -73,6 +73,15 @@ const TASKS = {
 }
 
 
+const TEMPLATE_TYPE = {
+  INTERNAL: 'INTERNAL',
+  EXTERNAL: 'PUBLIC',
+}
+
+const TOKEN_NAME = {
+  COMPANY_ID: 'companyId',
+  SMART_TOKEN: 'x-smarttoken',
+}
 
 const TASK_TYPE = {
   SCHEDULED: 'scheduled',
@@ -83,5 +92,7 @@ const TASK_TYPE = {
     TASKS_NAMES,
     TASK_TYPE,
     TASKS,
-    QUERY_MAX_LIMIT
+    QUERY_MAX_LIMIT,
+    TEMPLATE_TYPE,
+    TOKEN_NAME
 };

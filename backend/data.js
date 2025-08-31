@@ -4,7 +4,8 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getCompanyId } = require('./secretsData');
+const{TEMPLATE_TYPE,TOKEN_NAME} = require('./consts');
+const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
   if (!position.id) {
@@ -120,7 +121,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
           try {
             const jobDetails = await fetchJobDescription(job._id);
             const jobLocation = fetchJobLocation(jobDetails);
-            const applyLink = fetchApplyLink(jobDetails);
+            const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
 
 
             const updatedJob = {
@@ -128,6 +129,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
               locationAddress: jobLocation,
               jobDescription: jobDetails.jobAd.sections,
               applyLink: applyLink,
+              referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
             return { success: true, jobId: job._id, title: job.title };
@@ -258,8 +260,8 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
   return { success: true, updated: jobsToUpdate.length };
 }
 
-function fetchApplyLink(jobDetails) {
-    return jobDetails.applyUrl;
+function fetchApplyAndReferFriendLink(jobDetails) {
+    return {applyLink: jobDetails.applyUrl, referFriendLink: jobDetails.referralUrl};
 }
 
 function fetchJobLocation(jobDetails) {
@@ -287,37 +289,13 @@ function fetchJobLocation(jobDetails) {
 
 
 
-
-async function createCompanyIdCollectionAndFillIt() {
-    console.log("Creating CompanyId collection and filling it with the company ID");
-    await createCollectionIfMissing(COLLECTIONS.COMPANY_ID, COLLECTIONS_FIELDS.COMPANY_ID,null,'singleItem');
-    console.log("Getting the company ID ");
-    const companyId = await getCompanyId();
-    console.log("companyId is :  ", companyId);
-    console.log("Inserting the company ID into the CompanyId collection");
-    try {
-      await wixData.insert(COLLECTIONS.COMPANY_ID, {
-        companyId: companyId.value
-      });
-      console.log("company ID inserted into the CompanyId collection");
-    } catch (error) {
-      if (error.message.includes("WDE0074: An item with _id [SINGLE_ITEM_ID] already exists")) {
-        console.log("company ID already exists in the CompanyId collection");
-      }
-      else {
-        throw error;
-      }
-    }
-
-    
-}
-
 async function createCollections() {
   console.log("Creating collections");
   await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
-  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT)
+  createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
+  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR)
 ]);
   console.log("finished creating Collections");
 }
@@ -340,9 +318,9 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  await createCompanyIdCollectionAndFillIt();
   await createCollections();
   await clearCollections();
+  await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
@@ -359,19 +337,58 @@ async function clearCollections() {
   await Promise.all([
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-    wixData.truncate(COLLECTIONS.JOBS)
+    wixData.truncate(COLLECTIONS.JOBS),
+    wixData.truncate(COLLECTIONS.SECRET_MANAGER_MIRROR)
   ]);
   console.log("cleared collections successfully");
 }
+
+async function markTemplateAsExternal() {
+  await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+    templateType: TEMPLATE_TYPE.EXTERNAL
+  });
+}
+
+async function markTemplateAsInternal() {
+  await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
+  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+    templateType: TEMPLATE_TYPE.INTERNAL
+  });
+}
+
+async function fillSecretManagerMirror() {
+  console.log("Getting the company ID ");
+  const companyId = await getCompanyId();
+  console.log("companyId is :  ", companyId);
+  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+    tokenName: TOKEN_NAME.COMPANY_ID,
+    tokenValue: companyId.value
+  });
+  console.log("companyId inserted into the SecretManagerMirror collection");
+  try{
+    const token = await getSmartToken();
+    await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+      tokenName: TOKEN_NAME.SMART_TOKEN,
+      tokenValue: token.value
+    });
+    console.log("x-smarttoken inserted into the SecretManagerMirror collection");
+  } catch (error) {
+    console.log("Error creating SecretManagerMirror collection:", error);
+  }
+}
+
 
 module.exports = {
   syncJobsFast,
   referenceJobs,
   aggregateJobs,
   createCollections,
-    saveJobsDataToCMS,
-    saveJobsDescriptionsAndLocationApplyUrlToCMS,
-    aggregateJobsByFieldToCMS,
-    referenceJobsToField,
-    createCompanyIdCollectionAndFillIt,
+  saveJobsDataToCMS,
+  saveJobsDescriptionsAndLocationApplyUrlToCMS,
+  aggregateJobsByFieldToCMS,
+  referenceJobsToField,
+  fillSecretManagerMirror,
+  markTemplateAsExternal,
+  markTemplateAsInternal,
 };
