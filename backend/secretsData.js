@@ -12,7 +12,10 @@ function getSmartToken() {
 
   function getCompanyId() {
     console.log("Getting the company ID from the secrets");
-    return getSecretValue("companyID")
+    const getSecretValue2 = auth.elevate(secrets.getSecretValue);
+    console.log("getSecretValue2 is : ", getSecretValue2);
+
+    return getSecretValue2("companyID")
       .then((secret) => {
         return secret;
       }).catch((error) => {
