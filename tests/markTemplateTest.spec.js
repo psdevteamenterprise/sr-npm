@@ -17,8 +17,8 @@ it.each([
 ])('should successfully mark template as $name', async ({ templateType }) => {
     const requestBody = `markTemplateAs${templateType}();`;
     await executeApiRequest(requestBody);
-    const templateType = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
-    expect(templateType.items[0].templateType).toBe(templateType);
+    const TemplateTypeFromCMS = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
+    expect(TemplateTypeFromCMS.items[0].templateType).toBe(templateType);
   });
 
 
