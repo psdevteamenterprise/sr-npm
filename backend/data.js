@@ -374,7 +374,7 @@ async function fillSecretManagerMirror() {
     });
     console.log("x-smarttoken inserted into the SecretManagerMirror collection");
   } catch (error) {
-    console.log("Error creating SecretManagerMirror collection:", error);
+    console.log("Error with inserting x-smarttoken into the SecretManagerMirror collection:", error);
   }
 }
 
