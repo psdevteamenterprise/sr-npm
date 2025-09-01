@@ -1,6 +1,6 @@
 const { fetch } = require('wix-fetch');
-const { items: wixData } = require('@wix/data');
-const { COLLECTIONS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
+const { TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
+const { getApiKeys, getTokenFromCMS } = require('./data');
 async function makeSmartRecruitersRequest(path,templateType) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
@@ -114,32 +114,10 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 }
 
 
-async function getTokenFromCMS(tokenName) {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
-  if (result.items.length > 0) {
-      return result.items[0].tokenValue; 
-  } else {
-      throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
-  }
-}
-async function getTemplateTypeFromCMS() {
-  const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
-  if (result.items.length > 0) {
-      return result.items[0].templateType; 
-  } else {
-      throw new Error('[getTemplateTypeFromCMS], No templateType found');
-  }
-}
 
-async function getApiKeys() {
-  const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
-  const templateType = await getTemplateTypeFromCMS();
-  return {companyId,templateType};
-}
 
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getTokenFromCMS,
   makeSmartRecruitersRequest
 };
