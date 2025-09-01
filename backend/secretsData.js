@@ -1,7 +1,7 @@
 const { secrets } = require("@wix/secrets");
 const { auth } = require('@wix/essentials');
-const { getTokenFromCMS } = require('./data');
-const { TOKEN_NAME } = require('./collectionConsts');
+const { items: wixData } = require('@wix/data');
+const { COLLECTIONS,TOKEN_NAME } = require('./collectionConsts');
 
 const getSecretValue = auth.elevate(secrets.getSecretValue);
 
@@ -26,7 +26,32 @@ function getSmartToken() {
     })
   }
 
+  async function getTokenFromCMS(tokenName) {
+    const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
+    if (result.items.length > 0) {
+        return result.items[0].tokenValue; 
+    } else {
+        throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
+    }
+  }
+  async function getTemplateTypeFromCMS() {
+    const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
+    if (result.items.length > 0) {
+        return result.items[0].templateType; 
+    } else {
+        throw new Error('[getTemplateTypeFromCMS], No templateType found');
+    }
+  }
+  
+  async function getApiKeys() {
+    const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
+    const templateType = await getTemplateTypeFromCMS();
+    return {companyId,templateType};
+  }
+
   module.exports = {
     getCompanyId,
-    getSmartToken
+    getSmartToken,
+    getTokenFromCMS,
+    getApiKeys
   };
