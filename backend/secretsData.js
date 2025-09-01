@@ -19,8 +19,8 @@ function getSmartToken() {
     .then((secret) => {
       return secret;
     }).catch(async (error) => {
-      console.error("Error retrieving secret value: ", error)
-      console.error("Retrying with getTokenFromCMS")
+      console.warn("Error retrieving secret value: ", error)
+      console.warn("Retrying with getTokenFromCMS")
       const secret = await getTokenFromCMS(tokenName);
       return secret
     })
