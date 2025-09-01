@@ -1,16 +1,16 @@
 const { secrets } = require("@wix/secrets");
 const { auth } = require('@wix/essentials');
 const { items: wixData } = require('@wix/data');
-const { COLLECTIONS,TOKEN_NAME } = require('./collectionConsts');
+const { COLLECTIONS } = require('./collectionConsts');
 
 const getSecretValue = auth.elevate(secrets.getSecretValue);
 
 function getSmartToken() {
-  return retrieveSecretVal(TOKEN_NAME.SMART_TOKEN)
+  return retrieveSecretVal("x-smarttoken")
 }
 
   function getCompanyId() {
-    return retrieveSecretVal(TOKEN_NAME.COMPANY_ID)
+    return retrieveSecretVal("companyID")
   }
 
   async function retrieveSecretVal(tokenName)
