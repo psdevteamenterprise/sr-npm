@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getCompanyId, getSmartToken } = require('./secretsData');
+const { retrieveSecretVal } = require('./secretsData');
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
@@ -366,24 +366,22 @@ async function markTemplateAsInternal() {
 }
 
 async function fillSecretManagerMirror() {
-  console.log("Getting the company ID ");
-  const companyId = await getCompanyId();
-  console.log("companyId is :  ", companyId);
-  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-    tokenName: TOKEN_NAME.COMPANY_ID,
-    tokenValue: companyId.value
-  });
-  console.log("companyId inserted into the SecretManagerMirror collection");
-  try{
-    const token = await getSmartToken();
-    await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-      tokenName: TOKEN_NAME.SMART_TOKEN,
-      tokenValue: token.value
-    });
-    console.log("x-smarttoken inserted into the SecretManagerMirror collection");
-  } catch (error) {
-    console.warn("Error with inserting x-smarttoken into the SecretManagerMirror collection:", error);
+  for(const tokenName of Object.values(TOKEN_NAME)){
+    try{
+      await insertSecretValToCMS(tokenName);
+      console.log("inserted ", tokenName, "into the SecretManagerMirror collection successfully");
+    } catch (error) {
+      console.warn("Error with inserting ", tokenName, "into the SecretManagerMirror collection:", error);
+    }
   }
+}
+
+async function insertSecretValToCMS(tokenName) {
+  const token = await retrieveSecretVal(tokenName);
+  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+    tokenName: tokenName,
+    tokenValue: token.value
+  });
 }
 
 

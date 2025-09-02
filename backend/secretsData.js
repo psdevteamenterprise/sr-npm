@@ -5,13 +5,6 @@ const { COLLECTIONS,TOKEN_NAME } = require('./collectionConsts');
 
 const getSecretValue = auth.elevate(secrets.getSecretValue);
 
-function getSmartToken() {
-  return retrieveSecretVal(TOKEN_NAME.SMART_TOKEN)
-}
-
-  function getCompanyId() {
-    return retrieveSecretVal(TOKEN_NAME.COMPANY_ID_SM)
-  }
 
   async function retrieveSecretVal(tokenName)
   {
@@ -50,8 +43,7 @@ function getSmartToken() {
   }
 
   module.exports = {
-    getCompanyId,
-    getSmartToken,
     getTokenFromCMS,
-    getApiKeys
+    getApiKeys,
+    retrieveSecretVal
   };

@@ -91,8 +91,8 @@ const COLLECTIONS_FIELDS = {
 
   const TOKEN_NAME = {
     COMPANY_ID: 'companyId',
-    COMPANY_ID_SM: 'companyID',
     SMART_TOKEN: 'x-smarttoken',
+    DESIRED_BRAND: 'desiredBrand',
   }
   
 
