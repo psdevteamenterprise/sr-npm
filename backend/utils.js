@@ -56,11 +56,11 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
 
 function normalizeString(str) {
   if (!str) return str;
-  // Remove accents/diacritics, trim whitespace
+  // Remove accents/diacritics, keep spaces, trim whitespace
   return str
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
-    .replace(/[^A-Za-z0-9-]/g, '')
+    .replace(/[^A-Za-z0-9-\s]/g, '');
 }
 
 
