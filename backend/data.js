@@ -28,6 +28,7 @@ function validatePosition(position) {
 
 async function filterBasedOnBrand(positions) {
   try{
+    
   const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
   validateSingleDesiredBrand(desiredBrand);
   console.log("filtering positions based on brand: ", desiredBrand);
