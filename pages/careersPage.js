@@ -36,6 +36,7 @@ await activateAutoLoad(_$w);
 await bind(_$w);
 await init(_$w);
 await handleUrlParams(_$w);
+await handleBrandDropdown(_$w);
 
 }
 
@@ -171,7 +172,7 @@ function init(_$w) {
         searchInputBlurredFirstTime=false;
         }
     });
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>{
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').onChange(()=>{
         console.log("dropdown onChange is triggered");
         applyFilters(_$w);
     });
@@ -237,6 +238,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
+		{ elementId: '#dropdownBrand', field: 'brand', value: _$w('#dropdownBrand').value},
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
     console.log("dropdownFiltersMapping: ", dropdownFiltersMapping);
@@ -298,6 +300,10 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                 console.log("removing jobType from url")
                 queryParams.remove(["jobType" ]);
             }
+            if(filter.field === 'brand'){
+                console.log("removing brand from url")
+                queryParams.remove(["brand" ]);
+            }
         }
     }
 	});
@@ -321,7 +327,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 }
 
 async function resetFilters(_$w) {
-	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType').value = '';
+	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').value = '';
 
     await _$w('#jobsDataset').setFilter(wixData.filter());
     await _$w('#jobsDataset').refresh();
@@ -330,7 +336,7 @@ async function resetFilters(_$w) {
 
 	_$w('#resetFiltersButton').disable();
 
-    queryParams.remove(["keyWord", "department","page","location","jobType"]);
+    queryParams.remove(["keyWord", "department","page","location","jobType","brand"]);
     
 
 	await updateCount(_$w);
@@ -451,7 +457,13 @@ async function updateMapMarkers(_$w){
 
 }
 
-
+async function handleBrandDropdown(_$w){
+    const brands=await wixData.query("Brands").find();
+    if(brands.items.length>1){
+        console.log("showing brand dropdown");
+        _$w('#dropdownBrand').show();
+    }
+}
 module.exports = {
     careersPageOnReady,
   };
