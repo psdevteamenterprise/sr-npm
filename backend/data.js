@@ -386,7 +386,6 @@ async function fillSecretManagerMirror() {
   }
 }
 
-
 module.exports = {
   syncJobsFast,
   referenceJobs,
