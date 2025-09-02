@@ -30,7 +30,8 @@ const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   IMAGE: 'image',
 }
 const BRANDS_COLLECTION_FIELDS = {
-  BRAND: 'brand',
+  TITLE: 'title',
+  COUNT: 'count',
 }
 const CITIES_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -78,7 +79,8 @@ const COLLECTIONS_FIELDS = {
       {key:'tokenValue', type: 'TEXT'},
     ],
     BRANDS: [
-      {key:'brand', type: 'TEXT'},
+      {key:'title', type: 'TEXT'},
+      { key: 'count', type: 'NUMBER' },
     ],
   };
 
