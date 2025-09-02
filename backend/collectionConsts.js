@@ -71,6 +71,17 @@ const COLLECTIONS_FIELDS = {
     ],
   };
 
+  const TEMPLATE_TYPE = {
+    INTERNAL: 'INTERNAL',
+    EXTERNAL: 'PUBLIC',
+  }
+
+  const TOKEN_NAME = {
+    COMPANY_ID: 'companyId',
+    COMPANY_ID_SM: 'companyID',
+    SMART_TOKEN: 'x-smarttoken',
+  }
+  
 
   module.exports = {
     COLLECTIONS,
@@ -78,4 +89,6 @@ const COLLECTIONS_FIELDS = {
     JOBS_COLLECTION_FIELDS,
     AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS,
     CITIES_COLLECTION_FIELDS,
+    TEMPLATE_TYPE,
+    TOKEN_NAME,
 };

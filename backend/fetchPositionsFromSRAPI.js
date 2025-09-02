@@ -1,8 +1,6 @@
 const { fetch } = require('wix-fetch');
-const { items: wixData } = require('@wix/data');
-const { COLLECTIONS } = require('./collectionConsts');
-const { TEMPLATE_TYPE,TOKEN_NAME } = require('./consts');
-
+const { TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
+const { getTokenFromCMS,getApiKeys } = require('./secretsData');
 async function makeSmartRecruitersRequest(path,templateType) {
    const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
@@ -34,12 +32,18 @@ async function makeSmartRecruitersRequest(path,templateType) {
   }
 }
 
-async function fetchPositionsFromSRAPI(companyID=undefined) {
+async function fetchPositionsFromSRAPI(testObject=undefined) {
   let allPositions = [];
   let totalFound = 0;
   let page = 0;
   const MAX_PAGES = 30 // Safety limit to prevent infinite loops
-  const {companyId,templateType} = await getApiKeys();
+  
+  let companyId, templateType;
+  if (testObject) {
+    ({ companyId, templateType } = testObject);
+  } else {
+    ({ companyId, templateType } = await getApiKeys());
+  }
   console.log('Starting to fetch all positions with pagination...');
   let offset=0;
 
@@ -99,37 +103,21 @@ async function fetchPositionsFromSRAPI(companyID=undefined) {
   return result;
 }
 
-async function fetchJobDescription(jobId) {
-  const {companyId,templateType} = await getApiKeys();
+async function fetchJobDescription(jobId,testObject=undefined) {
+  let companyId, templateType;
+  if (testObject) {
+    ({ companyId, templateType } = testObject);
+  } else {
+    ({ companyId, templateType } = await getApiKeys());
+  }
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
 
-async function getTokenFromCMS(tokenName) {
-  const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
-  if (result.items.length > 0) {
-      return result.items[0].tokenValue; 
-  } else {
-      throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
-  }
-}
-async function getTemplateTypeFromCMS() {
-  const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
-  if (result.items.length > 0) {
-      return result.items[0].templateType; 
-  } else {
-      throw new Error('[getTemplateTypeFromCMS], No templateType found');
-  }
-}
 
-async function getApiKeys() {
-  const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
-  const templateType = await getTemplateTypeFromCMS();
-  return {companyId,templateType};
-}
 
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  getTokenFromCMS
+  makeSmartRecruitersRequest
 };

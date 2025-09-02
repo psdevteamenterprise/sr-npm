@@ -1,10 +1,9 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
 const { getAllPositions } = require('./queries');
-const{TEMPLATE_TYPE,TOKEN_NAME} = require('./consts');
 const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function validatePosition(position) {
@@ -337,24 +336,25 @@ async function clearCollections() {
   await Promise.all([
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-    wixData.truncate(COLLECTIONS.JOBS),
-    wixData.truncate(COLLECTIONS.SECRET_MANAGER_MIRROR)
+    wixData.truncate(COLLECTIONS.JOBS)
   ]);
   console.log("cleared collections successfully");
 }
 
 async function markTemplateAsExternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
-  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+  const tempalte = await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.EXTERNAL
   });
+  return tempalte;
 }
 
 async function markTemplateAsInternal() {
   await createCollectionIfMissing(COLLECTIONS.TEMPLATE_TYPE, COLLECTIONS_FIELDS.TEMPLATE_TYPE,null,'singleItem');
-  await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
+  const tempalte = await wixData.save(COLLECTIONS.TEMPLATE_TYPE, {
     templateType: TEMPLATE_TYPE.INTERNAL
   });
+  return tempalte;
 }
 
 async function fillSecretManagerMirror() {
@@ -374,9 +374,11 @@ async function fillSecretManagerMirror() {
     });
     console.log("x-smarttoken inserted into the SecretManagerMirror collection");
   } catch (error) {
-    console.log("Error creating SecretManagerMirror collection:", error);
+    console.warn("Error with inserting x-smarttoken into the SecretManagerMirror collection:", error);
   }
 }
+
+
 
 
 module.exports = {
