@@ -26,16 +26,24 @@ function validatePosition(position) {
 
 }
 
+async function filterBasedOnBrand(positions) {
+  try{
+  const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
+  console.log("filtering positions based on brand: ", desiredBrand);
+  return positions.content.filter(position => {
+    const brand = getBrand(position.customField);
+    if (!brand) return false;
+    return brand === desiredBrand;
+  });
+} catch (error) {
+  console.warn("Error with filtering based on brand:", error);
+  return positions.content;
+}
+}
+
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
-  const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
-  const sourcePositions = desiredBrand
-    ? positions.content.filter(position => {
-        const brand = getBrand(position.customField);
-        if (!brand) return false;
-        return brand === desiredBrand;
-      })
-    : positions.content;
+  const sourcePositions = await filterBasedOnBrand(positions);
   
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
