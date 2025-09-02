@@ -85,7 +85,7 @@ const COLLECTIONS_FIELDS = {
   };
 
   const TEMPLATE_TYPE = {
-    INTERNAL: 'INTERNAL',
+    INTERNAL: 'INTERNAL_OR_PUBLIC',
     EXTERNAL: 'PUBLIC',
   }
 
