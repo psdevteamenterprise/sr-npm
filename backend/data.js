@@ -29,6 +29,7 @@ function validatePosition(position) {
 async function filterBasedOnBrand(positions) {
   try{
   const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
+  validateSingleDesiredBrand(desiredBrand);
   console.log("filtering positions based on brand: ", desiredBrand);
   return positions.content.filter(position => {
     const brand = getBrand(position.customField);
@@ -36,9 +37,18 @@ async function filterBasedOnBrand(positions) {
     return brand === desiredBrand;
   });
 } catch (error) {
+  if(error.message === "Desired brand must be a single brand"){
+    throw error;
+  }
   console.warn("Error with filtering based on brand:", error);
   return positions.content;
 }
+}
+
+function validateSingleDesiredBrand(desiredBrand) {
+  if(typeof desiredBrand !== 'string' || desiredBrand.includes("[") || desiredBrand.includes("]") || desiredBrand.includes(",")){
+    throw new Error("Desired brand must be a single brand");
+  }
 }
 
 async function saveJobsDataToCMS() {
