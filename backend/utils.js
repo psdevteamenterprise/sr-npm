@@ -35,7 +35,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
     return Object.entries(jobsPerField).map(([value, amount]) => {
       const loc = cityLocations[value] || {};
       const locAddress = citylocationAddress[value] || {};
-      value = normalizeString(value);
+      value = normalizeString(value).trim();
       return {
         title: value,
         _id: value.replace(/\s+/g, ''),
@@ -61,7 +61,6 @@ function normalizeString(str) {
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
     .replace(/[^A-Za-z0-9-]/g, '')
-    .trim();
 }
 
 

@@ -7,7 +7,8 @@ const { getAllPositions } = require('./queries');
 const { getCompanyId, getSmartToken } = require('./secretsData');
 
 function getBrand(customField) {
-  return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
+  const brand = customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
+  return brand ? normalizeString(brand) : '';
 }
 
 function validatePosition(position) {
@@ -34,7 +35,7 @@ async function saveJobsDataToCMS() {
       _id: position.id,
       title: position.name || '',
       department: position.department?.label || 'Other',
-      cityText: normalizeString(position.location?.city),
+      cityText: normalizeString(position.location?.city).trim(),
       location: position.location && Object.keys(position.location).length > 0
         ? position.location
         : {
