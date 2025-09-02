@@ -2,9 +2,13 @@ const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
-const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
+const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
 const { getCompanyId, getSmartToken } = require('./secretsData');
+
+function getBrand(customField) {
+  return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
+}
 
 function validatePosition(position) {
   if (!position.id) {
@@ -30,7 +34,7 @@ async function saveJobsDataToCMS() {
       _id: position.id,
       title: position.name || '',
       department: position.department?.label || 'Other',
-      cityText: normalizeCityName(position.location?.city),
+      cityText: normalizeString(position.location?.city),
       location: position.location && Object.keys(position.location).length > 0
         ? position.location
         : {
@@ -46,6 +50,7 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
+      brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
     return basicJob;
@@ -294,7 +299,8 @@ async function createCollections() {
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR)
+  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR),
+  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS)
 ]);
   console.log("finished creating Collections");
 }
@@ -312,6 +318,7 @@ async function referenceJobs() {
   console.log("Reference jobs");
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
   console.log("finished referencing jobs");
 }
 

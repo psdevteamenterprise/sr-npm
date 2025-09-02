@@ -4,6 +4,7 @@ const COLLECTIONS = {
     JOBS: 'Jobs',
     TEMPLATE_TYPE: 'templateType',
     SECRET_MANAGER_MIRROR: 'SecretManagerMirror',
+    BRANDS: 'Brands',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -20,11 +21,16 @@ const JOBS_COLLECTION_FIELDS = {
   IMAGE: 'image',
   APPLY_LINK: 'applyLink',
   REFER_FRIEND_LINK: 'referFriendLink',
+  BRAND: 'brand',
+  BRAND_REF: 'brandRef',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
   COUNT: 'count',
   IMAGE: 'image',
+}
+const BRANDS_COLLECTION_FIELDS = {
+  BRAND: 'brand',
 }
 const CITIES_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -57,9 +63,11 @@ const COLLECTIONS_FIELDS = {
         {key:'jobDescription', type: 'OBJECT'},  
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
-        {key:'referFriendLink', type: 'URL'},         
+        {key:'referFriendLink', type: 'URL'},     
+        {key:'brand', type: 'TEXT'},    
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
+        {key:'brandRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.BRANDS } } },
         { key: 'image', type: 'IMAGE' },
     ],  
     TEMPLATE_TYPE: [
@@ -68,6 +76,9 @@ const COLLECTIONS_FIELDS = {
     SECRET_MANAGER_MIRROR: [
       {key:'tokenName', type: 'TEXT'},
       {key:'tokenValue', type: 'TEXT'},
+    ],
+    BRANDS: [
+      {key:'brand', type: 'TEXT'},
     ],
   };
 
@@ -89,6 +100,7 @@ const COLLECTIONS_FIELDS = {
     JOBS_COLLECTION_FIELDS,
     AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS,
     CITIES_COLLECTION_FIELDS,
+    BRANDS_COLLECTION_FIELDS,
     TEMPLATE_TYPE,
     TOKEN_NAME,
 };
