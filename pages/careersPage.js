@@ -37,8 +37,9 @@ allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
 await bind(_$w);
 await init(_$w);
-await handleUrlParams(_$w);
 await handleBrandDropdown(_$w);
+await handleUrlParams(_$w);
+
 
 }
 
@@ -106,7 +107,6 @@ async function handleUrlParams(_$w) {
     if (queryJobTypeVar) {
         await handleJobTypeParam(_$w,queryJobTypeVar);
     }
-    console.log("_$w('#dropdownBrand'): ", _$w('#dropdownBrand'));
     if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
