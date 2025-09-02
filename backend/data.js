@@ -378,9 +378,10 @@ async function fillSecretManagerMirror() {
 
 async function insertSecretValToCMS(tokenName) {
   const token = await retrieveSecretVal(tokenName);
-  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+  await wixData.save(COLLECTIONS.SECRET_MANAGER_MIRROR, {
     tokenName: tokenName,
-    tokenValue: token.value
+    tokenValue: token.value,
+    _id: normalizeString(tokenName)
   });
 }
 
