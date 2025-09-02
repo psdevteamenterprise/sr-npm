@@ -107,7 +107,7 @@ async function handleUrlParams(_$w) {
         await handleJobTypeParam(_$w,queryJobTypeVar);
     }
     console.log("_$w('#dropdownBrand'): ", _$w('#dropdownBrand'));
-    if (queryBrandVar && _$w('#dropdownBrand').isVisible()) { //if it is not visible, ignore it
+    if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
@@ -234,7 +234,7 @@ async function handleBackAndForth(_$w){
             deletedParam=true;
             _$w('#dropdownJobType').value = '';
         }
-        if(_$w('#dropdownBrand').isVisible()){
+        if(_$w('#dropdownBrand').isVisible){
         if(newQueryParams.brand){
             queryBrandVar=newQueryParams.brand;
         }
@@ -496,7 +496,6 @@ async function updateMapMarkers(_$w){
 
 async function handleBrandDropdown(_$w){
     const brands=await wixData.query("Brands").find();
-    console.log("brands: ", brands);
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
