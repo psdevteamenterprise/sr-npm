@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { retrieveSecretVal } = require('./secretsData');
+const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
@@ -28,8 +28,17 @@ function validatePosition(position) {
 
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
+  const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
+  const sourcePositions = desiredBrand
+    ? positions.content.filter(position => {
+        const brand = getBrand(position.customField);
+        if (!brand) return false;
+        return brand === desiredBrand;
+      })
+    : positions.content;
+  
   // bulk insert to jobs collection without descriptions first
-  const jobsData = positions.content.map(position => {
+  const jobsData = sourcePositions.map(position => {
     const basicJob = {
       _id: position.id,
       title: position.name || '',
