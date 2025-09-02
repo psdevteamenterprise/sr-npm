@@ -20,16 +20,18 @@ const {
   let queryDepartmentVar;
   let queryLocationVar;
   let queryJobTypeVar;
+  let queryBrandVar;
   let searchInputBlurredFirstTime=true;
   let deletedParam=false;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
-const { page, keyWord, department, location,jobType } = queryParams;
+const { page, keyWord, department, location,jobType,brand } = queryParams;
 queryPageVar=page;
 queryKeyWordVar=keyWord;
 queryDepartmentVar=department;
 queryLocationVar=location;
 queryJobTypeVar=jobType;
+queryBrandVar=brand;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
@@ -103,6 +105,9 @@ async function handleUrlParams(_$w) {
     }
     if (queryJobTypeVar) {
         await handleJobTypeParam(_$w,queryJobTypeVar);
+    }
+    if (queryBrandVar && _$w('#dropdownBrand').isVisible()) { //if it is not visible, ignore it
+        await handleBrandParam(_$w,queryBrandVar);
     }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
@@ -228,6 +233,16 @@ async function handleBackAndForth(_$w){
             deletedParam=true;
             _$w('#dropdownJobType').value = '';
         }
+        if(_$w('#dropdownBrand').isVisible()){
+        if(newQueryParams.brand){
+            queryBrandVar=newQueryParams.brand;
+        }
+        else{
+            queryBrandVar=undefined;
+            deletedParam=true;
+            _$w('#dropdownBrand').value = '';
+        }
+    }
         await handleUrlParams(_$w);
         
 }
@@ -416,6 +431,24 @@ async function handleLocationParam(_$w,location) {
         queryParams.remove(["location"]);
     }
     
+}
+
+async function handleBrandParam(_$w,brand){
+    const brandValue = decodeURIComponent(brand);
+    let dropdownOptions = _$w('#dropdownBrand').options;
+    console.log("brand dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query("Brands").find();
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        fixDropdownOptions('#dropdownBrand',optionsFromCMS, _$w);
+    }
+    const option=_$w('#dropdownBrand').options.find(option => option.value.toLowerCase() === brandValue.toLowerCase())
+    if(option){
+        _$w('#dropdownBrand').value = option.value;
+    }
+    else{
+        console.warn("brand value not found in dropdown options");
+        queryParams.remove(["brand"]);
+    }
 }
 
 async function handleJobTypeParam(_$w,jobType) {
