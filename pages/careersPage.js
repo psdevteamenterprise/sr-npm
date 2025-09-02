@@ -459,6 +459,7 @@ async function updateMapMarkers(_$w){
 
 async function handleBrandDropdown(_$w){
     const brands=await wixData.query("Brands").find();
+    console.log("brands: ", brands);
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
