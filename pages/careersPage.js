@@ -106,6 +106,7 @@ async function handleUrlParams(_$w) {
     if (queryJobTypeVar) {
         await handleJobTypeParam(_$w,queryJobTypeVar);
     }
+    console.log("_$w('#dropdownBrand'): ", _$w('#dropdownBrand'));
     if (queryBrandVar && _$w('#dropdownBrand').isVisible()) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
@@ -289,6 +290,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                     else{
                         queryParams.add({ jobType: encodeURIComponent("onsite") });
                     }
+                }
+                if(filter.field === 'brand'){
+                    queryParams.add({ brand: encodeURIComponent(filter.value) });
                 }
             }
 			if(filter.field === 'remote') {	
