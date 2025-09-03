@@ -441,7 +441,7 @@ async function handleBrandParam(_$w,brand){
     const brandValue = decodeURIComponent(brand);
     let dropdownOptions = _$w('#dropdownBrand').options;
     console.log("brand dropdown options:", dropdownOptions);
-    const optionsFromCMS=await wixData.query("Brands").find();
+    const optionsFromCMS=await wixData.query(COLLECTIONS.BRANDS).find();
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
         fixDropdownOptions('#dropdownBrand',optionsFromCMS, _$w);
     }
@@ -495,7 +495,7 @@ async function updateMapMarkers(_$w){
 }
 
 async function handleBrandDropdown(_$w){
-    const brands=await wixData.query("Brands").find();
+    const brands=await wixData.query(COLLECTIONS.BRANDS).find();
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
