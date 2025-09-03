@@ -11,6 +11,7 @@ const {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
+        await handleReferFriendButton(_$w,item);
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -25,8 +26,14 @@ const {
        }
     });
 }
-
-  
+    
+  function handleReferFriendButton(_$w,item) {
+    console.log("item is: ", item);
+    if(!item.referFriendLink){
+        _$w('#referFriendButton').hide();
+        console.log("referFriendButton is hidden");
+    }
+  }
   
   module.exports = {
     positionPageOnReady,
