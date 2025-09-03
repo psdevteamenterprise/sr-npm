@@ -40,7 +40,7 @@ async function filterBasedOnBrand(positions) {
 } catch (error) {
   if(error.message==="[getTokenFromCMS], No desiredBrand found")
   {
-    console.warn(error.message)
+    console.log("no desiredBrand found, fetching all positions")
     return positions.content;
   }
   throw error;
