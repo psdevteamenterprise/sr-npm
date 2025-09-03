@@ -38,17 +38,16 @@ async function filterBasedOnBrand(positions) {
     return brand === desiredBrand;
   });
 } catch (error) {
-  if(error.message === "Desired brand must be a single brand"){
-    throw error;
+  if(error.message==="[getTokenFromCMS], No desiredBrand found")
+  {
+    console.warn(error.message)
+    return positions.content;
   }
-  console.warn("Error with filtering based on brand:", error);
-  return positions.content;
+  throw error;
 }
 }
 
 function validateSingleDesiredBrand(desiredBrand) {
-  console.log("desiredBrand is: ", desiredBrand);
-  console.log("typeof desiredBrand is: ", typeof desiredBrand);
   if(typeof desiredBrand !== 'string' || desiredBrand.includes("[") || desiredBrand.includes("]") || desiredBrand.includes(",")){
     throw new Error("Desired brand must be a single brand");
   }
