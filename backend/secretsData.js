@@ -5,13 +5,6 @@ const { COLLECTIONS,TOKEN_NAME } = require('./collectionConsts');
 
 const getSecretValue = auth.elevate(secrets.getSecretValue);
 
-function getSmartToken() {
-  return retrieveSecretVal(TOKEN_NAME.SMART_TOKEN)
-}
-
-  function getCompanyId() {
-    return retrieveSecretVal(TOKEN_NAME.COMPANY_ID_SM)
-  }
 
   async function retrieveSecretVal(tokenName)
   {
@@ -29,7 +22,7 @@ function getSmartToken() {
   async function getTokenFromCMS(tokenName) {
     const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
     if (result.items.length > 0) {
-        return result.items[0].tokenValue; 
+        return result.items[0].value; 
     } else {
         throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
     }
@@ -50,8 +43,7 @@ function getSmartToken() {
   }
 
   module.exports = {
-    getCompanyId,
-    getSmartToken,
     getTokenFromCMS,
-    getApiKeys
+    getApiKeys,
+    retrieveSecretVal
   };

@@ -2,9 +2,13 @@ const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
-const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeCityName} = require('./utils');
+const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { getCompanyId, getSmartToken } = require('./secretsData');
+const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
+
+function getBrand(customField) {
+  return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
+}
 
 function validatePosition(position) {
   if (!position.id) {
@@ -22,15 +26,44 @@ function validatePosition(position) {
 
 }
 
+async function filterBasedOnBrand(positions) {
+  try{
+
+  const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
+  validateSingleDesiredBrand(desiredBrand);
+  console.log("filtering positions based on brand: ", desiredBrand);
+  return positions.content.filter(position => {
+    const brand = getBrand(position.customField);
+    if (!brand) return false;
+    return brand === desiredBrand;
+  });
+} catch (error) {
+  if(error.message==="[getTokenFromCMS], No desiredBrand found")
+  {
+    console.log("no desiredBrand found, fetching all positions")
+    return positions.content;
+  }
+  throw error;
+}
+}
+
+function validateSingleDesiredBrand(desiredBrand) {
+  if(typeof desiredBrand !== 'string' || desiredBrand.includes("[") || desiredBrand.includes("]") || desiredBrand.includes(",")){
+    throw new Error("Desired brand must be a single brand");
+  }
+}
+
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
+  const sourcePositions = await filterBasedOnBrand(positions);
+  
   // bulk insert to jobs collection without descriptions first
-  const jobsData = positions.content.map(position => {
+  const jobsData = sourcePositions.map(position => {
     const basicJob = {
       _id: position.id,
       title: position.name || '',
       department: position.department?.label || 'Other',
-      cityText: normalizeCityName(position.location?.city),
+      cityText: normalizeString(position.location?.city),
       location: position.location && Object.keys(position.location).length > 0
         ? position.location
         : {
@@ -46,6 +79,7 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
+      brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
     return basicJob;
@@ -294,7 +328,8 @@ async function createCollections() {
   [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR)
+  createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR),
+  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS)
 ]);
   console.log("finished creating Collections");
 }
@@ -303,7 +338,8 @@ async function aggregateJobs() {
   console.log("Aggregating jobs");
   await Promise.all([
     aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.DEPARTMENT, collection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT }),
-    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES })
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.CITY_TEXT, collection: COLLECTIONS.CITIES }),
+    aggregateJobsByFieldToCMS({ field: JOBS_COLLECTION_FIELDS.BRAND, collection: COLLECTIONS.BRANDS })
   ]);
   console.log("finished aggregating jobs");
 }
@@ -312,6 +348,7 @@ async function referenceJobs() {
   console.log("Reference jobs");
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
+  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
   console.log("finished referencing jobs");
 }
 
@@ -358,27 +395,25 @@ async function markTemplateAsInternal() {
 }
 
 async function fillSecretManagerMirror() {
-  console.log("Getting the company ID ");
-  const companyId = await getCompanyId();
-  console.log("companyId is :  ", companyId);
-  await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-    tokenName: TOKEN_NAME.COMPANY_ID,
-    tokenValue: companyId.value
-  });
-  console.log("companyId inserted into the SecretManagerMirror collection");
-  try{
-    const token = await getSmartToken();
-    await wixData.insert(COLLECTIONS.SECRET_MANAGER_MIRROR, {
-      tokenName: TOKEN_NAME.SMART_TOKEN,
-      tokenValue: token.value
-    });
-    console.log("x-smarttoken inserted into the SecretManagerMirror collection");
-  } catch (error) {
-    console.warn("Error with inserting x-smarttoken into the SecretManagerMirror collection:", error);
+  for(const tokenName of Object.values(TOKEN_NAME)){
+    try{
+      await insertSecretValToCMS(tokenName);
+      console.log("inserted ", tokenName, "into the SecretManagerMirror collection successfully");
+    } catch (error) {
+      console.warn("Error with inserting ", tokenName, "into the SecretManagerMirror collection:", error);
+    }
   }
 }
 
-
+async function insertSecretValToCMS(tokenName) {
+  const token = await retrieveSecretVal(tokenName);
+  console.log("token is: ", token);
+  await wixData.save(COLLECTIONS.SECRET_MANAGER_MIRROR, {
+    tokenName: tokenName,
+    value: token.value,
+    _id: normalizeString(tokenName)
+  });
+}
 
 
 module.exports = {

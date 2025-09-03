@@ -3,6 +3,7 @@ const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
+const { COLLECTIONS } = require('../backend/collectionConsts');
 
 const {
     debounce,
@@ -20,22 +21,26 @@ const {
   let queryDepartmentVar;
   let queryLocationVar;
   let queryJobTypeVar;
+  let queryBrandVar;
   let searchInputBlurredFirstTime=true;
   let deletedParam=false;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
-const { page, keyWord, department, location,jobType } = queryParams;
+const { page, keyWord, department, location,jobType,brand } = queryParams;
 queryPageVar=page;
 queryKeyWordVar=keyWord;
 queryDepartmentVar=department;
 queryLocationVar=location;
 queryJobTypeVar=jobType;
+queryBrandVar=brand;
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
 await bind(_$w);
 await init(_$w);
+await handleBrandDropdown(_$w);
 await handleUrlParams(_$w);
+
 
 }
 
@@ -102,6 +107,9 @@ async function handleUrlParams(_$w) {
     }
     if (queryJobTypeVar) {
         await handleJobTypeParam(_$w,queryJobTypeVar);
+    }
+    if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
+        await handleBrandParam(_$w,queryBrandVar);
     }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
@@ -171,7 +179,7 @@ function init(_$w) {
         searchInputBlurredFirstTime=false;
         }
     });
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType').onChange(()=>{
+    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').onChange(()=>{
         console.log("dropdown onChange is triggered");
         applyFilters(_$w);
     });
@@ -227,6 +235,16 @@ async function handleBackAndForth(_$w){
             deletedParam=true;
             _$w('#dropdownJobType').value = '';
         }
+        if(_$w('#dropdownBrand').isVisible){
+        if(newQueryParams.brand){
+            queryBrandVar=newQueryParams.brand;
+        }
+        else{
+            queryBrandVar=undefined;
+            deletedParam=true;
+            _$w('#dropdownBrand').value = '';
+        }
+    }
         await handleUrlParams(_$w);
         
 }
@@ -237,6 +255,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
 		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
 		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
+		{ elementId: '#dropdownBrand', field: 'brand', value: _$w('#dropdownBrand').value},
 		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
 		];
     console.log("dropdownFiltersMapping: ", dropdownFiltersMapping);
@@ -273,6 +292,9 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                         queryParams.add({ jobType: encodeURIComponent("onsite") });
                     }
                 }
+                if(filter.field === 'brand'){
+                    queryParams.add({ brand: encodeURIComponent(filter.value) });
+                }
             }
 			if(filter.field === 'remote') {	
 				value = filter.value === 'true';
@@ -298,6 +320,10 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                 console.log("removing jobType from url")
                 queryParams.remove(["jobType" ]);
             }
+            if(filter.field === 'brand'){
+                console.log("removing brand from url")
+                queryParams.remove(["brand" ]);
+            }
         }
     }
 	});
@@ -321,7 +347,7 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 }
 
 async function resetFilters(_$w) {
-	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType').value = '';
+	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').value = '';
 
     await _$w('#jobsDataset').setFilter(wixData.filter());
     await _$w('#jobsDataset').refresh();
@@ -330,7 +356,7 @@ async function resetFilters(_$w) {
 
 	_$w('#resetFiltersButton').disable();
 
-    queryParams.remove(["keyWord", "department","page","location","jobType"]);
+    queryParams.remove(["keyWord", "department","page","location","jobType","brand"]);
     
 
 	await updateCount(_$w);
@@ -412,6 +438,24 @@ async function handleLocationParam(_$w,location) {
     
 }
 
+async function handleBrandParam(_$w,brand){
+    const brandValue = decodeURIComponent(brand);
+    let dropdownOptions = _$w('#dropdownBrand').options;
+    console.log("brand dropdown options:", dropdownOptions);
+    const optionsFromCMS=await wixData.query(COLLECTIONS.BRANDS).find();
+    if(dropdownOptions.length!==optionsFromCMS.items.length+1){
+        fixDropdownOptions('#dropdownBrand',optionsFromCMS, _$w);
+    }
+    const option=_$w('#dropdownBrand').options.find(option => option.value.toLowerCase() === brandValue.toLowerCase())
+    if(option){
+        _$w('#dropdownBrand').value = option.value;
+    }
+    else{
+        console.warn("brand value not found in dropdown options");
+        queryParams.remove(["brand"]);
+    }
+}
+
 async function handleJobTypeParam(_$w,jobType) {
     const jobTypeValue = decodeURIComponent(jobType);
     let dropdownOptions = _$w('#dropdownJobType').options;
@@ -451,7 +495,13 @@ async function updateMapMarkers(_$w){
 
 }
 
-
+async function handleBrandDropdown(_$w){
+    const brands=await wixData.query(COLLECTIONS.BRANDS).find();
+    if(brands.items.length>1){
+        console.log("showing brand dropdown");
+        _$w('#dropdownBrand').show();
+    }
+}
 module.exports = {
     careersPageOnReady,
   };

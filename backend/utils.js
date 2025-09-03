@@ -35,7 +35,7 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
     return Object.entries(jobsPerField).map(([value, amount]) => {
       const loc = cityLocations[value] || {};
       const locAddress = citylocationAddress[value] || {};
-      value = normalizeCityName(value);
+      value = normalizeString(value);
       return {
         title: value,
         _id: value.replace(/\s+/g, ''),
@@ -48,29 +48,23 @@ function prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddre
   } else {
     return Object.entries(jobsPerField).map(([value, amount]) => ({
       title: value,
-      _id: sanitizeId(value),
+      _id: normalizeString(value).replace(/&/g, 'and'),
       count: amount,
     }));
   }
 }
 
-function normalizeCityName(city) {
-  if (!city) return city;
+function normalizeString(str) {
+  if (!str) return str;
   // Remove accents/diacritics, trim whitespace
-  return city
+  return str
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
+    .replace(/[^A-Za-z0-9-]/g, '')
     .trim();
 }
 
-function sanitizeId(input) {
-  if (!input) return '';
-  const withoutDiacritics = String(input)
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '');
-  const withAnd = withoutDiacritics.replace(/&/g, 'and');
-  return withAnd.replace(/[^A-Za-z0-9-]/g, '');
-}
+
 
 module.exports = {
   chunkedBulkOperation,
@@ -78,6 +72,6 @@ module.exports = {
   countJobsPerGivenField,
   fillCityLocationAndLocationAddress,
   prepareToSaveArray,
-  normalizeCityName,
-  sanitizeId,
+  normalizeString,
+  
 };
