@@ -28,10 +28,9 @@ const {
 }
     
   function handleReferFriendButton(_$w,item) {
-    console.log("item is: ", item);
     if(!item.referFriendLink){
-        _$w('#referFriendButton').hide();
-        console.log("referFriendButton is hidden");
+      console.log("hiding referFriendButton");
+      _$w('#referFriendButton').hide();
     }
   }
   
