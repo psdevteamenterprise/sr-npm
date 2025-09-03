@@ -76,7 +76,7 @@ const COLLECTIONS_FIELDS = {
     ],
     SECRET_MANAGER_MIRROR: [
       {key:'tokenName', type: 'TEXT'},
-      {key:'tokenValue', type: 'TEXT'},
+      {key:'value', type: 'TEXT'},
     ],
     BRANDS: [
       {key:'title', type: 'TEXT'},
@@ -84,7 +84,7 @@ const COLLECTIONS_FIELDS = {
     ],
   };
 
-  
+
   const TEMPLATE_TYPE = {
     INTERNAL: 'INTERNAL_OR_PUBLIC',
     EXTERNAL: 'PUBLIC',
