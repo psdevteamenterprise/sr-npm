@@ -3,6 +3,7 @@ const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
+const { COLLECTIONS } = require('../backend/collectionConsts');
 
 const {
     debounce,
