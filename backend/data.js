@@ -28,7 +28,7 @@ function validatePosition(position) {
 
 async function filterBasedOnBrand(positions) {
   try{
-    
+
   const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
   validateSingleDesiredBrand(desiredBrand);
   console.log("filtering positions based on brand: ", desiredBrand);
@@ -406,9 +406,10 @@ async function fillSecretManagerMirror() {
 
 async function insertSecretValToCMS(tokenName) {
   const token = await retrieveSecretVal(tokenName);
+  console.log("token is: ", token);
   await wixData.save(COLLECTIONS.SECRET_MANAGER_MIRROR, {
     tokenName: tokenName,
-    tokenValue: token.value,
+    value: token.value,
     _id: normalizeString(tokenName)
   });
 }
