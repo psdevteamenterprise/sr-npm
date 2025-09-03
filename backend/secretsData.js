@@ -22,7 +22,7 @@ const getSecretValue = auth.elevate(secrets.getSecretValue);
   async function getTokenFromCMS(tokenName) {
     const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
     if (result.items.length > 0) {
-        return result.items[0].tokenValue; 
+        return result.items[0].value; 
     } else {
         throw new Error(`[getTokenFromCMS], No ${tokenName} found`);
     }

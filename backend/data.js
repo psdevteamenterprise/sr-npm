@@ -47,6 +47,8 @@ async function filterBasedOnBrand(positions) {
 }
 
 function validateSingleDesiredBrand(desiredBrand) {
+  console.log("desiredBrand is: ", desiredBrand);
+  console.log("typeof desiredBrand is: ", typeof desiredBrand);
   if(typeof desiredBrand !== 'string' || desiredBrand.includes("[") || desiredBrand.includes("]") || desiredBrand.includes(",")){
     throw new Error("Desired brand must be a single brand");
   }
