@@ -1,7 +1,7 @@
 const {
     htmlToText
   } = require('../public/utils');
-  const { wixLocationFrontend } = require("wix-location-frontend");
+  const { query,queryParams } = require("wix-location-frontend");
   
   async function positionPageOnReady(_$w) {
 
@@ -39,7 +39,7 @@ const {
 
   function handleApplyButton(_$w,item) {
     console.log("item is: ", item);
-    console.log(wixLocationFrontend.query);
+    console.log(query);
     const applyLinkWithQueryParams=appendQueryParams(item.applyLink);
     console.log("applyLinkWithQueryParams is: ", applyLinkWithQueryParams);
 
@@ -48,7 +48,7 @@ const {
 
   function appendQueryParams(url){
     const urlObj=new URL(url);
-    Object.entries(queryParams).forEach(([key,value])=>{
+    Object.entries(query).forEach(([key,value])=>{
       urlObj.searchParams.set(key,value);
     });
     console.log("urlObj is: ", urlObj);
