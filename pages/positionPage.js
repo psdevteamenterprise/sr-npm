@@ -14,6 +14,7 @@ const {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         handleReferFriendButton(_$w,item);
+        _$w('#applyButton').target="_blank";//so it can open in new tab
         _$w('#applyButton').onClick(()=>handleApplyButton(_$w,item));
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
