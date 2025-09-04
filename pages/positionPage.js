@@ -1,7 +1,8 @@
 const {
-    htmlToText
+    htmlToText,
+    appendQueryParams
   } = require('../public/utils');
-  const { query,queryParams,to } = require("wix-location-frontend");
+  const { query } = require("wix-location-frontend");
   
   async function positionPageOnReady(_$w) {
 
@@ -16,12 +17,7 @@ const {
 
         handleReferFriendButton(_$w,item);
 
-        _$w('#applyButton').target="_blank";//so it can open in new tab
-       // _$w('#applyButton').onClick(()=>handleApplyButton(_$w,item));
-       const url=appendQueryParams(item.applyLink);
-       console.log("url is: ", url);
-       _$w('#applyButton').link=url;
-        console.log("applyButton.target is: ", _$w('#applyButton').target);
+        handleApplyButton(_$w,item);
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -45,18 +41,13 @@ const {
   }
 
   function handleApplyButton(_$w,item) {
-    const applyLinkWithQueryParams=appendQueryParams(item.applyLink);
-    console.log("applyLinkWithQueryParams is: ", applyLinkWithQueryParams);
-    to(applyLinkWithQueryParams);
+    _$w('#applyButton').target="_blank";//so it can open in new tab
+    console.log("query is: ", query);
+    const url=appendQueryParams(item.applyLink,query);
+    _$w('#applyButton').link=url; //so it can be clicked
+    console.log("url is: ", url);
   }
 
-  function appendQueryParams(url){
-    const urlObj=new URL(url);
-    Object.entries(query).forEach(([key,value])=>{
-      urlObj.searchParams.set(key,value);
-    });
-    return urlObj.toString();
-  }
   module.exports = {
     positionPageOnReady,
   };

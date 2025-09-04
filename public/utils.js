@@ -39,7 +39,16 @@ function filterBrokenMarkers(items) {
 }
 
 
+function appendQueryParams(url,query){
+  const urlObj=new URL(url);
+  Object.entries(query).forEach(([key,value])=>{
+    urlObj.searchParams.set(key,value);
+  });
+  return urlObj.toString();
+}
+
   module.exports = {
     htmlToText,
-    filterBrokenMarkers
+    filterBrokenMarkers,
+    appendQueryParams
   };
