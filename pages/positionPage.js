@@ -42,10 +42,8 @@ const {
 
   function handleApplyButton(_$w,item) {
     _$w('#applyButton').target="_blank";//so it can open in new tab
-    console.log("query is: ", query);
     const url=appendQueryParams(item.applyLink,query);
     _$w('#applyButton').link=url; //so it can be clicked
-    console.log("url is: ", url);
   }
 
   module.exports = {
