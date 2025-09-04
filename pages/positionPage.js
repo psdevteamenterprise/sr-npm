@@ -40,9 +40,20 @@ const {
   function handleApplyButton(_$w,item) {
     console.log("item is: ", item);
     console.log(wixLocationFrontend.query);
-    wixLocationFrontend.to(item.applyLink);
+    const applyLinkWithQueryParams=appendQueryParams(item.applyLink);
+    console.log("applyLinkWithQueryParams is: ", applyLinkWithQueryParams);
+
+    //wixLocationFrontend.to(item.applyLink);
   }
-  
+
+  function appendQueryParams(url){
+    const urlObj=new URL(url);
+    Object.entries(queryParams).forEach(([key,value])=>{
+      urlObj.searchParams.set(key,value);
+    });
+    console.log("urlObj is: ", urlObj);
+    return urlObj.toString();
+  }
   module.exports = {
     positionPageOnReady,
   };
