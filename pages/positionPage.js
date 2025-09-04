@@ -13,9 +13,15 @@ const {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
+
         handleReferFriendButton(_$w,item);
+
         _$w('#applyButton').target="_blank";//so it can open in new tab
-        _$w('#applyButton').onClick(()=>handleApplyButton(_$w,item));
+       // _$w('#applyButton').onClick(()=>handleApplyButton(_$w,item));
+       const url=appendQueryParams(item.applyLink);
+       console.log("url is: ", url);
+       _$w('#applyButton').link=url;
+        console.log("applyButton.target is: ", _$w('#applyButton').target);
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -39,8 +45,6 @@ const {
   }
 
   function handleApplyButton(_$w,item) {
-    console.log("item is: ", item);
-    console.log(query);
     const applyLinkWithQueryParams=appendQueryParams(item.applyLink);
     console.log("applyLinkWithQueryParams is: ", applyLinkWithQueryParams);
     to(applyLinkWithQueryParams);
@@ -51,7 +55,6 @@ const {
     Object.entries(query).forEach(([key,value])=>{
       urlObj.searchParams.set(key,value);
     });
-    console.log("urlObj is: ", urlObj);
     return urlObj.toString();
   }
   module.exports = {
