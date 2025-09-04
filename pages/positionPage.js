@@ -1,10 +1,12 @@
 const {
     htmlToText
   } = require('../public/utils');
-
+  const { wixLocationFrontend } = require("wix-location-frontend");
+  
   async function positionPageOnReady(_$w) {
 
     await bind(_$w);
+
   }
 
   async function bind(_$w) {
@@ -12,6 +14,7 @@ const {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         handleReferFriendButton(_$w,item);
+        _$w('#applyButton').onClick(()=>handleApplyButton(_$w,item));
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -32,6 +35,12 @@ const {
       console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
     }
+  }
+
+  function handleApplyButton(_$w,item) {
+    console.log("item is: ", item);
+    console.log(wixLocationFrontend.query);
+    wixLocationFrontend.to(item.applyLink);
   }
   
   module.exports = {
