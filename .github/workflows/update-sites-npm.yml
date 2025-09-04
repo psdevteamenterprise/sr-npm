@@ -1,0 +1,67 @@
+name: Reusable Workflow - Update sr-npm version on hosts using Github APP
+
+on:
+  workflow_call:
+    inputs:
+      new_version:
+        type: string
+        required: true
+    secrets:
+      GH_APP_ID:
+        required: true
+      GH_APP_PRIVATE_KEY:
+        required: true
+      WIX_CLI_API_KEY:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [external-template]
+    steps:
+      - name: Generate GitHub App token
+        id: token-generator
+        uses: peter-murray/workflow-application-token-action@v2
+        with:
+          application_id: ${{ secrets.GH_APP_ID }}
+          application_private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Checkout Repo Code
+        uses: actions/checkout@v4
+        with:
+          repository: psdevteamenterprise/${{ matrix.repo }}
+          token: ${{ steps.token-generator.outputs.token }}
+          ref: main
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Wix CLI
+        run: npm install -g @wix/cli
+
+      - name: Login to Wix
+        run: wix login --api-key ${{ secrets.WIX_CLI_API_KEY }}
+
+      - name: Bump velo-npm version to ${{ inputs.new_version }}
+        run: |
+          echo "Received version ${{inputs.new_version}}"
+          npm install sr-npm@${{inputs.new_version}} --save-exact
+          wix install
+
+      - name: Commit version change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json wix.lock
+          git commit -m "chore: bump sr-npm version to ${{inputs.new_version}}" || echo "Nothing to commit"
+          git push origin HEAD
+
+      - name: Preview Site
+        run: |
+          echo "Creating Preview for ${{ matrix.repo }}"
+          wix preview --source remote
