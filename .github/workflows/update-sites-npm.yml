@@ -11,7 +11,7 @@ on:
         required: true
       GH_APP_PRIVATE_KEY:
         required: true
-      WIX_CLI_API_KEY:
+      WIX_CLI_TOKEN:
         required: true
 
 permissions:
@@ -45,7 +45,7 @@ jobs:
         run: npm install -g @wix/cli
 
       - name: Login to Wix
-        run: wix login --api-key ${{ secrets.WIX_CLI_API_KEY }}
+        run: wix login --api-key ${{ secrets.WIX_CLI_TOKEN }}
 
       - name: Bump velo-npm version to ${{ inputs.new_version }}
         run: |

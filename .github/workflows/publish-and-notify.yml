@@ -29,7 +29,7 @@ jobs:
         id: publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.SR_NPM_PUBLISH }}
         run: npx semantic-release
 
       - name: Extract release type
@@ -60,6 +60,6 @@ jobs:
     with:
       new_version: ${{ needs.publish.outputs.version }}
     secrets:
-      GH_APP_ID: ${{ secrets.APP_ID }}
-      GH_APP_PRIVATE_KEY: ${{secrets.APP_PRIVATE_KEY}}
-      WIX_CLI_API_KEY: ${{secrets.WIX_CLI_API_KEY}}
+      GH_APP_ID: ${{ secrets.GH_APP_ID }}
+      GH_APP_PRIVATE_KEY: ${{secrets.GH_APP_PRIVATE_KEY}}
+      WIX_CLI_API_KEY: ${{secrets.WIX_CLI_TOKEN}}
