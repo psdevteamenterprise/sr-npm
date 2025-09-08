@@ -1,8 +1,9 @@
+const { query } = require("wix-location-frontend");
 const {
     htmlToText,
     appendQueryParams
   } = require('../public/utils');
-  const { query } = require("wix-location-frontend");
+  
   
   async function positionPageOnReady(_$w) {
 
