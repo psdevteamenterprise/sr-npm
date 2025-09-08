@@ -373,7 +373,8 @@ async function clearCollections() {
   await Promise.all([
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
-    wixData.truncate(COLLECTIONS.JOBS)
+    wixData.truncate(COLLECTIONS.JOBS),
+    wixData.truncate(COLLECTIONS.BRANDS)
   ]);
   console.log("cleared collections successfully");
 }
