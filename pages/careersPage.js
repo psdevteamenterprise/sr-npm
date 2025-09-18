@@ -496,20 +496,25 @@ async function updateMapMarkers(_$w){
 
 }
 
-async function handleBrandDropdown(_$w){    
-    const brands=await wixData.query(COLLECTIONS.BRANDS).find();
-    const disableMultiBrand=await getTokenFromCMS(TOKEN_NAME.DISABLE_MULTI_BRAND)
-    if(disableMultiBrand==='true'){
-        console.log("disabling brand dropdown because disableMultiBrand is true");
-        _$w('#dropdownBrand').hide();
+async function handleBrandDropdown(_$w) {
+    const brands = await wixData.query(COLLECTIONS.BRANDS).find();
+    let disableMultiBrand;
+    try {
+        disableMultiBrand = await getTokenFromCMS(TOKEN_NAME.DISABLE_MULTI_BRAND);
+    } catch (e) {
+        if (e.message !== "[getTokenFromCMS], No disableMultiBrand found") throw e;
+        console.log("disableMultiBrand token wasn't found");
+
     }
-    else{
-    if(brands.items.length>1){
+    if (disableMultiBrand === 'true') {
+        console.log("hiding brand dropdown");
+        _$w('#dropdownBrand').hide();
+    } else if (brands.items.length > 1) {
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
-    }
 }
+
 module.exports = {
     careersPageOnReady,
   };
