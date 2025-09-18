@@ -1,8 +1,13 @@
 name: Update Sites After Release Main
 
-
 on:
- workflow_dispatch:
+  push:
+      branches:
+      - main
+  pull_request:
+      branches:
+      - main
+  workflow_dispatch:
       
 permissions:
  contents: write
@@ -11,7 +16,7 @@ permissions:
 jobs:
  update-sites:
    uses: psdevteamenterprise/ci-workflows/.github/workflows/publish-and-notify.yml@main
-   
+
    with:
      sites_to_update: "['psdevteamenterprise/tests-site', 'psdevteamenterprise/external-template', 'psdevteamenterprise/internal']"
     
