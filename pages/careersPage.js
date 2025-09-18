@@ -4,7 +4,7 @@ const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
-
+const { getTokenFromCMS } = require('../backend/secretsData');
 const {
     debounce,
     getFilter,
@@ -495,11 +495,18 @@ async function updateMapMarkers(_$w){
 
 }
 
-async function handleBrandDropdown(_$w){
+async function handleBrandDropdown(_$w){    
     const brands=await wixData.query(COLLECTIONS.BRANDS).find();
+    const disableMultiBrand=await getTokenFromCMS(TOKEN_NAME.DISABLE_MULTI_BRAND)
+    if(disableMultiBrand==='true'){
+        console.log("disabling brand dropdown because disableMultiBrand is true");
+        _$w('#dropdownBrand').hide();
+    }
+    else{
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
+    }
     }
 }
 module.exports = {
