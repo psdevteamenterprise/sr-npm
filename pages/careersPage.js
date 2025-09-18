@@ -3,8 +3,9 @@ const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
-const { COLLECTIONS } = require('../backend/collectionConsts');
+const { COLLECTIONS, TOKEN_NAME } = require('../backend/collectionConsts');
 const { getTokenFromCMS } = require('../backend/secretsData');
+
 const {
     debounce,
     getFilter,
