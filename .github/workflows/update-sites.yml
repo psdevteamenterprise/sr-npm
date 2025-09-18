@@ -1,4 +1,4 @@
-name: Update Sites After Release Mai
+name: Update Sites After Release Main
 
 on:
   push:
