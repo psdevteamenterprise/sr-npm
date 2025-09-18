@@ -506,10 +506,8 @@ async function handleBrandDropdown(_$w) {
         console.log("disableMultiBrand token wasn't found");
 
     }
-    if (disableMultiBrand === 'true') {
-        console.log("hiding brand dropdown");
-        _$w('#dropdownBrand').hide();
-    } else if (brands.items.length > 1) {
+    
+        if (brands.items.length > 1 && disableMultiBrand !== 'true') {
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
