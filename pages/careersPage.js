@@ -3,7 +3,8 @@ const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
-const { COLLECTIONS } = require('../backend/collectionConsts');
+const { COLLECTIONS, TOKEN_NAME } = require('../backend/collectionConsts');
+const { getTokenFromCMS } = require('../backend/secretsData');
 
 const {
     debounce,
@@ -495,13 +496,22 @@ async function updateMapMarkers(_$w){
 
 }
 
-async function handleBrandDropdown(_$w){
-    const brands=await wixData.query(COLLECTIONS.BRANDS).find();
-    if(brands.items.length>1){
+async function handleBrandDropdown(_$w) {
+    const brands = await wixData.query(COLLECTIONS.BRANDS).find();
+    let disableMultiBrand;
+    try {
+        disableMultiBrand = await getTokenFromCMS(TOKEN_NAME.DISABLE_MULTI_BRAND);
+    } catch (e) {
+        if (e.message !== "[getTokenFromCMS], No disableMultiBrand found") throw e;
+        console.log("disableMultiBrand token wasn't found");
+
+    }
+        if (brands.items.length > 1 && disableMultiBrand !== 'true') {
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
 }
+
 module.exports = {
     careersPageOnReady,
   };

@@ -59,7 +59,6 @@ describe('fetchPositionsFromSRAPI error handling', () => {
   });
 
 
-
 });
 
 describe('fetchJobDescription error handling', () => {

@@ -94,6 +94,7 @@ const COLLECTIONS_FIELDS = {
     COMPANY_ID: 'companyId',
     SMART_TOKEN: 'x-smarttoken',
     DESIRED_BRAND: 'desiredBrand',
+    DISABLE_MULTI_BRAND: 'disableMultiBrand',
   }
   
 
