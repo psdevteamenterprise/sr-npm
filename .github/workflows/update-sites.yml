@@ -18,10 +18,9 @@ jobs:
     uses: psdevteamenterprise/ci-workflows/.github/workflows/publish-and-notify.yml@main
 
     with:
-     sites_to_update: "[{'repo': 'psdevteamenterprise/tests-site', secret: 'WIX_PS_API_KEY'},
-                        {'repo': 'psdevteamenterprise/external-template', secret: 'WIX_SR_API_KEY'},
-                        {'repo': 'psdevteamenterprise/internal', secret: 'WIX_SR_API_KEY'}]"
-                        
+     sites_to_update: "[{repo: 'psdevteamenterprise/tests-site', secret: 'WIX_PS_API_KEY'},
+                        {repo: 'psdevteamenterprise/external-template', secret: 'WIX_SR_API_KEY'},
+                        {repo: 'psdevteamenterprise/internal', secret: 'WIX_SR_API_KEY'}]"
     
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
