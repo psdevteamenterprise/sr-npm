@@ -1,8 +1,7 @@
 name: Update Sites After Release Main
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
   workflow_dispatch:
@@ -13,8 +12,6 @@ permissions:
 
 jobs:
   update-sites:
-    if: github.event.pull_request.merged == true
-    
     uses: psdevteamenterprise/ci-workflows/.github/workflows/publish-and-notify.yml@main
 
     with:
