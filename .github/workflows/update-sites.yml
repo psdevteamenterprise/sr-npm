@@ -1,11 +1,9 @@
 name: Update Sites After Release Main
 
 on:
-  push:
-      branches:
-      - main
   pull_request:
-      branches:
+    types: [closed]
+    branches:
       - main
   workflow_dispatch:
       
@@ -15,6 +13,7 @@ permissions:
 
 jobs:
   update-sites:
+    if: github.event.pull_request.merged == true
     uses: psdevteamenterprise/ci-workflows/.github/workflows/publish-and-notify.yml@main
     with:
      sites_to_update: "[{repo: 'psdevteamenterprise/tests-site', secret: 'WIX_PS_API_KEY'},
