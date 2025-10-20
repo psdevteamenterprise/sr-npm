@@ -23,6 +23,7 @@ const JOBS_COLLECTION_FIELDS = {
   REFER_FRIEND_LINK: 'referFriendLink',
   BRAND: 'brand',
   BRAND_REF: 'brandRef',
+  CUSTOM_FIELDS:'customFields',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
