@@ -71,6 +71,7 @@ const COLLECTIONS_FIELDS = {
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         {key:'brandRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.BRANDS } } },
         { key: 'image', type: 'IMAGE' },
+        { key: 'customFields', type: 'OBJECT' },
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
