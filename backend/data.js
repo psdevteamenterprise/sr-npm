@@ -28,7 +28,6 @@ function validatePosition(position) {
 
 async function filterBasedOnBrand(positions) {
   try{
-
   const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
   validateSingleDesiredBrand(desiredBrand);
   console.log("filtering positions based on brand: ", desiredBrand);
@@ -53,10 +52,19 @@ function validateSingleDesiredBrand(desiredBrand) {
   }
 }
 
+function addCustomFieldsToJob(basicJob, position) {
+  const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
+  for (const field of customFieldsArray) {
+    const label = field.fieldLabel;
+    const key = normalizeString(label);
+    const value = field.valueLabel
+    basicJob[key] = value;
+  }
+}
+
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   const sourcePositions = await filterBasedOnBrand(positions);
-  
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
     const basicJob = {
@@ -79,9 +87,11 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      brand: getBrand(position.customField),
+      //brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
+    addCustomFieldsToJob(basicJob,position)
+    console.log("basicJob: ", basicJob);
     return basicJob;
   });
 
@@ -354,18 +364,18 @@ async function referenceJobs() {
 
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
-  await createCollections();
-  await clearCollections();
-  await fillSecretManagerMirror();
+  // await createCollections();
+  // await clearCollections();
+  // await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
-  console.log("saving jobs descriptions and location apply url to CMS");
-  await saveJobsDescriptionsAndLocationApplyUrlToCMS();
-  console.log("saved jobs descriptions and location apply url to CMS successfully");
-  await aggregateJobs();
-  await referenceJobs();
-  console.log("syncing jobs fast finished successfully");
+  // console.log("saving jobs descriptions and location apply url to CMS");
+  // await saveJobsDescriptionsAndLocationApplyUrlToCMS();
+  // console.log("saved jobs descriptions and location apply url to CMS successfully");
+  // await aggregateJobs();
+  // await referenceJobs();
+  // console.log("syncing jobs fast finished successfully");
 }
 
 async function clearCollections() {
