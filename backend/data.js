@@ -52,14 +52,16 @@ function validateSingleDesiredBrand(desiredBrand) {
   }
 }
 
-function addCustomFieldsToJob(basicJob, position) {
+function addCustomFields(basicJob, position) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
+  const customFields = {};
   for (const field of customFieldsArray) {
     const label = field.fieldLabel;
     const key = normalizeString(label);
     const value = field.valueLabel
-    basicJob[key] = value;
+    customFields[key] = value;
   }
+  return { ...basicJob, customFields };
 }
 
 async function saveJobsDataToCMS() {
@@ -87,11 +89,10 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      //brand: getBrand(position.customField),
+     // brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
-    addCustomFieldsToJob(basicJob,position)
-    console.log("basicJob: ", basicJob);
+    basicJob=addCustomFields(basicJob,position)
     return basicJob;
   });
 
