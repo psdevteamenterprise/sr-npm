@@ -1,4 +1,4 @@
-const { getAllPositions } = require('../backend/queries');
+const { getAllPositions,getCutomFieldKeys } = require('../backend/queries');
 const {wixData} = require('wix-data');
 const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
@@ -22,17 +22,12 @@ const {
   let queryLocationVar;
   let queryJobTypeVar;
   let queryBrandVar;
+  let queryCustomFields;
   let searchInputBlurredFirstTime=true;
   let deletedParam=false;
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 console.log("queryParams: ", queryParams);
-const { page, keyWord, department, location,jobType,brand } = queryParams;
-queryPageVar=page;
-queryKeyWordVar=keyWord;
-queryDepartmentVar=department;
-queryLocationVar=location;
-queryJobTypeVar=jobType;
-queryBrandVar=brand;
+await retrieveQueryParams(queryParams);
 thisObjectVar=thisObject;
 allJobs=await getAllPositions();
 await activateAutoLoad(_$w);
@@ -44,7 +39,22 @@ await handleUrlParams(_$w);
 
 }
 
-  
+async function retrieveQueryParams(queryParams){
+const { page, keyWord, department, location,jobType,brand } = queryParams;
+queryPageVar=page;
+queryKeyWordVar=keyWord;
+queryDepartmentVar=department;
+queryLocationVar=location;
+queryJobTypeVar=jobType;
+queryBrandVar=brand;
+const customFieldKeys=await getCutomFieldKeys()
+for(const customFieldKey of customFieldKeys)
+{
+    queryCustomFields[customFieldKey]=queryParams[customFieldKey]
+}
+console.log("queryCustomFields",queryCustomFields)
+}
+
 function activateAutoLoad(_$w)
 {
     _$w("#jobsDataset").onReady(() => {

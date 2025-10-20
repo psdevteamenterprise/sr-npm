@@ -56,12 +56,12 @@ function addCustomFields(basicJob, position) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   const customFields = {};
   for (const field of customFieldsArray) {
-    const label = field.fieldLabel;
+    const label = field.fieldLabel==="Brands" ? "brand" : field.fieldLabel
     const key = normalizeString(label);
     const value = field.valueLabel
     customFields[key] = value;
   }
-  return { ...basicJob, customFields };
+  return { ...basicJob, ...customFields,customFieldsNames:Object.keys(customFields) };
 }
 
 async function saveJobsDataToCMS() {

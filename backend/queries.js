@@ -18,7 +18,16 @@ async function getPositionsByField(field, value) {
     .then(result => result.items);
 }
 
+async function getCutomFieldKeys() {
+  return wixData
+    .query(COLLECTIONS.JOBS)
+    .limit(1)
+    .find()
+    .then(result => result.items.customFields);
+}
+
 module.exports = {
   getAllPositions,
   getPositionsByField,
+  getCutomFieldKeys
 };

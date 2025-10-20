@@ -70,7 +70,7 @@ const COLLECTIONS_FIELDS = {
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         {key:'brandRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.BRANDS } } },
-        { key: 'customFields', type: 'OBJECT' },
+        { key: 'customFields', type: 'ARRAY' },
         { key: 'image', type: 'IMAGE' },
     ],  
     TEMPLATE_TYPE: [
