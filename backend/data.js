@@ -92,8 +92,8 @@ async function saveJobsDataToCMS() {
      // brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
-    basicJob=addCustomFields(basicJob,position)
-    return basicJob;
+    
+    return addCustomFields(basicJob,position)
   });
 
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
