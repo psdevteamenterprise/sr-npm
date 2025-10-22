@@ -52,11 +52,21 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
-
+function getCustomFieldsAndValuesFromPosition(position,customFields) {
+  const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
+  for (const field of customFieldsArray) {
+    if(field.fieldLabel==="Country" || field.fieldLabel==="Department") continue; //country and department are not custom fields, they are already in the job object
+    const label = field.fieldLabel==="Brands" ? "brand" : field.fieldLabel
+    const key = normalizeString(label);
+    const value = field.valueLabel
+    customFields[key] ? customFields[key].add(value) : customFields[key]=new Set([value])
+  }
+  
+}
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   const sourcePositions = await filterBasedOnBrand(positions);
-  
+  const customFields = {}
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
     const basicJob = {
@@ -82,9 +92,10 @@ async function saveJobsDataToCMS() {
       brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
+    getCustomFieldsAndValuesFromPosition(position,customFields);
     return basicJob;
   });
-
+  console.log("customFields: ", customFields);
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
   jobsData.sort((a, b) => {
     const titleA = a.title || '';
