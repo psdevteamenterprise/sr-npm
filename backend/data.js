@@ -1,7 +1,7 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
@@ -96,6 +96,8 @@ async function saveJobsDataToCMS() {
     return basicJob;
   });
   console.log("customFields: ", customFields);
+  populateCustomFieldsCollection(customFields);
+  populateCustomValuesCollection(customFields);
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
   jobsData.sort((a, b) => {
     const titleA = a.title || '';
@@ -134,6 +136,21 @@ async function saveJobsDataToCMS() {
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
+function populateCustomFieldsCollection(customFields) {
+  for(const key of Object.keys(customFields)){
+    wixData.save(COLLECTIONS.CUSTOM_FIELDS, {
+      title: key,
+    });
+  }
+}
+function populateCustomValuesCollection(customFields) {
+  for(const key of Object.keys(customFields)){
+    wixData.save(COLLECTIONS.CUSTOM_VALUES, {
+      title: key,
+      customField: customFields[key],
+    });
+  }
+}
 async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
   console.log('🚀 Starting job descriptions update process for ALL jobs');
 
@@ -362,6 +379,7 @@ async function referenceJobs() {
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
+  await referenceJobsToField({referenceField:JOBS_COLLECTION_FIELDS.CUSTOM_VALUES,sourceCollection:COLLECTIONS.CUSTOM_VALUES,jobField:JOBS_COLLECTION_FIELDS.CUSTOM_VALUES} )
   console.log("finished referencing jobs");
 }
 

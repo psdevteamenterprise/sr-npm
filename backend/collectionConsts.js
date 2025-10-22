@@ -5,6 +5,8 @@ const COLLECTIONS = {
     TEMPLATE_TYPE: 'templateType',
     SECRET_MANAGER_MIRROR: 'SecretManagerMirror',
     BRANDS: 'Brands',
+    CUSTOM_VALUES:'CustomValues',
+    CUSTOM_FIELDS:'CustomFields',
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
