@@ -329,7 +329,9 @@ async function createCollections() {
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
   createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR),
-  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS)
+  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS),
+  createCollectionIfMissing(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_VALUES),
+  createCollectionIfMissing(COLLECTIONS.CUSTOM_FIELDS, CUSTOM_FIELDS_COLLECTION_FIELDS.CUSTOM_FIELDS)
 ]);
   console.log("finished creating Collections");
 }
@@ -355,17 +357,17 @@ async function referenceJobs() {
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
   await createCollections();
-  await clearCollections();
-  await fillSecretManagerMirror();
+  // await clearCollections();
+  // await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
-  console.log("saved jobs data to CMS successfully");
-  console.log("saving jobs descriptions and location apply url to CMS");
-  await saveJobsDescriptionsAndLocationApplyUrlToCMS();
-  console.log("saved jobs descriptions and location apply url to CMS successfully");
-  await aggregateJobs();
-  await referenceJobs();
-  console.log("syncing jobs fast finished successfully");
+  // console.log("saved jobs data to CMS successfully");
+  // console.log("saving jobs descriptions and location apply url to CMS");
+  // await saveJobsDescriptionsAndLocationApplyUrlToCMS();
+  // console.log("saved jobs descriptions and location apply url to CMS successfully");
+  // await aggregateJobs();
+  // await referenceJobs();
+  // console.log("syncing jobs fast finished successfully");
 }
 
 async function clearCollections() {

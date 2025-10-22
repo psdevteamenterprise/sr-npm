@@ -23,11 +23,20 @@ const JOBS_COLLECTION_FIELDS = {
   REFER_FRIEND_LINK: 'referFriendLink',
   BRAND: 'brand',
   BRAND_REF: 'brandRef',
+  CUSTOM_VALUES: 'customValues',
+
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
   COUNT: 'count',
   IMAGE: 'image',
+}
+const CUSTOM_VALUES_COLLECTION_FIELDS = {
+  TITLE: 'title',
+  CUSTOM_FIELD: 'customField',
+}
+const CUSTOM_FIELDS_COLLECTION_FIELDS = {
+  TITLE: 'title',
 }
 const BRANDS_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -62,6 +71,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
+        {key:'customValues', type: 'MULTI-REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES } } },
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
         {key:'referFriendLink', type: 'URL'},     
@@ -81,6 +91,13 @@ const COLLECTIONS_FIELDS = {
     BRANDS: [
       {key:'title', type: 'TEXT'},
       { key: 'count', type: 'NUMBER' },
+    ],
+    CUSTOM_VALUES: [
+      {key:'title', type: 'TEXT'},
+      {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
+    ],
+    CUSTOM_FIELDS: [
+      {key:'title', type: 'TEXT'},
     ],
   };
 
@@ -104,6 +121,9 @@ const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS,
     CITIES_COLLECTION_FIELDS,
     BRANDS_COLLECTION_FIELDS,
+    CUSTOM_FIELDS_COLLECTION_FIELDS,
+    CUSTOM_VALUES_COLLECTION_FIELDS,
     TEMPLATE_TYPE,
     TOKEN_NAME,
+    
 };
