@@ -308,6 +308,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
     return rest;
   });
 
+  
   // Bulk update in chunks of 1000
   const chunkSize = 1000;
   await chunkedBulkOperation({
