@@ -1,7 +1,7 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
@@ -55,8 +55,8 @@ function validateSingleDesiredBrand(desiredBrand) {
 function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues,jobToCustomValues) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
-    if(field.fieldLabel==="Country" || field.fieldLabel==="Department") continue; //country and department are not custom fields, they are already in the job object
-    const label = field.fieldLabel==="Brands" ? "brand" : field.fieldLabel
+    if(field.fieldLabel==="Country" || field.fieldLabel==="Department" || field.fieldLabel==="Brands") continue; //country and department are not custom fields, they are already in the job object
+    //const label = field.fieldLabel==="Brands" ? "brand" : field.fieldLabel
     const fieldId=field.fieldId
     const fieldLabel = normalizeString(label);
     const valueId=field.valueId
