@@ -111,6 +111,7 @@ async function saveJobsDataToCMS() {
   
   console.log("customFieldsLabels: ", customFieldsLabels);
   console.log("customFieldsValues: ", customFieldsValues);
+  console.log("jobToCustomValues: ", jobToCustomValues);
   populateCustomFieldsCollection(customFieldsLabels);
   populateCustomValuesCollection(customFieldsValues);
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
@@ -147,8 +148,10 @@ async function saveJobsDataToCMS() {
       }
     },
   });
-  
+
   await insertValuesReference(jobToCustomValues);
+  await insertJOBSsReference(jobToCustomValues);
+  
 
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
@@ -156,7 +159,14 @@ async function saveJobsDataToCMS() {
 async function insertValuesReference(jobToCustomValues) {
   for (const jobId of Object.keys(jobToCustomValues)) {
     const items = jobToCustomValues[jobId];
-    await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.CUSTOM_VALUES,jobId, items);
+    await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, items);
+  }
+}
+async function insertJOBSsReference(jobToCustomValues) {
+  for (const jobId of Object.keys(jobToCustomValues)) {
+    for (const valueId of jobToCustomValues[jobId]) {
+      await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, jobId);
+    }
   }
 }
 

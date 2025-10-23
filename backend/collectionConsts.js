@@ -25,7 +25,7 @@ const JOBS_COLLECTION_FIELDS = {
   REFER_FRIEND_LINK: 'referFriendLink',
   BRAND: 'brand',
   BRAND_REF: 'brandRef',
-  CUSTOM_VALUES: 'customValues',
+  MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -35,7 +35,7 @@ const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
 const CUSTOM_VALUES_COLLECTION_FIELDS = {
   TITLE: 'title',
   CUSTOM_FIELD: 'customField',
-  JOBS: 'jobs',
+  MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
 }
 const CUSTOM_FIELDS_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -73,7 +73,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
-        {key:'customValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:'customValues',referencingDisplayName:'customValues' } } },
+        {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:CUSTOM_VALUES_COLLECTION_FIELDS.TITLE } } },
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
         {key:'referFriendLink', type: 'URL'},     
@@ -97,7 +97,7 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
-      {key:'jobs', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:'jobs',referencingDisplayName:'jobs' } } },
+      {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:JOBS_COLLECTION_FIELDS.TITLE } } },
     ],
     CUSTOM_FIELDS: [
       {key:'title', type: 'TEXT'},
