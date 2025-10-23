@@ -419,7 +419,6 @@ async function referenceJobs() {
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
-  await referenceJobsToField({referenceField:JOBS_COLLECTION_FIELDS.CUSTOM_VALUES,sourceCollection:COLLECTIONS.CUSTOM_VALUES,jobField:JOBS_COLLECTION_FIELDS.CUSTOM_VALUES} )
   console.log("finished referencing jobs");
 }
 
