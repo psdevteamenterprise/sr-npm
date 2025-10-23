@@ -57,9 +57,9 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
   for (const field of customFieldsArray) {
     if(field.fieldLabel==="Country" || field.fieldLabel==="Department" || field.fieldLabel==="Brands") continue; //country and department are not custom fields, they are already in the job object
     const label = field.fieldLabel
-    const fieldId=field.fieldId
-    const fieldLabel = normalizeString(label);
-    const valueId=field.valueId
+    const fieldId=normalizeString(field.fieldId)
+    const fieldLabel = label;
+    const valueId=normalizeString(field.valueId)
     const valueLabel = field.valueLabel
     customFieldsLabels[fieldId] = fieldLabel
     // Build nested dictionary: fieldId -> { valueId: valueLabel }
