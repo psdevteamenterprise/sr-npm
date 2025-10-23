@@ -73,7 +73,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
-        {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:CUSTOM_VALUES_COLLECTION_FIELDS.TITLE } } },
+        {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES } } },
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
         {key:'referFriendLink', type: 'URL'},     
@@ -97,7 +97,7 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
-      {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:JOBS_COLLECTION_FIELDS.TITLE } } },
+      {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:MULTI_REF_JOBS_CUSTOM_VALUES.MULTI_REF_JOBS_CUSTOM_VALUES } } },
     ],
     CUSTOM_FIELDS: [
       {key:'title', type: 'TEXT'},
