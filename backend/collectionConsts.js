@@ -74,7 +74,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
-        {key:'customValues', type: 'MULTI_REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES } } },
+        {key:'customValues', type: 'MULTI_REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:'jobs',referencingDisplayName:'jobs' } } },
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
         {key:'referFriendLink', type: 'URL'},     
@@ -98,7 +98,7 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
-      {key:'jobs', type: 'MULTI_REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.JOBS } } },
+      {key:'jobs', type: 'MULTI_REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:'customValues',referencingDisplayName:'customValues' } } },
     ],
     CUSTOM_FIELDS: [
       {key:'title', type: 'TEXT'},
