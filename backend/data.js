@@ -56,7 +56,7 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
     if(field.fieldLabel==="Country" || field.fieldLabel==="Department" || field.fieldLabel==="Brands") continue; //country and department are not custom fields, they are already in the job object
-    //const label = field.fieldLabel==="Brands" ? "brand" : field.fieldLabel
+    const label = field.fieldLabel
     const fieldId=field.fieldId
     const fieldLabel = normalizeString(label);
     const valueId=field.valueId
