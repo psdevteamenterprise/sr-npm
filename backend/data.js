@@ -401,7 +401,7 @@ async function referenceJobs() {
 async function syncJobsFast() {
   console.log("Syncing jobs fast");
   await createCollections();
-  //await clearCollections();
+  await clearCollections();
   // await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
