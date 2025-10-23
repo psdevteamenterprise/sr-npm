@@ -162,7 +162,7 @@ async function insertValuesReference(jobToCustomValues) {
     await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, items);
   }
 }
-async function insertJOBSsReference(jobToCustomValues) {
+async function insertJobsReference(jobToCustomValues) {
   for (const jobId of Object.keys(jobToCustomValues)) {
     for (const valueId of jobToCustomValues[jobId]) {
       await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, jobId);
