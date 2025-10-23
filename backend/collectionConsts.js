@@ -36,6 +36,7 @@ const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
 const CUSTOM_VALUES_COLLECTION_FIELDS = {
   TITLE: 'title',
   CUSTOM_FIELD: 'customField',
+  JOBS: 'jobs',
 }
 const CUSTOM_FIELDS_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -97,6 +98,7 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
+      {key:'jobs', type: 'MULTI-REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.JOBS } } },
     ],
     CUSTOM_FIELDS: [
       {key:'title', type: 'TEXT'},
