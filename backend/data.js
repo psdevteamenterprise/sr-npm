@@ -168,6 +168,7 @@ async function insertJobsReference(jobToCustomValues) {
       await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, jobId);
     }
   }
+  
 }
 
 async function populateCustomFieldsCollection(customFields) {
