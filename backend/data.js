@@ -112,8 +112,8 @@ async function saveJobsDataToCMS() {
   console.log("customFieldsLabels: ", customFieldsLabels);
   console.log("customFieldsValues: ", customFieldsValues);
   console.log("jobToCustomValues: ", jobToCustomValues);
-  populateCustomFieldsCollection(customFieldsLabels);
-  populateCustomValuesCollection(customFieldsValues);
+  await populateCustomFieldsCollection(customFieldsLabels);
+  await populateCustomValuesCollection(customFieldsValues);
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
   jobsData.sort((a, b) => {
     const titleA = a.title || '';
@@ -170,19 +170,19 @@ async function insertJobsReference(jobToCustomValues) {
   }
 }
 
-function populateCustomFieldsCollection(customFields) {
+async function populateCustomFieldsCollection(customFields) {
   for(const ID of Object.keys(customFields)){
-    wixData.save(COLLECTIONS.CUSTOM_FIELDS, {
+    await wixData.save(COLLECTIONS.CUSTOM_FIELDS, {
       title: customFields[ID],
       _id: ID,
     });
   }
 }
-function populateCustomValuesCollection(customFieldsValues) {
+async function populateCustomValuesCollection(customFieldsValues) {
   for (const fieldId of Object.keys(customFieldsValues)) {
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
-      wixData.save(COLLECTIONS.CUSTOM_VALUES, {
+      await wixData.save(COLLECTIONS.CUSTOM_VALUES, {
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId, // reference to CustomFields collection (displays the label)
