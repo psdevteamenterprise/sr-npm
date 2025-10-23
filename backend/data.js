@@ -150,7 +150,7 @@ async function saveJobsDataToCMS() {
   });
 
   await insertValuesReference(jobToCustomValues);
-  await insertJOBSsReference(jobToCustomValues);
+  await insertJobsReference(jobToCustomValues);
   
 
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
@@ -427,16 +427,16 @@ async function syncJobsFast() {
   console.log("Syncing jobs fast");
   await createCollections();
   await clearCollections();
-  // await fillSecretManagerMirror();
+  await fillSecretManagerMirror();
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
-  // console.log("saved jobs data to CMS successfully");
-  // console.log("saving jobs descriptions and location apply url to CMS");
-  // await saveJobsDescriptionsAndLocationApplyUrlToCMS();
-  // console.log("saved jobs descriptions and location apply url to CMS successfully");
-  // await aggregateJobs();
-  // await referenceJobs();
-  // console.log("syncing jobs fast finished successfully");
+  console.log("saved jobs data to CMS successfully");
+  console.log("saving jobs descriptions and location apply url to CMS");
+  await saveJobsDescriptionsAndLocationApplyUrlToCMS();
+  console.log("saved jobs descriptions and location apply url to CMS successfully");
+  await aggregateJobs();
+  await referenceJobs();
+  console.log("syncing jobs fast finished successfully");
 }
 
 async function clearCollections() {
