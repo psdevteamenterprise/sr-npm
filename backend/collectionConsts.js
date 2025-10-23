@@ -26,7 +26,6 @@ const JOBS_COLLECTION_FIELDS = {
   BRAND: 'brand',
   BRAND_REF: 'brandRef',
   CUSTOM_VALUES: 'customValues',
-
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
