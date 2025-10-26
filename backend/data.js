@@ -52,7 +52,7 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
-function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues,jobToCustomValues) {
+function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues,jobToCustomValues,customValuesToJobs) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
     if(field.fieldLabel==="Country" || field.fieldLabel==="Department" || field.fieldLabel==="Brands") continue; //country and department are not custom fields, they are already in the job object
@@ -69,6 +69,7 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     customFieldsValues[fieldId][valueId] = valueLabel;
 
     jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
+    customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
   
 }
@@ -78,6 +79,7 @@ async function saveJobsDataToCMS() {
   const customFieldsLabels = {}
   const customFieldsValues = {}
   const jobToCustomValues = {}
+  const customValuesToJobs = {}
 
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
@@ -105,7 +107,7 @@ async function saveJobsDataToCMS() {
       jobDescription: null, // Will be filled later
     };
 
-    getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues,jobToCustomValues);
+    getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues,jobToCustomValues,customValuesToJobs);
     return basicJob;
   });
   
@@ -151,7 +153,7 @@ async function saveJobsDataToCMS() {
 
   await insertValuesReference(jobToCustomValues);
   console.log("inserted values reference successfully");
-  await insertJobsReference(jobToCustomValues);
+  await insertJobsReference(customValuesToJobs);
   console.log("inserted jobs reference successfully");
 
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
@@ -165,12 +167,12 @@ async function insertValuesReference(jobToCustomValues) {
   }
   console.log("inserted values reference successfully");
 }
-async function insertJobsReference(jobToCustomValues) {
+async function insertJobsReference(customValuesToJobs) {
   console.log("inserting jobs reference");
-  for (const jobId of Object.keys(jobToCustomValues)) {
-    for (const valueId of jobToCustomValues[jobId]) {
-      await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, jobId);
-    }
+  console.log("jobToCustomValues: ", jobToCustomValues);
+  for (const valueId of Object.keys(customValuesToJobs)) {
+    const items = customValuesToJobs[valueId];
+    await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, items);
   }
   console.log("inserted jobs reference successfully");
 }
