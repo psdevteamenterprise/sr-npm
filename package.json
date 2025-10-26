@@ -25,7 +25,7 @@
     "@wix/site-window": "^1.0.0",
     "axios": "^1.11.0",
     "jest": "^30.0.5",
-    "tests-utils": "^1.0.7"
+    "tests-utils": "2.0.1"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
