@@ -173,24 +173,25 @@ async function insertJobsReference(jobToCustomValues) {
 }
 
 async function populateCustomFieldsCollection(customFields) {
-  console.log("populating custom fields collection");
   for(const ID of Object.keys(customFields)){
     await wixData.save(COLLECTIONS.CUSTOM_FIELDS, {
       title: customFields[ID],
       _id: ID,
     });
   }
-  console.log("populated custom fields collection successfully");
 }
 async function populateCustomValuesCollection(customFieldsValues) {
   console.log("populating custom values collection");
+  console.log("customFieldsValues: ", customFieldsValues);
   for (const fieldId of Object.keys(customFieldsValues)) {
+    console.log("populating custom values for field: ", fieldId);
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
+      console.log("populating custom values for value: ", valueId);
       await wixData.save(COLLECTIONS.CUSTOM_VALUES, {
         _id: valueId,
         title: valuesMap[valueId],
-        customField: fieldId, // reference to CustomFields collection (displays the label)
+       // customField: fieldId, // reference to CustomFields collection (displays the label)
       });
     }
   }
