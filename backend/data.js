@@ -169,7 +169,6 @@ async function insertValuesReference(jobToCustomValues) {
 }
 async function insertJobsReference(customValuesToJobs) {
   console.log("inserting jobs reference");
-  console.log("jobToCustomValues: ", jobToCustomValues);
   for (const valueId of Object.keys(customValuesToJobs)) {
     const items = customValuesToJobs[valueId];
     await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, items);
