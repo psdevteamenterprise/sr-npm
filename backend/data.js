@@ -158,18 +158,21 @@ async function saveJobsDataToCMS() {
 }
 
 async function insertValuesReference(jobToCustomValues) {
+  console.log("inserting values reference");
   for (const jobId of Object.keys(jobToCustomValues)) {
     const items = jobToCustomValues[jobId];
     await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, items);
   }
+  console.log("inserted values reference successfully");
 }
 async function insertJobsReference(jobToCustomValues) {
+  console.log("inserting jobs reference");
   for (const jobId of Object.keys(jobToCustomValues)) {
     for (const valueId of jobToCustomValues[jobId]) {
       await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, jobId);
     }
   }
-  
+  console.log("inserted jobs reference successfully");
 }
 
 async function populateCustomFieldsCollection(customFields) {
@@ -181,21 +184,16 @@ async function populateCustomFieldsCollection(customFields) {
   }
 }
 async function populateCustomValuesCollection(customFieldsValues) {
-  console.log("populating custom values collection");
-  console.log("customFieldsValues: ", customFieldsValues);
   for (const fieldId of Object.keys(customFieldsValues)) {
-    console.log("populating custom values for field: ", fieldId);
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
-      console.log("populating custom values for value: ", valueId);
       await wixData.save(COLLECTIONS.CUSTOM_VALUES, {
         _id: valueId,
         title: valuesMap[valueId],
-       // customField: fieldId, // reference to CustomFields collection (displays the label)
+        customField: fieldId, // reference to CustomFields collection (displays the label)
       });
     }
   }
-  console.log("populated custom values collection successfully");
 }
 async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
   console.log('🚀 Starting job descriptions update process for ALL jobs');
