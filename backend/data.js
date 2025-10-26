@@ -150,8 +150,9 @@ async function saveJobsDataToCMS() {
   });
 
   await insertValuesReference(jobToCustomValues);
+  console.log("inserted values reference successfully");
   await insertJobsReference(jobToCustomValues);
-  
+  console.log("inserted jobs reference successfully");
 
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
