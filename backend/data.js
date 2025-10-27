@@ -468,23 +468,8 @@ async function syncJobsFast() {
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
 }
-async function syncJobsFastSplitted() {
-  console.log("Syncing jobs fast");
-  await createCollections();
-  await clearCollections();
-  await fillSecretManagerMirror();
-  console.log("saving jobs data to CMS");
-  await saveJobsDataToCMS();
-  console.log("saved jobs data to CMS successfully");
-  await aggregateJobs();
-  await referenceJobs();
-  console.log("syncing jobs fast finished successfully");
-}
-async function syncJobsDescriptionsAndLocationApplyUrlFastSplitted() {
-  console.log("Syncing jobs descriptions and location apply url and values references");
-  await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
-  console.log("saved jobs descriptions and location apply url and values references successfully");
-}
+
+
 
 async function clearCollections() {
   console.log("clearing collections");
@@ -543,8 +528,7 @@ module.exports = {
   aggregateJobs,
   createCollections,
   saveJobsDataToCMS,
-  syncJobsFastSplitted,
-  syncJobsDescriptionsAndLocationApplyUrlFastSplitted,
+  saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
   fillSecretManagerMirror,

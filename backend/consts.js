@@ -1,13 +1,12 @@
-const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlToCMS,createCollections,aggregateJobs,referenceJobs,syncJobsFast} = require('./data')
+const {saveJobsDataToCMS,saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS,createCollections,aggregateJobs,referenceJobs,syncJobsFast} = require('./data')
 
 
 const QUERY_MAX_LIMIT = 1000;
 
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
-    SYNC_JOBS_SPLITTED: 'syncJobsFromSRAPIToCMSSplitted',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
-    INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS: 'insertJobsDescriptionsLocationApplyUrlToCMS',
+    INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_REFERENCES_TO_CMS: 'insertJobsDescriptionsLocationApplyUrlReferencesToCMS',
     AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
     REFERENCE_JOBS: 'referenceJobs',
     CREATE_COLLECTIONS: 'createCollections',
@@ -22,19 +21,7 @@ const TASKS = {
       childTasks: [
         { name: TASKS_NAMES.CREATE_COLLECTIONS},
         { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
-        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS },
-        { name: TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS },
-        {name: TASKS_NAMES.REFERENCE_JOBS},
-      ],
-      scheduleChildrenSequentially: true,
-      estimatedDurationSec: 60,
-    },
-    [TASKS_NAMES.SYNC_JOBS_SPLITTED]: {
-      name: TASKS_NAMES.SYNC_JOBS_SPLITTED,
-      childTasks: [
-        { name: TASKS_NAMES.CREATE_COLLECTIONS},
-        { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
-        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS },
+        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_REFERENCES_TO_CMS },
         { name: TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS },
         {name: TASKS_NAMES.REFERENCE_JOBS},
       ],
@@ -55,10 +42,10 @@ const TASKS = {
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
-    [TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS]: {
-      name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS,
+    [TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_REFERENCES_TO_CMS]: {
+      name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_REFERENCES_TO_CMS,
       getIdentifier:()=> "SHOULD_NEVER_SKIP",
-      process:saveJobsDescriptionsAndLocationApplyUrlToCMS,
+      process:saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS,
       shouldSkipCheck:()=>false,
       estimatedDurationSec:20
     },
