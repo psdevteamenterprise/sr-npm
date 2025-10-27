@@ -80,6 +80,12 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
+
+  if (!customFieldsValues["employmentType"]) {
+    customFieldsValues["employmentType"] = {};
+  }
+  customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
+
   
 }
 async function saveJobsDataToCMS() {
@@ -171,6 +177,7 @@ async function insertJobsReference(valueId) {
 
 async function populateCustomFieldsCollection(customFields) {
   fieldstoinsert=[]
+  customFields["employmentType"] = "Employment Type";
   for(const ID of Object.keys(customFields)){
     fieldstoinsert.push({
       title: customFields[ID],
