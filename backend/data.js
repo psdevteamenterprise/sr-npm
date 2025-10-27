@@ -1,15 +1,25 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
+
+
+let jobToCustomValues = {}
+let customValuesToJobs = {}
+let siteconfig;
+const EXCLUDED_CUSTOM_FIELDS = new Set(["Country", "Department", "Brands"]);
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
 }
 
+async function getSiteConfig() {
+  const queryresult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
+  siteconfig = queryresult.items[0];
+}
 function validatePosition(position) {
   if (!position.id) {
     throw new Error('Position id is required');
@@ -52,13 +62,35 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
+function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues) {
+  const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
+  for (const field of customFieldsArray) {
+    if(EXCLUDED_CUSTOM_FIELDS.has(field.fieldLabel)) continue; //country and department are not custom fields, they are already in the job object
+    const fieldId=normalizeString(field.fieldId)
+    const fieldLabel = field.fieldLabel;
+    const valueId=normalizeString(field.valueId)
+    const valueLabel = field.valueLabel
+    customFieldsLabels[fieldId] = fieldLabel
+    // Build nested dictionary: fieldId -> { valueId: valueLabel }
+    if (!customFieldsValues[fieldId]) {
+      customFieldsValues[fieldId] = {};
+    }
+    customFieldsValues[fieldId][valueId] = valueLabel;
 
+    jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
+    customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
+  }
+  
+}
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
   const sourcePositions = await filterBasedOnBrand(positions);
-  
+  const customFieldsLabels = {}
+  const customFieldsValues = {}
+
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
+    
     const basicJob = {
       _id: position.id,
       title: position.name || '',
@@ -82,9 +114,17 @@ async function saveJobsDataToCMS() {
       brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
     };
+
+    getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     return basicJob;
   });
-
+  if(siteconfig===undefined) {
+    await getSiteConfig();
+  }
+  if (siteconfig.customFields==="true") {
+  await populateCustomFieldsCollection(customFieldsLabels);
+  await populateCustomValuesCollection(customFieldsValues);
+  }
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
   jobsData.sort((a, b) => {
     const titleA = a.title || '';
@@ -119,15 +159,54 @@ async function saveJobsDataToCMS() {
       }
     },
   });
-
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
-async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
+async function insertValuesReference(jobId) {
+  await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, jobToCustomValues[jobId]);
+}
+async function insertJobsReference(valueId) {
+  await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, customValuesToJobs[valueId]);
+}
+
+async function populateCustomFieldsCollection(customFields) {
+  fieldstoinsert=[]
+  for(const ID of Object.keys(customFields)){
+    fieldstoinsert.push({
+      title: customFields[ID],
+      _id: ID,
+    })
+  }
+  await wixData.bulkSave(COLLECTIONS.CUSTOM_FIELDS, fieldstoinsert);
+}
+async function populateCustomValuesCollection(customFieldsValues) {
+  valuesToinsert=[]
+  for (const fieldId of Object.keys(customFieldsValues)) {
+    const valuesMap = customFieldsValues[fieldId] || {};
+    for (const valueId of Object.keys(valuesMap)) {
+      valuesToinsert.push({
+        _id: valueId,
+        title: valuesMap[valueId],
+        customField: fieldId,
+      })
+    }
+  }
+  await wixData.bulkSave(COLLECTIONS.CUSTOM_VALUES, valuesToinsert);
+}
+async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
   console.log('🚀 Starting job descriptions update process for ALL jobs');
 
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
+    if (siteconfig.customFields==="true") {
+      let customValues=await getAllCustomValues();
+      console.log("inserting jobs references to custom values collection");
+      for (const value of customValues.items) {
+        await insertJobsReference(value._id);
+      }
+      console.log("inserted jobs references to custom values collection successfully");
+    }
+  
     let totalUpdated = 0;
     let totalFailed = 0;
     let totalProcessed = 0;
@@ -156,7 +235,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
 
-
+            
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
@@ -165,6 +244,9 @@ async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
               referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
+            if (siteconfig.customFields==="true") {
+            await insertValuesReference(job._id);
+            }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
@@ -236,7 +318,10 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
     return { success: false, error: err.message };
   }
 }
-
+async function getAllCustomValues() {
+  let customValuesQuery = await wixData.query(COLLECTIONS.CUSTOM_VALUES).limit(1000).find();
+  return customValuesQuery;
+}
 async function getJobsWithNoDescriptions() {
   let jobswithoutdescriptionsQuery = await wixData
     .query(COLLECTIONS.JOBS)
@@ -280,6 +365,7 @@ async function referenceJobsToField({ referenceField, sourceCollection, jobField
     return rest;
   });
 
+  
   // Bulk update in chunks of 1000
   const chunkSize = 1000;
   await chunkedBulkOperation({
@@ -325,11 +411,13 @@ function fetchJobLocation(jobDetails) {
 async function createCollections() {
   console.log("Creating collections");
   await Promise.all(
-  [createCollectionIfMissing(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
+  [createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
   createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR),
-  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS)
+  createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS),
+  createCollectionIfMissing(COLLECTIONS.CUSTOM_VALUES, COLLECTIONS_FIELDS.CUSTOM_VALUES),
+  createCollectionIfMissing(COLLECTIONS.CUSTOM_FIELDS, COLLECTIONS_FIELDS.CUSTOM_FIELDS)
 ]);
   console.log("finished creating Collections");
 }
@@ -361,12 +449,14 @@ async function syncJobsFast() {
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
   console.log("saving jobs descriptions and location apply url to CMS");
-  await saveJobsDescriptionsAndLocationApplyUrlToCMS();
+  await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
   console.log("saved jobs descriptions and location apply url to CMS successfully");
   await aggregateJobs();
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
 }
+
+
 
 async function clearCollections() {
   console.log("clearing collections");
@@ -374,7 +464,9 @@ async function clearCollections() {
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
     wixData.truncate(COLLECTIONS.JOBS),
-    wixData.truncate(COLLECTIONS.BRANDS)
+    wixData.truncate(COLLECTIONS.BRANDS),
+    wixData.truncate(COLLECTIONS.CUSTOM_VALUES),
+    wixData.truncate(COLLECTIONS.CUSTOM_FIELDS),
   ]);
   console.log("cleared collections successfully");
 }
@@ -423,7 +515,7 @@ module.exports = {
   aggregateJobs,
   createCollections,
   saveJobsDataToCMS,
-  saveJobsDescriptionsAndLocationApplyUrlToCMS,
+  saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
   fillSecretManagerMirror,
