@@ -5,6 +5,7 @@ const QUERY_MAX_LIMIT = 1000;
 
 const TASKS_NAMES = {
     SYNC_JOBS: 'syncJobsFromSRAPIToCMS',
+    SYNC_JOBS_SPLITTED: 'syncJobsFromSRAPIToCMSSplitted',
     INSERT_JOBS_TO_CMS: 'insertJobsToCMS',
     INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS: 'insertJobsDescriptionsLocationApplyUrlToCMS',
     AGGREGATE_JOBS_BY_FIELD_TO_CMS: 'aggregateJobsByFieldToCMS',
@@ -18,6 +19,18 @@ const TASKS_NAMES = {
 const TASKS = {
     [TASKS_NAMES.SYNC_JOBS]: {
       name: TASKS_NAMES.SYNC_JOBS,
+      childTasks: [
+        { name: TASKS_NAMES.CREATE_COLLECTIONS},
+        { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
+        { name: TASKS_NAMES.INSERT_JOBS_DESCRIPTIONS_LOCATION_APPLY_URL_TO_CMS },
+        { name: TASKS_NAMES.AGGREGATE_JOBS_BY_FIELD_TO_CMS },
+        {name: TASKS_NAMES.REFERENCE_JOBS},
+      ],
+      scheduleChildrenSequentially: true,
+      estimatedDurationSec: 60,
+    },
+    [TASKS_NAMES.SYNC_JOBS_SPLITTED]: {
+      name: TASKS_NAMES.SYNC_JOBS_SPLITTED,
       childTasks: [
         { name: TASKS_NAMES.CREATE_COLLECTIONS},
         { name: TASKS_NAMES.INSERT_JOBS_TO_CMS },
