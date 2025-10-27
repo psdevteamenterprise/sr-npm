@@ -211,9 +211,15 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
     let customValues=await getAllCustomValues();
-    for (const valueId of customValues.items) {
-      await insertJobsReference(valueId);
+    console.log("customValues: ", customValues);
+    console.log("jobToCustomValues: ", jobToCustomValues);
+    console.log("customValuesToJobs: ", customValuesToJobs);
+
+    console.log("inserting jobs references");
+    for (const value of customValues.items) {
+      await insertJobsReference(value._id);
     }
+    console.log("inserted jobs references successfully");
     
 
     let totalUpdated = 0;
@@ -470,12 +476,14 @@ async function syncJobsFastSplitted() {
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
-  console.log("saving jobs descriptions and location apply url to CMS");
-  await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
-  console.log("saved jobs descriptions and location apply url to CMS successfully");
   await aggregateJobs();
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
+}
+async function syncJobsDescriptionsAndLocationApplyUrlFastSplitted() {
+  console.log("Syncing jobs descriptions and location apply url and values references");
+  await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
+  console.log("saved jobs descriptions and location apply url and values references successfully");
 }
 
 async function clearCollections() {
@@ -535,7 +543,8 @@ module.exports = {
   aggregateJobs,
   createCollections,
   saveJobsDataToCMS,
-  saveJobsDescriptionsAndLocationApplyUrlToCMS: saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS,
+  syncJobsFastSplitted,
+  syncJobsDescriptionsAndLocationApplyUrlFastSplitted,
   aggregateJobsByFieldToCMS,
   referenceJobsToField,
   fillSecretManagerMirror,
