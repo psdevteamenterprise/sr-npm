@@ -120,7 +120,7 @@ async function saveJobsDataToCMS() {
     return basicJob;
   });
   if(siteconfig===undefined) {
-    siteconfig = await getSiteConfig();
+    await getSiteConfig();
   }
   console.log("siteconfig is @#!#!@!@$##!@: ", siteconfig);
   if (siteconfig.customFields==="true") {

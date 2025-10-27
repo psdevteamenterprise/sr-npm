@@ -27,9 +27,10 @@ const {
 
 async function careersPageOnReady(_$w,thisObject,queryParams) {
 if(siteconfig===undefined) {
-    siteconfig = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
-    siteconfig = siteconfig.items[0];
+    const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
+    siteconfig = queryResult.items[0];
 }
+console.log("siteconfig: ", siteconfig);
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location,jobType,brand } = queryParams;
 queryPageVar=page;
