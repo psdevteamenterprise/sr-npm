@@ -30,7 +30,6 @@ if(siteconfig===undefined) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     siteconfig = queryResult.items[0];
 }
-console.log("siteconfig: ", siteconfig);
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location,jobType,brand } = queryParams;
 queryPageVar=page;
@@ -102,8 +101,11 @@ async function handleUrlParams(_$w) {
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
+    if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
+        await handleBrandParam(_$w,queryBrandVar);
+    }
 
-    if (siteconfig.onlyBrandKeywordUrlParams==="true") { // it is something else that is not TWG
+    if (siteconfig.onlyBrandKeywordUrlParams==="false") { // it is something else that is not TWG
         if (queryPageVar) {
             await handlePageParam(_$w);    
         }
@@ -116,9 +118,7 @@ async function handleUrlParams(_$w) {
         if (queryJobTypeVar) {
             await handleJobTypeParam(_$w,queryJobTypeVar);
         }
-        if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
-            await handleBrandParam(_$w,queryBrandVar);
-        }
+
 }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
