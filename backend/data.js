@@ -10,6 +10,7 @@ const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 let jobToCustomValues = {}
 let customValuesToJobs = {}
 let siteconfig;
+const EXCLUDED_CUSTOM_FIELDS = new Set(["Country", "Department", "Brands"]);
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
@@ -64,10 +65,9 @@ function validateSingleDesiredBrand(desiredBrand) {
 function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
-    if(field.fieldLabel==="Country" || field.fieldLabel==="Department" || field.fieldLabel==="Brands") continue; //country and department are not custom fields, they are already in the job object
-    const label = field.fieldLabel
+    if(EXCLUDED_CUSTOM_FIELDS.has(field.fieldLabel)) continue; //country and department are not custom fields, they are already in the job object
     const fieldId=normalizeString(field.fieldId)
-    const fieldLabel = label;
+    const fieldLabel = field.fieldLabel;
     const valueId=normalizeString(field.valueId)
     const valueLabel = field.valueLabel
     customFieldsLabels[fieldId] = fieldLabel
