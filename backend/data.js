@@ -177,24 +177,28 @@ async function insertJobsReference(customValuesToJobs) {
 }
 
 async function populateCustomFieldsCollection(customFields) {
+  fieldstoinsert=[]
   for(const ID of Object.keys(customFields)){
-    await wixData.save(COLLECTIONS.CUSTOM_FIELDS, {
+    fieldstoinsert.push({
       title: customFields[ID],
       _id: ID,
-    });
+    })
   }
+  await wixData.bulkSave(COLLECTIONS.CUSTOM_FIELDS, fieldstoinsert);
 }
 async function populateCustomValuesCollection(customFieldsValues) {
+  valuesToinsert=[]
   for (const fieldId of Object.keys(customFieldsValues)) {
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
-      await wixData.save(COLLECTIONS.CUSTOM_VALUES, {
+      valuesToinsert.push({
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId, // reference to CustomFields collection (displays the label)
-      });
+      })
     }
   }
+  await wixData.bulkSave(COLLECTIONS.CUSTOM_VALUES, valuesToinsert);
 }
 async function saveJobsDescriptionsAndLocationApplyUrlToCMS() {
   console.log('🚀 Starting job descriptions update process for ALL jobs');
