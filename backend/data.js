@@ -19,6 +19,7 @@ function getBrand(customField) {
 async function getSiteConfig() {
   const queryresult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
   siteconfig = queryresult.items[0];
+  console.log("siteconfig: ", siteconfig);
 }
 function validatePosition(position) {
   if (!position.id) {
@@ -121,6 +122,7 @@ async function saveJobsDataToCMS() {
   if(siteconfig===undefined) {
     siteconfig = await getSiteConfig();
   }
+  console.log("siteconfig is @#!#!@!@$##!@: ", siteconfig);
   if (siteconfig.customFields==="true") {
   await populateCustomFieldsCollection(customFieldsLabels);
   await populateCustomValuesCollection(customFieldsValues);

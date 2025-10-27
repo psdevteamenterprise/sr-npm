@@ -102,7 +102,7 @@ async function handleUrlParams(_$w) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
 
-    if (siteconfig.handleCareersUrlParams==="true") { // it is something else that is not TWG
+    if (siteconfig.onlyBrandKeywordUrlParams==="true") { // it is something else that is not TWG
         if (queryPageVar) {
             await handlePageParam(_$w);    
         }

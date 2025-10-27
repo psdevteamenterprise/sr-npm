@@ -89,7 +89,7 @@ const COLLECTIONS_FIELDS = {
       {key:'templateType', type: 'TEXT'},
     ],
     SITE_CONFIGS: [
-      {key:'urlParams', type: 'TEXT'},
+      {key:'onlyBrandKeywordUrlParams', type: 'TEXT'},
       {key:'customFields', type: 'TEXT'},
     ],
     SECRET_MANAGER_MIRROR: [
