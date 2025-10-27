@@ -207,7 +207,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
       console.log("inserted jobs references to custom values collection successfully");
     }
   
-
     let totalUpdated = 0;
     let totalFailed = 0;
     let totalProcessed = 0;
