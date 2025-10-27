@@ -62,6 +62,15 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
+function getEmploymentType(position,customFieldsValues) {
+  if (!customFieldsValues["employmentType"]) {
+    customFieldsValues["employmentType"] = {};
+  }
+  customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
+  jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(position.typeOfEmployment.id) : jobToCustomValues[position.id]=[position.typeOfEmployment.id]
+  customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].push(position.id) : customValuesToJobs[position.typeOfEmployment.id]=[position.id]
+}
+
 function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
@@ -80,13 +89,6 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
-
-  if (!customFieldsValues["employmentType"]) {
-    customFieldsValues["employmentType"] = {};
-  }
-  customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
-
-  
 }
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
@@ -122,6 +124,7 @@ async function saveJobsDataToCMS() {
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
+    getEmploymentType(position,customFieldsValues);
     return basicJob;
   });
   if(siteconfig===undefined) {
