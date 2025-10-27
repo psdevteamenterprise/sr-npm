@@ -7,6 +7,8 @@ const COLLECTIONS = {
     BRANDS: 'Brands',
     CUSTOM_VALUES:'CustomValues',
     CUSTOM_FIELDS:'CustomFields',
+    SITE_CONFIGS: 'SiteConfigs',
+
 }
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
@@ -85,6 +87,10 @@ const COLLECTIONS_FIELDS = {
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
+    ],
+    SITE_CONFIGS: [
+      {key:'urlParams', type: 'TEXT'},
+      {key:'customFields', type: 'TEXT'},
     ],
     SECRET_MANAGER_MIRROR: [
       {key:'tokenName', type: 'TEXT'},

@@ -9,11 +9,16 @@ const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 let jobToCustomValues = {}
 let customValuesToJobs = {}
+let siteconfig;
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
 }
 
+async function getSiteConfig() {
+  const queryresult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
+  siteconfig = queryresult.items[0];
+}
 function validatePosition(position) {
   if (!position.id) {
     throw new Error('Position id is required');
@@ -113,9 +118,13 @@ async function saveJobsDataToCMS() {
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     return basicJob;
   });
-  
+  if(siteconfig===undefined) {
+    siteconfig = await getSiteConfig();
+  }
+  if (siteconfig.customFields==="true") {
   await populateCustomFieldsCollection(customFieldsLabels);
   await populateCustomValuesCollection(customFieldsValues);
+  }
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
   jobsData.sort((a, b) => {
     const titleA = a.title || '';
@@ -189,14 +198,15 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
 
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
-    let customValues=await getAllCustomValues();
-
-    console.log("inserting jobs references to custom values collection");
-    for (const value of customValues.items) {
-      await insertJobsReference(value._id);
+    if (siteconfig.customFields==="true") {
+      let customValues=await getAllCustomValues();
+      console.log("inserting jobs references to custom values collection");
+      for (const value of customValues.items) {
+        await insertJobsReference(value._id);
+      }
+      console.log("inserted jobs references to custom values collection successfully");
     }
-    console.log("inserted jobs references to custom values collection successfully");
-    
+  
 
     let totalUpdated = 0;
     let totalFailed = 0;
@@ -235,7 +245,9 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
               referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
+            if (siteconfig.customFields==="true") {
             await insertValuesReference(job._id);
+            }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
