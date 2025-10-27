@@ -114,9 +114,6 @@ async function saveJobsDataToCMS() {
     return basicJob;
   });
   
-  console.log("customFieldsLabels: ", customFieldsLabels);
-  console.log("customFieldsValues: ", customFieldsValues);
-  console.log("jobToCustomValues: ", jobToCustomValues);
   await populateCustomFieldsCollection(customFieldsLabels);
   await populateCustomValuesCollection(customFieldsValues);
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
@@ -153,32 +150,14 @@ async function saveJobsDataToCMS() {
       }
     },
   });
-
-  // await insertValuesReference(jobToCustomValues);
-  // console.log("inserted values reference successfully");
-  // //await insertJobsReference(customValuesToJobs);
-  // console.log("inserted jobs reference successfully");
-
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
 async function insertValuesReference(jobId) {
   await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, jobToCustomValues[jobId]);
-  // console.log("inserting values reference");
-  // for (const jobId of Object.keys(jobToCustomValues)) {
-  //   const items = jobToCustomValues[jobId];
-  //   await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, items);
-  // }
-  // console.log("inserted values reference successfully");
 }
 async function insertJobsReference(valueId) {
   await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, customValuesToJobs[valueId]);
-  // console.log("inserting jobs reference");
-  // for (const valueId of Object.keys(customValuesToJobs)) {
-  //   const items = customValuesToJobs[valueId];
-  //   await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, items);
-  // }
-  // console.log("inserted jobs reference successfully");
 }
 
 async function populateCustomFieldsCollection(customFields) {
@@ -211,15 +190,12 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
   try {
     let jobsWithNoDescriptions = await getJobsWithNoDescriptions();
     let customValues=await getAllCustomValues();
-    console.log("customValues: ", customValues);
-    console.log("jobToCustomValues: ", jobToCustomValues);
-    console.log("customValuesToJobs: ", customValuesToJobs);
 
-    console.log("inserting jobs references");
+    console.log("inserting jobs references to custom values collection");
     for (const value of customValues.items) {
       await insertJobsReference(value._id);
     }
-    console.log("inserted jobs references successfully");
+    console.log("inserted jobs references to custom values collection successfully");
     
 
     let totalUpdated = 0;
