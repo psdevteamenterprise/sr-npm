@@ -4,7 +4,7 @@ const { window } = require('@wix/site-window');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
-
+const { careersMultiBoxesPageOnReady } = require('./careersMultiBoxesPage');
 const {
     debounce,
     getFilter,
@@ -30,6 +30,10 @@ if(siteconfig===undefined) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     siteconfig = queryResult.items[0];
 }
+if(siteconfig.customFields==="true") {
+    await careersMultiBoxesPageOnReady(_$w);
+}
+else{
 console.log("queryParams: ", queryParams);
 const { page, keyWord, department, location,jobType,brand } = queryParams;
 queryPageVar=page;
@@ -46,7 +50,7 @@ await init(_$w);
 await handleBrandDropdown(_$w);
 await handleUrlParams(_$w);
 
-
+}
 }
 
   
@@ -510,7 +514,7 @@ async function handleBrandDropdown(_$w){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
-}
+}  
 module.exports = {
     careersPageOnReady,
   };
