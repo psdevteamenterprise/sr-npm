@@ -90,6 +90,7 @@ async function loadJobs(_$w) {
         }));
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
+        console.log("fieldValues: ",fieldValues)
         const all_results=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, fieldValues, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
         console.log("all_results@@@@@: ",all_results)
         console.log("all_results@@@@@: ",all_results)
