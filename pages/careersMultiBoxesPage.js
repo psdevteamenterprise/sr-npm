@@ -229,6 +229,7 @@ async function refreshFacetCounts(_$w) {
       const counts = new Map(); // valueId -> count
       for (const job of jobs) {
         const referencedfield= await  wixData.queryReferenced(COLLECTIONS.JOBS, job, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)  
+        console.log("referencedfield: ",referencedfield)
         const vals = referencedfield._items
         //const vals = job[JOB_VALUES_FIELD] || [];
         for (const val of vals) {
