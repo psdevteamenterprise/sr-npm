@@ -41,6 +41,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
             updateSelectedValuesRepeater();
           });
     });
+    updateSelectedValuesRepeater();
 }
 
 async function loadJobs(_$w) {
