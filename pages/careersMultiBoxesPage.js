@@ -92,7 +92,7 @@ async function loadJobs(_$w) {
         const counter={}
         for (const val of fieldValues) {
           const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, val, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-          counter[val.title]=result._totalCount
+          counter[val.title]=result.totalCount
         }
         countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
   
@@ -230,7 +230,7 @@ async function refreshFacetCounts(_$w) {
       for (const job of jobs) {
         const referencedfield= await  wixData.queryReferenced(COLLECTIONS.JOBS, job, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)  
         console.log("referencedfield: ",referencedfield)
-        const vals = referencedfield._items
+        const vals = referencedfield.items
         //const vals = job[JOB_VALUES_FIELD] || [];
         for (const val of vals) {
           if (optionSet.has(val._id)) {
