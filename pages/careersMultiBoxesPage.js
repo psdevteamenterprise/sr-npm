@@ -284,6 +284,17 @@ async function refreshFacetCounts(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
   }
 
+  async function findAll(q) {
+    const out = [];
+    let res = await q.limit(1000).find();
+    out.push(...res.items);
+    while (res.hasNext()) {
+      res = await res.next();
+      out.push(...res.items);
+    }
+    return out;
+  }
+
 
 module.exports = {
     careersMultiBoxesPageOnReady
