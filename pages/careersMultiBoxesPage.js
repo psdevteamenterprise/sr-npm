@@ -36,12 +36,12 @@ async function careersMultiBoxesPageOnReady(_$w) {
               }
             });
     
-            applyJobFilters(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
-            refreshFacetCounts();
-            updateSelectedValuesRepeater();
+            applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
+            refreshFacetCounts(_$w);
+            updateSelectedValuesRepeater(_$w);
           });
     });
-    updateSelectedValuesRepeater();
+    updateSelectedValuesRepeater(_$w);
 }
 
 async function loadJobs(_$w) {
@@ -73,7 +73,7 @@ async function loadJobs(_$w) {
   
   
       // 3) Bind each filter repeater item
-    $w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).onItemReady(async ($item, itemData) => {
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).onItemReady(async ($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onClick(()=>{
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapsed ? $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).expand() : $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapse()
       })
@@ -108,8 +108,8 @@ async function loadJobs(_$w) {
       } else {
         selectedByField.delete(fieldId);
       }
-      applyJobFilters(); // re-query jobs
-      refreshFacetCounts();    // recompute and update counts in all lists
+      applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
+      refreshFacetCounts(_$w);    // recompute and update counts in all lists
   
     });
     
@@ -121,7 +121,7 @@ async function loadJobs(_$w) {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onInput(runFilter);
       });
   
-      await refreshFacetCounts();
+      await refreshFacetCounts(_$w);
           // After counts are ready, re-render all items to show numbers
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
         const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
@@ -184,7 +184,7 @@ async function loadJobs(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
   }
 
-  function applyJobFilters(filterByField) {
+  function applyJobFilters(_$w,filterByField) {
     let q = wixData.query(COLLECTIONS.JOBS)
   
     // AND across categories, OR within each category
@@ -200,7 +200,7 @@ async function loadJobs(_$w) {
   }
 
 
-async function refreshFacetCounts() {
+async function refreshFacetCounts(_$w) {
     if (!valuesByFieldIdGlobal)
     {
        return;
@@ -267,6 +267,21 @@ async function refreshFacetCounts() {
       map.get(ref).push(v);
     }
     return map;
+  }
+
+  function updateSelectedValuesRepeater(_$w) {
+    const selectedItems = [];
+    for (const [fieldId, valueIds] of selectedByField.entries()) {
+      const opts = optionsByFieldId.get(fieldId) || [];
+      const byId = new Map(opts.map(o => [o.value, o.label]));
+      for (const id of valueIds) {
+        const label = byId.get(id);
+        if (label) {
+          selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
+        }
+      }
+    }
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
   }
 
 
