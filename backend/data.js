@@ -256,9 +256,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
             if (siteconfig.customFields==="true") {
-              console.log("inserting values reference")
             await insertValuesReference(job._id);
-            console.log("inserted values reference successfully")
             }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
