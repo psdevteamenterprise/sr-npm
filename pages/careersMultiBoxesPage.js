@@ -100,6 +100,7 @@ async function loadJobs(_$w) {
         //   const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, val, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
         //   counter[val.title]=result.totalCount
         // }
+        
         countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
   
         // Initialize UI
