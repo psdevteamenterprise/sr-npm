@@ -28,7 +28,7 @@ async function loadJobs(_$w) {
       });
   }
 
-  async function loadFilters() {
+  async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
       const fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
