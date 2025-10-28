@@ -10,6 +10,37 @@ const countsByFieldId = new Map();
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
     await loadFilters(_$w);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
+        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
+    
+        // Deselect this value from both the selected map and the multibox
+          $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(() => {
+            const fieldId = itemData.fieldId;
+            const valueId = itemData.valueId;
+            if (!fieldId || !valueId) return;
+    
+            const existing = selectedByField.get(fieldId) || [];
+            const updated = existing.filter(v => v !== valueId);
+            if (updated.length) {
+              selectedByField.set(fieldId, updated);
+            } else {
+              selectedByField.delete(fieldId);
+            }
+    
+            // Update the checkbox group UI inside the corresponding filter item
+            _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($filterItem, filterItemData) => {
+              if (filterItemData._id === fieldId) {
+                const currentVals = $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
+                const nextVals = currentVals.filter(v => v !== valueId);
+                $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = nextVals;
+              }
+            });
+    
+            applyJobFilters(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
+            refreshFacetCounts();
+            updateSelectedValuesRepeater();
+          });
+    });
 }
 
 async function loadJobs(_$w) {
@@ -83,16 +114,16 @@ async function loadJobs(_$w) {
     
           // Input typing -> only filter this list’s visible options (no Jobs query)
         const runFilter = debounce(() => {
-          const query = ($item(FILTER_LABEL_ID).value || '').toLowerCase().trim();
+          const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
           updateOptionsUI($item, fieldId, query);
         }, 150);
-        $item(FILTER_LABEL_ID).onInput(runFilter);
+        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onInput(runFilter);
       });
   
       await refreshFacetCounts();
           // After counts are ready, re-render all items to show numbers
-      $w(FILTER_REPEATER_ID).forEachItem(($item, itemData) => {
-        const query = ($item(FILTER_LABEL_ID).value || '').toLowerCase().trim();
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
+        const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
         updateOptionsUI($item, itemData._id, query);
       
   
@@ -226,6 +257,16 @@ async function refreshFacetCounts() {
     });
   }
 
+  function groupValuesByField(values, refKey) {
+    const map = new Map();
+    for (const v of values) {
+      const ref = v[refKey]; // should be the _id of the CustomFields item
+      if (!ref) continue;
+      if (!map.has(ref)) map.set(ref, []);
+      map.get(ref).push(v);
+    }
+    return map;
+  }
 
 
 module.exports = {
