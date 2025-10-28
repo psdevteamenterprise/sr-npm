@@ -91,16 +91,10 @@ async function loadJobs(_$w) {
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
         const allvalues=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        console.log("allvalues: ",allvalues)
         for (const val of allvalues) {
           counter[val.title]=val.totalJobs
         }
 
-        // for (const val of fieldValues) {
-        //   const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, val, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-        //   counter[val.title]=result.totalCount
-        // }
-        
         countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
   
         // Initialize UI
@@ -117,6 +111,7 @@ async function loadJobs(_$w) {
       }
       applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
       refreshFacetCounts(_$w);    // recompute and update counts in all lists
+      updateSelectedValuesRepeater(_$w);
   
     });
     
@@ -278,6 +273,7 @@ async function refreshFacetCounts(_$w) {
   }
 
   function updateSelectedValuesRepeater(_$w) {
+    console.log("updating selected values repeater")
     const selectedItems = [];
     for (const [fieldId, valueIds] of selectedByField.entries()) {
       const opts = optionsByFieldId.get(fieldId) || [];
