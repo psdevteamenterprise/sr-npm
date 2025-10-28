@@ -1,23 +1,22 @@
-
-
+const { COLLECTIONS } = require('../backend/collectionConsts');
+const { items: wixData } = require('@wix/data');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
 
 async function careersMultiBoxesPageOnReady(_$w) {
-    // await  loadJobs(_$w);
-    // await loadFilters(_$w);
-    console.log("careersMultiBoxesPageOnReady");
-
+    await  loadJobs(_$w);
+    await loadFilters(_$w);
 }
 
 async function loadJobs(_$w) {
-    _$w('#jobsReapter').onItemReady(($item, itemData) => {
-      $item('#jobTitle').text = itemData.title || '';
-      $item('#locationLabel').text=itemData.location.fullLocation
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
+      $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title || '';
+      $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
     });
   
     return wixData.query(COLLECTIONS.JOBS)
       .find()
       .then((res) => {
-        $w('#jobsReapter').data = res.items;
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
       })
       .catch((err) => {
         console.error('Failed to load jobs:', err);
@@ -26,7 +25,6 @@ async function loadJobs(_$w) {
 
   async function loadFilters() {
     try {
-  
       // 1) Load all categories (fields)
       const fields = await getAllRecords(CUSTOM_FIELDS_COLLECTION);
       $w(FILTER_REPEATER_ID).data = fields;

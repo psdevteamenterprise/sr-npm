@@ -25,7 +25,7 @@ const {
   let searchInputBlurredFirstTime=true;
   let siteconfig;
 
-async function careersPageOnReady(_$w,thisObject,queryParams) {
+async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
 if(siteconfig===undefined) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     siteconfig = queryResult.items[0];
