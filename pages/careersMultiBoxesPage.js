@@ -238,7 +238,7 @@ async function refreshFacetCounts(_$w) {
     const fieldIds = Array.from(optionsByFieldId.keys());
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
-        console.log("currentoptions@@@@@@@@@@@@@: ",currentoptions)
+        //console.log("currentoptions@@@@@@@@@@@@@: ",currentoptions)
         let counter=new Map();
         for(const option of currentoptions) {
             console.log("currentJobs length: ",currentJobs.length)
