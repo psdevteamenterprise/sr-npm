@@ -229,12 +229,11 @@ async function loadJobs(_$w) {
 
 
 async function refreshFacetCounts(_$w) {
-    if (!valuesByFieldIdGlobal)
-    {
-       return;
-    }
-  
-    const fieldIds = Array.from(optionsByFieldId.keys());
+    // if (!valuesByFieldIdGlobal)
+    // {
+    //    return;
+    // }
+    const counts = new Map();
     for (const valueId of Object.keys(valueToJobs)) {
         for (const jobId of currentJobs) {
             if (valueToJobs[valueId].includes(jobId)) {
@@ -242,54 +241,66 @@ async function refreshFacetCounts(_$w) {
             }
         }
     }
+  
+    // const fieldIds = Array.from(optionsByFieldId.keys());
+    // for (const valueId of Object.keys(valueToJobs)) {
+    //     for (const jobId of currentJobs) {
+    //         if (valueToJobs[valueId].includes(jobId)) {
+    //             countsByFieldId.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
+    //         }
+    //     }
+    // }
 
 
-    // Run per-field queries in parallel
-    const tasks = fieldIds.map(async (fieldId) => {
-      // Build query with selections from all other fields
-      let q = wixData.query(COLLECTIONS.JOBS);
-      for (const [fid, values] of selectedByField.entries()) {
-        if (fid !== fieldId && values && values.length) {
-          q = q.hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES, values);
-        }
-      }
+
+
+
+    // // Run per-field queries in parallel
+    // const tasks = fieldIds.map(async (fieldId) => {
+    //   // Build query with selections from all other fields
+    //   let q = wixData.query(COLLECTIONS.JOBS);
+    //   for (const [fid, values] of selectedByField.entries()) {
+    //     if (fid !== fieldId && values && values.length) {
+    //       q = q.hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES, values);
+    //     }
+    //   }
   
-      // Fetch all matching jobs (paged)
-      const jobs = await findAll(q);
+    //   // Fetch all matching jobs (paged)
+    //   const jobs = await findAll(q);
   
   
-      // Prepare a set of valid option IDs for this field
-      const options = optionsByFieldId.get(fieldId) || [];
-      const optionSet = new Set(options.map(o => o.value));
+    //   // Prepare a set of valid option IDs for this field
+    //   const options = optionsByFieldId.get(fieldId) || [];
+    //   const optionSet = new Set(options.map(o => o.value));
   
-      // Tally counts
-      const counts = new Map(); // valueId -> count
-      for (const job of jobs) {
-        const referencedfield= await  wixData.queryReferenced(COLLECTIONS.JOBS, job, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)  
-        //console.log("referencedfield: ",referencedfield)
-        const vals = referencedfield.items
-        //const vals = job[JOB_VALUES_FIELD] || [];
-        for (const val of vals) {
-          if (optionSet.has(val._id)) {
-            counts.set(val._id, (counts.get(val._id) || 0) + 1);
-          }
-        }
+    //   // Tally counts
+    //   const counts = new Map(); // valueId -> count
+    //   for (const job of jobs) {
+    //     const referencedfield= await  wixData.queryReferenced(COLLECTIONS.JOBS, job, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)  
+    //     //console.log("referencedfield: ",referencedfield)
+    //     const vals = referencedfield.items
+    //     //const vals = job[JOB_VALUES_FIELD] || [];
+    //     for (const val of vals) {
+    //       if (optionSet.has(val._id)) {
+    //         counts.set(val._id, (counts.get(val._id) || 0) + 1);
+    //       }
+    //     }
   
-      }
+    //   }
   
-      // Ensure every option has a count (zero if absent)
-      for (const o of options) {
-        if (!counts.has(o.value)) 
-        {
-          counts.set(o.value, 0);}
-      }
+    //   // Ensure every option has a count (zero if absent)
+    //   for (const o of options) {
+    //     if (!counts.has(o.value)) 
+    //     {
+    //       counts.set(o.value, 0);}
+    //   }
   
-      countsByFieldId.set(fieldId, counts);
-    });
+    //   countsByFieldId.set(fieldId, counts);
+    // });
   
-    await Promise.all(tasks);
+    // await Promise.all(tasks);
   
-    // After counts are ready, update all items currently rendered
+    // // After counts are ready, update all items currently rendered
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
       const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
       updateOptionsUI($item, itemData._id, query);
@@ -325,7 +336,7 @@ async function refreshFacetCounts(_$w) {
 
   async function updateCurrentJobs(res) {
     currentJobs = [];
-    currentJobs.push(res.items.map(job=>job._id));
+    currentJobs.push(...res.items.map(job=>job._id));
     while (res.hasNext()) {
       res = await res.next();
       currentJobs.push(...res.items.map(job=>job._id));
