@@ -233,20 +233,35 @@ async function refreshFacetCounts(_$w) {
     // {
     //    return;
     // }
-    const counts = new Map();
-    for (const valueId of Object.keys(valueToJobs)) {
-        for (const jobId of currentJobs) {
-            if (valueToJobs[valueId].includes(jobId)) {
-                countsByFieldId.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
+    
+  
+    const fieldIds = Array.from(optionsByFieldId.keys());
+    for (const fieldId of fieldIds) {
+        let currentoptions=optionsByFieldId.get(fieldId)
+        console.log("currentoptions@@@@@@@@@@@@@: ",currentoptions)
+        let counter=new Map();
+        for(const option of currentoptions) {
+            for (const jobId of currentJobs) {
+                if (valueToJobs[option.value].includes(jobId)) {
+                    counter.set(option.value, (countsByFieldId.get(option.value) || 0) + 1);
+                }
             }
         }
+        countsByFieldId.set(fieldId, counter);
     }
-  
-    // const fieldIds = Array.from(optionsByFieldId.keys());
+
+    //     for (const valueId of Object.keys(valueToJobs)) {
+    //         for (const jobId of currentJobs) {
+    //             if (valueToJobs[valueId].includes(jobId)) {
+    //                 counter.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
+    //             }
+    //         }
+    //     }
+    // }
     // for (const valueId of Object.keys(valueToJobs)) {
     //     for (const jobId of currentJobs) {
     //         if (valueToJobs[valueId].includes(jobId)) {
-    //             countsByFieldId.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
+    //             counter.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
     //         }
     //     }
     // }
@@ -335,12 +350,14 @@ async function refreshFacetCounts(_$w) {
   }
 
   async function updateCurrentJobs(res) {
-    currentJobs = [];
-    currentJobs.push(...res.items.map(job=>job._id));
+    let newcurrentJobs = [];
+    newcurrentJobs.push(...res.items.map(job=>job._id));
     while (res.hasNext()) {
       res = await res.next();
-      currentJobs.push(...res.items.map(job=>job._id));
+      newcurrentJobs.push(...res.items.map(job=>job._id));
     }
+    console.log("newcurrentJobs inisde new function: ",newcurrentJobs)
+    currentJobs = newcurrentJobs;
     console.log("updated currentJobs inisde new function: ",currentJobs)
   }
 
