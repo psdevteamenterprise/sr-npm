@@ -199,6 +199,7 @@ async function populateCustomValuesCollection(customFieldsValues) {
         jobIds:customValuesToJobs[valueId],
       })
     }
+    console.log("customValuesToJobs[valueId]",customValuesToJobs[valueId])
   }
   await wixData.bulkSave(COLLECTIONS.CUSTOM_VALUES, valuesToinsert);
 }
