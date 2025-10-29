@@ -255,9 +255,9 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
               referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
-            if (siteconfig.customFields==="true") {
-            await insertValuesReference(job._id);
-            }
+            // if (siteconfig.customFields==="true") {
+            // await insertValuesReference(job._id);
+            // }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
