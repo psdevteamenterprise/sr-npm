@@ -43,9 +43,9 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
-    if(alljobs.length===0) {
-        alljobs=await getAllRecords(COLLECTIONS.JOBS);
-      }
+    // if(alljobs.length===0) {
+    //     alljobs=await getAllRecords(COLLECTIONS.JOBS);
+    //   }
     if(valueToJobs.size===0) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         for (const value of allvaluesobjects) {
@@ -53,7 +53,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         }
     }
     console.log("valueToJobs: ",valueToJobs)
-    console.log("alljobs: ",alljobs)
+    //console.log("alljobs: ",alljobs)
     
 }
 
