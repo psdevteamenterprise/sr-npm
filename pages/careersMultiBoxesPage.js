@@ -9,7 +9,21 @@ const countsByFieldId = new Map();
 let alljobs=[]
 let allvaluesobjects=[]
 let valueToJobs={}
+let currentJobs=[]
 async function careersMultiBoxesPageOnReady(_$w) {
+    if(alljobs.length===0) {
+        alljobs=await getAllRecords(COLLECTIONS.JOBS);
+        currentJobs=alljobs.map(job=>job._id);
+      }
+    if(valueToJobs.size===0) {
+        allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        for (const value of allvaluesobjects) {
+            valueToJobs[value._id]= value.jobIds;
+        }
+    }
+    console.log("valueToJobs: ",valueToJobs)
+    console.log("alljobs: ",alljobs)
+    
     await  loadJobs(_$w);
     await loadFilters(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
@@ -44,18 +58,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
-    if(alljobs.length===0) {
-        alljobs=await getAllRecords(COLLECTIONS.JOBS);
-      }
-    if(valueToJobs.size===0) {
-        allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        for (const value of allvaluesobjects) {
-            valueToJobs[value._id]= value.jobIds;
-        }
-    }
-    console.log("valueToJobs: ",valueToJobs)
-    console.log("alljobs: ",alljobs)
-    
+   
 }
 
 async function loadJobs(_$w) {
