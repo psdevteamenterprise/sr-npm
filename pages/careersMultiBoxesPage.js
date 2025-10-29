@@ -17,7 +17,9 @@ async function careersMultiBoxesPageOnReady(_$w) {
       }
     if(valueToJobs.size===0) {
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        console.log("allvaluesobjects: ",allvaluesobjects)
         for (const value of allvaluesobjects) {
+            console.log("value: ",value)
             valueToJobs[value._id]= value.jobIds;
         }
     }
