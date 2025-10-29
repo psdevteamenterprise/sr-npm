@@ -6,7 +6,8 @@ let valuesByFieldIdGlobal = null;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
 const countsByFieldId = new Map();
-let alljobsIds=[]
+let alljobs=[]
+let allvaluesobjects=[]
 let valueToJobs={}
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
@@ -43,12 +44,12 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
-    if(alljobsIds.length===0) {
+    if(alljobs.length===0) {
         let alljobsresult=await getAllRecords(COLLECTIONS.JOBS);
-        alljobsIds=alljobsresult.items.map(job=>job._id);
+        alljobs=alljobsresult.items;
       }
     if(valueToJobs.size===0) {
-        const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         console.log("allvaluesobjects@@@@@@@@@@@@@: ",allvaluesobjects)
         for (const value of allvaluesobjects) {
             console.log("value@@@@@@@@@@@@@: ",value)
@@ -56,7 +57,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         }
     }
     console.log("valueToJobs: ",valueToJobs)
-    console.log("alljobsIds: ",alljobsIds)
+    console.log("alljobs: ",alljobs)
     
 }
 
@@ -65,15 +66,16 @@ async function loadJobs(_$w) {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title || '';
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
     });
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = alljobs;
   
-    return wixData.query(COLLECTIONS.JOBS)
-      .find()
-      .then((res) => {
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
-      })
-      .catch((err) => {
-        console.error('Failed to load jobs:', err);
-      });
+    // return wixData.query(COLLECTIONS.JOBS)
+    //   .find()
+    //   .then((res) => {
+    //     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
+    //   })
+    //   .catch((err) => {
+    //     console.error('Failed to load jobs:', err);
+    //   });
   }
 
   async function loadFilters(_$w) {
@@ -83,8 +85,8 @@ async function loadJobs(_$w) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
   
       // 2) Load all values once and group them by referenced field
-      const values = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-      const valuesByFieldId = groupValuesByField(values, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
+      //const values = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+      const valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
   
   
@@ -106,8 +108,8 @@ async function loadJobs(_$w) {
         }));
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
-        const allvalues=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        for (const val of allvalues) {
+        //const allvalues=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        for (const val of allvaluesobjects) {
           counter[val.title]=val.totalJobs
         }
 
