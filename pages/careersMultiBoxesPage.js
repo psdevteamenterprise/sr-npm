@@ -83,7 +83,7 @@ async function loadJobs(_$w) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
   
       // 2) Load all values once and group them by referenced field
-      //const values = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+     
       const valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
   
@@ -106,7 +106,7 @@ async function loadJobs(_$w) {
         }));
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
-        //const allvalues=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+
         for (const val of allvaluesobjects) {
           counter[val.title]=val.totalJobs
         }
@@ -219,8 +219,8 @@ async function loadJobs(_$w) {
     }
   
     q.find()
-      .then((res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
-        updateCurrentJobs(res);
+      .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
+       await updateCurrentJobs(res);
         // currentJobs=res.items.map(job=>job._id);
         console.log("updated currentJobs adfger fucniton: ",currentJobs)
       })
