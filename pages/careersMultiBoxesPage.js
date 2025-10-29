@@ -7,7 +7,7 @@ const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
 const countsByFieldId = new Map();
 let alljobs=[]
-let valueToJobs=new Map();
+let valueToJobs={}
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
     await loadFilters(_$w);
@@ -49,8 +49,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
     if(valueToJobs.size===0) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         for (const value of allvaluesobjects) {
-            const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, value, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-            valueToJobs.set(value._id, result.items);
+            valueToJobs[value._id]= value.jobIds;
         }
     }
     console.log("valueToJobs: ",valueToJobs)
