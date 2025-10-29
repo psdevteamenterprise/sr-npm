@@ -17,14 +17,10 @@ async function careersMultiBoxesPageOnReady(_$w) {
       }
     if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        console.log("allvaluesobjects: ",allvaluesobjects)
         for (const value of allvaluesobjects) {
-            console.log("value: ",value)
             valueToJobs[value._id]= value.jobIds;
         }
     }
-    console.log("valueToJobs: ",valueToJobs)
-    console.log("alljobs: ",alljobs)
     
     await  loadJobs(_$w);
     await loadFilters(_$w);
@@ -212,6 +208,7 @@ async function loadJobs(_$w) {
   function applyJobFilters(_$w,filterByField) {
     console.log("applying job filters")
     console.log("selectedByField: ",selectedByField)
+
     let q = wixData.query(COLLECTIONS.JOBS)
   
     // AND across categories, OR within each category
@@ -222,9 +219,10 @@ async function loadJobs(_$w) {
     }
   
     q.find()
-      .then((res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items; 
-        currentJobs=res.items.map(job=>job._id);
-        console.log("updated currentJobs: ",currentJobs)
+      .then((res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
+        updateCurrentJobs(res);
+        // currentJobs=res.items.map(job=>job._id);
+        console.log("updated currentJobs adfger fucniton: ",currentJobs)
       })
       .catch((err) => { console.error('Failed to filter jobs:', err); });
   }
@@ -323,6 +321,16 @@ async function refreshFacetCounts(_$w) {
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
+  }
+
+  async function updateCurrentJobs(res) {
+    currentJobs = [];
+    currentJobs.push(res.items.map(job=>job._id));
+    while (res.hasNext()) {
+      res = await res.next();
+      currentJobs.push(...res.items.map(job=>job._id));
+    }
+    console.log("updated currentJobs inisde new function: ",currentJobs)
   }
 
   async function findAll(q) {
