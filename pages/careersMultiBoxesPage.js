@@ -243,7 +243,7 @@ async function refreshFacetCounts(_$w) {
         for(const option of currentoptions) {
             for (const jobId of currentJobs) {
                 if (valueToJobs[option.value].includes(jobId)) {
-                    counter.set(option.value, (countsByFieldId.get(option.value) || 0) + 1);
+                    counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
         }
