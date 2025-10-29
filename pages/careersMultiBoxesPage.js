@@ -43,17 +43,19 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
-    // if(alljobs.length===0) {
-    //     alljobs=await getAllRecords(COLLECTIONS.JOBS);
-    //   }
+    if(alljobs.length===0) {
+        alljobs=await getAllRecords(COLLECTIONS.JOBS);
+      }
     if(valueToJobs.size===0) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        console.log("allvaluesobjects@@@@@@@@@@@@@: ",allvaluesobjects)
         for (const value of allvaluesobjects) {
+            console.log("value@@@@@@@@@@@@@: ",value)
             valueToJobs[value._id]= value.jobIds;
         }
     }
     console.log("valueToJobs: ",valueToJobs)
-    //console.log("alljobs: ",alljobs)
+    console.log("alljobs: ",alljobs)
     
 }
 
