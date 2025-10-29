@@ -218,7 +218,7 @@ async function loadJobs(_$w) {
       }
     }
   
-    q.find()
+   await q.find()
       .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
        await updateCurrentJobs(res);
         // currentJobs=res.items.map(job=>job._id);
