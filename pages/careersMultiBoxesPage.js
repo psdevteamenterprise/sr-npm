@@ -28,7 +28,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
     
         // Deselect this value from both the selected map and the multibox
-          $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(() => {
+          $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
             if (!fieldId || !valueId) return;
@@ -50,12 +50,12 @@ async function careersMultiBoxesPageOnReady(_$w) {
               }
             });
     
-            applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
-            refreshFacetCounts(_$w);
-            updateSelectedValuesRepeater(_$w);
+            await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
+            await refreshFacetCounts(_$w);
+            await updateSelectedValuesRepeater(_$w);
           });
     });
-    updateSelectedValuesRepeater(_$w);
+    await updateSelectedValuesRepeater(_$w);
    
 }
 
@@ -118,16 +118,16 @@ async function loadJobs(_$w) {
   
         //$item(CHECKBOX_GROUP_ID).options = originalOptions;
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).selectedIndices = []; // start empty
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange((ev) => {
+        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange(async (ev) => {
       const selected = ev.target.value; // array of selected value IDs
       if (selected && selected.length) {
         selectedByField.set(fieldId, selected);
       } else {
         selectedByField.delete(fieldId);
       }
-      applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
-      refreshFacetCounts(_$w);    // recompute and update counts in all lists
-      updateSelectedValuesRepeater(_$w);
+      await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
+      await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+      await updateSelectedValuesRepeater(_$w);
   
     });
     
@@ -205,7 +205,7 @@ async function loadJobs(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
   }
 
-  function applyJobFilters(_$w,filterByField) {
+  async function applyJobFilters(_$w,filterByField) {
     console.log("applying job filters")
     console.log("selectedByField: ",selectedByField)
 
