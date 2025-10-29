@@ -15,7 +15,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
         currentJobs=alljobs.map(job=>job._id);
       }
-    if(valueToJobs.size===0) {
+    if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         console.log("allvaluesobjects: ",allvaluesobjects)
         for (const value of allvaluesobjects) {
