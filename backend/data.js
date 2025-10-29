@@ -198,7 +198,6 @@ async function populateCustomValuesCollection(customFieldsValues) {
         totalJobs:customValuesToJobs[valueId].length,
         jobIds:customValuesToJobs[valueId],
       })
-      console.log("customValuesToJobs[valueId]",customValuesToJobs[valueId])
     }
     
   }
