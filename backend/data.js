@@ -468,7 +468,6 @@ async function syncJobsFast() {
 }
 
 
-
 async function clearCollections() {
   console.log("clearing collections");
   await Promise.all([
