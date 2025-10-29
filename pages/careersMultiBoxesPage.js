@@ -189,11 +189,14 @@ async function loadJobs(_$w) {
         value: o.value
       };
     });
-  
+    console.log("base: ",base)
+    console.log("countsMap: ",countsMap)
+    console.log("withCounts: ",withCounts)
     // Apply search
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
+      console.log("filte@$@#@#$red: ",filtered)
   
     // Preserve currently selected values that are still visible
     const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
@@ -217,7 +220,10 @@ async function loadJobs(_$w) {
     }
   
     q.find()
-      .then((res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items; })
+      .then((res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items; 
+        currentJobs=res.items.map(job=>job._id);
+        console.log("updated currentJobs: ",currentJobs)
+      })
       .catch((err) => { console.error('Failed to filter jobs:', err); });
   }
 
@@ -229,6 +235,15 @@ async function refreshFacetCounts(_$w) {
     }
   
     const fieldIds = Array.from(optionsByFieldId.keys());
+    for (const valueId of valueToJobs.keys()) {
+        for (const jobId of currentJobs) {
+            if (valueToJobs[valueId].includes(jobId)) {
+                countsByFieldId.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
+            }
+        }
+    }
+
+
     // Run per-field queries in parallel
     const tasks = fieldIds.map(async (fieldId) => {
       // Build query with selections from all other fields
