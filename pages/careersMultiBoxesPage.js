@@ -235,7 +235,7 @@ async function refreshFacetCounts(_$w) {
     }
   
     const fieldIds = Array.from(optionsByFieldId.keys());
-    for (const valueId of valueToJobs.keys()) {
+    for (const valueId of Object.keys(valueToJobs)) {
         for (const jobId of currentJobs) {
             if (valueToJobs[valueId].includes(jobId)) {
                 countsByFieldId.set(valueId, (countsByFieldId.get(valueId) || 0) + 1);
