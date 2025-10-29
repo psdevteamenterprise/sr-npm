@@ -188,6 +188,7 @@ async function populateCustomFieldsCollection(customFields) {
 }
 async function populateCustomValuesCollection(customFieldsValues) {
   valuesToinsert=[]
+  console.log("customValuesToJobs@@@@@@@@@@@@@: ",customValuesToJobs)
   for (const fieldId of Object.keys(customFieldsValues)) {
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
