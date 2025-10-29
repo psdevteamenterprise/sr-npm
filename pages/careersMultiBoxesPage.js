@@ -6,6 +6,7 @@ let valuesByFieldIdGlobal = null;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
 const countsByFieldId = new Map();
+const alljobs=[]
 
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
@@ -42,6 +43,9 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
+    if(alljobs.length===0) {
+      alljobs=await getAllRecords(COLLECTIONS.JOBS);
+    }
 }
 
 async function loadJobs(_$w) {

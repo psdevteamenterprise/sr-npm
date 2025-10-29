@@ -171,9 +171,6 @@ async function saveJobsDataToCMS() {
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
-async function insertValuesReference(jobId) {
-  await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, jobToCustomValues[jobId]);
-}
 async function insertJobsReference(valueId) {
   await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, customValuesToJobs[valueId]);
 }
@@ -255,9 +252,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
               referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
-            // if (siteconfig.customFields==="true") {
-            // await insertValuesReference(job._id);
-            // }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
