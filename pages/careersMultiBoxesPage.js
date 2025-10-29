@@ -241,12 +241,15 @@ async function refreshFacetCounts(_$w) {
         console.log("currentoptions@@@@@@@@@@@@@: ",currentoptions)
         let counter=new Map();
         for(const option of currentoptions) {
+            console.log("currentJobs length: ",currentJobs.length)
             for (const jobId of currentJobs) {
                 if (valueToJobs[option.value].includes(jobId)) {
                     counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
         }
+        console.log("counter: ",counter)
+        console.log("fieldId: ",fieldId)
         countsByFieldId.set(fieldId, counter);
     }
     console.log("new countsByFieldId: ",countsByFieldId)
