@@ -6,7 +6,7 @@ let valuesByFieldIdGlobal = null;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
 const countsByFieldId = new Map();
-let alljobs=[]
+let alljobsIds=[]
 let valueToJobs={}
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
@@ -43,8 +43,9 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     updateSelectedValuesRepeater(_$w);
-    if(alljobs.length===0) {
-        alljobs=await getAllRecords(COLLECTIONS.JOBS);
+    if(alljobsIds.length===0) {
+        let alljobsresult=await getAllRecords(COLLECTIONS.JOBS);
+        alljobsIds=alljobsresult.items.map(job=>job._id);
       }
     if(valueToJobs.size===0) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
@@ -55,7 +56,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         }
     }
     console.log("valueToJobs: ",valueToJobs)
-    console.log("alljobs: ",alljobs)
+    console.log("alljobsIds: ",alljobsIds)
     
 }
 
