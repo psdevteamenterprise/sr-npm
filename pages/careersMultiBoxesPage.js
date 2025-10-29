@@ -50,7 +50,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         for (const value of allvaluesobjects) {
             const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, value, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-            valueToJobs.add(value._id, result.items);
+            valueToJobs.set(value._id, result.items);
         }
     }
     console.log("valueToJobs: ",valueToJobs)
