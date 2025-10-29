@@ -6,8 +6,8 @@ let valuesByFieldIdGlobal = null;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
 const countsByFieldId = new Map();
-const alljobs=[]
-
+let alljobs=[]
+let valueToJobs=new Map();
 async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
     await loadFilters(_$w);
@@ -44,8 +44,18 @@ async function careersMultiBoxesPageOnReady(_$w) {
     });
     updateSelectedValuesRepeater(_$w);
     if(alljobs.length===0) {
-      alljobs=await getAllRecords(COLLECTIONS.JOBS);
+        alljobs=await getAllRecords(COLLECTIONS.JOBS);
+      }
+    if(valueToJobs.size===0) {
+        const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        for (const value of allvaluesobjects) {
+            const result=await wixData.queryReferenced(COLLECTIONS.CUSTOM_VALUES, value, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
+            valueToJobs.add(value._id, result.items);
+        }
     }
+    console.log("valueToJobs: ",valueToJobs)
+    console.log("alljobs: ",alljobs)
+    
 }
 
 async function loadJobs(_$w) {
@@ -191,6 +201,8 @@ async function loadJobs(_$w) {
   }
 
   function applyJobFilters(_$w,filterByField) {
+    console.log("applying job filters")
+    console.log("selectedByField: ",selectedByField)
     let q = wixData.query(COLLECTIONS.JOBS)
   
     // AND across categories, OR within each category
@@ -235,7 +247,7 @@ async function refreshFacetCounts(_$w) {
       const counts = new Map(); // valueId -> count
       for (const job of jobs) {
         const referencedfield= await  wixData.queryReferenced(COLLECTIONS.JOBS, job, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)  
-        console.log("referencedfield: ",referencedfield)
+        //console.log("referencedfield: ",referencedfield)
         const vals = referencedfield.items
         //const vals = job[JOB_VALUES_FIELD] || [];
         for (const val of vals) {
