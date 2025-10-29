@@ -187,8 +187,7 @@ async function populateCustomFieldsCollection(customFields) {
   await wixData.bulkSave(COLLECTIONS.CUSTOM_FIELDS, fieldstoinsert);
 }
 async function populateCustomValuesCollection(customFieldsValues) {
-  valuesToinsert=[]
-  console.log("customValuesToJobs@@@@@@@@@@@@@: ",customValuesToJobs)
+  let valuesToinsert=[]
   for (const fieldId of Object.keys(customFieldsValues)) {
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
@@ -199,8 +198,9 @@ async function populateCustomValuesCollection(customFieldsValues) {
         totalJobs:customValuesToJobs[valueId].length,
         jobIds:customValuesToJobs[valueId],
       })
+      console.log("customValuesToJobs[valueId]",customValuesToJobs[valueId])
     }
-    console.log("customValuesToJobs[valueId]",customValuesToJobs[valueId])
+    
   }
   await wixData.bulkSave(COLLECTIONS.CUSTOM_VALUES, valuesToinsert);
 }
