@@ -234,7 +234,7 @@ async function refreshFacetCounts(_$w) {
     //    return;
     // }
     
-  
+    console.log("current countsByFieldId: ",countsByFieldId)
     const fieldIds = Array.from(optionsByFieldId.keys());
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
@@ -249,7 +249,7 @@ async function refreshFacetCounts(_$w) {
         }
         countsByFieldId.set(fieldId, counter);
     }
-
+    console.log("new countsByFieldId: ",countsByFieldId)
     //     for (const valueId of Object.keys(valueToJobs)) {
     //         for (const jobId of currentJobs) {
     //             if (valueToJobs[valueId].includes(jobId)) {
