@@ -179,17 +179,21 @@ async function loadJobs(_$w) {
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     console.log("base before filtering: ",base)
     console.log("countsMap: ",countsMap)
-    for (const element of countsMap)
+    let filteredbase=[]
+
+
+    
+    for (const element of base)
     {
         console.log("element: ",element)
-        if (element[1]===0)
+        if(countsMap.get(element.value))
         {
-            base= base.filter(o => o.value !== element[0])
+            filteredbase.push(element)
         }
     }
-    console.log("base after filtering: ",base)
+    console.log("base after filtering: ",filteredbase)
     // Build display options with counts
-    const withCounts = base.map(o => {
+    const withCounts = filteredbase.map(o => {
       const count = countsMap.get(o.value)
       return {
         label: `${o.label} (${count})`,
