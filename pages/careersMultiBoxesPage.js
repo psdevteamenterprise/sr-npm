@@ -15,7 +15,6 @@ async function careersMultiBoxesPageOnReady(_$w) {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
         currentJobs=alljobs;
-        console.log("alljobs: ",alljobs)
       }
     if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
@@ -84,18 +83,15 @@ async function loadJobs(_$w) {
     try {
       // 1) Load all categories (fields)
       let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
-      fields.push({_id:"Location",title:"Location"});
-      console.log("fields: ",fields)
+      fields.push({_id:"Location",title:"Location"}); 
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
       const cities=await getAllRecords(COLLECTIONS.CITIES);
-      console.log("cities: ",cities)
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
       }
       // 2) Load all values once and group them by referenced field
      
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
-      console.log("valuesByFieldId: ",valuesByFieldId)
       valuesByFieldId.set("Location",cities)
       console.log("valuesByFieldId after addubg cities: ",valuesByFieldId)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
@@ -110,13 +106,6 @@ async function loadJobs(_$w) {
   
         // Set the filter label (category name)
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
-
-        // if(fieldId==="Location") {
-        //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
-        //     label: city.city,
-        //     value: city._id
-        //   }));
-        // }
   
         // Build CheckboxGroup options for this field
         const fieldValues = valuesByFieldId.get(fieldId) || [];
@@ -256,10 +245,15 @@ async function loadJobs(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
+    console.log("filterByField: ",filterByField)
     if(filterByField!="Location") {
       filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
     }
+    else{
+        filterByField=JOBS_COLLECTION_FIELDS.CITY_TEXT;
+    }
   
+    console.log("selectedByField: ",selectedByField)
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
         for(job of finalFilteredJobs) {
