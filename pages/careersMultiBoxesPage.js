@@ -244,7 +244,7 @@ async function loadJobs(_$w) {
         for(job of currentJobs) {
             console.log("job: ",job)
             console.log("job[filterByField]: ",job[filterByField])
-            console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value))))
+            console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value)))
             if(job[filterByField].some(value=>values.includes(value))) {
                 console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
                 if(!alreadyAddedJobs.includes(job._id)) {
