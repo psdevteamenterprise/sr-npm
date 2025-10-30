@@ -7,7 +7,7 @@ const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 
-let jobToCustomValues = {}
+//let jobToCustomValues = {}
 let customValuesToJobs = {}
 let siteconfig;
 const EXCLUDED_CUSTOM_FIELDS = new Set(["Department"]);
@@ -62,12 +62,17 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
+function getLocation(position,basicJob) {
+
+  customValuesToJobs[basicJob.cityText] ? customValuesToJobs[basicJob.cityText].push(position.id) : customValuesToJobs[basicJob.cityText]=[position.id]
+
+}
 function getEmploymentType(position,customFieldsValues) {
   if (!customFieldsValues["employmentType"]) {
     customFieldsValues["employmentType"] = {};
   }
   customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
-  jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(position.typeOfEmployment.id) : jobToCustomValues[position.id]=[position.typeOfEmployment.id]
+  //jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(position.typeOfEmployment.id) : jobToCustomValues[position.id]=[position.typeOfEmployment.id]
   customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].push(position.id) : customValuesToJobs[position.typeOfEmployment.id]=[position.id]
 }
 
@@ -86,7 +91,7 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     }
     customFieldsValues[fieldId][valueId] = valueLabel;
 
-    jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
+    //jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
 }
@@ -125,6 +130,7 @@ async function saveJobsDataToCMS() {
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     getEmploymentType(position,customFieldsValues);
+    getLocation(position,basicJob);
     return basicJob;
   });
   if(siteconfig===undefined) {
@@ -309,7 +315,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   console.log(`counting jobs per ${field}.`);
   let results = await getAllPositions();
   const { jobsPerField, cityLocations,citylocationAddress } = iterateOverAllJobs(results, field);
-  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress);
+  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress,customValuesToJobs);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };

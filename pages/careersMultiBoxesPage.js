@@ -1,8 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
-const { auth } = require('@wix/essentials');
-const getAllRecordsElevated = auth.elevate(wixData.query);
+
 let valuesByFieldIdGlobal = null; 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
@@ -19,6 +18,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
       }
     if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        
         for (const value of allvaluesobjects) {
             valueToJobs[value._id]= value.jobIds;
         }
@@ -82,7 +82,8 @@ async function loadJobs(_$w) {
   async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
-      const fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+      let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+      fields.push({_id:"Location",title:"Location"});
       console.log("fields: ",fields)
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
       const cities=await getAllRecords(COLLECTIONS.CITIES);
@@ -156,15 +157,14 @@ async function loadJobs(_$w) {
       console.error('Failed to load filters:', err);
     }
   }
-  
+
   
   async function getAllRecords(collectionId) {
-    //let q = wixData.query(collectionId);
-    let q=getAllRecordsElevated(collectionId)
+    let q = wixData.query(collectionId);
   
   
     const items = [];
-    let res = await q.limit(1000).find()
+    let res = await q.limit(1000).find();
     items.push(...res.items);
   
     while (res.hasNext()) {
