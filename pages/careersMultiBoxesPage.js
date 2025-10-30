@@ -72,6 +72,7 @@ async function loadJobs(_$w) {
 
   function updateTotalJobsCountText(_$w) {
     _$w('#totalJobsCountText').text = `${currentJobs.length} Jobs`;
+    
   }
 
   async function loadFilters(_$w) {
