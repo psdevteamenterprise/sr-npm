@@ -93,7 +93,6 @@ async function loadJobs(_$w) {
      
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
-      console.log("valuesByFieldId after addubg cities: ",valuesByFieldId)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
   
   
@@ -109,7 +108,6 @@ async function loadJobs(_$w) {
   
         // Build CheckboxGroup options for this field
         const fieldValues = valuesByFieldId.get(fieldId) || [];
-        console.log("fieldValues: ",fieldValues)
         let originalOptions=[];
         if(fieldId==="Location") {
             originalOptions=fieldValues.map(city=>({
@@ -120,13 +118,7 @@ async function loadJobs(_$w) {
         else{
             originalOptions=fieldValues
         }
-        console.log("originalOptions: ",originalOptions)
-    //     else{
-    //      originalOptions = fieldValues.map(v => ({
-    //       label: v.title ,
-    //       value: v._id
-    //     }));
-    // }
+
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
 
@@ -245,7 +237,6 @@ async function loadJobs(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
-    console.log("filterByField: ",filterByField)
     if(filterByField!="Location") {
       filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
     }
@@ -257,16 +248,18 @@ async function loadJobs(_$w) {
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
         for(job of finalFilteredJobs) {
-            let jobVal;
             if(filterByField===JOBS_COLLECTION_FIELDS.CITY_TEXT){
-                jobVal=[job[filterByField]]
+                //if it is location then we check if selecred values (which is an array) have job city text
+                if(values.includes(job[filterByField])) {
+                    if(!addedJobsIds.includes(job._id)) {
+                        tempFilteredJobs.push(job);
+                        addedJobsIds.push(job._id);
+                    }
+                }
             }
             else{
-                jobVal=job[filterByField]
-            }
-            console.log("jobVal: ",jobVal)
-            console.log("jobVal.some(value=>values.includes(value._id)): ",jobVal.some(value=>values.includes(value._id)))
-            if(jobVal.some(value=>values.includes(value._id))) {
+                //if it is not location then we check if selecred values (which is an array) have one of the job values (whcih is also an array)
+                if(job[filterByField].some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
                     tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
