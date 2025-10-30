@@ -31,8 +31,10 @@ async function careersMultiBoxesPageOnReady(_$w) {
     
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
+            
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
+            dontUpdateThisCheckBox=fieldId;
             if (!fieldId || !valueId) return;
     
             const existing = selectedByField.get(fieldId) || [];
