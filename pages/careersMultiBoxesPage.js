@@ -3,6 +3,7 @@ const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
 
 let valuesByFieldIdGlobal = null; 
+let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
 const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts for each valueId
@@ -117,6 +118,7 @@ async function loadJobs(_$w) {
   
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).selectedIndices = []; // start empty
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange(async (ev) => {
+        dontUpdateThisCheckBox=fieldId;
       const selected = ev.target.value; // array of selected value IDs
       if (selected && selected.length) {
         selectedByField.set(fieldId, selected);
@@ -179,6 +181,11 @@ async function loadJobs(_$w) {
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     console.log("base before filtering: ",base)
     console.log("countsMap: ",countsMap)
+    if(dontUpdateThisCheckBox===fieldId)
+    {
+        dontUpdateThisCheckBox=null;
+        return;
+    }
     let filteredbase=[]
 
 
