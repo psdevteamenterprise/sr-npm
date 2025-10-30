@@ -2,14 +2,13 @@ const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = r
 const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
 
-let valuesByFieldIdGlobal = null; 
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
-const optionsByFieldId = new Map(); // fieldId -> [{label, value}]
-const countsByFieldId = new Map();
-let alljobs=[]
-let allvaluesobjects=[]
-let valueToJobs={}
-let currentJobs=[]
+const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
+const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts for each valueId
+let alljobs=[] // all jobs in the database
+let allvaluesobjects=[] // all values in the database
+let valueToJobs={} // valueId -> array of jobIdsxw
+let currentJobs=[] // current jobs that are displayed in the jobs repeater
 async function careersMultiBoxesPageOnReady(_$w) {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
@@ -24,6 +23,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
     
     await  loadJobs(_$w);
     await loadFilters(_$w);
+    //selected values repeater on item ready
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
     
@@ -53,6 +53,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
             await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
             await refreshFacetCounts(_$w);
             await updateSelectedValuesRepeater(_$w);
+            updateTotalJobsCountText(_$w);
           });
     });
     await updateSelectedValuesRepeater(_$w);
@@ -65,7 +66,11 @@ async function loadJobs(_$w) {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
     });
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = alljobs;
-  
+    updateTotalJobsCountText(_$w);
+  }
+
+  function updateTotalJobsCountText(_$w) {
+    _$w('#totalJobsCountText').text = `${currentJobs.length} Jobs`;
   }
 
   async function loadFilters(_$w) {
@@ -108,7 +113,6 @@ async function loadJobs(_$w) {
         // Initialize UI
         updateOptionsUI($item, fieldId, ''); // no search query
   
-        //$item(CHECKBOX_GROUP_ID).options = originalOptions;
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).selectedIndices = []; // start empty
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange(async (ev) => {
       const selected = ev.target.value; // array of selected value IDs
@@ -120,7 +124,7 @@ async function loadJobs(_$w) {
       await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
       await refreshFacetCounts(_$w);    // recompute and update counts in all lists
       await updateSelectedValuesRepeater(_$w);
-  
+      updateTotalJobsCountText(_$w);
     });
     
           // Input typing -> only filter this list’s visible options (no Jobs query)
@@ -212,7 +216,6 @@ async function loadJobs(_$w) {
 
 
 async function refreshFacetCounts(_$w) {    
-    console.log("current countsByFieldId: ",countsByFieldId)
     const fieldIds = Array.from(optionsByFieldId.keys());
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
@@ -245,16 +248,13 @@ async function refreshFacetCounts(_$w) {
   }
 
   function updateSelectedValuesRepeater(_$w) {
-    console.log("updating selected values repeater")
     const selectedItems = [];
     for (const [fieldId, valueIds] of selectedByField.entries()) {
       const opts = optionsByFieldId.get(fieldId) || [];
-      const byId = new Map(opts.map(o => [o.value, o.label]));
       for (const id of valueIds) {
-        const label = byId.get(id);
-        if (label) {
+        const found = opts.find((option) => option.value === id);
+        const label = found.label;
           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
-        }
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
@@ -267,9 +267,7 @@ async function refreshFacetCounts(_$w) {
       res = await res.next();
       newcurrentJobs.push(...res.items.map(job=>job._id));
     }
-    console.log("newcurrentJobs inisde new function: ",newcurrentJobs)
     currentJobs = newcurrentJobs;
-    console.log("updated currentJobs inisde new function: ",currentJobs)
   }
 
 module.exports = {
