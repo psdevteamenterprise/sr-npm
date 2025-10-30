@@ -177,9 +177,17 @@ async function loadJobs(_$w) {
   function updateOptionsUI($item, fieldId, searchQuery) {
     const base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
+    let countsMapWithoutZero=new Map()
+    for (const element of countsMap)
+    {
+        if (element[1]!=0)
+        {
+            countsMapWithoutZero.set(element[0],element[1])
+        }
+    }
     // Build display options with counts
     const withCounts = base.map(o => {
-      const count = countsMap.get(o.value) || 0;
+      const count = countsMapWithoutZero.get(o.value)
       return {
         label: `${o.label} (${count})`,
         value: o.value
@@ -253,16 +261,29 @@ async function refreshFacetCounts(_$w) {
     const selectedItems = [];
     for (const [fieldId, valueIds] of selectedByField.entries()) {
       const opts = optionsByFieldId.get(fieldId) || [];
-      const byId = new Map(opts.map(o => [o.value, o.label]));
       for (const id of valueIds) {
-        const label = byId.get(id);
-        if (label) {
+        const found = opts.find((option) => option.value === id);
+        const label = found.label;
           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
-        }
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
   }
+
+//   function updateSelectedValuesRepeater(_$w) {
+//     const selectedItems = [];
+//     for (const [fieldId, valueIds] of selectedByField.entries()) {
+//       const opts = optionsByFieldId.get(fieldId) || [];
+//       const byId = new Map(opts.map(o => [o.value, o.label]));
+//       for (const id of valueIds) {
+//         const label = byId.get(id);
+//         if (label) {
+//           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
+//         }
+//       }
+//     }
+//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
+//   }
 
   async function updateCurrentJobs(res) {
     let newcurrentJobs = [];
