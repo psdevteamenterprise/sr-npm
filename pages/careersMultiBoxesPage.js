@@ -93,7 +93,7 @@ async function loadJobs(_$w) {
      
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       console.log("valuesByFieldId: ",valuesByFieldId)
-      valuesByFieldId["Location"]=cities
+      valuesByFieldId.set("Location",cities)
       console.log("valuesByFieldId after addubg cities: ",valuesByFieldId)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
   
@@ -126,11 +126,15 @@ async function loadJobs(_$w) {
             }));
         }
         else{
-         originalOptions = fieldValues.map(v => ({
-          label: v.title ,
-          value: v._id
-        }));
-    }
+            originalOptions=fieldValues
+        }
+        console.log("originalOptions: ",originalOptions)
+    //     else{
+    //      originalOptions = fieldValues.map(v => ({
+    //       label: v.title ,
+    //       value: v._id
+    //     }));
+    // }
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
 
@@ -300,9 +304,11 @@ async function refreshFacetCounts(_$w) {
     const map = new Map();
     for (const v of values) {
       const ref = v[refKey]; // should be the _id of the CustomFields item
-      if (!ref) continue;
       if (!map.has(ref)) map.set(ref, []);
-      map.get(ref).push(v);
+      map.get(ref).push({
+        label: v.title ,
+        value: v._id
+      });
     }
     return map;
   }
