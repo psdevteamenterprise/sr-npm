@@ -236,7 +236,7 @@ async function loadJobs(_$w) {
     console.log(alljobs)
     let newFilteredJobs=[]
     let addedJobsIds=[]
-    //console.log("selectedByField: ",selectedByField)
+    console.log("selectedByField: ",selectedByField)
   
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
