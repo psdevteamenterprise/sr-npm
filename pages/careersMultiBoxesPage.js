@@ -177,6 +177,7 @@ async function loadJobs(_$w) {
   function updateOptionsUI($item, fieldId, searchQuery) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
+    console.log("base before filtering: ",base)
     for (const element of countsMap)
     {
         if (element[1]===0)
@@ -184,6 +185,7 @@ async function loadJobs(_$w) {
             base= base.filter(o => o.value !== element[0])
         }
     }
+    console.log("base after filtering: ",base)
     // Build display options with counts
     const withCounts = base.map(o => {
       const count = countsMap.get(o.value)
@@ -192,6 +194,7 @@ async function loadJobs(_$w) {
         value: o.value
       };
     });
+    console.log("withCounts: ",withCounts)
     // Apply search
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
@@ -201,6 +204,8 @@ async function loadJobs(_$w) {
     const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
+    console.log("preserved: ",preserved)
+    console.log("filtered: ",filtered)
   
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = filtered;
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
