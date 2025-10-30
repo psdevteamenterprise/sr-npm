@@ -181,26 +181,19 @@ async function loadJobs(_$w) {
   function updateOptionsUI($item, fieldId, searchQuery) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    console.log("base before filtering: ",base)
-    console.log("countsMap: ",countsMap)
     if(dontUpdateThisCheckBox===fieldId)
     {
         dontUpdateThisCheckBox=null;
         return;
     }
     let filteredbase=[]
-
-
-    
     for (const element of base)
     {
-        console.log("element: ",element)
         if(countsMap.get(element.value))
         {
             filteredbase.push(element)
         }
     }
-    console.log("base after filtering: ",filteredbase)
     // Build display options with counts
     const withCounts = filteredbase.map(o => {
       const count = countsMap.get(o.value)
@@ -209,7 +202,6 @@ async function loadJobs(_$w) {
         value: o.value
       };
     });
-    console.log("withCounts: ",withCounts)
     // Apply search
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
@@ -219,8 +211,6 @@ async function loadJobs(_$w) {
     const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-    console.log("preserved: ",preserved)
-    console.log("filtered: ",filtered)
   
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = filtered;
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
@@ -289,21 +279,6 @@ async function refreshFacetCounts(_$w) {
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
   }
-
-//   function updateSelectedValuesRepeater(_$w) {
-//     const selectedItems = [];
-//     for (const [fieldId, valueIds] of selectedByField.entries()) {
-//       const opts = optionsByFieldId.get(fieldId) || [];
-//       const byId = new Map(opts.map(o => [o.value, o.label]));
-//       for (const id of valueIds) {
-//         const label = byId.get(id);
-//         if (label) {
-//           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
-//         }
-//       }
-//     }
-//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
-//   }
 
   async function updateCurrentJobs(res) {
     let newcurrentJobs = [];
