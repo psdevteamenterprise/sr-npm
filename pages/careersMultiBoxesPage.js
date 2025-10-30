@@ -249,6 +249,9 @@ async function loadJobs(_$w) {
     for (const [, values] of selectedByField.entries()) {
         for(job of finalFilteredJobs) {
             if(filterByField===JOBS_COLLECTION_FIELDS.CITY_TEXT){
+                console.log("job[filterByField]: ",job[filterByField])
+                console.log("values: ",values)
+                console.log("values.includes(job[filterByField]): ",values.includes(job[filterByField]))
                 //if it is location then we check if selecred values (which is an array) have job city text
                 if(values.includes(job[filterByField])) {
                     if(!addedJobsIds.includes(job._id)) {
@@ -258,6 +261,9 @@ async function loadJobs(_$w) {
                 }
             }
             else{
+                console.log("job[filterByField]: ",job[filterByField])
+                console.log("values: ",values)
+                console.log("job[filterByField].some(value=>values.includes(value._id)): ",job[filterByField].some(value=>values.includes(value._id)))
                 //if it is not location then we check if selecred values (which is an array) have one of the job values (whcih is also an array)
                 if(job[filterByField].some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
