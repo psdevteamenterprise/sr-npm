@@ -10,12 +10,12 @@ const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts 
 let alljobs=[] // all jobs in the database
 let allvaluesobjects=[] // all values in the database
 let valueToJobs={} // valueId -> array of jobIds
-let currentJobsIds=[] // current jobs that are displayed in the jobs repeater
+//let currentJobsIds=[] // current jobs that are displayed in the jobs repeater
 let currentJobs=[] // current jobs that are displayed in the jobs repeater
 async function careersMultiBoxesPageOnReady(_$w) {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
-        currentJobsIds=alljobs.map(job=>job._id);
+       // currentJobsIds=alljobs.map(job=>job._id);
         currentJobs=alljobs;
         console.log("alljobs: ",alljobs)
       }
@@ -78,7 +78,7 @@ async function loadJobs(_$w) {
   }
 
   function updateTotalJobsCountText(_$w) {
-    _$w('#totalJobsCountText').text = `${currentJobsIds.length} Jobs`;
+    _$w('#totalJobsCountText').text = `${currentJobs.length} Jobs`;
     
   }
 
@@ -234,14 +234,15 @@ async function loadJobs(_$w) {
   async function applyJobFilters(_$w,filterByField) {
     //let q = wixData.query(COLLECTIONS.JOBS)
     console.log(alljobs)
-    let newFilteredJobs=[]
+    let newFilteredJobs=[];
+    let currentAllJobs=alljobs;
     let addedJobsIds=[]
     console.log("selectedByField: ",selectedByField)
   
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
       //  console.log("values: ",values)
-        for(job of alljobs) {
+        for(job of currentAllJobs) {
             //console.log("job: ",job)
             //console.log("job[filterByField]: ",job[filterByField])
            // console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
@@ -253,7 +254,9 @@ async function loadJobs(_$w) {
                 }
             }
         }
-
+        addedJobsIds=[]
+        currentAllJobs=newFilteredJobs;
+        newFilteredJobs=[];
     //   if (values && values.length) {
         
     //     q = q.hasSome(filterByField, values);
@@ -263,7 +266,7 @@ async function loadJobs(_$w) {
     //console.log("alreadyAddedJobs: ",alreadyAddedJobs)
     console.log("newFilteredJobs: ",newFilteredJobs)
     currentJobs=newFilteredJobs;
-    currentJobsIds=addedJobsIds;
+    //  currentJobsIds=addedJobsIds;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = newFilteredJobs;
   
 //    await q.find()
@@ -276,6 +279,7 @@ async function loadJobs(_$w) {
 
 async function refreshFacetCounts(_$w) {    
     const fieldIds = Array.from(optionsByFieldId.keys());
+    const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
         let counter=new Map();
@@ -326,7 +330,7 @@ async function refreshFacetCounts(_$w) {
       res = await res.next();
       newcurrentJobs.push(...res.items.map(job=>job._id));
     }
-    currentJobsIds = newcurrentJobs;
+    currentJobs = newcurrentJobs;
   }
 
 module.exports = {
