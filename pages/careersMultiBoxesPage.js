@@ -257,10 +257,16 @@ async function loadJobs(_$w) {
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
         for(job of finalFilteredJobs) {
-            console.log("job[JOBS_COLLECTION_FIELDS.CITY_TEXT]: ",job[JOBS_COLLECTION_FIELDS.CITY_TEXT])
-            console.log("values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT])",values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT]))
-            
-            if(values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT]) || job[filterByField].some(value=>values.includes(value._id))) {
+            let jobVal;
+            if(filterByField===JOBS_COLLECTION_FIELDS.CITY_TEXT){
+                jobVal=[job[filterByField]]
+            }
+            else{
+                jobVal=job[filterByField]
+            }
+            console.log("jobVal: ",jobVal)
+            console.log("jobVal.some(value=>values.includes(value._id)): ",jobVal.some(value=>values.includes(value._id)))
+            if(jobVal.some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
                     tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
