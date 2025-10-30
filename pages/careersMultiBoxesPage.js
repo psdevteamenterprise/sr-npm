@@ -82,8 +82,10 @@ async function loadJobs(_$w) {
     try {
       // 1) Load all categories (fields)
       const fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+      console.log("fields: ",fields)
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
-  
+      const cities=await getAllRecords(COLLECTIONS.CITIES);
+      console.log("cities: ",cities)
       // 2) Load all values once and group them by referenced field
      
       const valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
