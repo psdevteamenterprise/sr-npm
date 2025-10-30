@@ -232,42 +232,45 @@ async function loadJobs(_$w) {
   }
 
   async function applyJobFilters(_$w,filterByField) {
-    let q = wixData.query(COLLECTIONS.JOBS)
+    //let q = wixData.query(COLLECTIONS.JOBS)
     console.log(currentJobs)
     let newFilteredJobs=[]
-    let alreadyAddedJobs=[]
-    console.log("selectedByField: ",selectedByField)
+    let addedJobsIds=[]
+    //console.log("selectedByField: ",selectedByField)
   
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
-        console.log("values: ",values)
+      //  console.log("values: ",values)
         for(job of currentJobs) {
-            console.log("job: ",job)
-            console.log("job[filterByField]: ",job[filterByField])
-            console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
+            //console.log("job: ",job)
+            //console.log("job[filterByField]: ",job[filterByField])
+           // console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
             if(job[filterByField].some(value=>values.includes(value._id))) {
-                console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
-                if(!alreadyAddedJobs.includes(job._id)) {
+               // console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
+                if(!addedJobsIds.includes(job._id)) {
                     newFilteredJobs.push(job);
-                    alreadyAddedJobs.push(job._id);
+                    addedJobsIds.push(job._id);
                 }
             }
         }
 
-      if (values && values.length) {
+    //   if (values && values.length) {
         
-        q = q.hasSome(filterByField, values);
+    //     q = q.hasSome(filterByField, values);
 
-      }
+    //   }
     }
-    console.log("alreadyAddedJobs: ",alreadyAddedJobs)
+    //console.log("alreadyAddedJobs: ",alreadyAddedJobs)
     console.log("newFilteredJobs: ",newFilteredJobs)
+    currentJobs=newFilteredJobs;
+    currentJobsIds=addedJobsIds;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = newFilteredJobs;
   
-   await q.find()
-      .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
-       await updateCurrentJobs(res);
-      })
-      .catch((err) => { console.error('Failed to filter jobs:', err); });
+//    await q.find()
+//       .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
+//        await updateCurrentJobs(res);
+//       })
+//       .catch((err) => { console.error('Failed to filter jobs:', err); });
   }
 
 
