@@ -11,7 +11,7 @@ const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 let customValuesToJobs = {}
 let locationToJobs = {}
 let siteconfig;
-const EXCLUDED_CUSTOM_FIELDS = new Set(["Department"]);
+const EXCLUDED_CUSTOM_FIELDS = new Set(["Department","COUNTRY"]);
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;

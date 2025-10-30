@@ -237,20 +237,23 @@ async function loadJobs(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
-    if(filterByField!="Location") {
-      filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
-    }
-    else{
-        filterByField=JOBS_COLLECTION_FIELDS.CITY_TEXT;
-    }
+    // if(filterByField!="Location") {
+    //   filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
+    // }
+    // else{
+    //     filterByField=JOBS_COLLECTION_FIELDS.CITY_TEXT;
+    // }
+    console.log("filterByField: ",filterByField)
   
     console.log("selectedByField: ",selectedByField)
     // AND across categories, OR within each category
-    for (const [, values] of selectedByField.entries()) {
+    for (const [key, values] of selectedByField.entries()) {
+        console.log("key: ",key)
+        console.log("values: ",values)
         for(job of finalFilteredJobs) {
-            if(filterByField===JOBS_COLLECTION_FIELDS.CITY_TEXT){
+            if(key==="Location"){
                 //if it is location then we check if selecred values (which is an array) have job city text
-                if(values.includes(job[filterByField])) {
+                if(values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT])) {
                     if(!addedJobsIds.includes(job._id)) {
                         tempFilteredJobs.push(job);
                         addedJobsIds.push(job._id);
