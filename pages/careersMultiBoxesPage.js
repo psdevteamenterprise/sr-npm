@@ -106,6 +106,13 @@ async function loadJobs(_$w) {
   
         // Set the filter label (category name)
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
+
+        // if(fieldId==="Location") {
+        //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
+        //     label: city.title,
+        //     value: city._id
+        //   }));
+        // }
   
         // Build CheckboxGroup options for this field
         const fieldValues = valuesByFieldId.get(fieldId) || [];
@@ -229,14 +236,17 @@ async function loadJobs(_$w) {
     console.log(currentJobs)
     let newFilteredJobs=[]
     let alreadyAddedJobs=[]
-    console.log(selectedByField)
+    console.log("selectedByField: ",selectedByField)
   
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
-        console.log(values)
+        console.log("values: ",values)
         for(job of currentJobs) {
+            console.log("job: ",job)
+            console.log("job[filterByField]: ",job[filterByField])
+            console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value))))
             if(job[filterByField].some(value=>values.includes(value))) {
-
+                console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
                 if(!alreadyAddedJobs.includes(job._id)) {
                     newFilteredJobs.push(job);
                     alreadyAddedJobs.push(job._id);
@@ -250,7 +260,8 @@ async function loadJobs(_$w) {
 
       }
     }
-    console.log(newFilteredJobs)
+    console.log("alreadyAddedJobs: ",alreadyAddedJobs)
+    console.log("newFilteredJobs: ",newFilteredJobs)
   
    await q.find()
       .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
