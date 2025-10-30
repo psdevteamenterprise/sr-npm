@@ -175,19 +175,18 @@ async function loadJobs(_$w) {
   };
 
   function updateOptionsUI($item, fieldId, searchQuery) {
-    const base = optionsByFieldId.get(fieldId) || [];
+    let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    let countsMapWithoutZero=new Map()
     for (const element of countsMap)
     {
-        if (element[1]!=0)
+        if (element[1]===0)
         {
-            countsMapWithoutZero.set(element[0],element[1])
+            base= base.filter(o => o.value !== element[0])
         }
     }
     // Build display options with counts
     const withCounts = base.map(o => {
-      const count = countsMapWithoutZero.get(o.value)
+      const count = countsMap.get(o.value)
       return {
         label: `${o.label} (${count})`,
         value: o.value
