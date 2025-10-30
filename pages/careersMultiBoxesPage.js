@@ -2,6 +2,7 @@ const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = r
 const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
 
+let valuesByFieldIdGlobal = null; 
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
 const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts for each valueId
@@ -251,10 +252,12 @@ async function refreshFacetCounts(_$w) {
     const selectedItems = [];
     for (const [fieldId, valueIds] of selectedByField.entries()) {
       const opts = optionsByFieldId.get(fieldId) || [];
+      const byId = new Map(opts.map(o => [o.value, o.label]));
       for (const id of valueIds) {
-        const found = opts.find((option) => option.value === id);
-        const label = found.label;
+        const label = byId.get(id);
+        if (label) {
           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
+        }
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
