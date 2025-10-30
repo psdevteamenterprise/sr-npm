@@ -244,7 +244,7 @@ async function loadJobs(_$w) {
       //  console.log("values: ",values)
         for(job of currentAllJobs) {
             //console.log("job: ",job)
-            //console.log("job[filterByField]: ",job[filterByField])
+            console.log("job[filterByField]: ",job[filterByField])
            // console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
             if(job[filterByField].some(value=>values.includes(value._id))) {
                // console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
@@ -264,10 +264,11 @@ async function loadJobs(_$w) {
     //   }
     }
     //console.log("alreadyAddedJobs: ",alreadyAddedJobs)
-    console.log("newFilteredJobs: ",newFilteredJobs)
-    currentJobs=newFilteredJobs;
+    console.log("newFilteredJobs: ",currentAllJobs)
+    console.log("newFilteredJobs length: ",currentAllJobs.length)
+    currentJobs=currentAllJobs;
     //  currentJobsIds=addedJobsIds;
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = newFilteredJobs;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = currentAllJobs;
   
 //    await q.find()
 //       .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
