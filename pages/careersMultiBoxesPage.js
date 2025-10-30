@@ -275,6 +275,7 @@ async function loadJobs(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = currentJobs;
   
   }
+}
 
 
 async function refreshFacetCounts(_$w) {    
