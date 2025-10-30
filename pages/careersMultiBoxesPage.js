@@ -15,10 +15,11 @@ async function careersMultiBoxesPageOnReady(_$w) {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
         currentJobs=alljobs.map(job=>job._id);
+        console.log("alljobs: ",alljobs)
       }
     if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        
+
         for (const value of allvaluesobjects) {
             valueToJobs[value._id]= value.jobIds;
         }
@@ -160,7 +161,7 @@ async function loadJobs(_$w) {
 
   
   async function getAllRecords(collectionId) {
-    let q = wixData.query(collectionId);
+    let q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
   
   
     const items = [];
