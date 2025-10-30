@@ -178,8 +178,10 @@ async function loadJobs(_$w) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     console.log("base before filtering: ",base)
+    console.log("countsMap: ",countsMap)
     for (const element of countsMap)
     {
+        console.log("element: ",element)
         if (element[1]===0)
         {
             base= base.filter(o => o.value !== element[0])
@@ -209,7 +211,7 @@ async function loadJobs(_$w) {
   
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = filtered;
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
-    
+
   }
 
   async function applyJobFilters(_$w,filterByField) {
