@@ -54,6 +54,7 @@ const CITIES_COLLECTION_FIELDS = {
   LOCATION_ADDRESS: 'locationAddress',
   COUNT: 'count',
   COUNTRY: 'country',
+  JOB_IDS: 'jobIds',
 }
 const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
@@ -67,6 +68,7 @@ const COLLECTIONS_FIELDS = {
       {key:'locationAddress', type: 'ADDRESS'},
       {key:'count', type: 'NUMBER'},
       {key:'country', type: 'TEXT'},
+      {key:'jobIds', type: 'ARRAY'},
     ],
     JOBS: [
         {key:'location', type: 'OBJECT'},

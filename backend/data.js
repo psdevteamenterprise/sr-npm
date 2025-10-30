@@ -9,6 +9,7 @@ const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 //let jobToCustomValues = {}
 let customValuesToJobs = {}
+let locationToJobs = {}
 let siteconfig;
 const EXCLUDED_CUSTOM_FIELDS = new Set(["Department"]);
 
@@ -64,7 +65,7 @@ function validateSingleDesiredBrand(desiredBrand) {
 }
 function getLocation(position,basicJob) {
 
-  customValuesToJobs[basicJob.cityText] ? customValuesToJobs[basicJob.cityText].push(position.id) : customValuesToJobs[basicJob.cityText]=[position.id]
+  locationToJobs[basicJob.cityText] ? locationToJobs[basicJob.cityText].push(position.id) : locationToJobs[basicJob.cityText]=[position.id]
 
 }
 function getEmploymentType(position,customFieldsValues) {
@@ -315,7 +316,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   console.log(`counting jobs per ${field}.`);
   let results = await getAllPositions();
   const { jobsPerField, cityLocations,citylocationAddress } = iterateOverAllJobs(results, field);
-  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress,customValuesToJobs);
+  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress,locationToJobs);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
