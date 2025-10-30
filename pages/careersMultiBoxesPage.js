@@ -257,7 +257,7 @@ async function loadJobs(_$w) {
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
         for(job of finalFilteredJobs) {
-            if(job[filterByField].some(value=>values.includes(value._id))) {
+            if(values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT]) || job[filterByField].some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
                     tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
