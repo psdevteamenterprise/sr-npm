@@ -258,11 +258,8 @@ async function loadJobs(_$w) {
                 }
             }
             else{
-           
-            console.log("jobVal: ",jobVal)
-            console.log("jobVal.some(value=>values.includes(value._id)): ",jobVal.some(value=>values.includes(value._id)))
             //if it is not location then we check if selecred values (which is an array) have one of the job values (whcih is also an array)
-            if(jobVal.some(value=>values.includes(value._id))) {
+            if(job[filterByField].some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
                     tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
