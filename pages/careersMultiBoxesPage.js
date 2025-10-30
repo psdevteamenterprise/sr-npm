@@ -237,15 +237,6 @@ async function loadJobs(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
-    // if(filterByField!="Location") {
-    //   filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
-    // }
-    // else{
-    //     filterByField=JOBS_COLLECTION_FIELDS.CITY_TEXT;
-    // }
-    console.log("filterByField: ",filterByField)
-  
-    console.log("selectedByField: ",selectedByField)
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
         console.log("key: ",key)

@@ -7,7 +7,7 @@ const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 
-//let jobToCustomValues = {}
+
 let customValuesToJobs = {}
 let locationToJobs = {}
 let siteconfig;
@@ -73,7 +73,6 @@ function getEmploymentType(position,customFieldsValues) {
     customFieldsValues["employmentType"] = {};
   }
   customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
-  //jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(position.typeOfEmployment.id) : jobToCustomValues[position.id]=[position.typeOfEmployment.id]
   customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].push(position.id) : customValuesToJobs[position.typeOfEmployment.id]=[position.id]
 }
 
@@ -92,7 +91,6 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     }
     customFieldsValues[fieldId][valueId] = valueLabel;
 
-    //jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
 }
