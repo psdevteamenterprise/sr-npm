@@ -91,7 +91,10 @@ async function loadJobs(_$w) {
       console.log("cities: ",cities)
       // 2) Load all values once and group them by referenced field
      
-      const valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
+      let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
+      console.log("valuesByFieldId: ",valuesByFieldId)
+      valuesByFieldId["Location"]=cities
+      console.log("valuesByFieldId after addubg cities: ",valuesByFieldId)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
   
   
@@ -105,24 +108,37 @@ async function loadJobs(_$w) {
         // Set the filter label (category name)
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
 
-        if(fieldId==="Location") {
-          $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
-            label: city.city,
-            value: city._id
-          }));
-        }
+        // if(fieldId==="Location") {
+        //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
+        //     label: city.city,
+        //     value: city._id
+        //   }));
+        // }
   
         // Build CheckboxGroup options for this field
         const fieldValues = valuesByFieldId.get(fieldId) || [];
-        const originalOptions = fieldValues.map(v => ({
+        console.log("fieldValues: ",fieldValues)
+        let originalOptions=[];
+        if(fieldId==="Location") {
+            originalOptions=fieldValues.map(city=>({
+                label: city.city,
+                value: city._id
+            }));
+        }
+        else{
+         originalOptions = fieldValues.map(v => ({
           label: v.title ,
           value: v._id
         }));
+    }
         optionsByFieldId.set(fieldId, originalOptions);
         const counter={}
 
         for (const val of allvaluesobjects) {
           counter[val.title]=val.totalJobs
+        }
+        for(const city of cities) {
+          counter[city.city]=city.count
         }
 
         countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
