@@ -262,7 +262,7 @@ async function loadJobs(_$w) {
             }
             else{
             //if it is not location then we check if selecred values (which is an array) have one of the job values (whcih is also an array)
-            if(job[filterByField].some(value=>values.includes(value._id))) {
+            if(job[JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES].some(value=>values.includes(value._id))) {
                 if(!addedJobsIds.includes(job._id)) {
                     tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
