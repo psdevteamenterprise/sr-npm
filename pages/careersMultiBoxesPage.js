@@ -233,7 +233,7 @@ async function loadJobs(_$w) {
 
   async function applyJobFilters(_$w,filterByField) {
     //let q = wixData.query(COLLECTIONS.JOBS)
-    console.log(currentJobs)
+    console.log(alljobs)
     let newFilteredJobs=[]
     let addedJobsIds=[]
     //console.log("selectedByField: ",selectedByField)
@@ -241,7 +241,7 @@ async function loadJobs(_$w) {
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
       //  console.log("values: ",values)
-        for(job of currentJobs) {
+        for(job of alljobs) {
             //console.log("job: ",job)
             //console.log("job[filterByField]: ",job[filterByField])
            // console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
