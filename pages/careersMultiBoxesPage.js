@@ -10,12 +10,10 @@ const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts 
 let alljobs=[] // all jobs in the database
 let allvaluesobjects=[] // all values in the database
 let valueToJobs={} // valueId -> array of jobIds
-//let currentJobsIds=[] // current jobs that are displayed in the jobs repeater
 let currentJobs=[] // current jobs that are displayed in the jobs repeater
 async function careersMultiBoxesPageOnReady(_$w) {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
-       // currentJobsIds=alljobs.map(job=>job._id);
         currentJobs=alljobs;
         console.log("alljobs: ",alljobs)
       }
@@ -58,7 +56,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
               }
             });
     
-            await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES);
+            await applyJobFilters(_$w,fieldId);
             await refreshFacetCounts(_$w);
             await updateSelectedValuesRepeater(_$w);
             updateTotalJobsCountText(_$w);
@@ -107,12 +105,12 @@ async function loadJobs(_$w) {
         // Set the filter label (category name)
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
 
-        // if(fieldId==="Location") {
-        //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
-        //     label: city.title,
-        //     value: city._id
-        //   }));
-        // }
+        if(fieldId==="Location") {
+          $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = cities.map(city=>({
+            label: city.city,
+            value: city._id
+          }));
+        }
   
         // Build CheckboxGroup options for this field
         const fieldValues = valuesByFieldId.get(fieldId) || [];
@@ -141,7 +139,7 @@ async function loadJobs(_$w) {
       } else {
         selectedByField.delete(fieldId);
       }
-      await applyJobFilters(_$w,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES); // re-query jobs
+      await applyJobFilters(_$w,fieldId); // re-query jobs
       await refreshFacetCounts(_$w);    // recompute and update counts in all lists
       await updateSelectedValuesRepeater(_$w);
       updateTotalJobsCountText(_$w);
@@ -232,49 +230,31 @@ async function loadJobs(_$w) {
   }
 
   async function applyJobFilters(_$w,filterByField) {
-    //let q = wixData.query(COLLECTIONS.JOBS)
-    console.log(alljobs)
-    let newFilteredJobs=[];
-    let currentAllJobs=alljobs;
+    let tempFilteredJobs=[];
+    let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
-    console.log("selectedByField: ",selectedByField)
+    if(filterByField!="Location") {
+      filterByField=JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES;
+    }
   
     // AND across categories, OR within each category
     for (const [, values] of selectedByField.entries()) {
-      //  console.log("values: ",values)
-        for(job of currentAllJobs) {
-            //console.log("job: ",job)
-            console.log("job[filterByField]: ",job[filterByField])
-           // console.log("job[filterByField].some(value=>values.includes(value)))   ",job[filterByField].some(value=>values.includes(value._id)))
+        for(job of finalFilteredJobs) {
             if(job[filterByField].some(value=>values.includes(value._id))) {
-               // console.log("!alreadyAddedJobs.includes(job._id)  ",!alreadyAddedJobs.includes(job._id))
                 if(!addedJobsIds.includes(job._id)) {
-                    newFilteredJobs.push(job);
+                    tempFilteredJobs.push(job);
                     addedJobsIds.push(job._id);
                 }
             }
         }
         addedJobsIds=[]
-        currentAllJobs=newFilteredJobs;
-        newFilteredJobs=[];
-    //   if (values && values.length) {
-        
-    //     q = q.hasSome(filterByField, values);
-
-    //   }
+        finalFilteredJobs=tempFilteredJobs;
+        tempFilteredJobs=[];
     }
-    //console.log("alreadyAddedJobs: ",alreadyAddedJobs)
-    console.log("newFilteredJobs: ",currentAllJobs)
-    console.log("newFilteredJobs length: ",currentAllJobs.length)
-    currentJobs=currentAllJobs;
-    //  currentJobsIds=addedJobsIds;
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = currentAllJobs;
+
+    currentJobs=finalFilteredJobs;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = currentJobs;
   
-//    await q.find()
-//       .then(async (res) => { _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = res.items;
-//        await updateCurrentJobs(res);
-//       })
-//       .catch((err) => { console.error('Failed to filter jobs:', err); });
   }
 
 
@@ -322,16 +302,6 @@ async function refreshFacetCounts(_$w) {
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
-  }
-
-  async function updateCurrentJobs(res) {
-    let newcurrentJobs = [];
-    newcurrentJobs.push(...res.items.map(job=>job._id));
-    while (res.hasNext()) {
-      res = await res.next();
-      newcurrentJobs.push(...res.items.map(job=>job._id));
-    }
-    currentJobs = newcurrentJobs;
   }
 
 module.exports = {
