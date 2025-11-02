@@ -148,7 +148,7 @@ async function loadJobs(_$w) {
             console.log("elemenet: ",key)
             console.log("valuesByFieldId.get(elemenet): ",valuesByFieldId.get(key))
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
-            _$w(`${field.title}CheckBox`).onChange(async (ev) => {
+            _$w(`#${field.title}CheckBox`).onChange(async (ev) => {
               dontUpdateThisCheckBox=field._id;
             const selected = ev.target.value; // array of selected value IDs
             if (selected && selected.length) {
@@ -157,15 +157,16 @@ async function loadJobs(_$w) {
               selectedByField.delete(field._id);
             }
             await applyJobFilters(_$w,field._id); // re-query jobs
-           // await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+            await refreshFacetCounts(_$w,field.title);    // recompute and update counts in all lists
            // await updateSelectedValuesRepeater(_$w);
             updateTotalJobsCountText(_$w);
           });
-                  const runFilter = debounce(() => {
-          const query = (_$w(`${field.title}input`).value || '').toLowerCase().trim();
+
+          const runFilter = debounce(() => {
+          const query = (_$w(`#${field.title}input`).value || '').toLowerCase().trim();
           updateOptionsUI(_$w, field.title, field._id, query);
         }, 150);
-        _$w(`${field.title}input`).onInput(runFilter);
+         _$w(`#${field.title}input`).onInput(runFilter);
             found=true;
             break;
         }
@@ -175,6 +176,15 @@ async function loadJobs(_$w) {
       }
     }
 
+    await refreshFacetCounts(_$w);
+// _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
+      //   const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
+      //   updateOptionsUI($item, itemData._id, query);
+
+
+
+
+      
       //
 
 
@@ -309,12 +319,15 @@ async function loadJobs(_$w) {
   
     // Preserve currently selected values that are still visible
    // const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
-   const prevSelected = _$w(`${fieldTitle}CheckBox`).value || [];
+   const prevSelected = _$w(`#${fieldTitle}CheckBox`).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
+    console.log("preserved: ",preserved)
+    console.log("filtered: ",filtered)
+    console.log("fieldTitle: ",fieldTitle)
   
-    _$w(`${fieldTitle}CheckBox`).options = filtered;
-    _$w(`${fieldTitle}CheckBox`).value = preserved;
+    _$w(`#${fieldTitle}CheckBox`).options = filtered;
+    _$w(`#${fieldTitle}CheckBox`).value = preserved;
 
   }
 
@@ -355,7 +368,7 @@ async function loadJobs(_$w) {
   }
 
 
-async function refreshFacetCounts(_$w) {    
+async function refreshFacetCounts(_$w,fieldTitle) {    
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -371,10 +384,14 @@ async function refreshFacetCounts(_$w) {
         countsByFieldId.set(fieldId, counter);
     }
     // // After counts are ready, update all items currently rendered
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
-      const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
-      updateOptionsUI($item, itemData._id, query);
-    });
+    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
+    //   const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
+    //   updateOptionsUI($item, itemData._id, query);
+    // });
+    for(const fieldId of fieldIds) {
+        const query = (_$w(`#${fieldTitle}input`).value || '').toLowerCase().trim();
+        updateOptionsUI(_$w,fieldTitle, fieldId, query); // no search query
+    }
   }
 
   function groupValuesByField(values, refKey) {
