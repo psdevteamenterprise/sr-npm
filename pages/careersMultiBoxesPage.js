@@ -137,16 +137,16 @@ async function loadJobs(_$w) {
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
-      console.log("valuesByFieldId: ",valuesByFieldId)
+      console.log("valuesByFieldId: @$##@$@##$ ",valuesByFieldId)
       
-      for(const elemenet of Object.keys(valuesByFieldId)) {
-        console.log("elemenet: ",elemenet)
+      for(const [key, value] of valuesByFieldId) {
+        console.log("elemenet: ",key)
         for(const field of fields) {
-          if(field._id===elemenet && field.title==="Category") {
+          if(field._id===key && field.title==="Category") {
             updateOptionsUI(_$w,field.title, field._id, ''); // no search query
             console.log("field: ",field)
-            console.log("elemenet: ",elemenet)
-            console.log("valuesByFieldId.get(elemenet): ",valuesByFieldId.get(elemenet))
+            console.log("elemenet: ",key)
+            console.log("valuesByFieldId.get(elemenet): ",valuesByFieldId.get(key))
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`${field.title}CheckBox`).onChange(async (ev) => {
               dontUpdateThisCheckBox=field._id;
