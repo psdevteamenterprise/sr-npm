@@ -421,7 +421,7 @@ async function refreshFacetCounts(_$w,fieldTitle) {
     // });
     for(const field of allfields) {
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
-        updateOptionsUI(_$w,fieldTitle, field._id, query); // no search query
+        updateOptionsUI(_$w,field.title, field._id, query); // no search query
     }
   }
 
