@@ -309,8 +309,11 @@ async function loadJobs(_$w) {
     let base = optionsByFieldId.get(fieldId) || [];
     console.log("base: ",base)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
+    console.log("before if statement dontUpdateThisCheckBox: ",dontUpdateThisCheckBox)
+    console.log("fieldId: ",fieldId)
     if(dontUpdateThisCheckBox===fieldId)
     {
+      console.log("dontUpdateThisCheckBox is not null so returning")
         dontUpdateThisCheckBox=null;
         return;
     }
