@@ -15,7 +15,7 @@ const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
-async function careersMultiBoxesPageOnReady(_$w) {
+async function careersMultiBoxesPageOnReady(_$w,queryParams) {
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
@@ -23,13 +23,20 @@ async function careersMultiBoxesPageOnReady(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       if(selectedByField.size>0) {
         selectedByField.clear();
-        await applyJobFilters(_$w);
-          await refreshFacetCounts(_$w,true);
-          await updateSelectedValuesRepeater(_$w);
-          updateTotalJobsCountText(_$w);
+        await updateJobsAndNumbersAndFilters(_$w,true);
         }
     });
     await loadPaginationButtons(_$w);
+   await handleUrlParams(_$w,queryParams);
+}
+
+async function handleUrlParams(_$w,queryParams) {
+    if(queryParams.Brand) {
+      const brandValue = decodeURIComponent(queryParams.Brand);
+      console.log("brandValue: ", brandValue);
+      console.log("selectedByField: ", selectedByField);
+      console.log("optionsByFieldId: ", optionsByFieldId);
+    }
 }
 
 async function loadPaginationButtons(_$w) {
@@ -77,10 +84,7 @@ async function loadSelectedValuesRepeater(_$w) {
                     _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
                 }
             }  
-            await applyJobFilters(_$w);
-            await refreshFacetCounts(_$w);
-            await updateSelectedValuesRepeater(_$w);
-            updateTotalJobsCountText(_$w);
+            await updateJobsAndNumbersAndFilters(_$w);
           });
     });
     await updateSelectedValuesRepeater(_$w);
@@ -168,10 +172,8 @@ async function loadJobsRepeater(_$w) {
             } else {
               selectedByField.delete(field._id);  
             }
-            await applyJobFilters(_$w); // re-query jobs
-            await refreshFacetCounts(_$w);    // recompute and update counts in all lists
-            await updateSelectedValuesRepeater(_$w);
-            updateTotalJobsCountText(_$w);
+            await updateJobsAndNumbersAndFilters(_$w);
+       
           });
 
           const runFilter = debounce(() => {
@@ -190,7 +192,13 @@ async function loadJobsRepeater(_$w) {
     }
   }
 
-  
+  async function updateJobsAndNumbersAndFilters(_$w) {
+    await applyJobFilters(_$w); // re-query jobs
+    await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+    await updateSelectedValuesRepeater(_$w);
+    updateTotalJobsCountText(_$w);
+  }
+
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
