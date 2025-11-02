@@ -18,7 +18,7 @@ const pagination = {
 };
 async function careersMultiBoxesPageOnReady(_$w) {
     await loadData(_$w);
-    await loadJobs(_$w);
+    await loadJobsRepeater(_$w);
     await loadFilters(_$w);
     await loadSelectedValuesRepeater(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
@@ -33,15 +33,21 @@ async function careersMultiBoxesPageOnReady(_$w) {
 
 async function loadPaginationButtons(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
+      console.log("next page button clicked");
+      console.log("current page: ", pagination.currentPage);
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
       pagination.currentPage++;
+      console.log("next page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
+      console.log("previous page button clicked");
+      console.log("current page: ", pagination.currentPage);
       let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-1),pagination.pageSize*pagination.currentPage);
       pagination.currentPage--;
+      console.log("previous page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
     });
@@ -100,7 +106,7 @@ async function loadData(_$w) {
         allfields.push({_id:"Location",title:"Location"}); 
     }
 }
-async function loadJobs(_$w) {
+async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title || '';
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
@@ -110,6 +116,7 @@ async function loadJobs(_$w) {
     const jobsFirstPage=alljobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     updateTotalJobsCountText(_$w);
+    handlePaginationButtons(_$w);
   }
 
   function updateTotalJobsCountText(_$w) {
@@ -120,9 +127,6 @@ async function loadJobs(_$w) {
   async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
-     // let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
-      
-     // fields.push({_id:"Location",title:"Location"}); 
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
