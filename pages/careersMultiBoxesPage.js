@@ -86,7 +86,6 @@ async function loadSelectedValuesRepeater(_$w) {
 }
 
 async function loadData(_$w) {
-
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
         currentJobs=alljobs;
