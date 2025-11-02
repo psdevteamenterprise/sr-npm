@@ -7,6 +7,7 @@ let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
 const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts for each valueId
+let allfields=[] // all fields in the database
 let alljobs=[] // all jobs in the database
 let allvaluesobjects=[] // all values in the database
 let valueToJobs={} // valueId -> array of jobIds
@@ -23,7 +24,10 @@ async function careersMultiBoxesPageOnReady(_$w) {
             valueToJobs[value._id]= value.jobIds;
         }
     }
-    
+    if(allfields.length===0) {
+        allfields=await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+        allfields.push({_id:"Location",title:"Location"}); 
+    }
     await  loadJobs(_$w);
     await loadFilters(_$w);
     //selected values repeater on item ready
@@ -122,9 +126,10 @@ async function loadJobs(_$w) {
   async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
-      let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+     // let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
       
-      fields.push({_id:"Location",title:"Location"}); 
+     // fields.push({_id:"Location",title:"Location"}); 
+     console.log("allfields: ",allfields)
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
@@ -141,9 +146,9 @@ async function loadJobs(_$w) {
         counter[city.city]=city.count
       }
       console.log("valuesByFieldId: ",valuesByFieldId)
-      console.log("fields: ",fields)
+      console.log("fields: ",allfields)
       for(const [key, value] of valuesByFieldId) {
-        for(const field of fields) {
+        for(const field of allfields) {
           if(field._id===key) {
             let originalOptions=[];
             if(key==="Location") {
@@ -167,7 +172,7 @@ async function loadJobs(_$w) {
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
               console.log("valuesByFieldId: ",valuesByFieldId)
-              console.log("fields: ",fields)
+              console.log("fields: ",allfields)
               dontUpdateThisCheckBox=field._id;
               console.log("dontUpdateThisCheckBox ",dontUpdateThisCheckBox)
             const selected = ev.target.value; // array of selected value IDs
@@ -177,6 +182,7 @@ async function loadJobs(_$w) {
             } else {
               selectedByField.delete(field._id);  
             }
+            console.log("selectedByField: ",selectedByField)
             await applyJobFilters(_$w,field._id); // re-query jobs
             await refreshFacetCounts(_$w,field.title);    // recompute and update counts in all lists
            // await updateSelectedValuesRepeater(_$w);
@@ -392,7 +398,8 @@ async function loadJobs(_$w) {
   }
 
 
-async function refreshFacetCounts(_$w,fieldTitle) {    
+async function refreshFacetCounts(_$w,fieldTitle) {   
+  console.log("refreshFacetCounts now inisde refreshFacetCounts: ",fieldTitle)
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -412,9 +419,9 @@ async function refreshFacetCounts(_$w,fieldTitle) {
     //   const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
     //   updateOptionsUI($item, itemData._id, query);
     // });
-    for(const fieldId of fieldIds) {
-        const query = (_$w(`#${fieldTitle}input`).value || '').toLowerCase().trim();
-        updateOptionsUI(_$w,fieldTitle, fieldId, query); // no search query
+    for(const field of allfields) {
+        const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
+        updateOptionsUI(_$w,fieldTitle, field._id, query); // no search query
     }
   }
 
