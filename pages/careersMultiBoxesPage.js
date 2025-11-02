@@ -31,7 +31,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
     await  loadJobs(_$w);
     await loadFilters(_$w);
     //selected values repeater on item ready
-    //await loadSelectedValuesRepeater(_$w);
+    await loadSelectedValuesRepeater(_$w);
     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
     //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
     
@@ -89,15 +89,28 @@ async function loadSelectedValuesRepeater(_$w) {
             } else {
               selectedByField.delete(fieldId);
             }
+            console.log("deselecting value for this field: ",fieldId)
+
+            for(const field of allfields) {
+                if(field._id===fieldId) {
+                    console.log("field: ",field)
+                    console.log("fieldId: ",fieldId)
+                    console.log("valueId: ",valueId)
+                    const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
+                    const nextVals = currentVals.filter(v => v !== valueId);
+                    _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
+                }
+            }
+
     
             // Update the checkbox group UI inside the corresponding filter item
-            _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($filterItem, filterItemData) => {
-              if (filterItemData._id === fieldId) {
-                const currentVals = $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
-                const nextVals = currentVals.filter(v => v !== valueId);
-                $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = nextVals;
-              }
-            });
+            // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($filterItem, filterItemData) => {
+            //   if (filterItemData._id === fieldId) {
+            //     const currentVals = $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
+            //     const nextVals = currentVals.filter(v => v !== valueId);
+            //     $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = nextVals;
+            //   }
+            // });
     
             await applyJobFilters(_$w,fieldId);
             await refreshFacetCounts(_$w);
@@ -129,7 +142,6 @@ async function loadJobs(_$w) {
      // let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
       
      // fields.push({_id:"Location",title:"Location"}); 
-     console.log("allfields: ",allfields)
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
@@ -145,8 +157,6 @@ async function loadJobs(_$w) {
       for(const city of cities) {
         counter[city.city]=city.count
       }
-      console.log("valuesByFieldId: ",valuesByFieldId)
-      console.log("fields: ",allfields)
       for(const [key, value] of valuesByFieldId) {
         for(const field of allfields) {
           if(field._id===key) {
@@ -171,21 +181,16 @@ async function loadJobs(_$w) {
             _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-              console.log("valuesByFieldId: ",valuesByFieldId)
-              console.log("fields: ",allfields)
               dontUpdateThisCheckBox=field._id;
-              console.log("dontUpdateThisCheckBox ",dontUpdateThisCheckBox)
             const selected = ev.target.value; // array of selected value IDs
-            console.log("selected: ",selected)
             if (selected && selected.length) {
               selectedByField.set(field._id, selected);
             } else {
               selectedByField.delete(field._id);  
             }
-            console.log("selectedByField: ",selectedByField)
             await applyJobFilters(_$w,field._id); // re-query jobs
             await refreshFacetCounts(_$w,field.title);    // recompute and update counts in all lists
-           // await updateSelectedValuesRepeater(_$w);
+            await updateSelectedValuesRepeater(_$w);
             updateTotalJobsCountText(_$w);
           });
 
@@ -314,15 +319,10 @@ async function loadJobs(_$w) {
   };
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery) {
-    console.log("fieldTitle now inisde updateOptionsUI: ",fieldTitle)
     let base = optionsByFieldId.get(fieldId) || [];
-    console.log("base: ",base)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    console.log("before if statement dontUpdateThisCheckBox: ",dontUpdateThisCheckBox)
-    console.log("fieldId: ",fieldId)
     if(dontUpdateThisCheckBox===fieldId)
     {
-      console.log("dontUpdateThisCheckBox is not null so returning")
         dontUpdateThisCheckBox=null;
         return;
     }
@@ -352,9 +352,6 @@ async function loadJobs(_$w) {
    const prevSelected = _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-    console.log("preserved: ",preserved)
-    console.log("filtered: ",filtered)
-    console.log("fieldTitle: ",fieldTitle)
   
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
@@ -399,7 +396,6 @@ async function loadJobs(_$w) {
 
 
 async function refreshFacetCounts(_$w,fieldTitle) {   
-  console.log("refreshFacetCounts now inisde refreshFacetCounts: ",fieldTitle)
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
