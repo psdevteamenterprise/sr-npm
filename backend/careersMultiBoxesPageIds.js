@@ -14,6 +14,8 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     CLEAR_ALL_BUTTON_ID: '#clearAllButton',
     PAGE_BUTTON_NEXT: '#nextPageButton',
     PAGE_BUTTON_PREVIOUS: '#previousPageButton',
+    paginationCurrentText: '#paginationCurrent',
+    paginationTotalCountText: '#paginationTotalCount',
 }
 
 const FiltersIds={

@@ -36,9 +36,12 @@ async function loadPaginationButtons(_$w) {
       console.log("next page button clicked");
       console.log("current page: ", pagination.currentPage);
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = nextPageJobs.length+pagination.pageSize*pagination.currentPage;
       pagination.currentPage++;
       console.log("next page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
+      
+      
       handlePaginationButtons(_$w);
     });
 
@@ -47,8 +50,10 @@ async function loadPaginationButtons(_$w) {
       console.log("current page: ", pagination.currentPage);
       let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-1),pagination.pageSize*pagination.currentPage);
       pagination.currentPage--;
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = pagination.pageSize*pagination.currentPage;
       console.log("previous page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
+      
       handlePaginationButtons(_$w);
     });
 }
@@ -121,7 +126,7 @@ async function loadJobsRepeater(_$w) {
 
   function updateTotalJobsCountText(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
-    
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length
   }
 
   async function loadFilters(_$w) {
