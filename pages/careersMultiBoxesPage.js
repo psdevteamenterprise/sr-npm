@@ -140,6 +140,7 @@ async function loadJobs(_$w) {
       console.log("valuesByFieldId: ",valuesByFieldId)
       
       for(const elemenet of Object.keys(valuesByFieldId)) {
+        console.log("elemenet: ",elemenet)
         for(const field of fields) {
           if(field._id===elemenet && field.title==="Category") {
             updateOptionsUI(_$w,field.title, field._id, ''); // no search query
