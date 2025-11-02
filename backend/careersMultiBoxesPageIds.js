@@ -3,6 +3,8 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     JOBS_REPEATER: '#jobsReapter',
     JOBS_REPEATER_ITEM_TITLE: '#jobTitle',
     JOBS_REPEATER_ITEM_LOCATION: '#locationLabel',
+    JOBS_REPEATER_ITEM_EMPLOYMENT_TYPE: '#employmentTypeLabel',
+    TotalJobsCountText: '#totalJobsCountText',
     FILTER_LABEL: '#FilterTextInput',
     FILTER_CHECKBOX_CONTAINER: '#FilterCheckBoxContainer',
     FILTER_REPEATER_ITEM_CHECKBOX: '#filterCheckBox',
