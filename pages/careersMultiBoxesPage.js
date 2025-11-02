@@ -32,6 +32,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
     await loadFilters(_$w);
     //selected values repeater on item ready
     await loadSelectedValuesRepeater(_$w);
+    console.log("CLEAR_ALL_BUTTON_ID button is loaded: ",CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID)
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
         console.log("selectedByField before clear: ",selectedByField)
         
