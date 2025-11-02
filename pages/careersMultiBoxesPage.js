@@ -2,7 +2,6 @@ const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = r
 const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField } = require('./pagesUtils');
-let valuesByFieldIdGlobal = null; 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
@@ -130,7 +129,6 @@ async function loadJobsRepeater(_$w) {
       // 2) Load all values once and group them by referenced field
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
-      valuesByFieldIdGlobal = valuesByFieldId; // store globally
 
           // Build CheckboxGroup options for this field
         
