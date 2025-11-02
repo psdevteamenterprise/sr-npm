@@ -336,15 +336,15 @@ async function loadJobs(_$w) {
   
     // Preserve currently selected values that are still visible
    // const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
-   const prevSelected = _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).value || [];
+   const prevSelected = _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
     console.log("preserved: ",preserved)
     console.log("filtered: ",filtered)
     console.log("fieldTitle: ",fieldTitle)
   
-    _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).options = filtered;
-    _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).value = preserved;
+    _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
+    _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
 
   }
 
