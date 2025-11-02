@@ -3,5 +3,6 @@ module.exports = {
     ...require('./homePage'),
     ...require('./careersPage'),
     ...require('./careersMultiBoxesPage'),
+    ...require('./pagesUtils'),
   };
   

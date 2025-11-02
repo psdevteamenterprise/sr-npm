@@ -1,7 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
-
+const { groupValuesByField } = require('./pagesUtils');
 let valuesByFieldIdGlobal = null; 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
@@ -33,23 +33,17 @@ async function careersMultiBoxesPageOnReady(_$w) {
 
 async function loadPaginationButtons(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
-      console.log("next page button clicked");
-      console.log("current page: ", pagination.currentPage);
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = (nextPageJobs.length+pagination.pageSize*pagination.currentPage).toString();
       pagination.currentPage++;
-      console.log("next page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
-      console.log("previous page button clicked");
-      console.log("current page: ", pagination.currentPage);
       let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-1),pagination.pageSize*pagination.currentPage);
       pagination.currentPage--;
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = (pagination.pageSize*pagination.currentPage).toString();
-      console.log("previous page ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
     });
@@ -117,13 +111,14 @@ async function loadJobsRepeater(_$w) {
 
     const jobsFirstPage=alljobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
     updateTotalJobsCountText(_$w);
     handlePaginationButtons(_$w);
   }
 
   function updateTotalJobsCountText(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
   }
 
   async function loadFilters(_$w) {
@@ -293,6 +288,8 @@ async function loadJobsRepeater(_$w) {
     currentJobs=finalFilteredJobs;
     const jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
   }
@@ -325,18 +322,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
     }
   }
 
-  function groupValuesByField(values, refKey) {
-    const map = new Map();
-    for (const v of values) {
-      const ref = v[refKey]; // should be the _id of the CustomFields item
-      if (!map.has(ref)) map.set(ref, []);
-      map.get(ref).push({
-        label: v.title ,
-        value: v._id
-      });
-    }
-    return map;
-  }
+ 
 
   function updateSelectedValuesRepeater(_$w) {
     const selectedItems = [];
