@@ -12,6 +12,8 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     SELECTED_VALUES_REPEATER_ITEM_LABEL: '#selectedValueLabel',
     DESELECT_BUTTON_ID: '#deselectFilterValueButton',
     CLEAR_ALL_BUTTON_ID: '#clearAllButton',
+    PAGE_BUTTON_NEXT: '#nextPageButton',
+    PAGE_BUTTON_PREVIOUS: '#previousPageButton',
 }
 
 const FiltersIds={
@@ -22,6 +24,9 @@ const FiltersIds={
     "Employment Type": 'employmentType',
    "Contract Type": 'contractType',
    Brands: 'Brands',
+}
+const Pageination={
+    page
 }
 
 module.exports = {
