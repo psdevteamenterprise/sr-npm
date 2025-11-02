@@ -291,6 +291,7 @@ async function loadJobsRepeater(_$w) {
     currentJobs=finalFilteredJobs;
     const jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
+    pagination.currentPage=1;
     handlePaginationButtons(_$w);
   }
 
