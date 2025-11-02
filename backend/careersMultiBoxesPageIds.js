@@ -11,6 +11,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     SELECTED_VALUES_REPEATER: '#selectedValuesReapter',
     SELECTED_VALUES_REPEATER_ITEM_LABEL: '#selectedValueLabel',
     DESELECT_BUTTON_ID: '#deselectFilterValueButton',
+    CLEAR_ALL_BUTTON_ID: '#clearAllButton',
 }
 
 const FiltersIds={

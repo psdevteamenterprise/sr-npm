@@ -32,6 +32,13 @@ async function careersMultiBoxesPageOnReady(_$w) {
     await loadFilters(_$w);
     //selected values repeater on item ready
     await loadSelectedValuesRepeater(_$w);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
+        selectedByField.clear();
+        await applyJobFilters(_$w);
+        await refreshFacetCounts(_$w);
+        await updateSelectedValuesRepeater(_$w);
+        updateTotalJobsCountText(_$w);
+    });
     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
     //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
     
