@@ -1,7 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { items: wixData } = require('@wix/data');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
-const { groupValuesByField } = require('./pagesUtils');
+const { groupValuesByField, debounce, getAllRecords } = require('./pagesUtils');
+
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
 const optionsByFieldId = new Map(); // fieldId -> [{label, value}] array of objects with label which is the valueLabel and value which is the valueId
@@ -21,11 +21,13 @@ async function careersMultiBoxesPageOnReady(_$w) {
     await loadFilters(_$w);
     await loadSelectedValuesRepeater(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
+      if(selectedByField.size>0) {
         selectedByField.clear();
         await applyJobFilters(_$w);
-        await refreshFacetCounts(_$w,true);
-        await updateSelectedValuesRepeater(_$w);
-        updateTotalJobsCountText(_$w);
+          await refreshFacetCounts(_$w,true);
+          await updateSelectedValuesRepeater(_$w);
+          updateTotalJobsCountText(_$w);
+        }
     });
     await loadPaginationButtons(_$w);
 }
@@ -176,6 +178,7 @@ async function loadJobsRepeater(_$w) {
           const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
           updateOptionsUI(_$w, field.title, field._id, query);
         }, 150);
+        
          _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
         }
       }
@@ -188,28 +191,9 @@ async function loadJobsRepeater(_$w) {
   }
 
   
-  async function getAllRecords(collectionId) {
-    let q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-  
-  
-    const items = [];
-    let res = await q.limit(1000).find();
-    items.push(...res.items);
-  
-    while (res.hasNext()) {
-      res = await res.next();
-      items.push(...res.items);
-    }
-    return items;
-  }
 
-  const debounce = (fn, ms = 150) => {
-    let t;
-    return (...args) => {
-      clearTimeout(t);
-      t = setTimeout(() => fn(...args), ms);
-    };
-  };
+
+ 
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];

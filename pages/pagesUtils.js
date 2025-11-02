@@ -1,3 +1,6 @@
+const { items: wixData } = require('@wix/data');
+const { JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+
 function groupValuesByField(values, refKey) {
     const map = new Map();
     for (const v of values) {
@@ -11,6 +14,31 @@ function groupValuesByField(values, refKey) {
     return map;
   }
 
+  const debounce = (fn, ms = 150) => {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn(...args), ms);
+    };
+  };
+
+  async function getAllRecords(collectionId) {
+    let q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
+  
+  
+    const items = [];
+    let res = await q.limit(1000).find();
+    items.push(...res.items);
+  
+    while (res.hasNext()) {
+      res = await res.next();
+      items.push(...res.items);
+    }
+    return items;
+  }
+
   module.exports = {
     groupValuesByField,
+    debounce,
+    getAllRecords,
 }
