@@ -216,6 +216,8 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
     if (siteconfig.customFields==="true") {
       let customValues=await getAllCustomValues();
       console.log("inserting jobs references to custom values collection");
+      console.log("customValues: ",customValues)
+      console.log("customValues.items: ",customValues.items)
       for (const value of customValues.items) {
         await insertJobsReference(value._id);
       }

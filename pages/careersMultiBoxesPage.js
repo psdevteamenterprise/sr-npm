@@ -25,9 +25,49 @@ async function careersMultiBoxesPageOnReady(_$w) {
     }
     
     await  loadJobs(_$w);
-    await loadFilters(_$w);
+  //  await loadFilters(_$w);
     //selected values repeater on item ready
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
+    //await loadSelectedValuesRepeater(_$w);
+    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
+    //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
+    
+    //     // Deselect this value from both the selected map and the multibox
+    //       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
+            
+    //         const fieldId = itemData.fieldId;
+    //         const valueId = itemData.valueId;
+    //         dontUpdateThisCheckBox=fieldId;
+    //         if (!fieldId || !valueId) return;
+    
+    //         const existing = selectedByField.get(fieldId) || [];
+    //         const updated = existing.filter(v => v !== valueId);
+    //         if (updated.length) {
+    //           selectedByField.set(fieldId, updated);
+    //         } else {
+    //           selectedByField.delete(fieldId);
+    //         }
+    
+    //         // Update the checkbox group UI inside the corresponding filter item
+    //         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($filterItem, filterItemData) => {
+    //           if (filterItemData._id === fieldId) {
+    //             const currentVals = $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
+    //             const nextVals = currentVals.filter(v => v !== valueId);
+    //             $filterItem(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = nextVals;
+    //           }
+    //         });
+    
+    //         await applyJobFilters(_$w,fieldId);
+    //         await refreshFacetCounts(_$w);
+    //         await updateSelectedValuesRepeater(_$w);
+    //         updateTotalJobsCountText(_$w);
+    //       });
+    // });
+    // await updateSelectedValuesRepeater(_$w);
+   
+}
+
+async function loadSelectedValuesRepeater(_$w) {
+       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
     
         // Deselect this value from both the selected map and the multibox
@@ -62,7 +102,6 @@ async function careersMultiBoxesPageOnReady(_$w) {
           });
     });
     await updateSelectedValuesRepeater(_$w);
-   
 }
 
 async function loadJobs(_$w) {
@@ -239,8 +278,6 @@ async function loadJobs(_$w) {
     let addedJobsIds=[]
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
-        console.log("key: ",key)
-        console.log("values: ",values)
         for(job of finalFilteredJobs) {
             if(key==="Location"){
                 //if it is location then we check if selecred values (which is an array) have job city text
