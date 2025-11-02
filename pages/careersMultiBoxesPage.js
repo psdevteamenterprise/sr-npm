@@ -110,7 +110,6 @@ async function loadJobs(_$w) {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_EMPLOYMENT_TYPE).text=itemData.employmentType
     });
-    console.log("alljobs: ",alljobs)
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = alljobs;
     updateTotalJobsCountText(_$w);
   }
@@ -141,6 +140,7 @@ async function loadJobs(_$w) {
       for(const city of cities) {
         counter[city.city]=city.count
       }
+      
       for(const [key, value] of valuesByFieldId) {
         for(const field of fields) {
           if(field._id===key) {
@@ -166,6 +166,7 @@ async function loadJobs(_$w) {
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
               dontUpdateThisCheckBox=field._id;
+              console.log("dontUpdateThisCheckBox ",dontUpdateThisCheckBox)
             const selected = ev.target.value; // array of selected value IDs
             console.log("selected: ",selected)
             if (selected && selected.length) {
@@ -304,6 +305,7 @@ async function loadJobs(_$w) {
   };
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery) {
+    console.log("fieldTitle now inisde updateOptionsUI: ",fieldTitle)
     let base = optionsByFieldId.get(fieldId) || [];
     console.log("base: ",base)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
