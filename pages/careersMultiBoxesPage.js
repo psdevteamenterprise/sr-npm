@@ -140,7 +140,8 @@ async function loadJobs(_$w) {
       for(const city of cities) {
         counter[city.city]=city.count
       }
-      
+      console.log("valuesByFieldId: ",valuesByFieldId)
+      console.log("fields: ",fields)
       for(const [key, value] of valuesByFieldId) {
         for(const field of fields) {
           if(field._id===key) {
