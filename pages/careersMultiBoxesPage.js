@@ -16,6 +16,7 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,queryParams) {
+  console.log("queryParams: ", queryParams);
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
