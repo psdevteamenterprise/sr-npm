@@ -31,6 +31,7 @@ if(siteconfig===undefined) {
     siteconfig = queryResult.items[0];
 }
 if(siteconfig.customFields==="true") {
+    console.log("queryParams$@#@$#@#$#$: ", queryParams);
     await careersMultiBoxesPageOnReady(_$w,queryParams);
 }
 else{

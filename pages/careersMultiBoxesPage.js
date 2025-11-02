@@ -1,5 +1,6 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
+const { query,queryParams,onChange} = require("wix-location-frontend");
 const { groupValuesByField, debounce, getAllRecords } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
