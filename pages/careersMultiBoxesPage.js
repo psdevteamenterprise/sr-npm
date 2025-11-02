@@ -36,12 +36,14 @@ async function loadPaginationButtons(_$w) {
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
       pagination.currentPage++;
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
+      handlePaginationButtons(_$w);
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
       let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-1),pagination.pageSize*pagination.currentPage);
       pagination.currentPage--;
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
+      handlePaginationButtons(_$w);
     });
 }
 

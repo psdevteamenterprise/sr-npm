@@ -25,9 +25,7 @@ const FiltersIds={
    "Contract Type": 'contractType',
    Brands: 'Brands',
 }
-const Pageination={
-    page
-}
+
 
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
