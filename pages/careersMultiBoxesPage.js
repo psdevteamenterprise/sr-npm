@@ -138,11 +138,33 @@ async function loadJobs(_$w) {
       valuesByFieldId.set("Location",cities)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
       console.log("valuesByFieldId: @$##@$@##$ ",valuesByFieldId)
+
+          // Build CheckboxGroup options for this field
+        
       
       for(const [key, value] of valuesByFieldId) {
         console.log("elemenet: ",key)
         for(const field of fields) {
           if(field._id===key && field.title==="Category") {
+        let originalOptions=[];
+          if(key==="Location") {
+            originalOptions=value.map(city=>({
+                label: city.city,
+                value: city._id
+            }));
+        }
+        else{
+            originalOptions=value
+        }
+
+        optionsByFieldId.set(key, originalOptions);
+        const counter={}
+
+        for (const val of allvaluesobjects) {
+          counter[val.title]=val.totalJobs
+        }
+
+        countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
             updateOptionsUI(_$w,field.title, field._id, ''); // no search query
             console.log("field: ",field)
             console.log("elemenet: ",key)
@@ -154,7 +176,7 @@ async function loadJobs(_$w) {
             if (selected && selected.length) {
               selectedByField.set(field._id, selected);
             } else {
-              selectedByField.delete(field._id);
+              selectedByField.delete(field._id);  
             }
             await applyJobFilters(_$w,field._id); // re-query jobs
             await refreshFacetCounts(_$w,field.title);    // recompute and update counts in all lists
@@ -259,6 +281,9 @@ async function loadJobs(_$w) {
       
   
       // });
+      for(const city of cities) {
+        counter[city.city]=city.count
+      }
     } catch (err) {
       console.error('Failed to load filters:', err);
     }
@@ -290,6 +315,7 @@ async function loadJobs(_$w) {
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery) {
     let base = optionsByFieldId.get(fieldId) || [];
+    console.log("base: ",base)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(dontUpdateThisCheckBox===fieldId)
     {
