@@ -13,6 +13,17 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     DESELECT_BUTTON_ID: '#deselectFilterValueButton',
 }
 
+const FiltersIds={
+    Category: 'Category',
+    "Company Segment": 'CompanySegment',
+    Location: 'Location',
+    "Store Name": 'StoreName',
+    "Employment Type": 'employmentType',
+   "Contract Type": 'contractType',
+   Brands: 'Brands',
+}
+
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
+    FiltersIds,
 }

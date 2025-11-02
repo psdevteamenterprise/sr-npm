@@ -1,6 +1,6 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS} = require('../backend/careersMultiBoxesPageIds');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
 
 let valuesByFieldIdGlobal = null; 
 let dontUpdateThisCheckBox;
@@ -126,27 +126,26 @@ async function loadJobs(_$w) {
       let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
       
       fields.push({_id:"Location",title:"Location"}); 
-      console.log("fields: ",fields)
      // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
       }
       // 2) Load all values once and group them by referenced field
-     let found=false;
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
-      console.log("valuesByFieldId: @$##@$@##$ ",valuesByFieldId)
 
           // Build CheckboxGroup options for this field
         
       const counter={}
+      for(const city of cities) {
+        counter[city.city]=city.count
+      }
       for(const [key, value] of valuesByFieldId) {
-        console.log("elemenet: ",key)
         for(const field of fields) {
-          if(field._id===key && field.title==="Category") {
-        let originalOptions=[];
+          if(field._id===key) {
+           let originalOptions=[];
           if(key==="Location") {
             originalOptions=value.map(city=>({
                 label: city.city,
@@ -166,11 +165,8 @@ async function loadJobs(_$w) {
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
             updateOptionsUI(_$w,field.title, field._id, ''); // no search query
-            console.log("field: ",field)
-            console.log("elemenet: ",key)
-            console.log("valuesByFieldId.get(elemenet): ",valuesByFieldId.get(key))
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
-            _$w(`#${field.title}CheckBox`).onChange(async (ev) => {
+            _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
               dontUpdateThisCheckBox=field._id;
             const selected = ev.target.value; // array of selected value IDs
             if (selected && selected.length) {
@@ -185,16 +181,13 @@ async function loadJobs(_$w) {
           });
 
           const runFilter = debounce(() => {
-          const query = (_$w(`#${field.title}input`).value || '').toLowerCase().trim();
+          const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
           updateOptionsUI(_$w, field.title, field._id, query);
         }, 150);
-         _$w(`#${field.title}input`).onInput(runFilter);
-            found=true;
-            break;
+         _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);
+            
+            
         }
-      }
-      if(found) {
-        break;
       }
     }
 
@@ -281,9 +274,7 @@ async function loadJobs(_$w) {
       
   
       // });
-      for(const city of cities) {
-        counter[city.city]=city.count
-      }
+
     } catch (err) {
       console.error('Failed to load filters:', err);
     }
@@ -345,15 +336,15 @@ async function loadJobs(_$w) {
   
     // Preserve currently selected values that are still visible
    // const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
-   const prevSelected = _$w(`#${fieldTitle}CheckBox`).value || [];
+   const prevSelected = _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
     console.log("preserved: ",preserved)
     console.log("filtered: ",filtered)
     console.log("fieldTitle: ",fieldTitle)
   
-    _$w(`#${fieldTitle}CheckBox`).options = filtered;
-    _$w(`#${fieldTitle}CheckBox`).value = preserved;
+    _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).options = filtered;
+    _$w(MULTI_CHECK_BOX_IDS[fieldTitle]).value = preserved;
 
   }
 
@@ -363,7 +354,7 @@ async function loadJobs(_$w) {
     let addedJobsIds=[]
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
-        for(job of finalFilteredJobs) {
+        for(const job of finalFilteredJobs) {
             if(key==="Location"){
                 //if it is location then we check if selecred values (which is an array) have job city text
                 if(values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT])) {
