@@ -178,7 +178,7 @@ async function loadJobsRepeater(_$w) {
           const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
           updateOptionsUI(_$w, field.title, field._id, query);
         }, 150);
-        
+
          _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
         }
       }
@@ -191,10 +191,6 @@ async function loadJobsRepeater(_$w) {
   }
 
   
-
-
- 
-
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
