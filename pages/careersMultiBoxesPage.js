@@ -141,7 +141,7 @@ async function loadJobs(_$w) {
 
           // Build CheckboxGroup options for this field
         
-      
+      const counter={}
       for(const [key, value] of valuesByFieldId) {
         console.log("elemenet: ",key)
         for(const field of fields) {
@@ -158,7 +158,7 @@ async function loadJobs(_$w) {
         }
 
         optionsByFieldId.set(key, originalOptions);
-        const counter={}
+        
 
         for (const val of allvaluesobjects) {
           counter[val.title]=val.totalJobs
