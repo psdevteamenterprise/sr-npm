@@ -126,7 +126,6 @@ async function loadJobs(_$w) {
       let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
       
       fields.push({_id:"Location",title:"Location"}); 
-     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
@@ -145,30 +144,30 @@ async function loadJobs(_$w) {
       for(const [key, value] of valuesByFieldId) {
         for(const field of fields) {
           if(field._id===key) {
-           let originalOptions=[];
-          if(key==="Location") {
-            originalOptions=value.map(city=>({
-                label: city.city,
-                value: city._id
-            }));
-        }
-        else{
-            originalOptions=value
-        }
+            let originalOptions=[];
+            if(key==="Location") {
+              originalOptions=value.map(city=>({
+                  label: city.city,
+                  value: city._id
+              }));
+            }
+            else{
+                originalOptions=value
+            }
 
-        optionsByFieldId.set(key, originalOptions);
-        
+            optionsByFieldId.set(key, originalOptions);
+            for (const val of allvaluesobjects) {
+              counter[val.title]=val.totalJobs
+            }
 
-        for (const val of allvaluesobjects) {
-          counter[val.title]=val.totalJobs
-        }
-
-        countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
+            countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
             updateOptionsUI(_$w,field.title, field._id, ''); // no search query
+            _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
               dontUpdateThisCheckBox=field._id;
             const selected = ev.target.value; // array of selected value IDs
+            console.log("selected: ",selected)
             if (selected && selected.length) {
               selectedByField.set(field._id, selected);
             } else {
@@ -193,8 +192,8 @@ async function loadJobs(_$w) {
 
     await refreshFacetCounts(_$w);
 // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
-      //   const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
-      //   updateOptionsUI($item, itemData._id, query);
+//         const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
+//         updateOptionsUI($item, itemData._id, query);
 
 
 
