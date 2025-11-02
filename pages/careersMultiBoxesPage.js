@@ -25,7 +25,7 @@ async function careersMultiBoxesPageOnReady(_$w) {
     }
     
     await  loadJobs(_$w);
-  //  await loadFilters(_$w);
+    await loadFilters(_$w);
     //selected values repeater on item ready
     //await loadSelectedValuesRepeater(_$w);
     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
@@ -124,8 +124,10 @@ async function loadJobs(_$w) {
     try {
       // 1) Load all categories (fields)
       let fields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+      
       fields.push({_id:"Location",title:"Location"}); 
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
+      console.log("fields: ",fields)
+     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).data = fields;
       const cities=await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id]=city.jobIds;
@@ -135,77 +137,81 @@ async function loadJobs(_$w) {
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
+      console.log("valuesByFieldId: ",valuesByFieldId)
+      //_$w("#CategoryCheckBox").options = fields;
+
+
   
   
       // 3) Bind each filter repeater item
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).onItemReady(async ($item, itemData) => {
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onClick(()=>{
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapsed ? $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).expand() : $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapse()
-      })
-        const fieldId = itemData._id;
+    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).onItemReady(async ($item, itemData) => {
+    //   //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onClick(()=>{
+    //   //   $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapsed ? $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).expand() : $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_CHECKBOX_CONTAINER).collapse()
+    //   // })
+    //     const fieldId = itemData._id;
   
-        // Set the filter label (category name)
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
+    //     // Set the filter label (category name)
+    //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).placeholder = itemData.title
   
-        // Build CheckboxGroup options for this field
-        const fieldValues = valuesByFieldId.get(fieldId) || [];
-        let originalOptions=[];
-        if(fieldId==="Location") {
-            originalOptions=fieldValues.map(city=>({
-                label: city.city,
-                value: city._id
-            }));
-        }
-        else{
-            originalOptions=fieldValues
-        }
+    //     // Build CheckboxGroup options for this field
+    //     const fieldValues = valuesByFieldId.get(fieldId) || [];
+    //     let originalOptions=[];
+    //     if(fieldId==="Location") {
+    //         originalOptions=fieldValues.map(city=>({
+    //             label: city.city,
+    //             value: city._id
+    //         }));
+    //     }
+    //     else{
+    //         originalOptions=fieldValues
+    //     }
 
-        optionsByFieldId.set(fieldId, originalOptions);
-        const counter={}
+    //     optionsByFieldId.set(fieldId, originalOptions);
+    //     const counter={}
 
-        for (const val of allvaluesobjects) {
-          counter[val.title]=val.totalJobs
-        }
-        for(const city of cities) {
-          counter[city.city]=city.count
-        }
+    //     for (const val of allvaluesobjects) {
+    //       counter[val.title]=val.totalJobs
+    //     }
+    //     for(const city of cities) {
+    //       counter[city.city]=city.count
+    //     }
 
-        countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
+    //     countsByFieldId.set(fieldId, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
   
-        // Initialize UI
-        updateOptionsUI($item, fieldId, ''); // no search query
+    //     // Initialize UI
+    //     updateOptionsUI($item, fieldId, ''); // no search query
   
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).selectedIndices = []; // start empty
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange(async (ev) => {
-        dontUpdateThisCheckBox=fieldId;
-      const selected = ev.target.value; // array of selected value IDs
-      if (selected && selected.length) {
-        selectedByField.set(fieldId, selected);
-      } else {
-        selectedByField.delete(fieldId);
-      }
-      await applyJobFilters(_$w,fieldId); // re-query jobs
-      await refreshFacetCounts(_$w);    // recompute and update counts in all lists
-      await updateSelectedValuesRepeater(_$w);
-      updateTotalJobsCountText(_$w);
-    });
+    //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).selectedIndices = []; // start empty
+    //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).onChange(async (ev) => {
+    //     dontUpdateThisCheckBox=fieldId;
+    //   const selected = ev.target.value; // array of selected value IDs
+    //   if (selected && selected.length) {
+    //     selectedByField.set(fieldId, selected);
+    //   } else {
+    //     selectedByField.delete(fieldId);
+    //   }
+    //   await applyJobFilters(_$w,fieldId); // re-query jobs
+    //   await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+    //   await updateSelectedValuesRepeater(_$w);
+    //   updateTotalJobsCountText(_$w);
+    // });
     
-          // Input typing -> only filter this list’s visible options (no Jobs query)
-        const runFilter = debounce(() => {
-          const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
-          updateOptionsUI($item, fieldId, query);
-        }, 150);
-        $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onInput(runFilter);
-      });
+    //       // Input typing -> only filter this list’s visible options (no Jobs query)
+    //     const runFilter = debounce(() => {
+    //       const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
+    //       updateOptionsUI($item, fieldId, query);
+    //     }, 150);
+    //     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).onInput(runFilter);
+    //   });
   
-      await refreshFacetCounts(_$w);
+      //await refreshFacetCounts(_$w);
           // After counts are ready, re-render all items to show numbers
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
-        const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
-        updateOptionsUI($item, itemData._id, query);
+      // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER).forEachItem(($item, itemData) => {
+      //   const query = ($item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_LABEL).value || '').toLowerCase().trim();
+      //   updateOptionsUI($item, itemData._id, query);
       
   
-      });
+      // });
     } catch (err) {
       console.error('Failed to load filters:', err);
     }
