@@ -133,12 +133,48 @@ async function loadJobs(_$w) {
         valueToJobs[city._id]=city.jobIds;
       }
       // 2) Load all values once and group them by referenced field
-     
+     let found=false;
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
       valuesByFieldIdGlobal = valuesByFieldId; // store globally
       console.log("valuesByFieldId: ",valuesByFieldId)
-      //_$w("#CategoryCheckBox").options = fields;
+      
+      for(const elemenet of Object.keys(valuesByFieldId)) {
+        for(const field of fields) {
+          if(field._id===elemenet && field.title==="Category") {
+            updateOptionsUI(_$w,field.title, field._id, ''); // no search query
+            console.log("field: ",field)
+            console.log("elemenet: ",elemenet)
+            console.log("valuesByFieldId.get(elemenet): ",valuesByFieldId.get(elemenet))
+            //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
+            _$w(`${field.title}CheckBox`).onChange(async (ev) => {
+              dontUpdateThisCheckBox=field._id;
+            const selected = ev.target.value; // array of selected value IDs
+            if (selected && selected.length) {
+              selectedByField.set(field._id, selected);
+            } else {
+              selectedByField.delete(field._id);
+            }
+            await applyJobFilters(_$w,field._id); // re-query jobs
+           // await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+           // await updateSelectedValuesRepeater(_$w);
+            updateTotalJobsCountText(_$w);
+          });
+                  const runFilter = debounce(() => {
+          const query = (_$w(`${field.title}input`).value || '').toLowerCase().trim();
+          updateOptionsUI(_$w, field.title, field._id, query);
+        }, 150);
+        _$w(`${field.title}input`).onInput(runFilter);
+            found=true;
+            break;
+        }
+      }
+      if(found) {
+        break;
+      }
+    }
+
+      //
 
 
   
@@ -241,7 +277,7 @@ async function loadJobs(_$w) {
     };
   };
 
-  function updateOptionsUI($item, fieldId, searchQuery) {
+  function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(dontUpdateThisCheckBox===fieldId)
@@ -271,12 +307,13 @@ async function loadJobs(_$w) {
       : withCounts;
   
     // Preserve currently selected values that are still visible
-    const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
+   // const prevSelected = $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value || [];
+   const prevSelected = _$w(`${fieldTitle}CheckBox`).value || [];
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
   
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).options = filtered;
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.FILTER_REPEATER_ITEM_CHECKBOX).value = preserved;
+    _$w(`${fieldTitle}CheckBox`).options = filtered;
+    _$w(`${fieldTitle}CheckBox`).value = preserved;
 
   }
 
