@@ -33,7 +33,10 @@ async function careersMultiBoxesPageOnReady(_$w) {
     //selected values repeater on item ready
     await loadSelectedValuesRepeater(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
+        console.log("selectedByField before clear: ",selectedByField)
+        
         selectedByField.clear();
+        console.log("selectedByField after clear : ",selectedByField)
         await applyJobFilters(_$w);
         await refreshFacetCounts(_$w);
         await updateSelectedValuesRepeater(_$w);
@@ -119,7 +122,7 @@ async function loadSelectedValuesRepeater(_$w) {
             //   }
             // });
     
-            await applyJobFilters(_$w,fieldId);
+            await applyJobFilters(_$w);
             await refreshFacetCounts(_$w);
             await updateSelectedValuesRepeater(_$w);
             updateTotalJobsCountText(_$w);
@@ -195,8 +198,8 @@ async function loadJobs(_$w) {
             } else {
               selectedByField.delete(field._id);  
             }
-            await applyJobFilters(_$w,field._id); // re-query jobs
-            await refreshFacetCounts(_$w,field.title);    // recompute and update counts in all lists
+            await applyJobFilters(_$w); // re-query jobs
+            await refreshFacetCounts(_$w);    // recompute and update counts in all lists
             await updateSelectedValuesRepeater(_$w);
             updateTotalJobsCountText(_$w);
           });
@@ -365,7 +368,7 @@ async function loadJobs(_$w) {
 
   }
 
-  async function applyJobFilters(_$w,filterByField) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=alljobs;
     let addedJobsIds=[]
@@ -397,12 +400,13 @@ async function loadJobs(_$w) {
     }
 
     currentJobs=finalFilteredJobs;
+    console.log("currentJobs length: ",currentJobs.length)
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = currentJobs;
   
   }
 
 
-async function refreshFacetCounts(_$w,fieldTitle) {   
+async function refreshFacetCounts(_$w) {   
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -451,6 +455,7 @@ async function refreshFacetCounts(_$w,fieldTitle) {
           selectedItems.push({ _id: `${fieldId}:${id}`, label, fieldId, valueId: id });
       }
     }
+    console.log("selectedItems inside updateSelectedValuesRepeater: ",selectedItems)
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
   }
 
