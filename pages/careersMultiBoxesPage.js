@@ -166,6 +166,8 @@ async function loadJobs(_$w) {
             _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
             //_$w("#CategoryCheckBox").options = valuesByFieldId.get(elemenet);
             _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
+              console.log("valuesByFieldId: ",valuesByFieldId)
+              console.log("fields: ",fields)
               dontUpdateThisCheckBox=field._id;
               console.log("dontUpdateThisCheckBox ",dontUpdateThisCheckBox)
             const selected = ev.target.value; // array of selected value IDs
