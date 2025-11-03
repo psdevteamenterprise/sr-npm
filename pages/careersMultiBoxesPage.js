@@ -29,6 +29,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
           _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
         }
         selectedByField.clear();
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
         await updateJobsAndNumbersAndFilters(_$w,true);
         }
     });
