@@ -38,6 +38,7 @@ async function handleUrlParams(_$w,urlParams) {
       console.log("selectedByField: ", selectedByField);
       console.log("optionsByFieldId: ", optionsByFieldId);
       //await updateJobsAndNumbersAndFilters(_$w);
+      
     }
 }
 
