@@ -37,8 +37,18 @@ function groupValuesByField(values, refKey) {
     return items;
   }
 
+  function getFieldById(fieldId,allFields) {
+    return allFields.find(field=>field._id===fieldId);
+  }
+
+  function getFieldByTitle(title,allFields) {
+    return allFields.find(field=>field.title===title);
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
     getAllRecords,
+    getFieldById,
+    getFieldByTitle,
 }
