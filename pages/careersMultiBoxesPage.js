@@ -59,7 +59,14 @@ async function handleUrlParams(_$w,urlParams) {
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
         selectedByField.set(field._id, [option.value]);
         applyFiltering=true
-        dontUpdateThisCheckBox=field._id;
+        if(dontUpdateThisCheckBox)
+        {
+          //to update the checkboxes after applying the filters
+          dontUpdateThisCheckBox=null;
+        }
+        else{
+          dontUpdateThisCheckBox=field._id;
+        }
       }
       else {
         console.warn("category value not found in dropdown options");
