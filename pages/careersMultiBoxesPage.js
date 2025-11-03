@@ -34,10 +34,25 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 async function handleUrlParams(_$w,urlParams) {
   let applyFiltering=false;
     if(urlParams.brand) {
-      const brandValue = decodeURIComponent(urlParams.brand);
-      const field=getFieldByTitle(fieldTitlesInCMS.brand,allfields);
+      applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
+    }
+    if(urlParams.category) {
+      applyFiltering=await handleParams(_$w,"category",urlParams.category)
+    }
+    if(urlParams.keyword) {
+      console.log("keyword urlparam handling coming soon...")
+    }
+    if(applyFiltering) {
+      await updateJobsAndNumbersAndFilters(_$w);
+    }
+}
+
+async function handleParams(_$w,param,value) {
+  let applyFiltering=false;
+       const decodedValue = decodeURIComponent(value);
+      const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
       const options=optionsByFieldId.get(field._id);
-      const option=getCorrectOption(brandValue,options);
+      const option=getCorrectOption(decodedValue,options);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
@@ -46,38 +61,9 @@ async function handleUrlParams(_$w,urlParams) {
         dontUpdateThisCheckBox=field._id;
       }
       else {
-        console.warn("brand value not found in dropdown options");
+        console.warn(`${param} value not found in dropdown options`);
       }
-    }
-    if(urlParams.category) {
-      const categoryValue = decodeURIComponent(urlParams.category);
-      const field=getFieldByTitle(fieldTitlesInCMS.category,allfields);
-      const options=optionsByFieldId.get(field._id);
-      const option=getCorrectOption(categoryValue,options);
-      if(option) {
-        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
-        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
-        selectedByField.set(field._id, [option.value]);
-        applyFiltering=true
-        if(dontUpdateThisCheckBox)
-        {
-          //to update the checkboxes after applying the filters
-          dontUpdateThisCheckBox=null;
-        }
-        else{
-          dontUpdateThisCheckBox=field._id;
-        }
-      }
-      else {
-        console.warn("category value not found in dropdown options");
-      }
-    }
-    if(urlParams.keyword) {
-      console.log("keyword urlparam handling coming soon...")
-    }
-    if(applyFiltering) {
-      await updateJobsAndNumbersAndFilters(_$w);
-    }
+      return applyFiltering;
 }
 
 async function loadPaginationButtons(_$w) {
