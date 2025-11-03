@@ -380,6 +380,7 @@ function secondarySearch(_$w,query) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchJobs.length.toString();
     pagination.currentPage=1;
     handlePaginationButtons(_$w,true);
+    updateTotalJobsCountText(_$w);
 }
   function bindSearchInput(_$w) {
     const primarySearchDebounced = debounce(() => {
