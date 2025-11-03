@@ -1,7 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
 const { query,queryParams,onChange} = require("wix-location-frontend");
-const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle } = require('./pagesUtils');
+const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
@@ -33,7 +33,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 
 async function handleUrlParams(_$w,urlParams) {
     if(urlParams.brand) {
-      const brandValue = decodeURIComponent(urlParams.Brand);
+      const brandValue = decodeURIComponent(urlParams.brand);
       console.log("brandValue: ", brandValue);
       console.log("selectedByField: ", selectedByField);
       console.log("optionsByFieldId: ", optionsByFieldId);
@@ -42,7 +42,7 @@ async function handleUrlParams(_$w,urlParams) {
       console.log("field: ", field);
       const options=optionsByFieldId.get(field._id);
       console.log("all the options: are ", options);
-      const option=options.find(option=>option.label===brandValue);
+      const option=getCorrectOption(brandValue,options);
       console.log("the correctoption: ", option);
       if(option) {
         console.log("setting the value of the checkbox to: ", option.value);

@@ -45,10 +45,18 @@ function groupValuesByField(values, refKey) {
     return allFields.find(field=>field.title===title);
   }
 
+  function getCorrectOption(value,options) {
+    console.log("value: ", value);
+    const standardizedValue = value.toLowerCase().trim().replace(/[-\s]/g, '');
+    console.log("standardizedValue: ", standardizedValue);
+    return options.find(option=>option.label.toLowerCase().trim().replace(/[-\s]/g, '')===standardizedValue);
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
     getAllRecords,
     getFieldById,
     getFieldByTitle,
+    getCorrectOption,
 }
