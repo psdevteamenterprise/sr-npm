@@ -35,26 +35,13 @@ async function handleUrlParams(_$w,urlParams) {
   let applyFiltering=false;
     if(urlParams.brand) {
       const brandValue = decodeURIComponent(urlParams.brand);
-      console.log("brandValue: ", brandValue);
-      console.log("selectedByField: ", selectedByField);
-      console.log("optionsByFieldId: ", optionsByFieldId);
-      console.log("allfields: ", allfields);
       const field=getFieldByTitle(fieldTitlesInCMS.brand,allfields);
-      console.log("field: ", field);
       const options=optionsByFieldId.get(field._id);
-      console.log("all the options: are ", options);
       const option=getCorrectOption(brandValue,options);
-      console.log("the correctoption: ", option);
       if(option) {
-        console.log("setting the value of the checkbox to: ", option.value);
-        console.log("brandCheckBox options befroe: ", _$w(`#${FiltersIds[field.title]}CheckBox`).options);
-       // _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
-       console.log("optionIndex: ", optionIndex);
-       
        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
         selectedByField.set(field._id, [option.value]);
-        console.log("brandCheckBox options: after ", _$w(`#${FiltersIds[field.title]}CheckBox`).options);
         applyFiltering=true;
         dontUpdateThisCheckBox=field._id;
       }
@@ -64,26 +51,22 @@ async function handleUrlParams(_$w,urlParams) {
     }
     if(urlParams.category) {
       const categoryValue = decodeURIComponent(urlParams.category);
-      console.log("categoryValue: ", categoryValue);
-      console.log("selectedByField: ", selectedByField);
-      console.log("optionsByFieldId: ", optionsByFieldId);
-      console.log("allfields: ", allfields);
       const field=getFieldByTitle(fieldTitlesInCMS.category,allfields);
-      console.log("field: ", field);
       const options=optionsByFieldId.get(field._id);
-      console.log("all the options: are ", options);
       const option=getCorrectOption(categoryValue,options);
-      console.log("the correctoption: ", option);
       if(option) {
-        console.log("setting the value of the checkbox to: ", option.value);
-        //_$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
+        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
+        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
         selectedByField.set(field._id, [option.value]);
         applyFiltering=true
-
+        dontUpdateThisCheckBox=field._id;
       }
       else {
         console.warn("category value not found in dropdown options");
       }
+    }
+    if(urlParams.keyword) {
+      console.log("keyword urlparam handling coming soon...")
     }
     if(applyFiltering) {
       await updateJobsAndNumbersAndFilters(_$w);
