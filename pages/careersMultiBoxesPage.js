@@ -16,8 +16,9 @@ const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
-async function careersMultiBoxesPageOnReady(_$w,queryParams) {
-  console.log("queryParams: ", queryParams);
+async function careersMultiBoxesPageOnReady(_$w,urlParams,my_obj) {
+  console.log("urlParams: ", urlParams);
+  console.log("my_obj: ", my_obj);
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
@@ -29,12 +30,12 @@ async function careersMultiBoxesPageOnReady(_$w,queryParams) {
         }
     });
     await loadPaginationButtons(_$w);
-   await handleUrlParams(_$w,queryParams);
+   await handleUrlParams(_$w,urlParams);
 }
 
-async function handleUrlParams(_$w,queryParams) {
-    if(queryParams.Brand) {
-      const brandValue = decodeURIComponent(queryParams.Brand);
+async function handleUrlParams(_$w,urlParams) {
+    if(urlParams.Brand) {
+      const brandValue = decodeURIComponent(urlParams.Brand);
       console.log("brandValue: ", brandValue);
       console.log("selectedByField: ", selectedByField);
       console.log("optionsByFieldId: ", optionsByFieldId);

@@ -25,14 +25,16 @@ const {
   let searchInputBlurredFirstTime=true;
   let siteconfig;
 
-async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
+async function careersPageOnReady(_$w,thisObject=null,queryParams=null,my_obj) {
 if(siteconfig===undefined) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     siteconfig = queryResult.items[0];
 }
+console.log("queryParams inside careers: ", queryParams);
+console.log("my_obj inside careers: ", my_obj);
 if(siteconfig.customFields==="true") {
     console.log("queryParams$@#@$#@#$#$: ", queryParams);
-    await careersMultiBoxesPageOnReady(_$w,queryParams);
+    await careersMultiBoxesPageOnReady(_$w,queryParams,my_obj);
 }
 else{
 console.log("queryParams: ", queryParams);
