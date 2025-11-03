@@ -383,6 +383,8 @@ function secondarySearch(_$w,query) {
     pagination.currentPage=1;
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
+    console.log("_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data : ", _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data);
+    return _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data
 }
   function bindSearchInput(_$w) {
     const primarySearchDebounced = debounce(() => {
