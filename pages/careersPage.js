@@ -30,9 +30,8 @@ if(siteconfig===undefined) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     siteconfig = queryResult.items[0];
 }
-console.log("queryParams inside careers: ", queryParams);
+
 if(siteconfig.customFields==="true") {
-    console.log("queryParams$@#@$#@#$#$: ", queryParams);
     await careersMultiBoxesPageOnReady(_$w,queryParams);
 }
 else{
