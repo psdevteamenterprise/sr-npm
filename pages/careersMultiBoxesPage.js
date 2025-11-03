@@ -32,6 +32,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleUrlParams(_$w,urlParams) {
+  let applyFiltering=false;
     if(urlParams.brand) {
       const brandValue = decodeURIComponent(urlParams.brand);
       console.log("brandValue: ", brandValue);
@@ -49,13 +50,36 @@ async function handleUrlParams(_$w,urlParams) {
 
         _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
         selectedByField.set(field._id, [option.value]);
-        await updateJobsAndNumbersAndFilters(_$w);
+        applyFiltering=true;
       }
       else {
         console.warn("brand value not found in dropdown options");
       }
-      
-
+    }
+    if(urlParams.category) {
+      const categoryValue = decodeURIComponent(urlParams.category);
+      console.log("categoryValue: ", categoryValue);
+      console.log("selectedByField: ", selectedByField);
+      console.log("optionsByFieldId: ", optionsByFieldId);
+      console.log("allfields: ", allfields);
+      const field=getFieldByTitle(fieldTitlesInCMS.category,allfields);
+      console.log("field: ", field);
+      const options=optionsByFieldId.get(field._id);
+      console.log("all the options: are ", options);
+      const option=getCorrectOption(categoryValue,options);
+      console.log("the correctoption: ", option);
+      if(option) {
+        console.log("setting the value of the checkbox to: ", option.value);
+        _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
+        selectedByField.set(field._id, [option.value]);
+        applyFiltering=true
+      }
+      else {
+        console.warn("category value not found in dropdown options");
+      }
+    }
+    if(applyFiltering) {
+      await updateJobsAndNumbersAndFilters(_$w);
     }
 }
 
@@ -185,6 +209,7 @@ async function loadJobsRepeater(_$w) {
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
+          console.log(`#${FiltersIds[field.title]}CheckBox.selectedIndices: `, _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
         if (selected && selected.length) {
