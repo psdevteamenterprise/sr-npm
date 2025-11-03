@@ -52,6 +52,7 @@ async function handleParams(_$w,param,value) {
        const decodedValue = decodeURIComponent(value);
       const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
       const options=optionsByFieldId.get(field._id);
+      console.log("all options availbe for this field: ", field.title, " are ", options);
       const option=getCorrectOption(decodedValue,options);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
