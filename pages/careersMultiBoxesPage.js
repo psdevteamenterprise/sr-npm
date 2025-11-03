@@ -73,6 +73,7 @@ async function handleUrlParams(_$w,urlParams) {
         _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
         selectedByField.set(field._id, [option.value]);
         applyFiltering=true
+        
       }
       else {
         console.warn("category value not found in dropdown options");
