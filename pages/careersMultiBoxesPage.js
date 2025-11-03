@@ -16,9 +16,8 @@ const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
-async function careersMultiBoxesPageOnReady(_$w,urlParams,my_obj) {
+async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   console.log("urlParams: ", urlParams);
-  console.log("my_obj: ", my_obj);
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
