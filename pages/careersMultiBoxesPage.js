@@ -94,7 +94,6 @@ async function loadPaginationButtons(_$w) {
 async function loadSelectedValuesRepeater(_$w) {
        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
-    
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
             
@@ -102,7 +101,7 @@ async function loadSelectedValuesRepeater(_$w) {
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
             if (!fieldId || !valueId) return;
-    
+
             const existing = selectedByField.get(fieldId) || [];
             const updated = existing.filter(v => v !== valueId);
             if (updated.length) {
@@ -112,13 +111,9 @@ async function loadSelectedValuesRepeater(_$w) {
             }
 
             const field=getFieldById(fieldId,allfields);
-            
-                
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
-                
-             
             await updateJobsAndNumbersAndFilters(_$w);
           });
     });
