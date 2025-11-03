@@ -150,7 +150,8 @@ async function loadJobsRepeater(_$w) {
     handlePaginationButtons(_$w);
   }
 
-  function updateTotalJobsCountText(_$w) {
+  function updateTotalJobsCountText(_$w,secondarySearch=false) {
+    secondarySearch? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${secondarySearchJobs.length} Jobs`:
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
   }
 
@@ -380,7 +381,7 @@ function secondarySearch(_$w,query) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchJobs.length.toString();
     pagination.currentPage=1;
     handlePaginationButtons(_$w,true);
-    updateTotalJobsCountText(_$w);
+    updateTotalJobsCountText(_$w,true);
 }
   function bindSearchInput(_$w) {
     const primarySearchDebounced = debounce(() => {
