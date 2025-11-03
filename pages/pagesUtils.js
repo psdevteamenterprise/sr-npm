@@ -46,25 +46,16 @@ function groupValuesByField(values, refKey) {
   }
 
   function getCorrectOption(value,options) {
-    console.log("value: ", value);
-    const standardizedValue = value.toLowerCase().trim().replace(/[-\s]/g, '');
-    console.log("standardizedValue: ", standardizedValue);
-    return options.find(option=>option.label.toLowerCase().trim().replace(/[-\s]/g, '')===standardizedValue);
+    const standardizedValue = value.toLowerCase().trim().replace(/[^a-z0-9]/gi, '');
+    return options.find(option=>option.label.toLowerCase().trim().replace(/[^a-z0-9]/gi, '')===standardizedValue);
   }
 
   function getOptionIndexFromCheckBox(options,value) {
-    console.log("options: ", options);
-    console.log("value: ", value);
     for(let index=0;index<options.length;index++) {
-
-      console.log(`options at index ${index} is ${options[index]}`);
-      
       if(options[index].value===value) {
-        console.log(`found it !! at index ${index}`);
         return index;
       }
     }
-    return options.findIndex(option=>option.value===value);
   }
 
   module.exports = {
