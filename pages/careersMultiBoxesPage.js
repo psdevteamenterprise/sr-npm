@@ -1,7 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
 const { query,queryParams,onChange} = require("wix-location-frontend");
-const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption } = require('./pagesUtils');
+const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
@@ -48,7 +48,11 @@ async function handleUrlParams(_$w,urlParams) {
       if(option) {
         console.log("setting the value of the checkbox to: ", option.value);
 
-        _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
+       // _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
+       const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
+       console.log("optionIndex: ", optionIndex);
+       
+       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
         selectedByField.set(field._id, [option.value]);
         applyFiltering=true;
       }

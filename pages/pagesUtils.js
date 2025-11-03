@@ -52,6 +52,21 @@ function groupValuesByField(values, refKey) {
     return options.find(option=>option.label.toLowerCase().trim().replace(/[-\s]/g, '')===standardizedValue);
   }
 
+  function getOptionIndexFromCheckBox(options,value) {
+    console.log("options: ", options);
+    console.log("value: ", value);
+    for(let index=0;index<options.length;index++) {
+
+      console.log(`options at index ${index} is ${options[index]}`);
+      
+      if(options[index].value===value) {
+        console.log(`found it !! at index ${index}`);
+        return index;
+      }
+    }
+    return options.findIndex(option=>option.value===value);
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
@@ -59,4 +74,5 @@ function groupValuesByField(values, refKey) {
     getFieldById,
     getFieldByTitle,
     getCorrectOption,
+    getOptionIndexFromCheckBox,
 }
