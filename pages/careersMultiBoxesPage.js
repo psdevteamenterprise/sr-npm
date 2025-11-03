@@ -47,14 +47,16 @@ async function handleUrlParams(_$w,urlParams) {
       console.log("the correctoption: ", option);
       if(option) {
         console.log("setting the value of the checkbox to: ", option.value);
-
+        console.log("brandCheckBox options befroe: ", _$w(`#${FiltersIds[field.title]}CheckBox`).options);
        // _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
        console.log("optionIndex: ", optionIndex);
        
        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
         selectedByField.set(field._id, [option.value]);
+        console.log("brandCheckBox options: after ", _$w(`#${FiltersIds[field.title]}CheckBox`).options);
         applyFiltering=true;
+        dontUpdateThisCheckBox=field._id;
       }
       else {
         console.warn("brand value not found in dropdown options");
