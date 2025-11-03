@@ -12,6 +12,7 @@ let alljobs=[] // all jobs in the database
 let allvaluesobjects=[] // all values in the database
 let valueToJobs={} // valueId -> array of jobIds
 let currentJobs=[] // current jobs that are displayed in the jobs repeater
+let currentJobsBeforeSecondarySearch=[] 
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -21,6 +22,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
     await loadSelectedValuesRepeater(_$w);
+    await bindSearchInput(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       if(selectedByField.size>0) {
         selectedByField.clear();
@@ -346,6 +348,42 @@ async function refreshFacetCounts(_$w,clearAll=false) {
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
+  }
+
+
+function primarySearch(_$w,query) {
+  console.log("primary search query: ", query);
+}
+function secondarySearch(_$w,query) {
+  console.log("secondary search query: ", query);
+    if(query.length===0) {
+      if(currentJobsBeforeSecondarySearch.length>0) {
+      currentJobs=currentJobsBeforeSecondarySearch
+      }
+    }
+    else
+    {
+      currentJobsBeforeSecondarySearch=currentJobs;
+      currentJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
+    }
+    const jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
+    pagination.currentPage=1;
+    handlePaginationButtons(_$w);
+}
+  function bindSearchInput(_$w) {
+    const primarySearchDebounced = debounce(() => {
+      const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SEARCH_INPUT).value || '').toLowerCase().trim();
+      primarySearch(_$w, query);
+    }, 150);
+    const secondarySearchDebounced = debounce(() => {
+      const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
+      secondarySearch(_$w, query);
+    }, 150);
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SEARCH_INPUT).onInput(primarySearchDebounced);
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
   }
 
 module.exports = {

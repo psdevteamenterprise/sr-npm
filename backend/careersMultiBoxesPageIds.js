@@ -16,6 +16,11 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PAGE_BUTTON_PREVIOUS: '#previousPageButton',
     paginationCurrentText: '#paginationCurrent',
     paginationTotalCountText: '#paginationTotalCount',
+    SEARCH_INPUT: '#searchInput',
+    PRIMARY_SEARCH_RESULTS: '#resultsRepeater',
+    SEARCH_BUTTON: '#searchButton',
+    SECONDARY_SEARCH_INPUT: '#secondarySearchInput',
+
 }
 
 const fieldTitlesInCMS={
