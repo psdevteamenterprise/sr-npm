@@ -25,6 +25,9 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await bindSearchInput(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       if(selectedByField.size>0) {
+        for(const field of allfields) {
+          _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
+        }
         selectedByField.clear();
         await updateJobsAndNumbersAndFilters(_$w,true);
         }
