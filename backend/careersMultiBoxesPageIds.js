@@ -18,6 +18,11 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     paginationTotalCountText: '#paginationTotalCount',
 }
 
+const fieldTitlesInCMS={
+    "brand": "Brands",
+    category: "Category",
+}
+
 const FiltersIds={
     Category: 'Category',
     "Company Segment": 'CompanySegment',
@@ -32,4 +37,5 @@ const FiltersIds={
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
+    fieldTitlesInCMS
 }

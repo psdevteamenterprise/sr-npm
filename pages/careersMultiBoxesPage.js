@@ -1,5 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
 const { query,queryParams,onChange} = require("wix-location-frontend");
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle } = require('./pagesUtils');
 
@@ -38,9 +38,23 @@ async function handleUrlParams(_$w,urlParams) {
       console.log("selectedByField: ", selectedByField);
       console.log("optionsByFieldId: ", optionsByFieldId);
       console.log("allfields: ", allfields);
-      const field=getFieldByTitle("brand",allfields);
+      const field=getFieldByTitle(fieldTitlesInCMS.brand,allfields);
       console.log("field: ", field);
-      //await updateJobsAndNumbersAndFilters(_$w);
+      const options=optionsByFieldId.get(field._id);
+      console.log("all the options: are ", options);
+      const option=options.find(option=>option.label===brandValue);
+      console.log("the correctoption: ", option);
+      if(option) {
+        console.log("setting the value of the checkbox to: ", option.value);
+
+        _$w(`#${FiltersIds[field.title]}CheckBox`).value = [option.value];
+        selectedByField.set(field._id, [option.value]);
+        await updateJobsAndNumbersAndFilters(_$w);
+      }
+      else {
+        console.warn("brand value not found in dropdown options");
+      }
+      
 
     }
 }
