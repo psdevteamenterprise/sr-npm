@@ -358,6 +358,7 @@ function secondarySearch(_$w,query) {
   console.log("secondary search query: ", query);
     if(query.length===0) {
       if(currentJobsBeforeSecondarySearch.length>0) {
+        
       currentJobs=currentJobsBeforeSecondarySearch
       }
     }
