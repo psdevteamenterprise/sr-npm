@@ -364,9 +364,14 @@ function secondarySearch(_$w,query) {
     else
     {
       currentJobsBeforeSecondarySearch=currentJobs;
+      console.log("current jobs before secondary search length: ", currentJobsBeforeSecondarySearch.length);
+      console.log("current jobs before secondary search: ", currentJobsBeforeSecondarySearch);
       currentJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
+      console.log("current jobs length: ", currentJobs.length);
+      console.log("current jobs: ", currentJobs);
     }
     const jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
+    console.log("jobs first page: ", jobsFirstPage);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
