@@ -484,18 +484,7 @@ async function secondarySearch(_$w,query) {
           }
         }
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
-      //   let categroyFieldId;
-      //   for(const field of allfields) {
-      //     if(field.title==="Category") {
-      //       categroyFieldId=field._id;
-      //       break;
-      //   }
-      // }
-      // let categorycounts=countsByFieldId.get(categroyFieldId);
 
-
-        //_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = alljobs
-        //@@@@@@@@@@@@@@@@@
       });
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
