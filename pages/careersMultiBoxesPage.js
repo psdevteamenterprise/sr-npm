@@ -439,12 +439,11 @@ async function secondarySearch(_$w,query) {
     console.log("secondary search query is empty, resetting secondary search");
   //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
+    return;
   }
   else {
     allsecondarySearchJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
     currentSecondarySearchJobs=allsecondarySearchJobs;
-  }
- 
     const jobsFirstPage=allsecondarySearchJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
@@ -457,6 +456,7 @@ async function secondarySearch(_$w,query) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
     }
     secondarySearchIsFilled=true
+  }
     handlePaginationButtons(_$w);
     updateTotalJobsCountText(_$w);
     await refreshFacetCounts(_$w); //false for clearAll, true for secondarySearch
