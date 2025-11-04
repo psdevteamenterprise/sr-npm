@@ -54,8 +54,8 @@ async function loadPrimarySearchRepeater(_$w) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {
-      location.to(`/search?category=${itemData._id}`);
-      await handleUrlParams(_$w,originalQueryParamas);
+      await location.to(`/search?category=${itemData._id}`);
+     // await handleUrlParams(_$w,originalQueryParamas);
     });
   });
 }
