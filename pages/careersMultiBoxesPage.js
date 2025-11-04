@@ -25,14 +25,12 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await bindSearchInput(_$w);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       console.log("clear all button clicked");
-      if(selectedByField.size>0) {
+      if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value) {
         for(const field of allfields) {
           _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
         }
         selectedByField.clear();
-        console.log(" _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value ",_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value );
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
-        console.log(" _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value after clearing ",_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value );
         await updateJobsAndNumbersAndFilters(_$w,true);
         }
     });
