@@ -349,7 +349,7 @@ async function loadJobsRepeater(_$w) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
     }
     else{
-      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("jobResults");
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
     }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
@@ -426,7 +426,7 @@ function primarySearch(_$w,query) {
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
   if(filteredJobs.length>0) {
     alljobs=filteredJobs;
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("searchResult");
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = alljobs
   }
   else {
@@ -483,8 +483,20 @@ async function secondarySearch(_$w,query) {
             categoryValues.push({title:value.title+` (${value.totalJobs})` ,_id:value._id});
           }
         }
+        console.log("categoryValues: ", categoryValues);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
+      //   let categroyFieldId;
+      //   for(const field of allfields) {
+      //     if(field.title==="Category") {
+      //       categroyFieldId=field._id;
+      //       break;
+      //   }
+      // }
+      // let categorycounts=countsByFieldId.get(categroyFieldId);
 
+
+        //_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = alljobs
+        //@@@@@@@@@@@@@@@@@
       });
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
