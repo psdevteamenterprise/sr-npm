@@ -20,6 +20,8 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PRIMARY_SEARCH_RESULTS: '#resultsRepeater',
     SEARCH_BUTTON: '#searchButton',
     SECONDARY_SEARCH_INPUT: '#secondarySearchInput',
+    JOBS_MULTI_STATE_BOX:"#jobsMultiStateBox",
+
 
 }
 

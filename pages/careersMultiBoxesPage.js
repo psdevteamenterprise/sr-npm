@@ -328,6 +328,12 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
+    if(jobsFirstPage.length===0) {
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
+    }
+    else{
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
+    }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
   }
@@ -396,7 +402,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 function primarySearch(_$w,query) {
   console.log("primary search query: ", query);
 }
-function secondarySearch(_$w,query) {
+async function secondarySearch(_$w,query) {
   if(query.length===0) {
     secondarySearchJobs=currentJobs;
   }
@@ -409,18 +415,24 @@ function secondarySearch(_$w,query) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchJobs.length.toString();
     pagination.currentPage=1;
+    if(jobsFirstPage.length===0) {
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
+    }
+    else{
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("results");
+    }
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
     return secondarySearchJobs;
 }
-  function bindSearchInput(_$w) {
+  async function bindSearchInput(_$w) {
     const primarySearchDebounced = debounce(() => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SEARCH_INPUT).value || '').toLowerCase().trim();
       primarySearch(_$w, query);
     }, 150);
-    const secondarySearchDebounced = debounce(() => {
+    const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
-      secondarySearch(_$w, query);
+      await secondarySearch(_$w, query);
     }, 150);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SEARCH_INPUT).onInput(primarySearchDebounced);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
