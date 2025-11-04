@@ -61,13 +61,20 @@ async function handleUrlParams(_$w,urlParams) {
       
         console.log("(Number(urlParams.page)*pagination.pageSize).toString();  ", (Number(urlParams.page)*pagination.pageSize).toString());
         let paginationCurrentText=Number(urlParams.page)*pagination.pageSize
+        let startSlicIndex=pagination.pageSize*(pagination.currentPage-1);
+        let endSlicIndex=(pagination.pageSize)*(pagination.currentPage)+1;
         if(Number(urlParams.page)==Math.ceil(currentJobs.length/pagination.pageSize)) {
           console.log("last page, subtracting the remaining jobs from the pagination current text");
           paginationCurrentText=paginationCurrentText-(currentJobs.length%pagination.pageSize);          
+          endSlicIndex=currentJobs.length;
         }
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = paginationCurrentText.toString();
         pagination.currentPage=Number(urlParams.page);
-        const jobsFirstPage=currentJobs.slice(pagination.pageSize*(pagination.currentPage),pagination.pageSize*pagination.currentPage);
+        console.log("pagination.currentPage: ", pagination.currentPage);
+        console.log("slicing starting from: ", startSlicIndex);
+        console.log("slicing ending at: ", endSlicIndex);
+        const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
+        console.log("jobsFirstPage: ", jobsFirstPage);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
       }
