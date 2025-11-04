@@ -1,6 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
-const { query,queryParams,onChange} = require("wix-location-frontend");
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
@@ -316,10 +315,10 @@ function handlePaginationButtons(_$w,secondarySearch=false)
 {
   pagination.currentPage===1? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
   if(secondarySearch) {
-    pagination.currentPage===Math.ceil(secondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
+    pagination.currentPage>=Math.ceil(secondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
   }
   else {
-  pagination.currentPage===Math.ceil(currentJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
+  pagination.currentPage>=Math.ceil(currentJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
   }
 }
 async function refreshFacetCounts(_$w,clearAll=false) {   
@@ -365,26 +364,21 @@ function primarySearch(_$w,query) {
   console.log("primary search query: ", query);
 }
 function secondarySearch(_$w,query) {
-  console.log("secondary search query: ", query);
   if(query.length===0) {
     secondarySearchJobs=currentJobs;
   }
   else {
     secondarySearchJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
   }
-      console.log("current jobs length: ", currentJobs.length);
-      console.log("current jobs: ", currentJobs);
  
     const jobsFirstPage=secondarySearchJobs.slice(0,pagination.pageSize);
-    console.log("jobs first page: ", jobsFirstPage);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchJobs.length.toString();
     pagination.currentPage=1;
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
-    console.log("_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data : ", _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data);
-    return _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data
+    return secondarySearchJobs;
 }
   function bindSearchInput(_$w) {
     const primarySearchDebounced = debounce(() => {
@@ -400,5 +394,6 @@ function secondarySearch(_$w,query) {
   }
 
 module.exports = {
-    careersMultiBoxesPageOnReady
+    careersMultiBoxesPageOnReady,
+    secondarySearch
 };
