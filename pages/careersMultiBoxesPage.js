@@ -360,7 +360,8 @@ function handlePageUrlParam() {
   }
   
 }
-async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) {   
+async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) { 
+
   console.log("refreshing facet counts");
 
   
@@ -448,7 +449,7 @@ async function secondarySearch(_$w,query) {
     }
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
-    await refreshFacetCounts(_$w,true);
+    await refreshFacetCounts(_$w, false, true); //false for clearAll, true for secondarySearch
     return secondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
