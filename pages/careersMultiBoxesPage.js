@@ -58,7 +58,8 @@ async function handleUrlParams(_$w,urlParams) {
         queryParams.remove(["page"]);
         return;
       }
-      
+        console.log(" previous pagination.currentPage: ", pagination.currentPage);
+        pagination.currentPage=Number(urlParams.page);
         console.log("(Number(urlParams.page)*pagination.pageSize).toString();  ", (Number(urlParams.page)*pagination.pageSize).toString());
         let paginationCurrentText=Number(urlParams.page)*pagination.pageSize
         let startSlicIndex=pagination.pageSize*(pagination.currentPage-1);
@@ -69,7 +70,6 @@ async function handleUrlParams(_$w,urlParams) {
           endSlicIndex=currentJobs.length;
         }
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = paginationCurrentText.toString();
-        pagination.currentPage=Number(urlParams.page);
         console.log("pagination.currentPage: ", pagination.currentPage);
         console.log("slicing starting from: ", startSlicIndex);
         console.log("slicing ending at: ", endSlicIndex);
