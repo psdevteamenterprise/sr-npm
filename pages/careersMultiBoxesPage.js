@@ -1,4 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { queryParams } = require('wix-location-frontend');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
 
@@ -50,6 +51,9 @@ async function handleUrlParams(_$w,urlParams) {
     if(applyFiltering) {
       await updateJobsAndNumbersAndFilters(_$w);
     }
+    // if(urlParams.page) {
+
+    // }
 }
 
 async function handleParams(_$w,param,value) {
@@ -313,6 +317,7 @@ async function loadJobsRepeater(_$w) {
 
 function handlePaginationButtons(_$w,secondarySearch=false)
 {
+  handlePageUrlParam();
   pagination.currentPage===1? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
   if(secondarySearch) {
     pagination.currentPage>=Math.ceil(secondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
@@ -320,6 +325,17 @@ function handlePaginationButtons(_$w,secondarySearch=false)
   else {
   pagination.currentPage>=Math.ceil(currentJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
   }
+}
+
+function handlePageUrlParam() {
+  if(pagination.currentPage==1)
+  {
+      queryParams.remove(["page"]);
+  }
+  else{
+    queryParams.add({ page: pagination.currentPage });
+  }
+  
 }
 async function refreshFacetCounts(_$w,clearAll=false) {   
     const fieldIds = Array.from(optionsByFieldId.keys());
