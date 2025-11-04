@@ -434,7 +434,8 @@ function primarySearch(_$w,query) {
   console.log("primary search query: ", query);
 }
 async function secondarySearch(_$w,query) {
-  if(query.length===0) {
+  console.log("secondary search query: ", query);
+  if(query.length===0 || query===undefined) {
   //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
   }
