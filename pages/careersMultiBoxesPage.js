@@ -360,10 +360,39 @@ function handlePageUrlParam() {
   }
   
 }
-async function refreshFacetCounts(_$w,clearAll=false) {   
+async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) {   
   console.log("refreshing facet counts");
+
+  
+  secondarySearch? countJobsPerField(secondarySearchJobs):countJobsPerField(currentJobs);
+    // const fieldIds = Array.from(optionsByFieldId.keys());
+    // const currentJobsIds=currentJobs.map(job=>job._id);
+    // for (const fieldId of fieldIds) {
+    //     let currentoptions=optionsByFieldId.get(fieldId)
+    //     let counter=new Map();
+    //     for(const option of currentoptions) {
+    //         for (const jobId of currentJobsIds) {
+    //             if (valueToJobs[option.value].includes(jobId)) {
+    //                 counter.set(option.value, (counter.get(option.value) || 0) + 1);
+    //             }
+    //         }
+    //     }
+    //     countsByFieldId.set(fieldId, counter);
+    // }
+
+    console.log("countsByFieldId: ", countsByFieldId);
+
+    for(const field of allfields) {
+        const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
+        clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
+        // no search query
+    }
+  }
+
+
+  function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
-    const currentJobsIds=currentJobs.map(job=>job._id);
+    const currentJobsIds=jobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
         let counter=new Map();
@@ -376,16 +405,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
         }
         countsByFieldId.set(fieldId, counter);
     }
-
-    console.log("countsByFieldId: ", countsByFieldId);
-
-    for(const field of allfields) {
-        const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
-        clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
-        // no search query
-    }
   }
-
  
 
   function updateSelectedValuesRepeater(_$w) {
@@ -426,7 +446,7 @@ async function secondarySearch(_$w,query) {
     }
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
-    await refreshFacetCounts(_$w);
+    await refreshFacetCounts(_$w,true);
     return secondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
