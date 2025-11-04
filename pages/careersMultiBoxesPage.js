@@ -16,11 +16,13 @@ let currentJobs=[] // current jobs that are displayed in the jobs repeater
 let allsecondarySearchJobs=[] // secondary search results that are displayed in the jobs repeater
 let currentSecondarySearchJobs=[] // current secondary search results that are displayed in the jobs repeater
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
+let originalQueryParamas;
 const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
+    originalQueryParamas=urlParams;
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadPrimarySearchRepeater(_$w);
@@ -53,6 +55,7 @@ async function loadPrimarySearchRepeater(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {
       location.to(`/search?category=${itemData._id}`);
+      await handleUrlParams(_$w,originalQueryParamas);
     });
   });
 }
