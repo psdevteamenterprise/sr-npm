@@ -423,6 +423,7 @@ async function secondarySearch(_$w,query) {
     }
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
+    await refreshFacetCounts(_$w);
     return secondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
