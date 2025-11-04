@@ -117,7 +117,7 @@ async function loadPaginationButtons(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
       console.log("previous page button clicked");
       console.log("current displayed jobs: ", _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data);
-      let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-2),pagination.pageSize*pagination.currentPage);
+      let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-2),pagination.pageSize*pagination.currentPage-1);
       console.log("previousPageJobs ",previousPageJobs);
       console.log("current pagination.currentPage: ", pagination.currentPage);
       pagination.currentPage--;
