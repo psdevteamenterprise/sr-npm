@@ -51,9 +51,26 @@ async function handleUrlParams(_$w,urlParams) {
     if(applyFiltering) {
       await updateJobsAndNumbersAndFilters(_$w);
     }
-    // if(urlParams.page) {
-
-    // }
+    if(urlParams.page) {
+      console.log("urlParams.page: ", urlParams.page);
+      if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
+        console.log("page number is invalid, removing page from url");
+        queryParams.remove(["page"]);
+        return;
+      }
+      
+        console.log("(Number(urlParams.page)*pagination.pageSize).toString();  ", (Number(urlParams.page)*pagination.pageSize).toString());
+        let paginationCurrentText=Number(urlParams.page)*pagination.pageSize
+        if(Number(urlParams.page)==Math.ceil(currentJobs.length/pagination.pageSize)) {
+          console.log("last page, subtracting the remaining jobs from the pagination current text");
+          paginationCurrentText=paginationCurrentText-(currentJobs.length%pagination.pageSize);          
+        }
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = paginationCurrentText.toString();
+        pagination.currentPage=Number(urlParams.page);
+        const jobsFirstPage=currentJobs.slice(pagination.pageSize*(pagination.currentPage),pagination.pageSize*pagination.currentPage);
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
+        handlePaginationButtons(_$w);
+      }
 }
 
 async function handleParams(_$w,param,value) {
