@@ -419,7 +419,7 @@ async function secondarySearch(_$w,query) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
     }
     else{
-      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("results");
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
     }
     handlePaginationButtons(_$w,true);
     updateTotalJobsCountText(_$w,true);
