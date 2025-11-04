@@ -13,6 +13,7 @@ let allvaluesobjects=[] // all values in the database
 let valueToJobs={} // valueId -> array of jobIds
 let currentJobs=[] // current jobs that are displayed in the jobs repeater
 let secondarySearchJobs=[] // secondary search results that are displayed in the jobs repeater
+let secondarySearchIsFilled=false // whether the secondary search is filled with results
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -31,6 +32,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
         }
         selectedByField.clear();
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
+        secondarySearchIsFilled=false;
         await updateJobsAndNumbersAndFilters(_$w,true);
         }
     });
@@ -171,8 +173,8 @@ async function loadJobsRepeater(_$w) {
     handlePaginationButtons(_$w);
   }
 
-  function updateTotalJobsCountText(_$w,secondarySearch=false) {
-    secondarySearch? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${secondarySearchJobs.length} Jobs`:
+  function updateTotalJobsCountText(_$w) {
+    secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${secondarySearchJobs.length} Jobs`:
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
   }
 
@@ -245,9 +247,9 @@ async function loadJobsRepeater(_$w) {
 
  
 
-  async function updateJobsAndNumbersAndFilters(_$w) {
+  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
     await applyJobFilters(_$w); // re-query jobs
-    await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+    await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
   }
@@ -338,11 +340,11 @@ async function loadJobsRepeater(_$w) {
     handlePaginationButtons(_$w);
   }
 
-function handlePaginationButtons(_$w,secondarySearch=false)
+function handlePaginationButtons(_$w)
 {
   handlePageUrlParam();
   pagination.currentPage===1? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
-  if(secondarySearch) {
+  if(secondarySearchIsFilled) {
     pagination.currentPage>=Math.ceil(secondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
   }
   else {
@@ -360,12 +362,11 @@ function handlePageUrlParam() {
   }
   
 }
-async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) { 
+async function refreshFacetCounts(_$w,clearAll=false) { 
 
   console.log("refreshing facet counts");
 
-  
-  secondarySearch? countJobsPerField(secondarySearchJobs):countJobsPerField(currentJobs);
+  secondarySearchIsFilled? countJobsPerField(secondarySearchJobs):countJobsPerField(currentJobs);
     // const fieldIds = Array.from(optionsByFieldId.keys());
     // const currentJobsIds=currentJobs.map(job=>job._id);
     // for (const fieldId of fieldIds) {
@@ -431,6 +432,7 @@ function primarySearch(_$w,query) {
 async function secondarySearch(_$w,query) {
   if(query.length===0) {
     secondarySearchJobs=currentJobs;
+    secondarySearchIsFilled=false;
   }
   else {
     secondarySearchJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
@@ -447,9 +449,10 @@ async function secondarySearch(_$w,query) {
     else{
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
     }
-    handlePaginationButtons(_$w,true);
-    updateTotalJobsCountText(_$w,true);
-    await refreshFacetCounts(_$w, false, true); //false for clearAll, true for secondarySearch
+    secondarySearchIsFilled=true
+    handlePaginationButtons(_$w);
+    updateTotalJobsCountText(_$w);
+    await refreshFacetCounts(_$w); //false for clearAll, true for secondarySearch
     return secondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
