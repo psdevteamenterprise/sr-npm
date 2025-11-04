@@ -439,7 +439,8 @@ async function secondarySearch(_$w,query) {
     console.log("secondary search query is empty, resetting secondary search");
   //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
-    
+    await updateJobsAndNumbersAndFilters(_$w); // we do this here because of the case when searching the list and adding filters from the side, and we delete the search query, so we need to refresh the counts and the jobs
+    return;
   }
   else {
     allsecondarySearchJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
@@ -457,6 +458,7 @@ async function secondarySearch(_$w,query) {
     }
     secondarySearchIsFilled=true
   }
+  
     handlePaginationButtons(_$w);
     updateTotalJobsCountText(_$w);
     await refreshFacetCounts(_$w); //false for clearAll, true for secondarySearch
