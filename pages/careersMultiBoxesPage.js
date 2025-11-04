@@ -327,8 +327,6 @@ async function loadJobsRepeater(_$w) {
         tempFilteredJobs=[];
     }
     secondarySearchIsFilled? currentSecondarySearchJobs=finalFilteredJobs:currentJobs=finalFilteredJobs;
-
-    //currentJobs=finalFilteredJobs;
     let jobsFirstPage=[];
     secondarySearchIsFilled? jobsFirstPage=currentSecondarySearchJobs.slice(0,pagination.pageSize):jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
@@ -368,26 +366,7 @@ function handlePageUrlParam() {
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
-  console.log("refreshing facet counts");
-
   secondarySearchIsFilled? countJobsPerField(currentSecondarySearchJobs):countJobsPerField(currentJobs);
-    // const fieldIds = Array.from(optionsByFieldId.keys());
-    // const currentJobsIds=currentJobs.map(job=>job._id);
-    // for (const fieldId of fieldIds) {
-    //     let currentoptions=optionsByFieldId.get(fieldId)
-    //     let counter=new Map();
-    //     for(const option of currentoptions) {
-    //         for (const jobId of currentJobsIds) {
-    //             if (valueToJobs[option.value].includes(jobId)) {
-    //                 counter.set(option.value, (counter.get(option.value) || 0) + 1);
-    //             }
-    //         }
-    //     }
-    //     countsByFieldId.set(fieldId, counter);
-    // }
-
-    console.log("countsByFieldId: ", countsByFieldId);
-
     for(const field of allfields) {
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
         clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
@@ -397,7 +376,6 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
 
   function countJobsPerField(jobs) {
-    console.log("counting jobs per field for jobs: ", jobs);
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=jobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -412,7 +390,6 @@ async function refreshFacetCounts(_$w,clearAll=false) {
         }
         countsByFieldId.set(fieldId, counter);
     }
-    console.log("countsByFieldId inside countJobsPerField: ", countsByFieldId);
   }
  
 
@@ -434,10 +411,7 @@ function primarySearch(_$w,query) {
   console.log("primary search query: ", query);
 }
 async function secondarySearch(_$w,query) {
-  console.log("secondary search query: ", query);
   if(query.length===0 || query===undefined || query==='') {
-    console.log("secondary search query is empty, resetting secondary search");
-  //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
     await updateJobsAndNumbersAndFilters(_$w); // we do this here because of the case when searching the list and adding filters from the side, and we delete the search query, so we need to refresh the counts and the jobs
     return;
@@ -461,7 +435,7 @@ async function secondarySearch(_$w,query) {
   
     handlePaginationButtons(_$w);
     updateTotalJobsCountText(_$w);
-    await refreshFacetCounts(_$w); //false for clearAll, true for secondarySearch
+    await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
