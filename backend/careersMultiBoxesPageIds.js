@@ -29,6 +29,8 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
 
 }
 
+const CATEGORY_CUSTOM_FIELD_ID_IN_CMS='5cd8c873c9e77c0008aa7d23';
+
 const fieldTitlesInCMS={
     "brand": "Brands",
     category: "Category",
@@ -48,5 +50,6 @@ const FiltersIds={
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
-    fieldTitlesInCMS
+    fieldTitlesInCMS,   
+    CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
 }
