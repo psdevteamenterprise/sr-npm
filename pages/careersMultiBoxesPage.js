@@ -391,6 +391,7 @@ async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) {
 
 
   function countJobsPerField(jobs) {
+    console.log("counting jobs per field for jobs: ", jobs);
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=jobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -405,6 +406,7 @@ async function refreshFacetCounts(_$w,clearAll=false,secondarySearch=false) {
         }
         countsByFieldId.set(fieldId, counter);
     }
+    console.log("countsByFieldId inside countJobsPerField: ", countsByFieldId);
   }
  
 
