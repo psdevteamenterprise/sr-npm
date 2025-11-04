@@ -296,7 +296,8 @@ async function loadJobsRepeater(_$w) {
 
   async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
-    let finalFilteredJobs=alljobs;
+    let finalFilteredJobs=[];
+    secondarySearchIsFilled? finalFilteredJobs=secondarySearchJobs:finalFilteredJobs=alljobs;
     let addedJobsIds=[]
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
