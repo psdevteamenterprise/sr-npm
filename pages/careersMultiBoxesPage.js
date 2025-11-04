@@ -349,7 +349,7 @@ async function loadJobsRepeater(_$w) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
     }
     else{
-      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("jobResults");
     }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
@@ -480,7 +480,7 @@ async function secondarySearch(_$w,query) {
         let categoryValues=[]
         for(const value of allvaluesobjects) {
           if(value.customField===CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
-            categoryValues.push({title:value.title+` (${value.totalJobs})`});
+            categoryValues.push({title:value.title+` (${value.totalJobs})` ,_id:value._id});
           }
         }
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
