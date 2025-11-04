@@ -439,7 +439,7 @@ async function secondarySearch(_$w,query) {
     console.log("secondary search query is empty, resetting secondary search");
   //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
-    return;
+    
   }
   else {
     allsecondarySearchJobs=currentJobs.filter(job=>job.title.toLowerCase().includes(query));
