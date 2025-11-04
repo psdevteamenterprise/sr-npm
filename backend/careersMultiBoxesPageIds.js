@@ -16,12 +16,16 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PAGE_BUTTON_PREVIOUS: '#previousPageButton',
     paginationCurrentText: '#paginationCurrent',
     paginationTotalCountText: '#paginationTotalCount',
-    SEARCH_INPUT: '#searchInput',
     PRIMARY_SEARCH_RESULTS: '#resultsRepeater',
     SEARCH_BUTTON: '#searchButton',
     SECONDARY_SEARCH_INPUT: '#secondarySearchInput',
     JOBS_MULTI_STATE_BOX:"#jobsMultiStateBox",
-
+    PRIMARY_SEARCH_INPUT: '#primarySearchInput',
+    JOB_RESULTS_REPEATER: '#jobResultsRepeater',
+    CATEGORY_RESULTS_REPEATER: '#categoryResultsRepeater',
+    PRIMARY_SEARCH_MULTI_BOX: '#primarySearchMultiBox',
+    PRIMARY_SEARCH_POSITION_BUTTON: '#primarySearechPositionButton',
+    PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
 
 }
 
