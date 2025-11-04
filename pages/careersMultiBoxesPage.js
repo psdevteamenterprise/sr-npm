@@ -1,6 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { queryParams } = require('wix-location-frontend');
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS} = require('../backend/careersMultiBoxesPageIds');
+const { location } = require("@wix/site-location");
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
@@ -52,7 +53,7 @@ async function loadPrimarySearchRepeater(_$w) {
     console.log("itemData#$@#$%@#$@#$@#$: ", itemData);
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {
-      console.log("category button clicked: ", itemData._id);
+      location.to(`?category=${itemData._id}`);
     });
   });
 }
