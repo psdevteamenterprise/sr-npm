@@ -175,7 +175,7 @@ async function loadJobsRepeater(_$w) {
   }
 
   function updateTotalJobsCountText(_$w) {
-    secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${allsecondarySearchJobs.length} Jobs`:
+    secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentSecondarySearchJobs.length} Jobs`:
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
   }
 
@@ -332,7 +332,7 @@ async function loadJobsRepeater(_$w) {
     const jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchIsFilled? currentSecondarySearchJobs.length.toString():currentJobs.length.toString();
     if(jobsFirstPage.length===0) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
     }
@@ -348,7 +348,7 @@ function handlePaginationButtons(_$w)
   handlePageUrlParam();
   pagination.currentPage===1? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
   if(secondarySearchIsFilled) {
-    pagination.currentPage>=Math.ceil(allsecondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
+    pagination.currentPage>=Math.ceil(currentSecondarySearchJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
   }
   else {
   pagination.currentPage>=Math.ceil(currentJobs.length/pagination.pageSize)? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).enable();
@@ -369,7 +369,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
   console.log("refreshing facet counts");
 
-  secondarySearchIsFilled? countJobsPerField(allsecondarySearchJobs):countJobsPerField(currentJobs);
+  secondarySearchIsFilled? countJobsPerField(currentSecondarySearchJobs):countJobsPerField(currentJobs);
     // const fieldIds = Array.from(optionsByFieldId.keys());
     // const currentJobsIds=currentJobs.map(job=>job._id);
     // for (const fieldId of fieldIds) {
@@ -434,7 +434,7 @@ function primarySearch(_$w,query) {
 }
 async function secondarySearch(_$w,query) {
   if(query.length===0) {
-    allsecondarySearchJobs=currentJobs;
+  //  allsecondarySearchJobs=currentJobs;
     secondarySearchIsFilled=false;
   }
   else {
