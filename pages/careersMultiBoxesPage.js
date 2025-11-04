@@ -52,29 +52,21 @@ async function handleUrlParams(_$w,urlParams) {
       await updateJobsAndNumbersAndFilters(_$w);
     }
     if(urlParams.page) {
-      console.log("urlParams.page: ", urlParams.page);
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
-        console.log("page number is invalid, removing page from url");
+        console.warn("page number is invalid, removing page from url");
         queryParams.remove(["page"]);
         return;
       }
-        console.log(" previous pagination.currentPage: ", pagination.currentPage);
         pagination.currentPage=Number(urlParams.page);
-        console.log("(Number(urlParams.page)*pagination.pageSize).toString();  ", (Number(urlParams.page)*pagination.pageSize).toString());
         let paginationCurrentText=Number(urlParams.page)*pagination.pageSize
         let startSlicIndex=pagination.pageSize*(pagination.currentPage-1);
         let endSlicIndex=(pagination.pageSize)*(pagination.currentPage);
         if(Number(urlParams.page)==Math.ceil(currentJobs.length/pagination.pageSize)) {
-          console.log("last page, subtracting the remaining jobs from the pagination current text");
           paginationCurrentText=paginationCurrentText-(pagination.pageSize-(currentJobs.length%pagination.pageSize));          
           endSlicIndex=currentJobs.length;
         }
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = paginationCurrentText.toString();
-        console.log("pagination.currentPage: ", pagination.currentPage);
-        console.log("slicing starting from: ", startSlicIndex);
-        console.log("slicing ending at: ", endSlicIndex);
         const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
-        console.log("jobsFirstPage: ", jobsFirstPage);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
       }
@@ -102,26 +94,16 @@ async function handleParams(_$w,param,value) {
 
 async function loadPaginationButtons(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
-      console.log("next page button clicked");
-      console.log("current displayed jobs: ", _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data);
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
-      console.log("nextPageJobs ",nextPageJobs);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = (nextPageJobs.length+pagination.pageSize*pagination.currentPage).toString();
-      console.log("current pagination.currentPage: ", pagination.currentPage);
       pagination.currentPage++;
-      console.log("new pagination.currentPage: ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
-      console.log("previous page button clicked");
-      console.log("current displayed jobs: ", _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data);
       let previousPageJobs=currentJobs.slice(pagination.pageSize*(pagination.currentPage-2),pagination.pageSize*(pagination.currentPage-1));
-      console.log("previousPageJobs ",previousPageJobs);
-      console.log("current pagination.currentPage: ", pagination.currentPage);
       pagination.currentPage--;
-      console.log("new pagination.currentPage: ", pagination.currentPage);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = (pagination.pageSize*pagination.currentPage).toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
