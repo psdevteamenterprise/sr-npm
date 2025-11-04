@@ -22,7 +22,7 @@ const pagination = {
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await loadData(_$w);
     await loadJobsRepeater(_$w);
-    await loadPrimarySearchButtons(_$w);
+    await loadPrimarySearchRepeater(_$w);
     await loadFilters(_$w);
     await loadSelectedValuesRepeater(_$w);
     await bindSearchInput(_$w);
@@ -42,14 +42,18 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
    await handleUrlParams(_$w,urlParams);
 }
 
-async function loadPrimarySearchButtons(_$w) {
+async function loadPrimarySearchRepeater(_$w) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).text = itemData.title || '';
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
    
   });
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).text = itemData.title || '';
+    console.log("itemData#$@#$%@#$@#$@#$: ", itemData);
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {
+      console.log("category button clicked: ", itemData._id);
+    });
   });
 }
 
