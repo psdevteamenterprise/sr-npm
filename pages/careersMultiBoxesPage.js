@@ -361,6 +361,7 @@ function handlePageUrlParam() {
   
 }
 async function refreshFacetCounts(_$w,clearAll=false) {   
+  console.log("refreshing facet counts");
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=currentJobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
@@ -375,6 +376,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
         }
         countsByFieldId.set(fieldId, counter);
     }
+
+    console.log("countsByFieldId: ", countsByFieldId);
 
     for(const field of allfields) {
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
