@@ -23,16 +23,20 @@ const pagination = {
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     console.log("careersMultiBoxesPageOnReady urlParams: ", urlParams);
     await loadData(_$w);
-    await loadJobsRepeater(_$w);
-    await loadPrimarySearchRepeater(_$w);
-    await loadFilters(_$w);
-    await loadSelectedValuesRepeater(_$w);
-    await bindSearchInput(_$w);
+
+    await Promise.all([
+      loadJobsRepeater(_$w),
+      loadPrimarySearchRepeater(_$w),
+      loadFilters(_$w),
+      loadSelectedValuesRepeater(_$w),
+      bindSearchInput(_$w),
+      loadPaginationButtons(_$w)
+    ]);
+    await handleUrlParams(_$w, urlParams);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
-    await loadPaginationButtons(_$w);
-   await handleUrlParams(_$w,urlParams);
+
 }
 
 async function clearAll(_$w) {
