@@ -341,30 +341,30 @@ async function loadJobsRepeater(_$w) {
     if(keyword) {
       finalFilteredJobs=currentJobs
     }
-    let addedJobsIds=[]
+    let addedJobsIds=new Set();
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
         for(const job of finalFilteredJobs) {
             if(key==="Location"){
                 //if it is location then we check if selecred values (which is an array) have job city text
                 if(values.includes(job[JOBS_COLLECTION_FIELDS.CITY_TEXT])) {
-                    if(!addedJobsIds.includes(job._id)) {
+                    if(!addedJobsIds.has(job._id)) {
                         tempFilteredJobs.push(job);
-                        addedJobsIds.push(job._id);
+                        addedJobsIds.add(job._id);
                     }
                 }
             }
             else{
             //if it is not location then we check if selecred values (which is an array) have one of the job values (whcih is also an array)
             if(job[JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES].some(value=>values.includes(value._id))) {
-                if(!addedJobsIds.includes(job._id)) {
+                if(!addedJobsIds.has(job._id)) {
                     tempFilteredJobs.push(job);
-                    addedJobsIds.push(job._id);
+                    addedJobsIds.add(job._id);
                 }
             }
         }
         }
-        addedJobsIds=[]
+        addedJobsIds.clear();
         finalFilteredJobs=tempFilteredJobs;
         tempFilteredJobs=[];
     }
