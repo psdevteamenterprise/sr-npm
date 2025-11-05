@@ -4,4 +4,5 @@ module.exports = {
   ...require('./fetchPositionsFromSRAPI'),
   ...require('./consts'),
   ...require('./data'),
+  ...require('./careersMultiBoxesPageIds'),
 };

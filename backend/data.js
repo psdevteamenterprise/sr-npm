@@ -7,10 +7,11 @@ const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
 
 
-let jobToCustomValues = {}
+
 let customValuesToJobs = {}
+let locationToJobs = {}
 let siteconfig;
-const EXCLUDED_CUSTOM_FIELDS = new Set(["Country", "Department", "Brands"]);
+const EXCLUDED_CUSTOM_FIELDS = new Set(["Department","Country"]);
 
 function getBrand(customField) {
   return customField.find(field => field.fieldLabel === 'Brands')?.valueLabel;
@@ -62,6 +63,19 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
+function getLocation(position,basicJob) {
+
+  locationToJobs[basicJob.cityText] ? locationToJobs[basicJob.cityText].push(position.id) : locationToJobs[basicJob.cityText]=[position.id]
+
+}
+function getEmploymentType(position,customFieldsValues) {
+  if (!customFieldsValues["employmentType"]) {
+    customFieldsValues["employmentType"] = {};
+  }
+  customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
+  customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].push(position.id) : customValuesToJobs[position.typeOfEmployment.id]=[position.id]
+}
+
 function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues) {
   const customFieldsArray = Array.isArray(position?.customField) ? position.customField : [];
   for (const field of customFieldsArray) {
@@ -77,10 +91,8 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     }
     customFieldsValues[fieldId][valueId] = valueLabel;
 
-    jobToCustomValues[position.id] ? jobToCustomValues[position.id].push(valueId) : jobToCustomValues[position.id]=[valueId]
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
   }
-  
 }
 async function saveJobsDataToCMS() {
   const positions = await fetchPositionsFromSRAPI();
@@ -113,9 +125,12 @@ async function saveJobsDataToCMS() {
       language: position.language?.label || '',
       brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
+      employmentType: position.typeOfEmployment.label
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
+    getEmploymentType(position,customFieldsValues);
+    getLocation(position,basicJob);
     return basicJob;
   });
   if(siteconfig===undefined) {
@@ -162,15 +177,13 @@ async function saveJobsDataToCMS() {
   console.log(`✓ All chunks processed. Total jobs saved: ${totalSaved}/${jobsData.length}`);
 }
 
-async function insertValuesReference(jobId) {
-  await wixData.insertReference(COLLECTIONS.JOBS, JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,jobId, jobToCustomValues[jobId]);
-}
 async function insertJobsReference(valueId) {
   await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, customValuesToJobs[valueId]);
 }
 
 async function populateCustomFieldsCollection(customFields) {
   fieldstoinsert=[]
+  customFields["employmentType"] = "Employment Type";
   for(const ID of Object.keys(customFields)){
     fieldstoinsert.push({
       title: customFields[ID],
@@ -180,7 +193,7 @@ async function populateCustomFieldsCollection(customFields) {
   await wixData.bulkSave(COLLECTIONS.CUSTOM_FIELDS, fieldstoinsert);
 }
 async function populateCustomValuesCollection(customFieldsValues) {
-  valuesToinsert=[]
+  let valuesToinsert=[]
   for (const fieldId of Object.keys(customFieldsValues)) {
     const valuesMap = customFieldsValues[fieldId] || {};
     for (const valueId of Object.keys(valuesMap)) {
@@ -188,8 +201,11 @@ async function populateCustomValuesCollection(customFieldsValues) {
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId,
+        totalJobs:customValuesToJobs[valueId].length,
+        jobIds:customValuesToJobs[valueId],
       })
     }
+    
   }
   await wixData.bulkSave(COLLECTIONS.CUSTOM_VALUES, valuesToinsert);
 }
@@ -201,6 +217,8 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
     if (siteconfig.customFields==="true") {
       let customValues=await getAllCustomValues();
       console.log("inserting jobs references to custom values collection");
+      console.log("customValues: ",customValues)
+      console.log("customValues.items: ",customValues.items)
       for (const value of customValues.items) {
         await insertJobsReference(value._id);
       }
@@ -244,9 +262,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
               referFriendLink: referFriendLink,
             };
             await wixData.update(COLLECTIONS.JOBS, updatedJob);
-            if (siteconfig.customFields==="true") {
-            await insertValuesReference(job._id);
-            }
             return { success: true, jobId: job._id, title: job.title };
           } catch (error) {
             console.error(`    ❌ Failed to update ${job.title} (${job._id}):`, error);
@@ -302,7 +317,7 @@ async function aggregateJobsByFieldToCMS({ field, collection }) {
   console.log(`counting jobs per ${field}.`);
   let results = await getAllPositions();
   const { jobsPerField, cityLocations,citylocationAddress } = iterateOverAllJobs(results, field);
-  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress);
+  const toSave = prepareToSaveArray(jobsPerField, cityLocations, field,citylocationAddress,locationToJobs);
   if (toSave.length === 0) {
     console.log('No jobs found.');
     return { success: true, message: 'No jobs to save.' };
@@ -455,7 +470,6 @@ async function syncJobsFast() {
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
 }
-
 
 
 async function clearCollections() {

@@ -28,6 +28,7 @@ const JOBS_COLLECTION_FIELDS = {
   BRAND: 'brand',
   BRAND_REF: 'brandRef',
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
+  EMPLOYMENT_TYPE: 'employmentType',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -38,6 +39,8 @@ const CUSTOM_VALUES_COLLECTION_FIELDS = {
   TITLE: 'title',
   CUSTOM_FIELD: 'customField',
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
+  TOTAL_JOBS: 'totalJobs',
+  JOB_IDS: 'jobIds',
 }
 const CUSTOM_FIELDS_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -52,6 +55,7 @@ const CITIES_COLLECTION_FIELDS = {
   LOCATION_ADDRESS: 'locationAddress',
   COUNT: 'count',
   COUNTRY: 'country',
+  JOB_IDS: 'jobIds',
 }
 const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
@@ -65,6 +69,7 @@ const COLLECTIONS_FIELDS = {
       {key:'locationAddress', type: 'ADDRESS'},
       {key:'count', type: 'NUMBER'},
       {key:'country', type: 'TEXT'},
+      {key:'jobIds', type: 'ARRAY'},
     ],
     JOBS: [
         {key:'location', type: 'OBJECT'},
@@ -83,7 +88,8 @@ const COLLECTIONS_FIELDS = {
         {key:'departmentref', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT } } },
         {key:'city', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CITIES } } },
         {key:'brandRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.BRANDS } } },
-        { key: 'image', type: 'IMAGE' },
+        {key: 'image', type: 'IMAGE' },
+        {key:'employmentType', type: 'TEXT'},
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
@@ -103,7 +109,9 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
+      {key:'totalJobs', type: 'NUMBER'},
       {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES } } },
+      {key:'jobIds', type: 'ARRAY'},
     ],
     CUSTOM_FIELDS: [
       {key:'title', type: 'TEXT'},
