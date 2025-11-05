@@ -51,6 +51,7 @@ async function clearAll(_$w) {
 
 
 async function loadPrimarySearchRepeater(_$w) {
+  try {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(async () => {
@@ -69,9 +70,13 @@ async function loadPrimarySearchRepeater(_$w) {
      await handleUrlParams(_$w,{category:encodedCategory});
     });
   });
+  } catch (error) {
+    console.error('Failed to load primary search repeater:', error);
+  }
 }
 
 async function handleUrlParams(_$w,urlParams) {
+  try { 
   let applyFiltering=false;
   let keyword=false
   console.log("handleUrlParams urlParams: ", urlParams);
@@ -108,6 +113,9 @@ async function handleUrlParams(_$w,urlParams) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
       }
+  } catch (error) {
+    console.error('Failed to handle url params:', error);
+  }
 }
 
 async function handleParams(_$w,param,value) {
@@ -133,6 +141,7 @@ async function handleParams(_$w,param,value) {
 }
 
 async function loadPaginationButtons(_$w) {
+  try {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = (nextPageJobs.length+pagination.pageSize*pagination.currentPage).toString();
@@ -148,9 +157,13 @@ async function loadPaginationButtons(_$w) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
     });
+  } catch (error) {
+    console.error('Failed to load pagination buttons:', error);
+  }
 }
 
 async function loadSelectedValuesRepeater(_$w) {
+  try {
        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
         // Deselect this value from both the selected map and the multibox
@@ -177,16 +190,19 @@ async function loadSelectedValuesRepeater(_$w) {
           });
     });
     await updateSelectedValuesRepeater(_$w);
+  } catch (error) {
+    console.error('Failed to load selected values repeater:', error);
+  }
 }
 
-async function loadData(_$w) {
+async function loadData() {
+  try {
     if(alljobs.length===0) {
         alljobs=await getAllRecords(COLLECTIONS.JOBS);
         currentJobs=alljobs;
       }
     if(Object.keys(valueToJobs).length === 0){
         allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        console.log("allvaluesobjects: ", allvaluesobjects);
         for (const value of allvaluesobjects) {
             valueToJobs[value._id]= value.jobIds;
         }
@@ -195,8 +211,12 @@ async function loadData(_$w) {
         allfields=await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
         allfields.push({_id:"Location",title:"Location"}); 
     }
+  } catch (error) {
+    console.error('Failed to load data:', error);
+  }
 }
 async function loadJobsRepeater(_$w) {
+  try {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title;
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).onClick(async () => {
@@ -213,7 +233,10 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = currentJobs.length.toString();
     updateTotalJobsCountText(_$w);
     handlePaginationButtons(_$w);
+  } catch (error) {
+    console.error('Failed to load jobs repeater:', error);
   }
+}
 
   function updateTotalJobsCountText(_$w) {
     secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentSecondarySearchJobs.length} Jobs`:
@@ -507,6 +530,7 @@ async function secondarySearch(_$w,query) {
     return allsecondarySearchJobs;
 }
   async function bindSearchInput(_$w) {
+    try {
     const primarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await primarySearch(_$w, query);
@@ -565,7 +589,10 @@ async function secondarySearch(_$w,query) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
       }
     });
+  } catch (error) {
+    console.error('Failed to bind search input:', error);
   }
+}
 
   async function loadCategoriesListPrimarySearch(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
