@@ -55,17 +55,22 @@ async function loadPrimarySearchRepeater(_$w) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {
-      console.log("before location.to");
-      await location.to(`/search?category=${itemData._id}`);
-      console.log("after location to");
-      to(`/search?category=${itemData._id}`);
-     // await handleUrlParams(_$w,originalQueryParamas);
+    //  console.log("before location.to");
+      //await location.to(`/search?category=${itemData._id}`);
+     // console.log("after location to");
+     // to(`/search?category=${itemData._id}`);
+     console.log("before handling shit")
+     let encodedCategory=encodeURIComponent(itemData._id);
+     
+     await handleUrlParams(_$w,{category:encodedCategory});
+     console.log("after handling url params");
     });
   });
 }
 
 async function handleUrlParams(_$w,urlParams) {
   let applyFiltering=false;
+  console.log("handleUrlParams urlParams: ", urlParams);
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
@@ -101,7 +106,9 @@ async function handleUrlParams(_$w,urlParams) {
 
 async function handleParams(_$w,param,value) {
   let applyFiltering=false;
+  console.log("handleParams param: ", param, " value: ", value);
        const decodedValue = decodeURIComponent(value);
+       console.log("decodedValue: ", decodedValue);
       const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
       const options=optionsByFieldId.get(field._id);
       console.log("all options availbe for this field: ", field.title, " are ", options);
