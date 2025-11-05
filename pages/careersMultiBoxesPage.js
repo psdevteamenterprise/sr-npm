@@ -81,7 +81,8 @@ async function handleUrlParams(_$w,urlParams) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
     if(urlParams.keyword) {
-      await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+      applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
       keyword=true;
     }
     if(applyFiltering) {
@@ -446,10 +447,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 async function primarySearch(_$w,query) {
   console.log("primary search query: ", query);
   if(query.length===0 || query===undefined || query==='') {
-    //await loadCategoriesListPrimarySearch(_$w);
-    console.log("loading categories list primary search");
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
-    return;
+    return false;
   }
 
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
@@ -458,9 +457,11 @@ async function primarySearch(_$w,query) {
     currentJobs=filteredJobs;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = currentJobs
+    return true;
   }
   else {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
+    return false;
   }
 }
 async function secondarySearch(_$w,query) {
@@ -528,7 +529,8 @@ async function secondarySearch(_$w,query) {
         else {
           let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
           queryParams.add({ keyword:encodedKeyWord });
-          await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
+          handleUrlParams(_$w,{keyword:encodedKeyWord});
+        // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
         }
       }
     });
