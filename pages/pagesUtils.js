@@ -23,7 +23,7 @@ function groupValuesByField(values, refKey) {
   };
 
   async function getAllRecords(collectionId) {
-    let q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
+    const q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
   
   
     const items = [];
