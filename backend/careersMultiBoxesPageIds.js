@@ -27,6 +27,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PRIMARY_SEARCH_POSITION_BUTTON: '#primarySearechPositionButton',
     PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
     RESULTS_CONTAINER: '#resultsContainer',
+    PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
 
 }
 

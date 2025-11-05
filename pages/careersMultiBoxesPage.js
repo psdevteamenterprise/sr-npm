@@ -72,6 +72,7 @@ async function loadPrimarySearchRepeater(_$w) {
 
 async function handleUrlParams(_$w,urlParams) {
   let applyFiltering=false;
+  let keyword=false
   console.log("handleUrlParams urlParams: ", urlParams);
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
@@ -80,10 +81,11 @@ async function handleUrlParams(_$w,urlParams) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
     if(urlParams.keyword) {
-      console.log("keyword urlparam handling coming soon...")
+      await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+      keyword=true;
     }
     if(applyFiltering) {
-      await updateJobsAndNumbersAndFilters(_$w);
+      await updateJobsAndNumbersAndFilters(_$w,false,keyword);
     }
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -281,8 +283,8 @@ async function loadJobsRepeater(_$w) {
 
  
 
-  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
-    await applyJobFilters(_$w); // re-query jobs
+  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false,keyword=false) {
+    await applyJobFilters(_$w,keyword); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
@@ -322,16 +324,17 @@ async function loadJobsRepeater(_$w) {
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-  
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
-
   }
 
-  async function applyJobFilters(_$w) {
+  async function applyJobFilters(_$w,keyword=false) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
+    if(keyword) {
+      finalFilteredJobs=currentJobs
+    }
     let addedJobsIds=[]
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
@@ -452,16 +455,13 @@ async function primarySearch(_$w,query) {
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
   console.log("filteredJobs.length: ", filteredJobs.length);
   if(filteredJobs.length>0) {
-    alljobs=filteredJobs;
+    currentJobs=filteredJobs;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = alljobs
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = currentJobs
   }
   else {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
-
   }
-
-
 }
 async function secondarySearch(_$w,query) {
   if(query.length===0 || query===undefined || query==='') {
@@ -496,27 +496,54 @@ async function secondarySearch(_$w,query) {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await primarySearch(_$w, query);
     }, 150);
+
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
     }, 150);
+
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => {
         await primarySearchDebounced();
       });
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
-        if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapsed) {
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-        await loadCategoriesListPrimarySearch(_$w);
-        }
-        else {
+
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+      if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
+        await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
+      }
+      else {
+      await loadCategoriesListPrimarySearch(_$w);
+      }
+    });
+
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+    });
+
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
+      if( event.key==='Enter') {
+        if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
           _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
         }
-      });
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-      });
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
+        else {
+          let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
+          queryParams.add({ keyword:encodedKeyWord });
+          await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
+        }
+      }
+    });
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
+      if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+      }
+      else {
+        let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
+        queryParams.add({ keyword:encodedKeyWord });
+        await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
+      }
+    });
   }
 
   async function loadCategoriesListPrimarySearch(_$w) {
