@@ -61,6 +61,7 @@ function groupValuesByField(values, refKey) {
   async function getLatestJobsByCategoryId(categoryId) {
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
     const categoryValue=result.find(value=>value._id===categoryId);
+    console.log("categoryValue: ", categoryValue);
     const jobs=categoryValue.multiRefJobsCustomValues;
 
     const latestJobs = jobs
