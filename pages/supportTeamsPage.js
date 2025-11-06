@@ -27,6 +27,7 @@ async function bindRepeater(_$w) {
             await location.to(itemData["link-jobs-title"]);
           })
     });
+    
   //  const teamName=_$w(TEAM_NAME).label.toLowerCase();
   //  _$w(RECENTLEY_ADDED_JOBS).data = await getLatestJobsByCategory(teamName);
 }
