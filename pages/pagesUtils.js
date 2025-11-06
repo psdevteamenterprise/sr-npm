@@ -63,11 +63,8 @@ function groupValuesByField(values, refKey) {
     return result.find(value=>value._id===valueId);
   }
 
-  async function getLatestJobsByValueId(Value) {
-    console.log("Value: ", Value);
+  async function getLatestJobsByValue(Value) {
     const jobs=Value.multiRefJobsCustomValues;
-    console.log("jobs: ", jobs);
-
     const latestJobs = jobs
     .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
     .slice(0, 5);
@@ -82,6 +79,6 @@ function groupValuesByField(values, refKey) {
     getFieldByTitle,
     getCorrectOption,
     getOptionIndexFromCheckBox,
-    getLatestJobsByValueId,
+    getLatestJobsByValue,
     getValueFromValueId
 }

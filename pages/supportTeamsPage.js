@@ -1,4 +1,4 @@
-const { getLatestJobsByValueId, getValueFromValueId } = require('./pagesUtils');
+const { getLatestJobsByValue, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const { supportTeamsPageIds } = require('../backend/consts');
 
@@ -23,8 +23,7 @@ async function bind(_$w) {
     const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
     const Value=await getValueFromValueId(valueId);
-    console.log("Value: ", Value);
-    const latestsJobs=await getLatestJobsByValueId(Value);
+    const latestsJobs=await getLatestJobsByValue(Value);
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
     
     _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick(async () => {
