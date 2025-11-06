@@ -16,7 +16,22 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PAGE_BUTTON_PREVIOUS: '#previousPageButton',
     paginationCurrentText: '#paginationCurrent',
     paginationTotalCountText: '#paginationTotalCount',
+    PRIMARY_SEARCH_RESULTS: '#resultsRepeater',
+    SEARCH_BUTTON: '#searchButton',
+    SECONDARY_SEARCH_INPUT: '#secondarySearchInput',
+    JOBS_MULTI_STATE_BOX:"#jobsMultiStateBox",
+    PRIMARY_SEARCH_INPUT: '#primarySearchInput',
+    JOB_RESULTS_REPEATER: '#jobResultsRepeater',
+    CATEGORY_RESULTS_REPEATER: '#categoryResultsRepeater',
+    PRIMARY_SEARCH_MULTI_BOX: '#primarySearchMultiBox',
+    PRIMARY_SEARCH_POSITION_BUTTON: '#primarySearchPositionButton',
+    PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
+    RESULTS_CONTAINER: '#resultsContainer',
+    PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
+
 }
+
+const CATEGORY_CUSTOM_FIELD_ID_IN_CMS='5cd8c873c9e77c0008aa7d23';
 
 const fieldTitlesInCMS={
     "brand": "Brands",
@@ -37,5 +52,6 @@ const FiltersIds={
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
-    fieldTitlesInCMS
+    fieldTitlesInCMS,   
+    CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
 }

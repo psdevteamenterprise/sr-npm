@@ -5,6 +5,7 @@ const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { careersMultiBoxesPageOnReady } = require('./careersMultiBoxesPage');
+
 const {
     debounce,
     getFilter,
