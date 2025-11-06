@@ -24,7 +24,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     JOB_RESULTS_REPEATER: '#jobResultsRepeater',
     CATEGORY_RESULTS_REPEATER: '#categoryResultsRepeater',
     PRIMARY_SEARCH_MULTI_BOX: '#primarySearchMultiBox',
-    PRIMARY_SEARCH_POSITION_BUTTON: '#primarySearechPositionButton',
+    PRIMARY_SEARCH_POSITION_BUTTON: '#primarySearchPositionButton',
     PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
     RESULTS_CONTAINER: '#resultsContainer',
     PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
