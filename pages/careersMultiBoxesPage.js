@@ -68,11 +68,11 @@ async function loadPrimarySearchRepeater(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
       console.log("primary search category button clicked#%@#%%#$#$%: ", itemData);
-      const url = await location.baseUrl();
-      console.log("url: ", url);
-      await location.to(`${url}?category=${encodeURIComponent(itemData._id)}`);
+      const baseUrl = await location.baseUrl();
+      console.log("baseUrl: ", baseUrl);
+     // await location.to(`${baseUrl}/search?category=${encodeURIComponent(itemData._id)}`);
     });
-  });
+  }); 
   } catch (error) {
     console.error('Failed to load primary search repeater:', error);
   }
@@ -568,11 +568,11 @@ async function secondarySearch(_$w,query) {
           _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
           await updateJobsAndNumbersAndFilters(_$w);
 
-        }
+        } 
         else {
           let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-          const url = await location.url();
-          await location.to(`${url}?keyword=${encodedKeyWord}`);
+          const baseUrl = await location.baseUrl();
+          await location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
           // queryParams.add({ keyword:encodedKeyWord });
           // handleUrlParams(_$w,{keyword:encodedKeyWord});
          // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
@@ -589,8 +589,8 @@ async function secondarySearch(_$w,query) {
       }
       else {
         let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-        const url = await location.url();
-        await location.to(`${url}?keyword=${encodedKeyWord}`);
+        const baseUrl = await location.baseUrl();
+        await location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
         // queryParams.add({ keyword:encodedKeyWord });
         // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
         // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
