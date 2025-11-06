@@ -1,7 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { queryParams} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS} = require('../backend/careersMultiBoxesPageIds');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox,loadPrimarySearchRepeater,bindPrimarySearch,primarySearch } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;

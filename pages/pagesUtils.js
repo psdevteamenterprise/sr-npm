@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS } = require('../backend/careersMultiBoxesPageIds');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
