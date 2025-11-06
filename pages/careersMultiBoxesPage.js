@@ -68,7 +68,8 @@ async function loadPrimarySearchRepeater(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
       console.log("primary search category button clicked#%@#%%#$#$%: ", itemData);
-      const url = await location.url();
+      const url = await location.baseUrl();
+      console.log("url: ", url);
       await location.to(`${url}?category=${encodeURIComponent(itemData._id)}`);
     });
   });
