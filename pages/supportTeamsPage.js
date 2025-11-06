@@ -5,13 +5,25 @@ const { supportTeamsPageIds } = require('../backend/consts');
 
 
 async function supportTeasmPageOnReady(_$w) {
-    bind(_$w);
+    handleRecentJobsSection(_$w);
     
 }
 
 
 
-async function bind(_$w) {
+async function handleRecentJobsSection(_$w) {
+
+    const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
+    const Value=await getValueFromValueId(valueId);
+    const latestsJobs=await getLatestJobsByValue(Value);
+
+    if(latestsJobs.length === 0) {
+        console.log("No jobs found , collapsing recently Jobs Section ");
+        _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).collapse();
+        return;
+    }
+
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
@@ -20,10 +32,6 @@ async function bind(_$w) {
           })
     });
    
-    const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
-    const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
-    const Value=await getValueFromValueId(valueId);
-    const latestsJobs=await getLatestJobsByValue(Value);
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
     
     _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick(async () => {
