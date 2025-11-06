@@ -69,8 +69,8 @@ async function loadPrimarySearchRepeater(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
       console.log("primary search category button clicked#%@#%%#$#$%: ", itemData);
       const baseUrl = await location.baseUrl();
-      console.log("baseUrl: ", baseUrl);
-     // await location.to(`${baseUrl}/search?category=${encodeURIComponent(itemData._id)}`);
+      const encodedCategory=encodeURIComponent(itemData._id);
+      await location.to(`${baseUrl}/search?category=${encodedCategory}`);
     });
   }); 
   } catch (error) {
