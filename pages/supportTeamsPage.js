@@ -20,10 +20,9 @@ async function handleRecentJobsSection(_$w) {
 
     if(latestsJobs.length === 0) {
         console.log("No jobs found , collapsing recently Jobs Section ");
-        await _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).collapse();
+        await collapseSection(_$w);
         return;
     }
-
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
@@ -39,6 +38,14 @@ async function handleRecentJobsSection(_$w) {
     });
 }
 
+
+async function collapseSection(_$w) {
+    Promise.all([
+        _$w(supportTeamsPageIds.RECENTLY_ADDED_JOBS_SECTION).collapse(),
+        _$w(supportTeamsPageIds.MOST_RECENT_JOBS_TITLE).collapse(),
+        _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).collapse()
+    ]);
+}
 module.exports = {
     supportTeasmPageOnReady,
 };

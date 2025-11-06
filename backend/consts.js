@@ -87,6 +87,7 @@ const supportTeamsPageIds={
     SEE_ALL_JOBS_TEXT: "#seeAllJobsText",
     TEAM_SUPPORT_DYNAMIC_DATASET: "#dynamicDataset",
     RECENTLY_ADDED_JOBS_SECTION: "#recentlyJobsSection",
+    MOST_RECENT_JOBS_TITLE: "#mostRecentJobsTitle",
     valueToValueIdMap: {
         "Human Resouces":"PeopleSupport",
         "Buying":"Merchandise",
