@@ -36,7 +36,7 @@ async function bindRepeater(_$w) {
     const categoryId=valueToCategoryIdMap[obj.title_fld]
     const latestsJobs=await getLatestJobsByCategoryId(categoryId);
     console.log("latestsJobs: ", latestsJobs);
-
+    _$w(RECENTLEY_ADDED_JOBS).data = latestsJobs;
   //  const teamName=_$w(TEAM_NAME).label.toLowerCase();
   //  _$w(RECENTLEY_ADDED_JOBS).data = await getLatestJobsByCategory(teamName);
 }

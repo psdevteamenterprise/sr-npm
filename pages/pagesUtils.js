@@ -64,6 +64,14 @@ function groupValuesByField(values, refKey) {
     console.log("result: ", result);
     const categoryValue=result.filter(value=>value._id===categoryId);
     console.log("categoryValue: ", categoryValue);
+    const jobs=categoryValue.multiRefJobsCustomValues;
+    console.log("jobs: ", jobs);
+    const latestJobs = jobs
+    .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
+    .slice(0, 5);
+    console.log("latestJobs: ", latestJobs);
+    return latestJobs;
+
 
 
   }
