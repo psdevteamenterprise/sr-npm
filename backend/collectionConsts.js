@@ -8,6 +8,7 @@ const COLLECTIONS = {
     CUSTOM_VALUES:'CustomValues',
     CUSTOM_FIELDS:'CustomFields',
     SITE_CONFIGS: 'SiteConfigs',
+    SUPPORT_TEAMS: 'SupportTeams',
 
 }
 const JOBS_COLLECTION_FIELDS = {

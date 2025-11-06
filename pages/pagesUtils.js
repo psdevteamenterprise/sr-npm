@@ -1,5 +1,5 @@
 const { items: wixData } = require('@wix/data');
-const { JOBS_COLLECTION_FIELDS, COLLECTIONS } = require('../backend/collectionConsts');
+const { JOBS_COLLECTION_FIELDS, COLLECTIONS, CUSTOM_VALUES_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
@@ -59,8 +59,11 @@ function groupValuesByField(values, refKey) {
   }
 
   async function getLatestJobsByCategory(category) {
-    const alljobs=await getAllRecords(COLLECTIONS.JOBS);
-    const team=await getAllRecords(COLLECTIONS.TEAMS);
+    console.log("category: ", category);
+    const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+    console.log("result: ", result);
+    const categoryValue=result.filter(value=>value.title.toLowerCase()===category.toLowerCase());
+    console.log("categoryValue: ", categoryValue);
 
   }
 
