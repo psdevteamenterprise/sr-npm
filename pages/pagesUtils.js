@@ -1,5 +1,5 @@
 const { items: wixData } = require('@wix/data');
-const { JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { JOBS_COLLECTION_FIELDS, COLLECTIONS } = require('../backend/collectionConsts');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
@@ -58,6 +58,12 @@ function groupValuesByField(values, refKey) {
     }
   }
 
+  async function getLatestJobsByCategory(category) {
+    const alljobs=await getAllRecords(COLLECTIONS.JOBS);
+    const team=await getAllRecords(COLLECTIONS.TEAMS);
+
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
@@ -66,4 +72,5 @@ function groupValuesByField(values, refKey) {
     getFieldByTitle,
     getCorrectOption,
     getOptionIndexFromCheckBox,
+    getLatestJobsByCategory
 }
