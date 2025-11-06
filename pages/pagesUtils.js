@@ -64,6 +64,7 @@ function groupValuesByField(values, refKey) {
     console.log("result: ", result);
     const categoryValue=result.filter(value=>value.title.toLowerCase()===category.toLowerCase());
     console.log("categoryValue: ", categoryValue);
+    
 
   }
 
