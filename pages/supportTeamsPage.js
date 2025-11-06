@@ -27,7 +27,8 @@ async function bindRepeater(_$w) {
             await location.to(itemData["link-jobs-title"]);
           })
     });
-    const teamName=_$w(TEAM_NAME).label.toLowerCase();
+    console.log("TEAM_NAME.text: ", _$w(TEAM_NAME).text);
+    const teamName=_$w(TEAM_NAME).text.toLowerCase();
     console.log("teamName: ", teamName);
     const latestsJobs=await getLatestJobsByCategory(teamName);
     console.log("latestsJobs: ", latestsJobs);
