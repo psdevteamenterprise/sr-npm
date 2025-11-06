@@ -5,12 +5,29 @@ const {
   const { handleOnLocationClick } = require('../public/mapUtils');
   const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
+const {wixData} = require('wix-data');
+const { COLLECTIONS } = require('../backend/collectionConsts');
+const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
 let thisObjectVar;
 let searchByCityFlag=false;
-async function homePageOnReady(_$w,thisObject) {
+async function homePageOnReady(_$w,thisObject=null) {
+
+    const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
+    const siteconfig = queryResult.items[0];
+    if(siteconfig.categorySearch==="true") {
+        const allJobs=await getAllRecords(COLLECTIONS.JOBS);
+        const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        Promise.all([
+            bindPrimarySearch(_$w,allvaluesobjects,allJobs),
+            loadPrimarySearchRepeater(_$w)
+        ]);
+    }
+    else{
+
     thisObjectVar=thisObject;
     await bind(_$w);
     await init(_$w);
+    }
     
   }
 
