@@ -59,7 +59,6 @@ async function loadPrimarySearchRepeater(_$w) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(async () => {
-      console.log("primary search position button clicked: ", itemData);
       await location.to(itemData["link-jobs-title"]);
     })
    
@@ -67,11 +66,12 @@ async function loadPrimarySearchRepeater(_$w) {
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {   
-     await clearAll(_$w);
-     let encodedCategory=encodeURIComponent(itemData._id);
-     queryParams.add({ category:encodedCategory });
-     await handleUrlParams(_$w,{category:encodedCategory});
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
+      await location.to(`/careers?category=${encodeURIComponentitemData._id}`);
+    //  await clearAll(_$w);
+    //  let encodedCategory=encodeURIComponent(itemData._id);
+    //  queryParams.add({ category:encodedCategory });
+    //  await handleUrlParams(_$w,{category:encodedCategory});
     });
   });
   } catch (error) {
