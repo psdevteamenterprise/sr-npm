@@ -67,7 +67,8 @@ async function loadPrimarySearchRepeater(_$w) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
-      await location.to(`/careers?category=${encodeURIComponentitemData._id}`);
+      console.log("primary search category button clicked#%@#%%#$#$%: ", itemData);
+      await location.to(`/search?category=${encodeURIComponent(itemData._id)}`);
     //  await clearAll(_$w);
     //  let encodedCategory=encodeURIComponent(itemData._id);
     //  queryParams.add({ category:encodedCategory });
