@@ -54,29 +54,6 @@ async function clearAll(_$w) {
 }
 
 
-// async function loadPrimarySearchRepeater(_$w) {
-//   try {
-//   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-//     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
-//     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(async () => {
-//       await location.to(itemData["link-jobs-title"]);
-//     })
-   
-//   });
-
-//   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-//     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
-//     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
-//       const baseUrl = await location.baseUrl();
-//       const encodedCategory=encodeURIComponent(itemData._id);
-//       await location.to(`${baseUrl}/search?category=${encodedCategory}`);
-//     });
-//   }); 
-//   } catch (error) {
-//     console.error('Failed to load primary search repeater:', error);
-//   }
-// }
-
 async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
@@ -483,26 +460,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
   }
 
 
-// async function primarySearch(_$w,query) {
-//   console.log("primary search query: ", query);
-//   if(query.length===0 || query===undefined || query==='') {
-//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
-//     return false;
-//   }
 
-//   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
-//   console.log("filteredJobs.length: ", filteredJobs.length);
-//   if(filteredJobs.length>0) {
-//     currentJobs=filteredJobs;
-//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = currentJobs
-//     return true;
-//   }
-//   else {
-//     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
-//     return false;
-//   }
-// }
 async function secondarySearch(_$w,query) {
   if(query.length===0 || query===undefined || query==='') {
     secondarySearchIsFilled=false;
@@ -535,84 +493,20 @@ async function secondarySearch(_$w,query) {
     try {
       await bindPrimarySearch(_$w,allvaluesobjects,alljobs);
 
-    // const primarySearchDebounced = debounce(async () => {
-    //   const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
-    //   await primarySearch(_$w, query);
-    // }, 150);
 
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
     }, 150);
 
-    //   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => {
-    //     await primarySearchDebounced();
-    //   });
-
-    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
-    //   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-    //   if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
-    //     await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
-    //   }
-    //   else {
-    //   await loadCategoriesListPrimarySearch(_$w);
-    //   }
-    // });
-
-    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
-    //   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    // });
-
-    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
-    //   if( event.key==='Enter') {
-    //     if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
-    //       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    //       await updateJobsAndNumbersAndFilters(_$w);
-
-    //     } 
-    //     else {
-    //       let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-    //       const baseUrl = await location.baseUrl();
-    //       await location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-    //       // queryParams.add({ keyword:encodedKeyWord });
-    //       // handleUrlParams(_$w,{keyword:encodedKeyWord});
-    //      // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    //     // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
-    //     }
-    //   }
-    // });
+   
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
-    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
-    //   if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
-    //     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    //     await updateJobsAndNumbersAndFilters(_$w);
-    //   }
-    //   else {
-    //     let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-    //     const baseUrl = await location.baseUrl();
-    //     await location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-    //     // queryParams.add({ keyword:encodedKeyWord });
-    //     // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
-    //     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    //   }
-    // });
   } catch (error) {
     console.error('Failed to bind search input:', error);
   }
 }
 
-  // async function loadCategoriesListPrimarySearch(_$w) {
-  //   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
-  //   let categoryValues=[]
-  //   for(const value of allvaluesobjects) {
-  //     if(value.customField===CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
-  //       categoryValues.push({title:value.title+` (${value.totalJobs})` ,_id:value._id});
-  //     }
-  //   }
-  //   console.log("categoryValues: ", categoryValues);
-  //   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
-  // }
 
 module.exports = {
     careersMultiBoxesPageOnReady,
