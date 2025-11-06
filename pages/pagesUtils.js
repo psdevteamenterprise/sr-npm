@@ -1,5 +1,5 @@
 const { items: wixData } = require('@wix/data');
-const { JOBS_COLLECTION_FIELDS, COLLECTIONS, CUSTOM_VALUES_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { JOBS_COLLECTION_FIELDS, COLLECTIONS } = require('../backend/collectionConsts');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
@@ -59,23 +59,14 @@ function groupValuesByField(values, refKey) {
   }
 
   async function getLatestJobsByCategoryId(categoryId) {
-    console.log("categoryId: ", categoryId);
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-    console.log("result: ", result);
     const categoryValue=result.find(value=>value._id===categoryId);
-    console.log("categoryValue: ", categoryValue);
     const jobs=categoryValue.multiRefJobsCustomValues;
 
-
-    console.log("jobs: ", jobs);
     const latestJobs = jobs
     .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
     .slice(0, 5);
-    console.log("latestJobs: ", latestJobs);
     return latestJobs;
-
-
-
   }
 
   module.exports = {

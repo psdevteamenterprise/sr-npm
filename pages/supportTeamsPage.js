@@ -1,14 +1,6 @@
 const { getLatestJobsByCategoryId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
-const RECENTLEY_ADDED_JOBS="#recentleyAddedJobs"
-const JOB_LOCATION="#jobLocation"
-const JOB_TITLE="#jobTitle"
-const TEAM_NAME="#teamName"
-const SEE_ALL_JOBS_TEXT="#seeAllJobsText"
-const TEAM_SUPPORT_DYNAMIC_DATASET="#dynamicDataset"
-const valueToCategoryIdMap={
-    "Human Resouces":"PeopleSupport"
-}
+const { supportTeamsPageIds } = require('../backend/consts');
 
 async function supportTeasmPageOnReady(_$w) {
 
@@ -18,27 +10,23 @@ async function supportTeasmPageOnReady(_$w) {
 
 function loadOnClick(_$w)
 {
-    _$w(SEE_ALL_JOBS_TEXT).onClick(async () => {
+    _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick(async () => {
         await location.to(`/search`);
     });
 }
 
 async function bindRepeater(_$w) {
-    _$w(RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
-        $item(JOB_TITLE).text = itemData.title;
-        $item(JOB_LOCATION).text = itemData.location.fullLocation;
-        $item(JOB_TITLE).onClick(async () => {
+    _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
+        $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
+        $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
+        $item(supportTeamsPageIds.JOB_TITLE).onClick(async () => {  
             await location.to(itemData["link-jobs-title"]);
           })
     });
-    let obj= _$w(TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
-    console.log("obj: ", obj);
-    const categoryId=valueToCategoryIdMap[obj.title_fld]
+    let obj= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    const categoryId=supportTeamsPageIds.valueToCategoryIdMap[obj.title_fld]
     const latestsJobs=await getLatestJobsByCategoryId(categoryId);
-    console.log("latestsJobs: ", latestsJobs);
-    _$w(RECENTLEY_ADDED_JOBS).data = latestsJobs;
-  //  const teamName=_$w(TEAM_NAME).label.toLowerCase();
-  //  _$w(RECENTLEY_ADDED_JOBS).data = await getLatestJobsByCategory(teamName);
+    _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
 }
 
 module.exports = {
