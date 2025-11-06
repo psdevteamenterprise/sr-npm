@@ -20,7 +20,7 @@ async function handleRecentJobsSection(_$w) {
 
     if(latestsJobs.length === 0) {
         console.log("No jobs found , collapsing recently Jobs Section ");
-        _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).collapse();
+        await _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).collapse();
         return;
     }
 
