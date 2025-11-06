@@ -1,6 +1,7 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds} = require('../backend/careersMultiBoxesPageIds');
-const { groupValuesByField, debounce, getAllRecords } = require('./pagesUtils');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
+const { query,queryParams,onChange} = require("wix-location-frontend");
+const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
 const selectedByField = new Map(); // fieldId -> array of selected value IDs
@@ -15,7 +16,7 @@ const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
-async function careersMultiBoxesPageOnReady(_$w) {
+async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await loadData(_$w);
     await loadJobsRepeater(_$w);
     await loadFilters(_$w);
@@ -23,13 +24,47 @@ async function careersMultiBoxesPageOnReady(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       if(selectedByField.size>0) {
         selectedByField.clear();
-        await applyJobFilters(_$w);
-          await refreshFacetCounts(_$w,true);
-          await updateSelectedValuesRepeater(_$w);
-          updateTotalJobsCountText(_$w);
+        await updateJobsAndNumbersAndFilters(_$w,true);
         }
     });
     await loadPaginationButtons(_$w);
+   await handleUrlParams(_$w,urlParams);
+}
+
+async function handleUrlParams(_$w,urlParams) {
+  let applyFiltering=false;
+    if(urlParams.brand) {
+      applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
+    }
+    if(urlParams.category) {
+      applyFiltering=await handleParams(_$w,"category",urlParams.category)
+    }
+    if(urlParams.keyword) {
+      console.log("keyword urlparam handling coming soon...")
+    }
+    if(applyFiltering) {
+      await updateJobsAndNumbersAndFilters(_$w);
+    }
+}
+
+async function handleParams(_$w,param,value) {
+  let applyFiltering=false;
+       const decodedValue = decodeURIComponent(value);
+      const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
+      const options=optionsByFieldId.get(field._id);
+      console.log("all options availbe for this field: ", field.title, " are ", options);
+      const option=getCorrectOption(decodedValue,options);
+      if(option) {
+       const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
+       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
+        selectedByField.set(field._id, [option.value]);
+        applyFiltering=true;
+        dontUpdateThisCheckBox=field._id;
+      }
+      else {
+        console.warn(`${param} value not found in dropdown options`);
+      }
+      return applyFiltering;
 }
 
 async function loadPaginationButtons(_$w) {
@@ -53,7 +88,6 @@ async function loadPaginationButtons(_$w) {
 async function loadSelectedValuesRepeater(_$w) {
        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
-    
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
             
@@ -61,7 +95,7 @@ async function loadSelectedValuesRepeater(_$w) {
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
             if (!fieldId || !valueId) return;
-    
+
             const existing = selectedByField.get(fieldId) || [];
             const updated = existing.filter(v => v !== valueId);
             if (updated.length) {
@@ -70,17 +104,11 @@ async function loadSelectedValuesRepeater(_$w) {
               selectedByField.delete(fieldId);
             }
 
-            for(const field of allfields) {
-                if(field._id===fieldId) {
-                    const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
-                    const nextVals = currentVals.filter(v => v !== valueId);
-                    _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
-                }
-            }  
-            await applyJobFilters(_$w);
-            await refreshFacetCounts(_$w);
-            await updateSelectedValuesRepeater(_$w);
-            updateTotalJobsCountText(_$w);
+            const field=getFieldById(fieldId,allfields);
+            const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
+            const nextVals = currentVals.filter(v => v !== valueId);
+            _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
+            await updateJobsAndNumbersAndFilters(_$w);
           });
     });
     await updateSelectedValuesRepeater(_$w);
@@ -139,49 +167,47 @@ async function loadJobsRepeater(_$w) {
         counter[city.city]=city.count
       }
       for(const [key, value] of valuesByFieldId) {
-        for(const field of allfields) {
-          if(field._id===key) {
-            let originalOptions=[];
-            if(key==="Location") {
-              originalOptions=value.map(city=>({
-                  label: city.city,
-                  value: city._id
-              }));
-            }
-            else{
-                originalOptions=value
-            }
-
-            optionsByFieldId.set(key, originalOptions);
-            for (const val of allvaluesobjects) {
-              counter[val.title]=val.totalJobs
-            }
-
-            countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
-            updateOptionsUI(_$w,field.title, field._id, ''); // no search query
-            _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
-            _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-              dontUpdateThisCheckBox=field._id;
-            const selected = ev.target.value; // array of selected value IDs
-            if (selected && selected.length) {
-              selectedByField.set(field._id, selected);
-            } else {
-              selectedByField.delete(field._id);  
-            }
-            await applyJobFilters(_$w); // re-query jobs
-            await refreshFacetCounts(_$w);    // recompute and update counts in all lists
-            await updateSelectedValuesRepeater(_$w);
-            updateTotalJobsCountText(_$w);
-          });
-
-          const runFilter = debounce(() => {
-          const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
-          updateOptionsUI(_$w, field.title, field._id, query);
-        }, 150);
-
-         _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
+        const field=getFieldById(key,allfields);
+        let originalOptions=[];
+        if(key==="Location") {
+          originalOptions=value.map(city=>({
+              label: city.city,
+              value: city._id
+          }));
         }
-      }
+        else{
+            originalOptions=value
+        }
+
+        optionsByFieldId.set(key, originalOptions);
+        for (const val of allvaluesobjects) {
+          counter[val.title]=val.totalJobs
+        }
+
+        countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
+        updateOptionsUI(_$w,field.title, field._id, ''); // no search query
+        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
+        _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
+          console.log(`#${FiltersIds[field.title]}CheckBox.selectedIndices: `, _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
+          dontUpdateThisCheckBox=field._id;
+        const selected = ev.target.value; // array of selected value IDs
+        if (selected && selected.length) {
+          selectedByField.set(field._id, selected);
+        } else {
+          selectedByField.delete(field._id);  
+        }
+        await updateJobsAndNumbersAndFilters(_$w);
+    
+      });
+
+      const runFilter = debounce(() => {
+      const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
+      updateOptionsUI(_$w, field.title, field._id, query);
+    }, 150);
+
+      _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
+        
+      
     }
     await refreshFacetCounts(_$w);
 
@@ -190,7 +216,15 @@ async function loadJobsRepeater(_$w) {
     }
   }
 
-  
+ 
+
+  async function updateJobsAndNumbersAndFilters(_$w) {
+    await applyJobFilters(_$w); // re-query jobs
+    await refreshFacetCounts(_$w);    // recompute and update counts in all lists
+    await updateSelectedValuesRepeater(_$w);
+    updateTotalJobsCountText(_$w);
+  }
+
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();

@@ -37,8 +37,33 @@ function groupValuesByField(values, refKey) {
     return items;
   }
 
+  function getFieldById(fieldId,allFields) {
+    return allFields.find(field=>field._id===fieldId);
+  }
+
+  function getFieldByTitle(title,allFields) {
+    return allFields.find(field=>field.title===title);
+  }
+
+  function getCorrectOption(value,options) {
+    const standardizedValue = value.toLowerCase().trim().replace(/[^a-z0-9]/gi, '');
+    return options.find(option=>option.label.toLowerCase().trim().replace(/[^a-z0-9]/gi, '')===standardizedValue);
+  }
+
+  function getOptionIndexFromCheckBox(options,value) {
+    for(let index=0;index<options.length;index++) {
+      if(options[index].value===value) {
+        return index;
+      }
+    }
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
     getAllRecords,
+    getFieldById,
+    getFieldByTitle,
+    getCorrectOption,
+    getOptionIndexFromCheckBox,
 }
