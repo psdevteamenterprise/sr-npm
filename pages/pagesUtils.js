@@ -62,9 +62,11 @@ function groupValuesByField(values, refKey) {
     console.log("categoryId: ", categoryId);
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
     console.log("result: ", result);
-    const categoryValue=result.filter(value=>value._id===categoryId);
+    const categoryValue=result.find(value=>value._id===categoryId);
     console.log("categoryValue: ", categoryValue);
     const jobs=categoryValue.multiRefJobsCustomValues;
+
+
     console.log("jobs: ", jobs);
     const latestJobs = jobs
     .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
