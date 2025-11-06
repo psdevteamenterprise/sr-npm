@@ -58,11 +58,15 @@ function groupValuesByField(values, refKey) {
     }
   }
 
-  async function getLatestJobsByCategoryId(categoryId) {
+  async function getValueFromValueId(valueId) {
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-    const categoryValue=result.find(value=>value._id===categoryId);
-    console.log("categoryValue: ", categoryValue);
-    const jobs=categoryValue.multiRefJobsCustomValues;
+    return result.find(value=>value._id===valueId);
+  }
+
+  async function getLatestJobsByValueId(Value) {
+    console.log("Value: ", Value);
+    const jobs=Value.multiRefJobsCustomValues;
+    console.log("jobs: ", jobs);
 
     const latestJobs = jobs
     .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
@@ -78,5 +82,6 @@ function groupValuesByField(values, refKey) {
     getFieldByTitle,
     getCorrectOption,
     getOptionIndexFromCheckBox,
-    getLatestJobsByCategoryId
+    getLatestJobsByValueId,
+    getValueFromValueId
 }

@@ -1,4 +1,4 @@
-const { getLatestJobsByCategoryId } = require('./pagesUtils');
+const { getLatestJobsByValueId, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const { supportTeamsPageIds } = require('../backend/consts');
 
@@ -21,12 +21,14 @@ async function bind(_$w) {
     });
    
     const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
-    const categoryId=supportTeamsPageIds.valueToCategoryIdMap[currentItem.title_fld]
-    const latestsJobs=await getLatestJobsByCategoryId(categoryId);
+    const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
+    const Value=await getValueFromValueId(valueId);
+    console.log("Value: ", Value);
+    const latestsJobs=await getLatestJobsByValueId(Value);
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
     
     _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick(async () => {
-        await location.to(`/search?category=${categoryId}`);
+        await location.to(`/search?category=${Value.title}`);
     });
 }
 

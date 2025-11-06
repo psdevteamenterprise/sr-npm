@@ -86,7 +86,7 @@ const supportTeamsPageIds={
     JOB_TITLE: "#jobTitle",
     SEE_ALL_JOBS_TEXT: "#seeAllJobsText",
     TEAM_SUPPORT_DYNAMIC_DATASET: "#dynamicDataset",
-    valueToCategoryIdMap: {
+    valueToValueIdMap: {
         "Human Resouces":"PeopleSupport",
         "Buying":"Merchandise",
         "Tech":"InformationServices",
