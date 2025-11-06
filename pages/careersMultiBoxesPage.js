@@ -1,5 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { queryParams,to:myto} = require('wix-location-frontend');
+const { queryParams} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox } = require('./pagesUtils');
@@ -68,33 +68,8 @@ async function loadPrimarySearchRepeater(_$w) {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
       console.log("primary search category button clicked#%@#%%#$#$%: ", itemData);
-      if(itemData.title==="In-Store (91)") {
-        console.log("In-Store (91) button clicked");
-        const url = await location.url();
-        console.log("url: ", url);
-        await location.to(`${url}?category=${encodeURIComponent(itemData._id)}`);
- 
-      }
-      if(itemData.title==="Distribution Centres (20)") {
-        console.log("Distribution Centres (20) button clicked");
-        await location.to(`https://google.com`);
-      }
-      if(itemData.title==="Merchandise (7)")
-      {
-        console.log("Merchandise (7) button clicked");
-        myto ("https://youtube.com");
-      }
-      if(itemData.title==="People (1)")
-      {
-        console.log("People (1) button clicked");
-        myto (`/search?category=${encodeURIComponent(itemData._id)}`);
-      }
-      //await location.to(`/search?category=${encodeURIComponent(itemData._id)}`);
-    //  await location.to(`/search?category=${encodeURIComponent(itemData._id)}`);
-    //  await clearAll(_$w);
-    //  let encodedCategory=encodeURIComponent(itemData._id);
-    //  queryParams.add({ category:encodedCategory });
-    //  await handleUrlParams(_$w,{category:encodedCategory});
+      const url = await location.url();
+      await location.to(`${url}?category=${encodeURIComponent(itemData._id)}`);
     });
   });
   } catch (error) {
@@ -595,9 +570,11 @@ async function secondarySearch(_$w,query) {
         }
         else {
           let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-          queryParams.add({ keyword:encodedKeyWord });
-          handleUrlParams(_$w,{keyword:encodedKeyWord});
-          _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+          const url = await location.url();
+          await location.to(`${url}?keyword=${encodedKeyWord}`);
+          // queryParams.add({ keyword:encodedKeyWord });
+          // handleUrlParams(_$w,{keyword:encodedKeyWord});
+         // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
         // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
         }
       }
@@ -611,9 +588,11 @@ async function secondarySearch(_$w,query) {
       }
       else {
         let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-        queryParams.add({ keyword:encodedKeyWord });
-        await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+        const url = await location.url();
+        await location.to(`${url}?keyword=${encodedKeyWord}`);
+        // queryParams.add({ keyword:encodedKeyWord });
+        // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
+        // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
       }
     });
   } catch (error) {
