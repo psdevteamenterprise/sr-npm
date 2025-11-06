@@ -1,10 +1,14 @@
-const { getLatestJobsByCategory } = require('./pagesUtils');
+const { getLatestJobsByCategoryId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const RECENTLEY_ADDED_JOBS="#recentleyAddedJobs"
 const JOB_LOCATION="#jobLocation"
 const JOB_TITLE="#jobTitle"
 const TEAM_NAME="#teamName"
 const SEE_ALL_JOBS_TEXT="#seeAllJobsText"
+const TEAM_SUPPORT_DYNAMIC_DATASET="#dynamicDataset"
+const valueToCategoryIdMap={
+    "Human Resouces":"PeopleSupport"
+}
 
 async function supportTeasmPageOnReady(_$w) {
 
@@ -27,10 +31,10 @@ async function bindRepeater(_$w) {
             await location.to(itemData["link-jobs-title"]);
           })
     });
-    console.log("TEAM_NAME.text: ", _$w(TEAM_NAME).text);
-    const teamName=_$w(TEAM_NAME).text.toLowerCase();
-    console.log("teamName: ", teamName);
-    const latestsJobs=await getLatestJobsByCategory(teamName);
+    let obj= _$w(TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    console.log("obj: ", obj);
+    const categoryId=valueToCategoryIdMap[obj.title_fld]
+    const latestsJobs=await getLatestJobsByCategoryId(categoryId);
     console.log("latestsJobs: ", latestsJobs);
 
   //  const teamName=_$w(TEAM_NAME).label.toLowerCase();

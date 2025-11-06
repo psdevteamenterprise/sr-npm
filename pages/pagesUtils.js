@@ -58,13 +58,13 @@ function groupValuesByField(values, refKey) {
     }
   }
 
-  async function getLatestJobsByCategory(category) {
-    console.log("category: ", category);
+  async function getLatestJobsByCategoryId(categoryId) {
+    console.log("categoryId: ", categoryId);
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
     console.log("result: ", result);
-    const categoryValue=result.filter(value=>value.title.toLowerCase()===category.toLowerCase());
+    const categoryValue=result.filter(value=>value._id===categoryId);
     console.log("categoryValue: ", categoryValue);
-    
+
 
   }
 
@@ -76,5 +76,5 @@ function groupValuesByField(values, refKey) {
     getFieldByTitle,
     getCorrectOption,
     getOptionIndexFromCheckBox,
-    getLatestJobsByCategory
+    getLatestJobsByCategoryId
 }
