@@ -22,7 +22,6 @@ async function getPositionWithMultiRefField(jobId)
 {
   return wixData
     .queryReferenced(COLLECTIONS.JOBS,jobId,JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-    .find()
     .then(result => result.items[0]);
 }
 
