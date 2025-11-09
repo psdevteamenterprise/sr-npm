@@ -41,6 +41,7 @@ async function getCategoryValueId(customFields) {
         handleReferFriendButton(_$w,item);
 
         handleApplyButton(_$w,item);
+        console.log("i am here");
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -50,10 +51,12 @@ async function getCategoryValueId(customFields) {
         {
           _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
         }
+        console.log("i am here 2");
     });
 
     if(_$w('#relatedJobsDataset'))
     {
+      console.log("relatedJobsDataset@@$@$@$#$@: ");
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){
@@ -64,6 +67,7 @@ async function getCategoryValueId(customFields) {
 
   if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
   {
+    console.log("i am here 3");
    const relatedJobs=await getRelatedJobs();
    console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
     _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
