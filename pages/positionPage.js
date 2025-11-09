@@ -51,9 +51,7 @@ async function getCategoryValueId(customFields) {
         }
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
-          console.log("item inside getRelatedJobs: ", item);
         const relatedJobs=await getRelatedJobs(categoryValueId,item._id);
-        console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
@@ -61,7 +59,7 @@ async function getCategoryValueId(customFields) {
               await location.to(itemData["link-jobs-title"]);
             });
           });
-          _$w('#relatedJobsRepNoDepartment').data = relatedJobs.slice(0,5);
+          _$w('#relatedJobsRepNoDepartment').data = relatedJobs
 
         }
     });
@@ -93,7 +91,6 @@ async function getCategoryValueId(customFields) {
 
   async function getRelatedJobs(categoryValueId,itemId) {
     const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).find();
-    console.log("relatedJobs@@$@$@$#$@: ", relatedJobs);
     return relatedJobs.items;
   }
 
