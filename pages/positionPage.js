@@ -2,6 +2,7 @@ const { query } = require("wix-location-frontend");
 const { getPositionWithMultiRefField } = require('../backend/queries');
 const { COLLECTIONS,JOBS_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
+const { location } = require("@wix/site-location");
 const {
     htmlToText,
     appendQueryParams
@@ -56,7 +57,7 @@ async function getCategoryValueId(customFields) {
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
           console.log("i am here 3");
-        const relatedJobs=await getRelatedJobs(categoryValueId);
+        const relatedJobs=await getRelatedJobs(categoryValueId,item._id);
         console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
@@ -95,10 +96,10 @@ async function getCategoryValueId(customFields) {
     _$w('#applyButton').link=url; //so it can be clicked
   }
 
-  async function getRelatedJobs(categoryValueId) {
+  async function getRelatedJobs(categoryValueId,itemId) {
     console.log("categoryValueId inside getRelatedJobs ", categoryValueId);
     console.log("type of categoryValueId: ", typeof categoryValueId);
-    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).find();
+    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).neq(JOBS_COLLECTION_FIELDS.ID,itemId).find();
     console.log("relatedJobs@@$@$@$#$@: ", relatedJobs);
     return relatedJobs.items;
   }
