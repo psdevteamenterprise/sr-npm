@@ -56,7 +56,7 @@ async function getCategoryValueId(customFields) {
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
           console.log("i am here 3");
-        const relatedJobs=await getRelatedJobs();
+        const relatedJobs=await getRelatedJobs(categoryValueId);
         console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
@@ -95,7 +95,7 @@ async function getCategoryValueId(customFields) {
     _$w('#applyButton').link=url; //so it can be clicked
   }
 
-  async function getRelatedJobs() {
+  async function getRelatedJobs(categoryValueId) {
     console.log("categoryValueId inside getRelatedJobs ", categoryValueId);
     console.log("type of categoryValueId: ", typeof categoryValueId);
     const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).find();
