@@ -8,6 +8,7 @@ const {
   async function positionPageOnReady(_$w) {
 
     await bind(_$w);
+    
 
   }
 
@@ -15,7 +16,7 @@ const {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
-
+        console.log("item@@$@$@$#$@: ", item);
         handleReferFriendButton(_$w,item);
 
         handleApplyButton(_$w,item);
@@ -30,12 +31,23 @@ const {
         }
     });
 
+    if(_$w('#relatedJobsDataset'))
+    {
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){
             _$w('#relatedJobsSection').collapse();
        }
     });
+  }
+
+  if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
+  {
+    _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
+      $item('#relatedJobsItem').text = itemData.title;
+    });
+
+  }
 }
     
   function handleReferFriendButton(_$w,item) {
