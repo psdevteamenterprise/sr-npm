@@ -1,5 +1,5 @@
 const { items: wixData } = require('@wix/data');
-const { JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { JOBS_COLLECTION_FIELDS,COLLECTIONS } = require('../backend/collectionConsts');
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
 
