@@ -178,6 +178,19 @@ async function primarySearch(_$w,query,alljobs) {
   }
 }
 
+  async function getValueFromValueId(valueId) {
+    const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+    return result.find(value=>value._id===valueId);
+  }
+
+  async function getLatestJobsByValue(Value) {
+    const jobs=Value.multiRefJobsCustomValues;
+    const latestJobs = jobs
+    .sort((a, b) => new Date(b.releasedDate) - new Date(a.releasedDate))
+    .slice(0, 5);
+    return latestJobs;
+  }
+
   module.exports = {
     groupValuesByField,
     debounce,
@@ -189,4 +202,6 @@ async function primarySearch(_$w,query,alljobs) {
     loadPrimarySearchRepeater,
     bindPrimarySearch,
     primarySearch,
+    getLatestJobsByValue,
+    getValueFromValueId
 }

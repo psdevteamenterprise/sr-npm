@@ -125,7 +125,8 @@ async function saveJobsDataToCMS() {
       language: position.language?.label || '',
       brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
-      employmentType: position.typeOfEmployment.label
+      employmentType: position.typeOfEmployment.label,
+      releasedDate: position.releasedDate 
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);

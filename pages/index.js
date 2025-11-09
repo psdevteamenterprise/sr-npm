@@ -4,5 +4,6 @@ module.exports = {
     ...require('./careersPage'),
     ...require('./careersMultiBoxesPage'),
     ...require('./pagesUtils'),
+    ...require('./supportTeamsPage'),
   };
   
