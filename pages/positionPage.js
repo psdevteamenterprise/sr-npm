@@ -1,11 +1,15 @@
 const { query } = require("wix-location-frontend");
 const { getPositionWithMultiRefField } = require('../backend/queries');
+const { COLLECTIONS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { items: wixData } = require('@wix/data');
 const {
     htmlToText,
     appendQueryParams
   } = require('../public/utils');
   
-  
+  let categoryValueId;
+
+
   async function positionPageOnReady(_$w) {
 
     await bind(_$w);
@@ -13,13 +17,26 @@ const {
 
   }
 
+async function getCategoryValueId(customFields) {
+  const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq('title',"Category").find();
+  for(const field of customFields) {
+    if(field.customField===categoryCustomField._id) {
+      categoryValueId=field._id;
+      return;
+    }
+  }
+}
+
+
   async function bind(_$w) {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
-        console.log("item@@$@$@$#$@: ", item);
         const multiRefField=await getPositionWithMultiRefField(item._id);
+        await getCategoryValueId(multiRefField);
         console.log("multiRefField@@$@$@$#$@: ", multiRefField);
+        console.log("categoryValueId@@$@$@$#$@: ", categoryValueId);
+
         handleReferFriendButton(_$w,item);
 
         handleApplyButton(_$w,item);
@@ -46,6 +63,8 @@ const {
 
   if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
   {
+   const relatedJobs=await getRelatedJobs();
+   console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
     _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
       $item('#relatedJobsItem').text = itemData.title;
     });
@@ -64,6 +83,12 @@ const {
     _$w('#applyButton').target="_blank";//so it can open in new tab
     const url=appendQueryParams(item.applyLink,query);
     _$w('#applyButton').link=url; //so it can be clicked
+  }
+
+  async function getRelatedJobs() {
+    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,categoryValueId).find();
+    console.log("relatedJobs@@$@$@$#$@: ", relatedJobs);
+    return relatedJobs.items;
   }
 
   module.exports = {
