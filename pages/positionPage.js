@@ -56,7 +56,7 @@ async function getCategoryValueId(customFields) {
 
     if(_$w('#relatedJobsDataset'))
     {
-      console.log("relatedJobsDataset@@$@$@$#$@: ");
+      console.log("relatedJobsDataset@@$@$@$#$@ is  : ",_$w('#relatedJobsDataset'));
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){
