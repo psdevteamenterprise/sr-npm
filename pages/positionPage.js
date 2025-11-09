@@ -18,7 +18,7 @@ const {
   }
 
 async function getCategoryValueId(customFields) {
-  const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find();
+  const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find().then(result => result.items[0]);
   console.log("categoryCustomField@@$@$@$#$@: ", categoryCustomField);
   for(const field of customFields) {
     if(field.customField===categoryCustomField._id) {
@@ -67,8 +67,13 @@ async function getCategoryValueId(customFields) {
    const relatedJobs=await getRelatedJobs();
    console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
     _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
-      $item('#relatedJobsItem').text = itemData.title;
+      $item('#relatedJobTitle').text = itemData.title;
+      $item('#relatedJobLocation').text = itemData.location.fullLocation;
+      $item('#relatedJobTitle').onClick(async () => {
+        await location.to(itemData["link-jobs-title"]);
+      });
     });
+    _$w('#relatedJobsRepNoDepartment').data = relatedJobs.slice(0,5);
 
   }
 }
