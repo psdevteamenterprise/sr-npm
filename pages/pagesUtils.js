@@ -153,19 +153,16 @@ async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
       categoryValues.push({title:value.title+` (${value.totalJobs})` ,_id:value._id});
     }
   }
-  console.log("categoryValues: ", categoryValues);
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
 }
 
 async function primarySearch(_$w,query,alljobs) {
-  console.log("primary search query: ", query);
   if(query.length===0 || query===undefined || query==='') {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
     return false;
   }
 
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
-  console.log("filteredJobs.length: ", filteredJobs.length);
   if(filteredJobs.length>0) {
     //currentJobs=filteredJobs;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
