@@ -54,7 +54,7 @@ async function getCategoryValueId(customFields) {
         console.log("i am here 2");
     });
 
-    if(_$w('#relatedJobsDataset'))
+    if(_$w('#relatedJobsDataset') && _$w('#relatedJobsDataset').length>0)
     {
       console.log("relatedJobsDataset@@$@$@$#$@ is  : ",_$w('#relatedJobsDataset'));
     _$w('#relatedJobsDataset').onReady(() => {
