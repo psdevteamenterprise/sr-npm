@@ -28,13 +28,14 @@ Module.prototype.require = function(id) {
 };
 
 const careersMultiBoxesPage = rewire('../pages/careersMultiBoxesPage');
+const pagesUtils = rewire('../pages/pagesUtils');
 
 // Restore original require
 Module.prototype.require = originalRequire;
 
 const secondarySearch = careersMultiBoxesPage.__get__('secondarySearch');
-const primarySearch = careersMultiBoxesPage.__get__('primarySearch');
-const loadCategoriesListPrimarySearch = careersMultiBoxesPage.__get__('loadCategoriesListPrimarySearch');
+const primarySearch = pagesUtils.__get__('primarySearch');
+const loadCategoriesListPrimarySearch = pagesUtils.__get__('loadCategoriesListPrimarySearch');
 
 
 
@@ -165,7 +166,7 @@ describe('primarySearch function tests', () => {
     });
     careersMultiBoxesPage.__set__('alljobs', mockJobs);
 
-    await primarySearch(mockW, 'product');
+    await primarySearch(mockW, 'product',mockJobs);
     
     expect(mockprimarySearchMultiBox.changeState).toHaveBeenCalledWith('jobResults');
     expect(mockprimarySearcJobResult.data).toHaveLength(11);
@@ -178,7 +179,7 @@ describe('primarySearch function tests', () => {
      });
      careersMultiBoxesPage.__set__('alljobs', mockJobs);
  
-     await primarySearch(mockW, 'unicorn hunter');
+     await primarySearch(mockW, 'unicorn hunter',mockJobs);
      
      expect(mockprimarySearchMultiBox.changeState).toHaveBeenCalledWith('noResults');
      expect(mockprimarySearcJobResult.data).toBeNull();
@@ -193,7 +194,7 @@ describe('primarySearch function tests', () => {
      
      careersMultiBoxesPage.__set__('allvaluesobjects', mockCategoryValues);
 
-     await loadCategoriesListPrimarySearch(mockW);
+     await loadCategoriesListPrimarySearch(mockW,mockCategoryValues);
 
      expect(mockprimarySearchMultiBox.changeState).toHaveBeenCalledWith('categoryResults');
      expect(mockCategoryResultsRepeater.data).toHaveLength(3);

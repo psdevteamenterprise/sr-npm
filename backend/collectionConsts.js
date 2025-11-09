@@ -8,6 +8,7 @@ const COLLECTIONS = {
     CUSTOM_VALUES:'CustomValues',
     CUSTOM_FIELDS:'CustomFields',
     SITE_CONFIGS: 'SiteConfigs',
+    SUPPORT_TEAMS: 'SupportTeams',
 
 }
 const JOBS_COLLECTION_FIELDS = {
@@ -29,6 +30,7 @@ const JOBS_COLLECTION_FIELDS = {
   BRAND_REF: 'brandRef',
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
   EMPLOYMENT_TYPE: 'employmentType',
+  RELEASED_DATE: 'releasedDate',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -90,6 +92,7 @@ const COLLECTIONS_FIELDS = {
         {key:'brandRef', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.BRANDS } } },
         {key: 'image', type: 'IMAGE' },
         {key:'employmentType', type: 'TEXT'},
+        {key:'releasedDate', type: 'TEXT'},
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
