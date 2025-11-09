@@ -1,6 +1,6 @@
 const { query } = require("wix-location-frontend");
 const { getPositionWithMultiRefField } = require('../backend/queries');
-const { COLLECTIONS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { COLLECTIONS,JOBS_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
 const {
     htmlToText,
@@ -18,7 +18,8 @@ const {
   }
 
 async function getCategoryValueId(customFields) {
-  const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq('title',"Category").find();
+  const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find();
+  console.log("categoryCustomField@@$@$@$#$@: ", categoryCustomField);
   for(const field of customFields) {
     if(field.customField===categoryCustomField._id) {
       categoryValueId=field._id;
