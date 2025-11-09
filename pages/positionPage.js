@@ -1,4 +1,5 @@
 const { query } = require("wix-location-frontend");
+const { getPositionWithMultiRefField } = require('../backend/queries');
 const {
     htmlToText,
     appendQueryParams
@@ -17,6 +18,8 @@ const {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         console.log("item@@$@$@$#$@: ", item);
+        const multiRefField=await getPositionWithMultiRefField(item._id);
+        console.log("multiRefField@@$@$@$#$@: ", multiRefField);
         handleReferFriendButton(_$w,item);
 
         handleApplyButton(_$w,item);
