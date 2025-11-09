@@ -59,22 +59,17 @@ describe('related jobs show jobs with the same category value test', () => {
     const CATEGORY_FIELD_ID = `category-field-${Date.now()}`;
     const TECH_CATEGORY_VALUE_ID = `tech-category-${Math.floor(Math.random() * 10000)}`;
 
-    // Create current job using MockJobBuilder with random data
     const currentJob = new MockJobBuilder()
       .withTitle('Senior Developer')
       .withDepartment('Technology')
-      .withCategory(TECH_CATEGORY_VALUE_ID)
+      .withMultiRefCustomValues([{ _id: TECH_CATEGORY_VALUE_ID }])
       .forPositionPage()
       .build();
 
-    // Create 0-5 related jobs with same category using random data (including case with 0 related jobs)
-    const relatedJobsCount = Math.floor(Math.random() * 6); // 0-5 jobs
-    const relatedJobs = MockJobBuilder.createJobsWithSameCategory(
-      TECH_CATEGORY_VALUE_ID, 
-      relatedJobsCount
-    );
+    // create 0-5 related jobs with same category value(0 for the case when there is no related jobs)
+    const relatedJobsCount = Math.floor(Math.random() * 6);
+    const relatedJobs = MockJobBuilder.createJobsWithSameField(TECH_CATEGORY_VALUE_ID, relatedJobsCount);
 
-    // Current job's custom values (Tech category)
     const currentJobCustomValues = [
       { _id: TECH_CATEGORY_VALUE_ID, customField: CATEGORY_FIELD_ID, title: 'Technology' }
     ];
@@ -84,7 +79,6 @@ describe('related jobs show jobs with the same category value test', () => {
       title: 'Category'
     };
 
-    // Setup mocks - capture the onReady callback so we can await it
     let datasetReadyCallback;
     const mockDataset = {
       onReady: jest.fn((callback) => {
@@ -117,20 +111,15 @@ describe('related jobs show jobs with the same category value test', () => {
       return Promise.resolve({ items: relatedJobs });
     });
 
-    // Run the page function (sets up the onReady callback)
     await positionPageOnReady(mockW);
-
-    // Now execute the dataset onReady callback and wait for it
     await datasetReadyCallback();
 
-    // Verify the repeater got populated with related jobs
     expect(mockRealtedJobsRepeater.data).not.toBeNull();
     expect(mockRealtedJobsRepeater.data).toHaveLength(relatedJobsCount);
     
-    // Verify all related jobs have the same category as current job
     const allHaveSameCategory = mockRealtedJobsRepeater.data.every(job => 
       job.multiRefJobsCustomValues && 
-      job.multiRefJobsCustomValues.includes(TECH_CATEGORY_VALUE_ID)
+      job.multiRefJobsCustomValues.some(val => val._id === TECH_CATEGORY_VALUE_ID)
     );
     expect(allHaveSameCategory).toBe(true);
   });
