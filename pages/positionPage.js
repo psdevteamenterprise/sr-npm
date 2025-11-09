@@ -96,7 +96,9 @@ async function getCategoryValueId(customFields) {
   }
 
   async function getRelatedJobs() {
-    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,categoryValueId).find();
+    console.log("categoryValueId inside getRelatedJobs ", categoryValueId);
+    console.log("type of categoryValueId: ", typeof categoryValueId);
+    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).find();
     console.log("relatedJobs@@$@$@$#$@: ", relatedJobs);
     return relatedJobs.items;
   }
