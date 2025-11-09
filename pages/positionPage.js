@@ -83,7 +83,7 @@ async function getCategoryValueId(customFields) {
 }
     
   function handleReferFriendButton(_$w,item) {
-    if(!item.referFriendLink){
+    if(!item.referFriendLink &&  _$w('#referFriendButton')){
       console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
     }
