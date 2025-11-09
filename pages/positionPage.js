@@ -7,12 +7,13 @@ const {
     appendQueryParams
   } = require('../public/utils');
   
-  let categoryValueId;
+  
 
 
   async function positionPageOnReady(_$w) {
 
     await bind(_$w);
+    
     
 
   }
@@ -22,8 +23,8 @@ async function getCategoryValueId(customFields) {
   console.log("categoryCustomField@@$@$@$#$@: ", categoryCustomField);
   for(const field of customFields) {
     if(field.customField===categoryCustomField._id) {
-      categoryValueId=field._id;
-      return;
+      return field._id;
+      
     }
   }
 }
@@ -34,7 +35,7 @@ async function getCategoryValueId(customFields) {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         const multiRefField=await getPositionWithMultiRefField(item._id);
-        await getCategoryValueId(multiRefField);
+        const categoryValueId=await getCategoryValueId(multiRefField);
         console.log("multiRefField@@$@$@$#$@: ", multiRefField);
         console.log("categoryValueId@@$@$@$#$@: ", categoryValueId);
 
@@ -52,11 +53,25 @@ async function getCategoryValueId(customFields) {
           _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
         }
         console.log("i am here 2");
+        if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
+        {
+          console.log("i am here 3");
+        const relatedJobs=await getRelatedJobs();
+        console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
+          _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
+            $item('#relatedJobTitle').text = itemData.title;
+            $item('#relatedJobLocation').text = itemData.location.fullLocation;
+            $item('#relatedJobTitle').onClick(async () => {
+              await location.to(itemData["link-jobs-title"]);
+            });
+          });
+          _$w('#relatedJobsRepNoDepartment').data = relatedJobs.slice(0,5);
+
+        }
     });
 
     if(_$w('#relatedJobsDataset') && _$w('#relatedJobsDataset').length>0)
     {
-      console.log("relatedJobsDataset@@$@$@$#$@ is  : ",_$w('#relatedJobsDataset'));
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
        if(!count){
@@ -64,22 +79,7 @@ async function getCategoryValueId(customFields) {
        }
     });
   }
-
-  if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
-  {
-    console.log("i am here 3");
-   const relatedJobs=await getRelatedJobs();
-   console.log("relatedJobs@@$@$@$$%%%%%%%%%%#$@: ", relatedJobs);
-    _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
-      $item('#relatedJobTitle').text = itemData.title;
-      $item('#relatedJobLocation').text = itemData.location.fullLocation;
-      $item('#relatedJobTitle').onClick(async () => {
-        await location.to(itemData["link-jobs-title"]);
-      });
-    });
-    _$w('#relatedJobsRepNoDepartment').data = relatedJobs.slice(0,5);
-
-  }
+ 
 }
     
   function handleReferFriendButton(_$w,item) {
