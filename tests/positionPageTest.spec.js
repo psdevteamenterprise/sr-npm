@@ -1,6 +1,9 @@
+// Mock query chain at the top
 const MockJobBuilder = require('./mockJobBuilder');
+const { positionPageOnReady } = require('../pages/positionPage');
+const { getPositionWithMultiRefField } = require('../backend/queries');
+const { items: wixData } = require('@wix/data');
 
-// Create mocks before importing
 const mockQueryChain = {
   eq: jest.fn().mockReturnThis(),
   find: jest.fn(),
@@ -11,16 +14,15 @@ const mockQueryChain = {
   then: jest.fn()
 };
 
-const mockWixData = {
-  query: jest.fn(() => mockQueryChain),
-  queryReferenced: jest.fn()
-};
-
+// Jest mocks (hoisted automatically)
 jest.mock('wix-location-frontend', () => ({
   query: {}
 }), { virtual: true });
 jest.mock('@wix/data', () => ({
-  items: mockWixData
+  items: {
+    query: jest.fn(() => mockQueryChain),
+    queryReferenced: jest.fn()
+  }
 }));
 jest.mock('@wix/site-location', () => ({
   location: {
@@ -39,8 +41,14 @@ jest.mock('../public/utils', () => ({
   appendQueryParams: jest.fn((url) => url)
 }));
 
-const { positionPageOnReady } = require('../pages/positionPage');
-const { getPositionWithMultiRefField } = require('../backend/queries');
+// Mock isElementExistOnPage
+jest.mock('psdev-utils', () => ({
+  isElementExistOnPage: jest.fn(() => true)
+}));
+
+
+
+
 
 
 describe('related jobs show jobs with the same category value test', () => {
@@ -96,15 +104,19 @@ describe('related jobs show jobs with the same category value test', () => {
         '#qualificationsText': { text: '' },
         '#relatedJobsTitleText': { text: '' },
         '#additionalInfoText': { text: '' },
-        '#applyButton': { target: '', link: '' }
+        '#applyButton': { target: '', link: '' },
+        '#relatedJobsNoDepartmentItem': { onClick: jest.fn() },
+        '#relatedJobsDataset': { onReady: jest.fn(), getTotalCount: jest.fn() },
+        '#relatedJobsSection': { collapse: jest.fn() },
+        '#referFriendButton': { hide: jest.fn() }
       };
-      return mocks[selector] || { text: '', hide: jest.fn() };
+      return mocks[selector] || { text: '', hide: jest.fn(), onClick: jest.fn() };
     });
 
     getPositionWithMultiRefField.mockResolvedValue(currentJobCustomValues);
     
     mockQueryChain.find.mockImplementation(() => {
-      const queryArg = mockWixData.query.mock.calls[mockWixData.query.mock.calls.length - 1][0];
+      const queryArg = wixData.query.mock.calls[wixData.query.mock.calls.length - 1][0];
       if (queryArg === 'CustomFields') {
         return Promise.resolve({ items: [categoryCustomField] });
       }
