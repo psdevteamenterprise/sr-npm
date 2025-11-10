@@ -238,7 +238,12 @@ class MockJobBuilder {
     return jobs;
   }
 
-  static createJobsWithSameCategory(categoryId, count = 3) {
+  static createJobsWithSameField(fieldId, count = 3,options = {}) {
+    const {
+      titlePrefix = null,
+      randomTitles = true
+    } = options;
+
     const jobs = [];
     const titles = [
       'Frontend Developer', 'Backend Developer', 'Full Stack Engineer',
@@ -254,18 +259,28 @@ class MockJobBuilder {
     ];
 
     for (let i = 0; i < count; i++) {
-      const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+      let jobTitle;
+      if (titlePrefix) {
+        jobTitle = `${titlePrefix} ${i + 1}`;
+      } else if (randomTitles) {
+        const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+        jobTitle = `${randomTitle} ${i + 1}`;
+      } else {
+        jobTitle = `Job ${i + 1}`;
+      }
+
       const randomCity = cities[Math.floor(Math.random() * cities.length)];
       
-      jobs.push(
-        new MockJobBuilder()
-          .withTitle(`${randomTitle} ${i + 1}`)
-          .withCity(randomCity.city, randomCity.region)
-          .withCategory(categoryId)
-          .withLinkJobsTitle(`/jobs/${randomTitle.toLowerCase().replace(/\s+/g, '-')}-${i + 1}`)
-          .forPositionPage()
-          .build()
-      );
+      const job = new MockJobBuilder()
+        .withTitle(jobTitle)
+        .withCity(randomCity.city, randomCity.region)
+        .withMultiRefCustomValues([{ _id: fieldId }])
+        .withLinkJobsTitle(`/jobs/${jobTitle.toLowerCase().replace(/\s+/g, '-')}`)
+        .forPositionPage()
+        .build();
+      
+      job._id = `job-${jobTitle.toLowerCase().replace(/\s+/g, '-')}`;
+      jobs.push(job);
     }
     return jobs;
   }

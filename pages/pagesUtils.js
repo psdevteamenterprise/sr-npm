@@ -112,17 +112,12 @@ _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (even
   if( event.key==='Enter') {
     if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-     // await updateJobsAndNumbersAndFilters(_$w);
 
     } 
     else {
       let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
       const baseUrl = await location.baseUrl();
        location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-      // queryParams.add({ keyword:encodedKeyWord });
-      // handleUrlParams(_$w,{keyword:encodedKeyWord});
-     // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
     }
   }
 });
@@ -130,15 +125,11 @@ _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (even
 _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
   if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-    //await updateJobsAndNumbersAndFilters(_$w);
   }
   else {
     let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
     const baseUrl = await location.baseUrl();
      location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-    // queryParams.add({ keyword:encodedKeyWord });
-    // await primarySearch(_$w, _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim());
-    // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
   }
 });
   
