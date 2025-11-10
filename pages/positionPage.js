@@ -60,21 +60,22 @@ async function getCategoryValueId(customFields) {
             // });
           });
           _$w('#relatedJobsRepNoDepartment').data = relatedJobs
-          _$w('#relatedJobsNoDepartmentItem1').onClick((event) => {
-            console.log("event clicked: ");
-            const data = _$w("#relatedJobsRepNoDepartment").data;
-            console.log("data: ", data);
-            console.log("event: ", event);
-            const clickedItemData = data.find(
-              (item) => item._id === event.context.itemId,
-            );
-            console.log("clickedItemData: ", clickedItemData);
-            location.to(clickedItemData["link-jobs-title"]);
-          });
+         
 
         }
     });
-
+    console.log("before on click");
+    _$w('#relatedJobsNoDepartmentItem1').onClick((event) => {
+      console.log("event clicked: ");
+      const data = _$w("#relatedJobsRepNoDepartment").data;
+      console.log("data: ", data);
+      console.log("event: ", event);
+      const clickedItemData = data.find(
+        (item) => item._id === event.context.itemId,
+      );
+      console.log("clickedItemData: ", clickedItemData);
+      location.to(clickedItemData["link-jobs-title"]);
+    });
     if(_$w('#relatedJobsDataset') && _$w('#relatedJobsDataset').length>0)
     {
     _$w('#relatedJobsDataset').onReady(() => {
