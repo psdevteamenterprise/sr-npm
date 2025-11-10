@@ -55,11 +55,18 @@ async function getCategoryValueId(customFields) {
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
-            $item('#relatedJobTitle').onClick(async () => {
-              await location.to(itemData["link-jobs-title"]);
-            });
+            // $item('#relatedJobTitle').onClick(async () => {
+            //   await location.to(itemData["link-jobs-title"]);
+            // });
           });
           _$w('#relatedJobsRepNoDepartment').data = relatedJobs
+          _$w('#relatedJobsNoDepartmentItem').onClick((event) => {
+            const data = _$w("#relatedJobsRepNoDepartment").data;
+            const clickedItemData = data.find(
+              (item) => item._id === event.context.itemId,
+            );
+            location.to(clickedItemData["link-jobs-title"]);
+          });
 
         }
     });
