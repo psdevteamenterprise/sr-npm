@@ -120,6 +120,67 @@ class MockJobBuilder {
     return this;
   }
 
+  withMultiRefCustomValues(categoryIds) {
+    this.jobData.multiRefJobsCustomValues = categoryIds;
+    return this;
+  }
+
+  withCategory(categoryId) {
+    if (!this.jobData.multiRefJobsCustomValues) {
+      this.jobData.multiRefJobsCustomValues = [];
+    }
+    this.jobData.multiRefJobsCustomValues.push(categoryId);
+    return this;
+  }
+
+  withDepartment(department) {
+    this.jobData.department = department;
+    return this;
+  }
+
+  withJobDescription(companyDesc, jobDesc, qualifications, additionalInfo = null) {
+    this.jobData.jobDescription = {
+      companyDescription: { text: companyDesc },
+      jobDescription: { text: jobDesc },
+      qualifications: { text: qualifications }
+    };
+    if (additionalInfo) {
+      this.jobData.jobDescription.additionalInformation = { text: additionalInfo };
+    }
+    return this;
+  }
+
+  withApplyLink(link) {
+    this.jobData.applyLink = link;
+    return this;
+  }
+
+  withLinkJobsTitle(link) {
+    this.jobData['link-jobs-title'] = link;
+    return this;
+  }
+
+  forPositionPage() {
+    if (!this.jobData._id) {
+      this.jobData._id = this.generateId();
+    }
+    if (!this.jobData.department) {
+      this.jobData.department = 'Technology';
+    }
+    if (!this.jobData.jobDescription) {
+      this.withJobDescription(
+        '<p>Great company to work for</p>',
+        '<p>You will build awesome stuff</p>',
+        '<p>Must know how to code</p>',
+        '<p>Additional info here</p>'
+      );
+    }
+    if (!this.jobData.applyLink) {
+      this.jobData.applyLink = `https://apply.com/${this.jobData.id}`;
+    }
+    return this;
+  }
+
   asRemote() {
     this.jobData.location.remote = true;
     return this;
@@ -173,6 +234,38 @@ class MockJobBuilder {
         customizer(builder, i);
       }
       jobs.push(builder.build());
+    }
+    return jobs;
+  }
+
+  static createJobsWithSameCategory(categoryId, count = 3) {
+    const jobs = [];
+    const titles = [
+      'Frontend Developer', 'Backend Developer', 'Full Stack Engineer',
+      'DevOps Engineer', 'QA Engineer', 'Data Scientist',
+      'Product Manager', 'UX Designer', 'System Architect'
+    ];
+    const cities = [
+      { city: 'Auckland', region: 'Auckland Region' },
+      { city: 'Wellington', region: 'Wellington Region' },
+      { city: 'Christchurch', region: 'Canterbury Region' },
+      { city: 'Hamilton', region: 'Waikato Region' },
+      { city: 'Dunedin', region: 'Otago Region' }
+    ];
+
+    for (let i = 0; i < count; i++) {
+      const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+      const randomCity = cities[Math.floor(Math.random() * cities.length)];
+      
+      jobs.push(
+        new MockJobBuilder()
+          .withTitle(`${randomTitle} ${i + 1}`)
+          .withCity(randomCity.city, randomCity.region)
+          .withCategory(categoryId)
+          .withLinkJobsTitle(`/jobs/${randomTitle.toLowerCase().replace(/\s+/g, '-')}-${i + 1}`)
+          .forPositionPage()
+          .build()
+      );
     }
     return jobs;
   }
