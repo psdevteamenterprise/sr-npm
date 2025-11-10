@@ -46,7 +46,7 @@ async function getCategoryValueId(customValues) {
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
         _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
-        if(_$w('#additionalInfoText'))
+        if(isElementExistOnPage(_$w('#additionalInfoText')))
         {
           _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
         }
