@@ -25,6 +25,7 @@
     "@wix/site-window": "^1.0.0",
     "axios": "^1.11.0",
     "jest": "^30.0.5",
+    "psdev-utils": "1.7.3",
     "tests-utils": "^1.0.7"
   },
   "devDependencies": {

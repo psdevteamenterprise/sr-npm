@@ -3,6 +3,7 @@ const { getPositionWithMultiRefField } = require('../backend/queries');
 const { COLLECTIONS,JOBS_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 const { items: wixData } = require('@wix/data');
 const { location } = require("@wix/site-location");
+const{isElementExistOnPage} = require('psdev-utils');
 const {
     htmlToText,
     appendQueryParams
@@ -68,7 +69,7 @@ async function getCategoryValueId(customValues) {
       );
       location.to(clickedItemData["link-jobs-title"]);
     });
-    if(_$w('#relatedJobsDataset') && _$w('#relatedJobsDataset').length>0)
+    if(isElementExistOnPage(_$w('#relatedJobsDataset')))
     {
     _$w('#relatedJobsDataset').onReady(() => {
         const count = _$w('#relatedJobsDataset').getTotalCount();
@@ -77,13 +78,21 @@ async function getCategoryValueId(customValues) {
        }
     });
   }
+  else
+  {
+    console.log("check if it is working")
+  }
  
 }
     
   function handleReferFriendButton(_$w,item) {
-    if(!item.referFriendLink &&  _$w('#referFriendButton')){
+    if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
       console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
+    }
+    else
+    {
+      console.log("check if it is working")
     }
   }
 
