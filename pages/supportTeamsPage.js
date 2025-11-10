@@ -26,15 +26,15 @@ async function handleRecentJobsSection(_$w) {
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
-        $item(supportTeamsPageIds.JOB_TITLE).onClick(async () => {  
-            await location.to(itemData["link-jobs-title"]);
+        $item(supportTeamsPageIds.JOB_TITLE).onClick( () => {  
+             location.to(itemData["link-jobs-title"]);
           })
     });
    
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
     
-    _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick(async () => {
-        await location.to(`/search?category=${Value.title}`);
+    _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick( () => {
+         location.to(`/search?category=${Value.title}`);
     });
 }
 
