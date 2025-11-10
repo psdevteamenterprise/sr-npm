@@ -60,7 +60,7 @@ async function getCategoryValueId(customFields) {
             // });
           });
           _$w('#relatedJobsRepNoDepartment').data = relatedJobs
-          _$w('#relatedJobsNoDepartmentItem').onClick((event) => {
+          _$w('#relatedJobsNoDepartmentItem1').onClick((event) => {
             console.log("event clicked: ");
             const data = _$w("#relatedJobsRepNoDepartment").data;
             console.log("data: ", data);
