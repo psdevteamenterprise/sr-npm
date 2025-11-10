@@ -78,10 +78,6 @@ async function getCategoryValueId(customValues) {
        }
     });
   }
-  else
-  {
-    console.log("check if it is working")
-  }
  
 }
     
@@ -89,10 +85,6 @@ async function getCategoryValueId(customValues) {
     if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
       console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
-    }
-    else
-    {
-      console.log("check if it is working")
     }
   }
 
