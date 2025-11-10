@@ -69,7 +69,12 @@ async function handleUrlParams(_$w,urlParams) {
       applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
       keyword=true;
-      console.log("delete me")
+      if(applyFiltering)
+      {
+        console.log("delete me")
+        currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+      }
+      
     }
     if(applyFiltering) {
       await updateJobsAndNumbersAndFilters(_$w,false,keyword);
