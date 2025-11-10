@@ -2,41 +2,13 @@ const rewire = require('rewire');
 const MockJobBuilder = require('./mockJobBuilder');
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 
-// Mock Wix modules
-const mockQueryParams = {
-  add: jest.fn(),
-  remove: jest.fn()
-};
-
-const mockLocation = {
-  url: 'https://test.com',
-  path: '/test',
-  query: {}
-};
-
-// Temporarily mock require for Wix modules
-const Module = require('module');
-const originalRequire = Module.prototype.require;
-Module.prototype.require = function(id) {
-  if (id === 'wix-location-frontend') {
-    return { queryParams: mockQueryParams };
-  }
-  if (id === '@wix/site-location') {
-    return { location: mockLocation };
-  }
-  return originalRequire.apply(this, arguments);
-};
-
+// Load modules with rewire
 const careersMultiBoxesPage = rewire('../pages/careersMultiBoxesPage');
 const pagesUtils = rewire('../pages/pagesUtils');
-
-// Restore original require
-Module.prototype.require = originalRequire;
 
 const secondarySearch = careersMultiBoxesPage.__get__('secondarySearch');
 const primarySearch = pagesUtils.__get__('primarySearch');
 const loadCategoriesListPrimarySearch = pagesUtils.__get__('loadCategoriesListPrimarySearch');
-
 
 
 describe('secondarySearch function tests', () => {
