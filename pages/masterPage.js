@@ -14,6 +14,7 @@ async function masterPageOnReady(_$w) {
             location.to('https://www.smartrecruiters.com/app/referrals/');
         });
     }
+    
     else{
         console.log("myReferralsButton not found");
     }
