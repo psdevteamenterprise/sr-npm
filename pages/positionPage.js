@@ -55,36 +55,17 @@ async function getCategoryValueId(customFields) {
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
-            // $item('#relatedJobTitle').onClick(async () => {
-            //   await location.to(itemData["link-jobs-title"]);
-            // });
           });
           _$w('#relatedJobsRepNoDepartment').data = relatedJobs
-          console.log("before on click");
-          _$w('#relatedJobsNoDepartmentItem1').onClick((event) => {
-            console.log("event clicked: ");
-            const data = _$w("#relatedJobsRepNoDepartment").data;
-            console.log("data: ", data);
-            console.log("event: ", event);
-            const clickedItemData = data.find(
-              (item) => item._id === event.context.itemId,
-            );
-            console.log("clickedItemData: ", clickedItemData);
-            location.to(clickedItemData["link-jobs-title"]);
-          });
+
 
         }
     });
-    console.log("before on click");
-    _$w('#relatedJobsNoDepartmentItem').onClick((event) => {
-      console.log("event clicked: ");
+    _$w('#relatedJobsNoDepartmentItem').onClick((event) => {   
       const data = _$w("#relatedJobsRepNoDepartment").data;
-      console.log("data: ", data);
-      console.log("event: ", event);
       const clickedItemData = data.find(
         (item) => item._id === event.context.itemId,
       );
-      console.log("clickedItemData: ", clickedItemData);
       location.to(clickedItemData["link-jobs-title"]);
     });
     if(_$w('#relatedJobsDataset') && _$w('#relatedJobsDataset').length>0)
