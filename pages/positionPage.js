@@ -20,6 +20,7 @@ const {
   }
 
 async function getCategoryValueId(customFields) {
+  console.log("customFields: ", customFields);
   const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find().then(result => result.items[0]);
   for(const field of customFields) {
     if(field.customField===categoryCustomField._id) {
@@ -35,6 +36,7 @@ async function getCategoryValueId(customFields) {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         const multiRefField=await getPositionWithMultiRefField(item._id);
+        console.log("multiRefField: ", multiRefField);
         const categoryValueId=await getCategoryValueId(multiRefField);
 
         handleReferFriendButton(_$w,item);
