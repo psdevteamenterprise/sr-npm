@@ -21,7 +21,6 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
-    console.log("careersMultiBoxesPageOnReady urlParams: ", urlParams);
     await loadData(_$w);
 
     await Promise.all([
@@ -40,7 +39,6 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function clearAll(_$w) {
-  console.log("clear all button clicked");
   if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
@@ -58,7 +56,6 @@ async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
   let keyword=false
-  console.log("handleUrlParams urlParams: ", urlParams);
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
@@ -74,7 +71,6 @@ async function handleUrlParams(_$w,urlParams) {
       keyword=true;
       if(applyFiltering)
       {
-        console.log("delete me")
         currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
       }
       
@@ -108,12 +104,9 @@ async function handleUrlParams(_$w,urlParams) {
 
 async function handleParams(_$w,param,value) {
   let applyFiltering=false;
-  console.log("handleParams param: ", param, " value: ", value);
        const decodedValue = decodeURIComponent(value);
-       console.log("decodedValue: ", decodedValue);
       const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
       const options=optionsByFieldId.get(field._id);
-      console.log("all options availbe for this field: ", field.title, " are ", options);
       const option=getCorrectOption(decodedValue,options);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
@@ -241,10 +234,6 @@ async function loadJobsRepeater(_$w) {
       // 2) Load all values once and group them by referenced field
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
-      console.log("valuesByFieldId: ", valuesByFieldId);
-      console.log("allvaluesobjects: ", allvaluesobjects);
-      console.log("allfields: ", allfields);
-      
           // Build CheckboxGroup options for this field
         
       const counter={}
@@ -270,15 +259,9 @@ async function loadJobsRepeater(_$w) {
         }
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
-        console.log("i am here 0 , field: ", field);
-        console.log("countsByFieldId: ", countsByFieldId);
-        console.log("optionsByFieldId: ", optionsByFieldId);
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
-        console.log("after updateoptionUI");
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
-        console.log("i am here 1 , field.title: ", field.title);
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-          console.log(`#${FiltersIds[field.title]}CheckBox.selectedIndices: `, _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
         if (selected && selected.length) {
@@ -289,19 +272,14 @@ async function loadJobsRepeater(_$w) {
         await updateJobsAndNumbersAndFilters(_$w);
     
       });
-      console.log("i am here 2 , field.title: ", field.title);
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
       updateOptionsUI(_$w, field.title, field._id, query);
     }, 150);
-    console.log("i am here 3 , field.title: ", field.title);
       _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
-      console.log("i am here 4 , field.title: ", field.title);  
       
     }
-console.log("i am here 5 ");
     await refreshFacetCounts(_$w);
-    console.log("i am here 6 ");
 
     } catch (err) {
       console.error('Failed to load filters:', err);
@@ -319,13 +297,7 @@ console.log("i am here 5 ");
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
-    console.log("fieldTitle :", fieldTitle);
-    console.log("fieldId :", fieldId);
-    console.log("base :", base);
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    console.log("countsMap :", countsMap);
-    console.log("searchQuery :", searchQuery);
-    console.log("clearAll :", clearAll);
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
         dontUpdateThisCheckBox=null;
@@ -347,21 +319,16 @@ console.log("i am here 5 ");
         value: o.value
       };
     });
-    console.log("withCounts :", withCounts);
     // Apply search
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
-  console.log("filtered :", filtered);
 
     // Preserve currently selected values that are still visible
     let prevSelected=[]
-    console.log("FiltersIds[fieldTitle] :", FiltersIds[fieldTitle]);
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    console.log("visibleSet :", visibleSet);
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-    console.log("preserved :", preserved);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
   }
