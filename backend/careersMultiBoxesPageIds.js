@@ -36,6 +36,7 @@ const CATEGORY_CUSTOM_FIELD_ID_IN_CMS='5cd8c873c9e77c0008aa7d23';
 const fieldTitlesInCMS={
     "brand": "Brands",
     category: "Category",
+    visibility: "Visibility",
 }
 
 const FiltersIds={

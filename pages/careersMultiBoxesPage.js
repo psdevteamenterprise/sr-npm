@@ -62,6 +62,9 @@ async function handleUrlParams(_$w,urlParams) {
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
+    if(urlParams.visibility) {
+      applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
+    }
     if(urlParams.category) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
