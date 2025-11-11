@@ -69,11 +69,19 @@ function getLocation(position,basicJob) {
 
 }
 function getVisibility(position,customFieldsValues) {
+  console.log("position: ", position);
+  console.log("customFieldsValues: ", customFieldsValues);
+  console.log("customValuesToJobs: ", customValuesToJobs);
   if (!customFieldsValues["Visibility"]) {
     customFieldsValues["Visibility"] = {};
   }
+  console.log("i am here 0")
   customFieldsValues["Visibility"][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
+  console.log("customFieldsValues: ", customFieldsValues);
+  console.log("i am here 1")
   customValuesToJobs["Visibility"][position.visibility.toLowerCase()] ? customValuesToJobs["Visibility"][position.visibility.toLowerCase()].push(position.id) : customValuesToJobs["Visibility"][position.visibility.toLowerCase()]=[position.id]
+  console.log("customValuesToJobs: ", customValuesToJobs);
+  console.log("i am here 2")
 }
 
 function getEmploymentType(position,customFieldsValues) {
