@@ -350,8 +350,10 @@ console.log("i am here 5 ");
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
   console.log("filtered :", filtered);
+
     // Preserve currently selected values that are still visible
     let prevSelected=[]
+    console.log("FiltersIds[fieldTitle] :", FiltersIds[fieldTitle]);
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
     console.log("visibleSet :", visibleSet);

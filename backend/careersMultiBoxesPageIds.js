@@ -46,6 +46,7 @@ const FiltersIds={
     "Employment Type": 'employmentType',
    "Contract Type": 'contractType',
    Brands: 'Brands',
+   Visibility: 'visibility',
 }
 
 

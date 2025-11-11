@@ -201,7 +201,7 @@ async function insertJobsReference(valueId) {
 async function populateCustomFieldsCollection(customFields) {
   let fieldstoinsert=[]
   customFields["employmentType"] = "Employment Type";
-  customFields["visibility"] = "Visibility";
+  customFields["Visibility"] = "Visibility";
   for(const ID of Object.keys(customFields)){
     fieldstoinsert.push({
       title: customFields[ID],
