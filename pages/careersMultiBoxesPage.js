@@ -271,6 +271,7 @@ async function loadJobsRepeater(_$w) {
         console.log("countsByFieldId: ", countsByFieldId);
         console.log("optionsByFieldId: ", optionsByFieldId);
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
+        console.log("after updateoptionUI");
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         console.log("i am here 1 , field.title: ", field.title);
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
@@ -315,7 +316,13 @@ console.log("i am here 5 ");
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
+    console.log("fieldTitle :", fieldTitle);
+    console.log("fieldId :", fieldId);
+    console.log("base :", base);
     const countsMap = countsByFieldId.get(fieldId) || new Map();
+    console.log("countsMap :", countsMap);
+    console.log("searchQuery :", searchQuery);
+    console.log("clearAll :", clearAll);
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
         dontUpdateThisCheckBox=null;
@@ -337,16 +344,19 @@ console.log("i am here 5 ");
         value: o.value
       };
     });
+    console.log("withCounts :", withCounts);
     // Apply search
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
-  
+  console.log("filtered :", filtered);
     // Preserve currently selected values that are still visible
     let prevSelected=[]
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
+    console.log("visibleSet :", visibleSet);
     const preserved = prevSelected.filter(v => visibleSet.has(v));
+    console.log("preserved :", preserved);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
   }
