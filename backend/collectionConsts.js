@@ -93,7 +93,6 @@ const COLLECTIONS_FIELDS = {
         {key: 'image', type: 'IMAGE' },
         {key:'employmentType', type: 'TEXT'},
         {key:'releasedDate', type: 'TEXT'},
-        {key:'visibility', type: 'TEXT'},
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
