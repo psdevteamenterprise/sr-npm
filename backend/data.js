@@ -69,11 +69,11 @@ function getLocation(position,basicJob) {
 
 }
 function getVisibility(position,customFieldsValues) {
-  if (!customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY]) {
-    customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY] = {};
+  if (!customFieldsValues["Visibility"]) {
+    customFieldsValues["Visibility"] = {};
   }
-  customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
-  customValuesToJobs[position.visibility.toLowerCase()] ? customValuesToJobs[position.visibility.toLowerCase()].push(position.id) : customValuesToJobs[position.visibility.toLowerCase()]=[position.id]
+  customFieldsValues["Visibility"][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
+  customValuesToJobs["Visibility"][position.visibility.toLowerCase()] ? customValuesToJobs["Visibility"][position.visibility.toLowerCase()].push(position.id) : customValuesToJobs["Visibility"][position.visibility.toLowerCase()]=[position.id]
 }
 
 function getEmploymentType(position,customFieldsValues) {

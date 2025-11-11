@@ -31,7 +31,6 @@ const JOBS_COLLECTION_FIELDS = {
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
   EMPLOYMENT_TYPE: 'employmentType',
   RELEASED_DATE: 'releasedDate',
-  VISIBILITY: 'visibility',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
