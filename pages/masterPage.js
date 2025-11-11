@@ -1,19 +1,27 @@
 const{isElementExistOnPage} = require('psdev-utils');
 const { location } = require("@wix/site-location");
 const { LINKS } = require('../backend/consts');
+const {getApiKeys} = require('../backend/secretsData');
 
-
+let companyId;
 async function masterPageOnReady(_$w) {
-    
-    bindButton(_$w,"Application");
-    bindButton(_$w,"Referrals");
+    const {companyId,templateType} = await getApiKeys();
+    this.companyId=companyId;
+    bindButton(_$w,"myApplication");
+    bindButton(_$w,"myReferrals");
+    bindButton(_$w,"login");
   }
 
   function bindButton(_$w,buttonName) {
-    if(isElementExistOnPage(_$w(`#my${buttonName}Button`))){
-        _$w(`#my${buttonName}Button`).onClick(()=>{
+    if(isElementExistOnPage(_$w(`#${buttonName}Button`))){
+        if(buttonName==="login"){
+            location.to(LINKS[buttonName].replace("${companyId}",this.companyId));
+        }
+        else{   
+        _$w(`#${buttonName}Button`).onClick(()=>{
             location.to(LINKS[buttonName]);
         });
+    }
     }
     else{
         console.log(`${buttonName} button not found`);
