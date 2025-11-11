@@ -143,7 +143,8 @@ async function saveJobsDataToCMS() {
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     getEmploymentType(position,customFieldsValues);
     getLocation(position,basicJob);
-    if(templateType===TEMPLATE_TYPE.INTERNAL){
+    if(templateType===TEMPLATE_TYPE.EXTERNAL){
+      console.log("change me lkater to internsal")
      getVisibility(position,customFieldsValues);
     }
 
@@ -198,8 +199,9 @@ async function insertJobsReference(valueId) {
 }
 
 async function populateCustomFieldsCollection(customFields) {
-  fieldstoinsert=[]
+  let fieldstoinsert=[]
   customFields["employmentType"] = "Employment Type";
+  customFields["visibility"] = "Visibility";
   for(const ID of Object.keys(customFields)){
     fieldstoinsert.push({
       title: customFields[ID],
