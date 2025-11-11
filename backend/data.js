@@ -69,23 +69,13 @@ function getLocation(position,basicJob) {
 
 }
 function getVisibility(position,customFieldsValues) {
-  console.log("position: ", position);
-  console.log("customFieldsValues: ", customFieldsValues);
-  console.log("customValuesToJobs: ", customValuesToJobs);
   if (!customFieldsValues["Visibility"]) {
     customFieldsValues["Visibility"] = {};
   }
-  console.log("i am here 0")
-  console.log("customFieldsValues ",customFieldsValues)
-  customFieldsValues["Visibility"][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
-  console.log("customFieldsValues: ", customFieldsValues);
-  console.log("i am here 1")
-  //console.log("customValuesToJobs[Visibility][position.visibility.toLowerCase()]: ", customValuesToJobs["Visibility"][position.visibility.toLowerCase()]);
-  console.log("aftyer printing")
-  console.log("customValuesToJobs[position.visibility.toLowerCase()]: ", customValuesToJobs[position.visibility.toLowerCase()]);
-  customValuesToJobs[position.visibility.toLowerCase()] ? customValuesToJobs[position.visibility.toLowerCase()].push(position.id) : customValuesToJobs[position.visibility.toLowerCase()]=[position.id]
-  console.log("customValuesToJobs: ", customValuesToJobs);
-  console.log("i am here 2")
+  let visibility;
+  position.visibility.toLowerCase()==="public"? visibility="external" : visibility="internal";
+  customFieldsValues["Visibility"][visibility] = visibility;
+  customValuesToJobs[visibility] ? customValuesToJobs[visibility].push(position.id) : customValuesToJobs[visibility]=[position.id]
 }
 
 function getEmploymentType(position,customFieldsValues) {
