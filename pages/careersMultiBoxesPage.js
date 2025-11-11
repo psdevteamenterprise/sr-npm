@@ -267,7 +267,7 @@ async function loadJobsRepeater(_$w) {
         }
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
-        console.log("i am here 0 , field.title: ", field.title);
+        console.log("i am here 0 , field: ", field);
         console.log("countsByFieldId: ", countsByFieldId);
         console.log("optionsByFieldId: ", optionsByFieldId);
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
