@@ -52,12 +52,12 @@ async function getCategoryValueId(customValues) {
         }
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
-        const relatedJobs=await getRelatedJobs(categoryValueId,item._id);
+        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
           });
-          _$w('#relatedJobsRepNoDepartment').data = relatedJobs
+          _$w('#relatedJobsRepNoDepartment').data = relatedJobs;
 
 
         }
@@ -94,8 +94,8 @@ async function getCategoryValueId(customValues) {
     _$w('#applyButton').link=url; //so it can be clicked
   }
 
-  async function getRelatedJobs(categoryValueId,itemId) {
-    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).find();
+  async function getRelatedJobs(categoryValueId,itemId,limit=1000) {
+    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).limit(limit).find();
     return relatedJobs.items;
   }
 
