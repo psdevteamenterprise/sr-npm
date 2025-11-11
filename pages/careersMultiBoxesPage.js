@@ -269,6 +269,7 @@ async function loadJobsRepeater(_$w) {
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
+        console.log("i am here 1 , field.title: ", field.title);
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
           console.log(`#${FiltersIds[field.title]}CheckBox.selectedIndices: `, _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
           dontUpdateThisCheckBox=field._id;
@@ -281,18 +282,19 @@ async function loadJobsRepeater(_$w) {
         await updateJobsAndNumbersAndFilters(_$w);
     
       });
-
+      console.log("i am here 2 , field.title: ", field.title);
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
       updateOptionsUI(_$w, field.title, field._id, query);
     }, 150);
-
+    console.log("i am here 3 , field.title: ", field.title);
       _$w(`#${FiltersIds[field.title]}input`).onInput(runFilter);         
-        
+      console.log("i am here 4 , field.title: ", field.title);  
       
     }
-
+console.log("i am here 5 ");
     await refreshFacetCounts(_$w);
+    console.log("i am here 6 ");
 
     } catch (err) {
       console.error('Failed to load filters:', err);
