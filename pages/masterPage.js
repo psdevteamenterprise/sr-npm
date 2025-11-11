@@ -25,6 +25,7 @@ async function masterPageOnReady(_$w,getApiKeys) {
         else{   
         _$w(`#${buttonName}Button`).onClick(()=>{
             console.log(`${buttonName} button clicked`);
+            console.log("link to be used: ", LINKS[buttonName]);
             location.to(LINKS[buttonName]);
         });
     }
