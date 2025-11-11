@@ -3,12 +3,12 @@ const { location } = require("@wix/site-location");
 const { LINKS } = require('../backend/consts');
 const {getApiKeys} = require('../backend/secretsData');
 
-let companyId;
+let companyIdGlobal;
 async function masterPageOnReady(_$w) {
     const {companyId,templateType} = await getApiKeys();
-    this.companyId=companyId;
-    console.log("companyId: ", this.companyId);
-    bindButton(_$w,"myApplication");
+    companyIdGlobal=companyId;
+    console.log("companyId: ", companyIdGlobal);
+    bindButton(_$w,"myApplication");    
     bindButton(_$w,"myReferrals");
     bindButton(_$w,"login");
   }
@@ -19,7 +19,7 @@ async function masterPageOnReady(_$w) {
             
             _$w(`#${buttonName}Button`).onClick(()=>{
                 console.log("login button clicked");
-            location.to(LINKS[buttonName].replace("${companyId}",this.companyId));
+            location.to(LINKS[buttonName].replace("${companyId}",companyIdGlobal));
             });
         }
         else{   
