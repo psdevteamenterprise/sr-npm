@@ -1,25 +1,24 @@
 const{isElementExistOnPage} = require('psdev-utils');
 const { location } = require("@wix/site-location");
+const { LINKS } = require('../backend/consts');
+
+
 async function masterPageOnReady(_$w) {
-    if(isElementExistOnPage(_$w('#myApplicationButton'))){
-        _$w('#myApplicationButton').onClick(()=>{
-            location.to('https://www.smartrecruiters.com/app/employee-portal/68246e5512d84f4c00a19e62/job-applications');
-        });
-    }
-    else{
-        console.log("myApplicationButton not found");
-    }
-    if(isElementExistOnPage(_$w('#myReferralsButton'))){
-        _$w('#myReferralsButton').onClick(()=>{
-            location.to('https://www.smartrecruiters.com/app/referrals/');
-        });
-    }
     
-    else{
-        console.log("myReferralsButton not found");
-    }
+    bindButton(_$w,"Application");
+    bindButton(_$w,"Referrals");
   }
 
+  function bindButton(_$w,buttonName) {
+    if(isElementExistOnPage(_$w(`#my${buttonName}Button`))){
+        _$w(`#my${buttonName}Button`).onClick(()=>{
+            location.to(LINKS[buttonName]);
+        });
+    }
+    else{
+        console.log(`${buttonName} button not found`);
+    }
+  }
 module.exports = {
     masterPageOnReady,
   };

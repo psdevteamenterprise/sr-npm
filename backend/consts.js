@@ -107,8 +107,10 @@ const supportTeamsPageIds={
         "Commercial":"CommercialSales",// this field doesnt exists in the database
     }
 }
-
-
+const LINKS={
+  Application:'https://www.smartrecruiters.com/app/employee-portal/68246e5512d84f4c00a19e62/job-applications',
+  Referrals:'https://www.smartrecruiters.com/app/referrals/',
+}
 
   module.exports = {
     TASKS_NAMES,
@@ -116,4 +118,5 @@ const supportTeamsPageIds={
     TASKS,
     QUERY_MAX_LIMIT,
     supportTeamsPageIds,
+    LINKS,
 };
