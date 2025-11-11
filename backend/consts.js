@@ -108,8 +108,8 @@ const supportTeamsPageIds={
     }
 }
 const LINKS={
-  Application:'https://www.smartrecruiters.com/app/employee-portal/68246e5512d84f4c00a19e62/job-applications',
-  Referrals:'https://www.smartrecruiters.com/app/referrals/',
+  myApplication:'https://www.smartrecruiters.com/app/employee-portal/68246e5512d84f4c00a19e62/job-applications',
+  myReferrals:'https://www.smartrecruiters.com/app/referrals/',
   login:'https://www.smartrecruiters.com/web-sso/saml/${companyId}/login',
 }
 
