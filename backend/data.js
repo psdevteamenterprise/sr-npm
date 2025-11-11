@@ -79,6 +79,9 @@ function getVisibility(position,customFieldsValues) {
   customFieldsValues["Visibility"][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
   console.log("customFieldsValues: ", customFieldsValues);
   console.log("i am here 1")
+  console.log("customValuesToJobs[Visibility][position.visibility.toLowerCase()]: ", customValuesToJobs["Visibility"][position.visibility.toLowerCase()]);
+  console.log("aftyer printing")
+  console.log("customValuesToJobs[Visibility][position.visibility.toLowerCase()]: ", customValuesToJobs["Visibility"][position.visibility.toLowerCase()]);
   customValuesToJobs["Visibility"][position.visibility.toLowerCase()] ? customValuesToJobs["Visibility"][position.visibility.toLowerCase()].push(position.id) : customValuesToJobs["Visibility"][position.visibility.toLowerCase()]=[position.id]
   console.log("customValuesToJobs: ", customValuesToJobs);
   console.log("i am here 2")
