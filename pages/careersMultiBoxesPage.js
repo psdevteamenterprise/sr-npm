@@ -288,6 +288,7 @@ async function loadJobsRepeater(_$w) {
         
       
     }
+    
     await refreshFacetCounts(_$w);
 
     } catch (err) {

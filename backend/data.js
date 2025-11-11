@@ -4,7 +4,7 @@ const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
 const { getAllPositions } = require('./queries');
-const { retrieveSecretVal, getTokenFromCMS } = require('./secretsData');
+const { retrieveSecretVal, getTokenFromCMS ,getApiKeys} = require('./secretsData');
 
 
 
@@ -68,6 +68,14 @@ function getLocation(position,basicJob) {
   locationToJobs[basicJob.cityText] ? locationToJobs[basicJob.cityText].push(position.id) : locationToJobs[basicJob.cityText]=[position.id]
 
 }
+function getVisibility(position,customFieldsValues) {
+  if (!customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY]) {
+    customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY] = {};
+  }
+  customFieldsValues[JOBS_COLLECTION_FIELDS.VISIBILITY][position.visibility.toLowerCase()] = position.visibility.toLowerCase();
+  customValuesToJobs[position.visibility.toLowerCase()] ? customValuesToJobs[position.visibility.toLowerCase()].push(position.id) : customValuesToJobs[position.visibility.toLowerCase()]=[position.id]
+}
+
 function getEmploymentType(position,customFieldsValues) {
   if (!customFieldsValues["employmentType"]) {
     customFieldsValues["employmentType"] = {};
@@ -99,6 +107,9 @@ async function saveJobsDataToCMS() {
   const sourcePositions = await filterBasedOnBrand(positions);
   const customFieldsLabels = {}
   const customFieldsValues = {}
+  
+  const {companyId,templateType} = await getApiKeys();
+  console.log("templateType: ", templateType);
 
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
@@ -126,12 +137,16 @@ async function saveJobsDataToCMS() {
       brand: getBrand(position.customField),
       jobDescription: null, // Will be filled later
       employmentType: position.typeOfEmployment.label,
-      releasedDate: position.releasedDate 
+      releasedDate: position.releasedDate
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     getEmploymentType(position,customFieldsValues);
     getLocation(position,basicJob);
+    if(templateType===TEMPLATE_TYPE.INTERNAL){
+     getVisibility(position,customFieldsValues);
+    }
+
     return basicJob;
   });
   if(siteconfig===undefined) {
