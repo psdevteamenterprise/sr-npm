@@ -111,7 +111,6 @@ async function saveJobsDataToCMS() {
   const customFieldsValues = {}
   
   const {companyId,templateType} = await getApiKeys();
-  console.log("templateType: ", templateType);
 
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
@@ -145,8 +144,7 @@ async function saveJobsDataToCMS() {
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
     getEmploymentType(position,customFieldsValues);
     getLocation(position,basicJob);
-    if(templateType===TEMPLATE_TYPE.EXTERNAL){
-      console.log("change me lkater to internsal")
+    if(templateType===TEMPLATE_TYPE.INTERNAL){
      getVisibility(position,customFieldsValues);
     }
 
