@@ -152,7 +152,6 @@ async function primarySearch(_$w,query,alljobs) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
     return false;
   }
-  console.log("all jobs:  ", alljobs);
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
   if(filteredJobs.length>0) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
