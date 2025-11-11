@@ -241,7 +241,7 @@ async function loadJobsRepeater(_$w) {
       console.log("valuesByFieldId: ", valuesByFieldId);
       console.log("allvaluesobjects: ", allvaluesobjects);
       console.log("allfields: ", allfields);
-      console.log("optionsByFieldId: ", optionsByFieldId);
+      
           // Build CheckboxGroup options for this field
         
       const counter={}
@@ -267,6 +267,9 @@ async function loadJobsRepeater(_$w) {
         }
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
+        console.log("i am here 0 , field.title: ", field.title);
+        console.log("countsByFieldId: ", countsByFieldId);
+        console.log("optionsByFieldId: ", optionsByFieldId);
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         console.log("i am here 1 , field.title: ", field.title);
