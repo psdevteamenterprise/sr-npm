@@ -1,10 +1,10 @@
 const{isElementExistOnPage} = require('psdev-utils');
 const { location } = require("@wix/site-location");
 const { LINKS } = require('../backend/consts');
-const {getApiKeys} = require('../backend/secretsData');
+// const {getApiKeys} = require('../backend/secretsData');
 
 let companyIdGlobal;
-async function masterPageOnReady(_$w) {
+async function masterPageOnReady(_$w,getApiKeys) {
     const {companyId,templateType} = await getApiKeys();
     companyIdGlobal=companyId;
     console.log("companyId: ", companyIdGlobal);
