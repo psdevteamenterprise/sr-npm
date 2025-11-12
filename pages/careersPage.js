@@ -124,8 +124,6 @@ async function handleUrlParams(_$w) {
         if (queryJobTypeVar) {
             await handleJobTypeParam(_$w,queryJobTypeVar);
         }
-
-
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
