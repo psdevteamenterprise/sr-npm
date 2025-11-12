@@ -10,6 +10,7 @@ const { COLLECTIONS } = require('../backend/collectionConsts');
 const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
 let thisObjectVar;
 let searchByCityFlag=false;
+let loadedCategories=false;
 async function homePageOnReady(_$w,thisObject=null) {
 
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
@@ -85,11 +86,24 @@ function bindTeamRepeater(_$w) {
 }
 
 function bindViewAllButton(_$w) {
+    if(!loadedCategories) {
+        loadedCategories=true;
+        _$w('#viewAllCategoriesButton').label = "View All";
     _$w('#viewAllCategoriesButton').onClick(()=>{
         console.log("loading more categories");
        _$w("#categoriesDataset").loadMore();
        console.log("categories loaded");
     });
+}
+else
+{
+    loadedCategories=false;
+    _$w('#viewAllCategoriesButton').label = "View Less";
+    _$w('#viewAllCategoriesButton').onClick(()=>{
+        _$w("#categoriesDataset").loadPage(0);
+        console.log("categories reseted");
+    });
+}
 }
 
 function init(_$w) {
