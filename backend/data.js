@@ -145,7 +145,6 @@ async function saveJobsDataToCMS() {
     getEmploymentType(position,customFieldsValues);
     getLocation(position,basicJob);
     if(templateType===TEMPLATE_TYPE.INTERNAL){
-      
      getVisibility(position,customFieldsValues);
     }
 
