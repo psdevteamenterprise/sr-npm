@@ -4,7 +4,7 @@ const { items: wixData } = require('@wix/data');
 const { COLLECTIONS,TOKEN_NAME } = require('./collectionConsts');
 
 const getSecretValue = auth.elevate(secrets.getSecretValue);
-
+const elevatedQuery = auth.elevate(wixData.query);
 
   async function retrieveSecretVal(tokenName)
   {
@@ -20,7 +20,7 @@ const getSecretValue = auth.elevate(secrets.getSecretValue);
   }
 
   async function getTokenFromCMS(tokenName) {
-    const result = await wixData.query(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
+    const result = await elevatedQuery(COLLECTIONS.SECRET_MANAGER_MIRROR).eq('tokenName',tokenName).find();
     if (result.items.length > 0) {
         return result.items[0].value; 
     } else {
@@ -28,7 +28,7 @@ const getSecretValue = auth.elevate(secrets.getSecretValue);
     }
   }
   async function getTemplateTypeFromCMS() {
-    const result = await wixData.query(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
+    const result = await elevatedQuery(COLLECTIONS.TEMPLATE_TYPE).limit(1).find();
     if (result.items.length > 0) {
         return result.items[0].templateType; 
     } else {
