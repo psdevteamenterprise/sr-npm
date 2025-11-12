@@ -65,13 +65,20 @@ function bindTeamRepeater(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         console.log("itemData: ", itemData);
-        $item('#teamButton').onClick(()=>{
-            const department = encodeURIComponent(itemData.title);
-            itemData.customField?
-            location.to(`/search?category=${department}`)
-            :
-            location.to(`/positions?department=${department}`);
-        });
+        const department = encodeURIComponent(itemData.title);
+        if (itemData.customField) {
+            [$item('#teamButton'), $item('#teamButton2')].forEach(btn => {
+                btn.onClick(() => {
+                    location.to(`/search?category=${department}`);
+                });
+            });
+
+        }
+        else{
+            $item('#teamButton').onClick(()=>{
+                location.to(`/positions?department=${department}`);
+            });
+        }
     });
 }
 
