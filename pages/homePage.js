@@ -86,25 +86,25 @@ function bindTeamRepeater(_$w) {
 }
 
 function bindViewAllButton(_$w) {
-    if(!loadedCategories) {
-        loadedCategories=true;
-        _$w('#viewAllCategoriesButton').label = "View All";
+        
     _$w('#viewAllCategoriesButton').onClick(()=>{
-        console.log("loading more categories");
-       _$w("#categoriesDataset").loadMore();
-       console.log("categories loaded");
+        if(!loadedCategories) {
+            loadedCategories=true;
+            _$w('#viewAllCategoriesButton').label = "View All";
+            _$w("#categoriesDataset").loadMore();
+            console.log("categories loaded");
+        }
+        else{
+            loadedCategories=false;
+            _$w('#viewAllCategoriesButton').label = "View Less";
+            _$w("#categoriesDataset").loadPage(1);
+            console.log("categories reseted");
+        }
     });
 }
-else
-{
-    loadedCategories=false;
-    _$w('#viewAllCategoriesButton').label = "View Less";
-    _$w('#viewAllCategoriesButton').onClick(()=>{
-        _$w("#categoriesDataset").loadPage(1);
-        console.log("categories reseted");
-    });
-}
-}
+
+
+
 
 function init(_$w) {
     const debouncedInput = debounce(()=>handleSearchInput(_$w), 400,thisObjectVar);
