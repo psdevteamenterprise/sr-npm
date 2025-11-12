@@ -100,7 +100,7 @@ else
     loadedCategories=false;
     _$w('#viewAllCategoriesButton').label = "View Less";
     _$w('#viewAllCategoriesButton').onClick(()=>{
-        _$w("#categoriesDataset").loadPage(0);
+        _$w("#categoriesDataset").loadPage(1);
         console.log("categories reseted");
     });
 }
