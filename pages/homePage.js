@@ -20,7 +20,9 @@ async function homePageOnReady(_$w,thisObject=null) {
        await Promise.all([
             bindPrimarySearch(_$w,allvaluesobjects,allJobs),
             loadPrimarySearchRepeater(_$w),
-            bindTeamRepeater(_$w)
+            bindTeamRepeater(_$w),
+            bindViewAllButton(_$w),
+
         ]);
     }
     else{
@@ -79,6 +81,14 @@ function bindTeamRepeater(_$w) {
                 location.to(`/positions?department=${department}`);
             });
         }
+    });
+}
+
+function bindViewAllButton(_$w) {
+    _$w('#viewAllCategoriesButton').onClick(()=>{
+        console.log("loading more categories");
+       _$w("#categoriesDataset").loadMore();
+       console.log("categories loaded");
     });
 }
 
