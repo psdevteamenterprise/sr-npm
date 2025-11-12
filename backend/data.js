@@ -202,7 +202,7 @@ async function populateCustomValuesCollection(customFieldsValues) {
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId,
-        totalJobs:customValuesToJobs[valueId].length,
+        count:customValuesToJobs[valueId].length,
         jobIds:customValuesToJobs[valueId],
       })
     }

@@ -141,7 +141,7 @@ async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
   let categoryValues=[]
   for(const value of allvaluesobjects) {
     if(value.customField===CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
-      categoryValues.push({title:value.title+` (${value.totalJobs})` ,_id:value._id});
+      categoryValues.push({title:value.title+` (${value.count})` ,_id:value._id});
     }
   }
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;

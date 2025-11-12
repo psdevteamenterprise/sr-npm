@@ -67,6 +67,9 @@ function bindTeamRepeater(_$w) {
         console.log("itemData: ", itemData);
         $item('#teamButton').onClick(()=>{
             const department = encodeURIComponent(itemData.title);
+            itemData.customField?
+            location.to(`/search?category=${department}`)
+            :
             location.to(`/positions?department=${department}`);
         });
     });

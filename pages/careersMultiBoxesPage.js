@@ -260,7 +260,7 @@ async function loadJobsRepeater(_$w) {
 
         optionsByFieldId.set(key, originalOptions);
         for (const val of allvaluesobjects) {
-          counter[val.title]=val.totalJobs
+          counter[val.title]=val.count
         }
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
