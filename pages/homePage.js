@@ -66,7 +66,6 @@ function bindTeamRepeater(_$w) {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
         console.log("itemData: ", itemData);
         $item('#teamButton').onClick(()=>{
-            
             const department = encodeURIComponent(itemData.title);
             itemData.customField?
             location.to(`/search?category=${department}`)
