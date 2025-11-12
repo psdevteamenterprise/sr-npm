@@ -147,7 +147,6 @@ async function saveJobsDataToCMS() {
     if(templateType===TEMPLATE_TYPE.INTERNAL){
      getVisibility(position,customFieldsValues);
     }
-
     return basicJob;
   });
   if(siteconfig===undefined) {
