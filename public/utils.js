@@ -40,15 +40,10 @@ function filterBrokenMarkers(items) {
 
 
 function appendQueryParams(url,query){
-  console.log("appendQueryParams url: ", url);
-  console.log("appendQueryParams query: ", query);
   const urlObj=new URL(url);
-  console.log("urlObj urlObj: ", urlObj);
   Object.entries(query).forEach(([key,value])=>{
     urlObj.searchParams.set(key,value);
   });
-  console.log("urlObj urlObj: ", urlObj);
-  console.log("urlObj urlObj.toString(): ", urlObj.toString());
   return urlObj.toString();
 }
 

@@ -19,7 +19,8 @@ async function homePageOnReady(_$w,thisObject=null) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
        await Promise.all([
             bindPrimarySearch(_$w,allvaluesobjects,allJobs),
-            loadPrimarySearchRepeater(_$w)
+            loadPrimarySearchRepeater(_$w),
+            bindTeamRepeater(_$w)
         ]);
     }
     else{
@@ -32,13 +33,9 @@ async function homePageOnReady(_$w,thisObject=null) {
   }
 
   function bind(_$w) {
-    _$w('#teamRepeater').onItemReady(($item, itemData) => {
-        $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-        $item('#teamButton').onClick(()=>{
-            const department = encodeURIComponent(itemData.title);
-            location.to(`/positions?department=${department}`);
-        });
-    });
+
+    bindTeamRepeater(_$w);
+
 
     _$w('#citiesDataset').onReady(async () => {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
@@ -61,6 +58,17 @@ async function homePageOnReady(_$w,thisObject=null) {
         });
         //@ts-ignore
         _$w('#googleMaps').setMarkers(markers);
+    });
+}
+
+function bindTeamRepeater(_$w) {
+    _$w('#teamRepeater').onItemReady(($item, itemData) => {
+        $item('#teamButton').label = `View ${itemData.count} Open Positions`;
+        console.log("itemData: ", itemData);
+        $item('#teamButton').onClick(()=>{
+            const department = encodeURIComponent(itemData.title);
+            location.to(`/positions?department=${department}`);
+        });
     });
 }
 

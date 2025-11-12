@@ -37,10 +37,9 @@ async function getCategoryValueId(customValues) {
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         const multiRefField=await getPositionWithMultiRefField(item._id);
         const categoryValueId=await getCategoryValueId(multiRefField);
-
         handleReferFriendButton(_$w,item);
-
         handleApplyButton(_$w,item);
+        
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -83,15 +82,21 @@ async function getCategoryValueId(customValues) {
     
   function handleReferFriendButton(_$w,item) {
     if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
-      console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
     }
   }
 
   function handleApplyButton(_$w,item) {
+    try{
     _$w('#applyButton').target="_blank";//so it can open in new tab
-    const url=appendQueryParams(item.applyLink,query);
-    _$w('#applyButton').link=url; //so it can be clicked
+      const url=appendQueryParams(item.applyLink,query);
+      _$w('#applyButton').link=url; //so it can be clicked
+    }
+    catch(error){
+      console.warn("error in handleApplyButton: , using applyLink directly", error);
+      _$w('#applyButton').target="_blank";
+      _$w('#applyButton').link=item.applyLink;
+    }
   }
 
   async function getRelatedJobs(categoryValueId,itemId,limit=1000) {
