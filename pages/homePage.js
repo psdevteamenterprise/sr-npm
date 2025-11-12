@@ -90,13 +90,13 @@ function bindViewAllButton(_$w) {
     _$w('#viewAllCategoriesButton').onClick(()=>{
         if(!loadedCategories) {
             loadedCategories=true;
-            _$w('#viewAllCategoriesButton').label = "View All";
+            _$w('#viewAllCategoriesButton').label = "View Less";
             _$w("#categoriesDataset").loadMore();
             console.log("categories loaded");
         }
         else{
             loadedCategories=false;
-            _$w('#viewAllCategoriesButton').label = "View Less";
+            _$w('#viewAllCategoriesButton').label = "View All";
             _$w("#categoriesDataset").loadPage(1);
             console.log("categories reseted");
         }
