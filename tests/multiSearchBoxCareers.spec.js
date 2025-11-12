@@ -158,15 +158,16 @@ describe('primarySearch function tests', () => {
  
      await primarySearch(mockW, 'unicorn hunter',mockJobs);
      
+     
      expect(mockprimarySearchMultiBox.changeState).toHaveBeenCalledWith('noResults');
      expect(mockprimarySearcJobResult.data).toBeNull();
    });
 
    it('should fill category repeater when clicking on empty primary search input', async () => {
      const mockCategoryValues = [
-       { _id: 'cat1', title: 'Engineering', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, totalJobs: 5 },
-       { _id: 'cat2', title: 'Marketing', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, totalJobs: 3 },
-       { _id: 'cat3', title: 'Sales', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, totalJobs: 7 }
+       { _id: 'cat1', title: 'Engineering', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, count: 5 },
+       { _id: 'cat2', title: 'Marketing', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, count: 3 },
+       { _id: 'cat3', title: 'Sales', customField: CATEGORY_CUSTOM_FIELD_ID_IN_CMS, count: 7 }
      ];
      
      careersMultiBoxesPage.__set__('allvaluesobjects', mockCategoryValues);
