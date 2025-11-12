@@ -67,7 +67,6 @@ async function homePageOnReady(_$w,thisObject=null) {
 function bindTeamRepeater(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-        console.log("itemData: ", itemData);
         const department = encodeURIComponent(itemData.title);
         if (itemData.customField) {
             [$item('#teamButton'), $item('#teamButton2')].forEach(btn => {
@@ -86,19 +85,17 @@ function bindTeamRepeater(_$w) {
 }
 
 function bindViewAllButton(_$w) {
-        
+            
     _$w('#viewAllCategoriesButton').onClick(()=>{
         if(!loadedCategories) {
             loadedCategories=true;
             _$w('#viewAllCategoriesButton').label = "View Less";
             _$w("#categoriesDataset").loadMore();
-            console.log("categories loaded");
         }
         else{
             loadedCategories=false;
             _$w('#viewAllCategoriesButton').label = "View All";
             _$w("#categoriesDataset").loadPage(1);
-            console.log("categories reseted");
         }
     });
 }
