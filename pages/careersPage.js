@@ -110,8 +110,6 @@ async function handleUrlParams(_$w) {
     if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
-
-    
         if (queryPageVar) {
             await handlePageParam(_$w);    
         }
