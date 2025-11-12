@@ -5,4 +5,5 @@ module.exports = {
   ...require('./consts'),
   ...require('./data'),
   ...require('./careersMultiBoxesPageIds'),
+  ...require ('./secretsData'),
 };
