@@ -20,11 +20,12 @@ async function homePageOnReady(_$w,thisObject=null) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
        await Promise.all([
             bindPrimarySearch(_$w,allvaluesobjects,allJobs),
-            loadPrimarySearchRepeater(_$w),
-            bindTeamRepeater(_$w),
-            bindViewAllButton(_$w),
-
+            loadPrimarySearchRepeater(_$w)
         ]);
+        bindTeamRepeater(_$w)
+        bindViewAllButton(_$w)
+
+        
     }
     else{
 
