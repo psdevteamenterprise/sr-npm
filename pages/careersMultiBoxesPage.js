@@ -218,6 +218,7 @@ async function loadJobsRepeater(_$w) {
 }
 
   function updateTotalJobsCountText(_$w) {
+    console.log("currentJobs inisde updateTotalJobsCountText: ",currentJobs)
     secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentSecondarySearchJobs.length} Jobs`:
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
   }
@@ -439,17 +440,23 @@ async function refreshFacetCounts(_$w,clearAll=false) {
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=jobs.map(job=>job._id);
+    
     for (const fieldId of fieldIds) {
+      console.log("fieldId: ",fieldId)
+      console.log("optionsByFieldId: ",optionsByFieldId)
+      console.log("valueToJobs: ",valueToJobs)
         let currentoptions=optionsByFieldId.get(fieldId)
         let counter=new Map();
         for(const option of currentoptions) {
             for (const jobId of currentJobsIds) {
+              console.log("current jobId: ",jobId)
                 if (valueToJobs[option.value].includes(jobId)) {
                     counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
         }
         countsByFieldId.set(fieldId, counter);
+        console.log("countsByFieldId: ",countsByFieldId)
     }
   }
  
