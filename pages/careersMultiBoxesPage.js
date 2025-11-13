@@ -16,7 +16,7 @@ let currentJobs=[] // current jobs that are displayed in the jobs repeater
 let allsecondarySearchJobs=[] // secondary search results that are displayed in the jobs repeater
 let currentSecondarySearchJobs=[] // current secondary search results that are displayed in the jobs repeater
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
-let keywordAllJobs=[] // all jobs that are displayed in the jobs repeater when the keyword is filled
+let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -49,7 +49,7 @@ async function clearAll(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value='';
     secondarySearchIsFilled=false;
     currentJobs=alljobs;
-    keywordAllJobs=alljobs;
+    keywordAllJobs=undefined;
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
@@ -58,12 +58,10 @@ async function clearAll(_$w) {
 async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
-  let keyword=false
 
   if(urlParams.keyword) {
     applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
-    keyword=true;
     currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
     keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
@@ -77,8 +75,8 @@ async function handleUrlParams(_$w,urlParams) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
 
-    if(applyFiltering || keyword) {
-      await updateJobsAndNumbersAndFilters(_$w,false,keyword);
+    if(applyFiltering || keywordAllJobs) {
+      await updateJobsAndNumbersAndFilters(_$w);
     }
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -290,8 +288,8 @@ async function loadJobsRepeater(_$w) {
 
  
 
-  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false,keyword=false) {
-    await applyJobFilters(_$w,keyword); // re-query jobs
+  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
+    await applyJobFilters(_$w); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
@@ -336,11 +334,11 @@ async function loadJobsRepeater(_$w) {
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
   }
 
-  async function applyJobFilters(_$w,keyword=false) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
-    if(keyword) {
+    if(keywordAllJobs) {
       finalFilteredJobs=keywordAllJobs
     }
     let addedJobsIds=new Set();
