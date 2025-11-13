@@ -56,6 +56,14 @@ async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
   let keyword=false
+
+  if(urlParams.keyword) {
+    applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
+    keyword=true;
+    currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;    
+  }
+
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
@@ -65,17 +73,8 @@ async function handleUrlParams(_$w,urlParams) {
     if(urlParams.category) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
-    if(urlParams.keyword) {
-      applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
-      keyword=true;
-      if(applyFiltering)
-      {
-        currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
-      }
-      
-    }
-    if(applyFiltering) {
+
+    if(applyFiltering || keyword) {
       await updateJobsAndNumbersAndFilters(_$w,false,keyword);
     }
     if(urlParams.page) {

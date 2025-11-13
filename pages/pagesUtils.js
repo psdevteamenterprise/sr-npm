@@ -155,21 +155,20 @@ async function primarySearch(_$w,query,alljobs) {
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
   if(filteredJobs.length>0) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
-    return true;
   }
   else {
     console.log("searching by location")
-    //search by location
      filteredJobs=alljobs.filter(job=>job.location.fullLocation.toLowerCase().includes(query));
     if(filteredJobs.length>0) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
-      return true;
     }
+    else{
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
-    return false;
+    }
   }
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
+    return filteredJobs.length>0;
+  
 }
 
   async function getValueFromValueId(valueId) {
