@@ -501,7 +501,6 @@ async function secondarySearch(_$w,query) {
     try {
       await bindPrimarySearch(_$w,allvaluesobjects,alljobs);
 
-
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
