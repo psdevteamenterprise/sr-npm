@@ -60,8 +60,8 @@ function groupValuesByField(values, refKey) {
     }
   }
 
-async function loadPrimarySearchRepeater(_$w) {
-  try {
+function loadPrimarySearchRepeater(_$w) {
+  
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';   
   });
@@ -87,9 +87,6 @@ async function loadPrimarySearchRepeater(_$w) {
       location.to(`${baseUrl}/search?category=${encodedCategory}`);
   });
 
-  } catch (error) {
-    console.error('Failed to load primary search repeater:', error);
-  }
 }
 
 async function bindPrimarySearch(_$w,allvaluesobjects,alljobs) {
