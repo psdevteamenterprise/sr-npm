@@ -47,6 +47,7 @@ async function clearAll(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value='';
     secondarySearchIsFilled=false;
+    currentJobs=alljobs;
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
@@ -74,7 +75,7 @@ async function handleUrlParams(_$w,urlParams) {
     }
 
     if(applyFiltering || keyword) {
-      await updateJobsAndNumbersAndFilters(_$w,false,keyword);
+      await updateJobsAndNumbersAndFilters(_$w,false);
     }
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -218,7 +219,6 @@ async function loadJobsRepeater(_$w) {
 }
 
   function updateTotalJobsCountText(_$w) {
-    console.log("currentJobs inisde updateTotalJobsCountText: ",currentJobs)
     secondarySearchIsFilled? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentSecondarySearchJobs.length} Jobs`:
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.TotalJobsCountText).text = `${currentJobs.length} Jobs`;
   }
@@ -287,8 +287,8 @@ async function loadJobsRepeater(_$w) {
 
  
 
-  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false,keyword=false) {
-    await applyJobFilters(_$w,keyword); // re-query jobs
+  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
+    await applyJobFilters(_$w); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
@@ -296,15 +296,7 @@ async function loadJobsRepeater(_$w) {
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
-    console.log("base: ",base)
-    console.log("optionsByFieldId : ",optionsByFieldId)
-    console.log("countsByFieldId : ",countsByFieldId)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    console.log("countsMap: ",countsMap)
-    console.log("fieldTitle: ",fieldTitle)
-    console.log("fieldId: ",fieldId)
-    console.log("searchQuery: ",searchQuery)
-    console.log("clearAll: ",clearAll)
     
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
@@ -319,7 +311,6 @@ async function loadJobsRepeater(_$w) {
             filteredbase.push(element)
         }
     }
-    console.log("filteredbase: ",filteredbase)
     // Build display options with counts
     const withCounts = filteredbase.map(o => {
       const count = countsMap.get(o.value)
@@ -329,7 +320,6 @@ async function loadJobsRepeater(_$w) {
       };
     });
     // Apply search
-    console.log("withCounts: ",withCounts)
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
@@ -338,20 +328,18 @@ async function loadJobsRepeater(_$w) {
     let prevSelected=[]
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    console.log("visibleSet: ",visibleSet)
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-    console.log("preserved: ",preserved)
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
   }
 
-  async function applyJobFilters(_$w,keyword=false) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
-    secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
-    if(keyword) {
-      finalFilteredJobs=currentJobs
-    }
+    secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=currentJobs;
+    // if(keyword) {
+    //   finalFilteredJobs=currentJobs
+    // }
     let addedJobsIds=new Set();
     // AND across categories, OR within each category
     for (const [key, values] of selectedByField.entries()) {
@@ -442,21 +430,16 @@ async function refreshFacetCounts(_$w,clearAll=false) {
     const currentJobsIds=jobs.map(job=>job._id);
     
     for (const fieldId of fieldIds) {
-      console.log("fieldId: ",fieldId)
-      console.log("optionsByFieldId: ",optionsByFieldId)
-      console.log("valueToJobs: ",valueToJobs)
         let currentoptions=optionsByFieldId.get(fieldId)
         let counter=new Map();
         for(const option of currentoptions) {
             for (const jobId of currentJobsIds) {
-              console.log("current jobId: ",jobId)
                 if (valueToJobs[option.value].includes(jobId)) {
                     counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
         }
         countsByFieldId.set(fieldId, counter);
-        console.log("countsByFieldId: ",countsByFieldId)
     }
   }
  
