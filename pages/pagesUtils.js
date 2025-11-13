@@ -64,20 +64,38 @@ async function loadPrimarySearchRepeater(_$w) {
   try {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(() => {
-       location.to(itemData["link-jobs-title"]);
-    })
+    // $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(() => {
+    //    location.to(itemData["link-jobs-title"]);
+    // })
    
   });
-
+  
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+    );
+    location.to(clickedItemData["link-jobs-title"]);
+  });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
-      const baseUrl = await location.baseUrl();
-      const encodedCategory=encodeURIComponent(itemData._id);
-      location.to(`${baseUrl}/search?category=${encodedCategory}`);
-    });
+    // $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
+    //   const baseUrl = await location.baseUrl();
+    //   const encodedCategory=encodeURIComponent(itemData._id);
+    //   location.to(`${baseUrl}/search?category=${encodedCategory}`);
+    // });
   }); 
+
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER_ITEM).onClick(async (event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+    );
+    const baseUrl = await location.baseUrl();
+      const encodedCategory=encodeURIComponent(clickedItemData._id);
+      location.to(`${baseUrl}/search?category=${encodedCategory}`);
+  });
+
   } catch (error) {
     console.error('Failed to load primary search repeater:', error);
   }
