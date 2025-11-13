@@ -16,6 +16,7 @@ async function handleRecentJobsSection(_$w) {
     const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
     const Value=await getValueFromValueId(valueId);
+    console.log("Value: ",Value);
     const latestsJobs=await getLatestJobsByValue(Value);
 
     if(latestsJobs.length === 0) {
