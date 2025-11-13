@@ -181,6 +181,7 @@ async function primarySearch(_$w,query,alljobs) {
   async function getValueFromValueId(valueId) {
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
     console.log("result: ",result);
+    console.log("valueId: ",valueId);
     return result.find(value=>value._id===valueId);
     
   }
