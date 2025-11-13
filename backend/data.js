@@ -75,7 +75,7 @@ function getVisibility(position,customFieldsValues) {
   let visibility;
   position.visibility.toLowerCase()==="public"? visibility="external" : visibility="internal";
   customFieldsValues["Visibility"][visibility] = visibility;
-  customValuesToJobs[visibility] ? customValuesToJobs[visibility].push(position.id) : customValuesToJobs[visibility]=[position.id]
+  customValuesToJobs[visibility] ? customValuesToJobs[visibility].add(position.id) : customValuesToJobs[visibility]=new Set([position.id])
 }
 
 function getEmploymentType(position,customFieldsValues) {
@@ -83,7 +83,7 @@ function getEmploymentType(position,customFieldsValues) {
     customFieldsValues["employmentType"] = {};
   }
   customFieldsValues["employmentType"][position.typeOfEmployment.id] = position.typeOfEmployment.label;
-  customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].push(position.id) : customValuesToJobs[position.typeOfEmployment.id]=[position.id]
+  customValuesToJobs[position.typeOfEmployment.id] ? customValuesToJobs[position.typeOfEmployment.id].add(position.id) : customValuesToJobs[position.typeOfEmployment.id]=new Set([position.id])
 }
 
 function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues) {
@@ -101,7 +101,7 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     }
     customFieldsValues[fieldId][valueId] = valueLabel;
 
-    customValuesToJobs[valueId] ? customValuesToJobs[valueId].push(position.id) : customValuesToJobs[valueId]=[position.id]
+    customValuesToJobs[valueId] ? customValuesToJobs[valueId].add(position.id) : customValuesToJobs[valueId]=new Set([position.id])
   }
 }
 async function saveJobsDataToCMS() {
@@ -194,7 +194,7 @@ async function saveJobsDataToCMS() {
 }
 
 async function insertJobsReference(valueId) {
-  await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, customValuesToJobs[valueId]);
+  await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, Array.from(customValuesToJobs[valueId]));
 }
 
 async function populateCustomFieldsCollection(customFields) {
@@ -218,8 +218,8 @@ async function populateCustomValuesCollection(customFieldsValues) {
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId,
-        count:customValuesToJobs[valueId].length,
-        jobIds:customValuesToJobs[valueId],
+        count:customValuesToJobs[valueId].size,
+        jobIds:Array.from(customValuesToJobs[valueId]),
       })
     }
     
