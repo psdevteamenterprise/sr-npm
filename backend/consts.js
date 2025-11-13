@@ -82,6 +82,7 @@ const TASK_TYPE = {
 
 const supportTeamsPageIds={
     RECENTLEY_ADDED_JOBS: "#recentleyAddedJobs",
+    RECENTLEY_ADDED_JOBS_ITEM: "#recentleyAddedJobsItem",
     JOB_LOCATION: "#jobLocation",
     JOB_TITLE: "#jobTitle",
     SEE_ALL_JOBS_TEXT: "#seeAllJobsText",
