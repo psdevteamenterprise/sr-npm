@@ -63,7 +63,6 @@ async function handleUrlParams(_$w,urlParams) {
     keyword=true;
     currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;    
   }
-
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
