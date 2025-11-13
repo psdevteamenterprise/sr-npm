@@ -153,7 +153,7 @@ async function saveJobsDataToCMS() {
     await getSiteConfig();
   }
   if (siteconfig.customFields==="true") {
-  await populateCustomFieldsCollection(customFieldsLabels);
+  await populateCustomFieldsCollection(customFieldsLabels,templateType);
   await populateCustomValuesCollection(customFieldsValues);
   }
   // Sort jobs by title (ascending, case-insensitive, numeric-aware)
@@ -197,10 +197,12 @@ async function insertJobsReference(valueId) {
   await wixData.insertReference(COLLECTIONS.CUSTOM_VALUES, CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,valueId, Array.from(customValuesToJobs[valueId]));
 }
 
-async function populateCustomFieldsCollection(customFields) {
+async function populateCustomFieldsCollection(customFields,templateType) {
   let fieldstoinsert=[]
   customFields["employmentType"] = "Employment Type";
-  customFields["Visibility"] = "Visibility";
+  if(templateType===TEMPLATE_TYPE.INTERNAL){
+    customFields["Visibility"] = "Visibility";
+  }
   for(const ID of Object.keys(customFields)){
     fieldstoinsert.push({
       title: customFields[ID],
