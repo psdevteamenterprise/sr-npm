@@ -89,7 +89,7 @@ function loadPrimarySearchRepeater(_$w) {
 
 }
 
-async function bindPrimarySearch(_$w,allvaluesobjects,alljobs) {
+ function bindPrimarySearch(_$w,allvaluesobjects,alljobs) {
 
   const primarySearchDebounced = debounce(async () => {
     const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
