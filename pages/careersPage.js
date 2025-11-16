@@ -508,6 +508,8 @@ async function updateMapMarkers(_$w){
 
 async function handleBrandDropdown(_$w){
     console.log("siteconfig: ", siteconfig);
+    console.log("siteconfig.disableMultiBrand: ", siteconfig.disableMultiBrand);
+    console.log("siteconfig.disableMultiBrand==='false': ", siteconfig.disableMultiBrand==="false");
     if(siteconfig.disableMultiBrand==="false"){
     const brands=await wixData.query(COLLECTIONS.BRANDS).find();
     if(brands.items.length>1){
