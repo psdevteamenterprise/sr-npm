@@ -90,28 +90,26 @@ const supportTeamsPageIds={
     MOST_RECENT_JOBS_TITLE: "#mostRecentJobsTitle",
     valueToValueIdMap: {
         "Human Resouces":"PeopleSupport",
-        "Buying":"Merchandise",
-        "Tech":"InformationServices",
-        "Planning":"Merchandise",
+        "Merchandise - Buying":"Merchandise",
+        "Technology, Data and Digital":"InformationServices",
+        "Merchandise - Planning":"Merchandise",
         "Digital":"ecommerceandDigital",// this field doesnt exists in the database
-        "Marketing":"Marketing", 
-        "Finance":"Finance",// this field doesnt exists in the database
+        "Marketing and Market Media":"Marketing", 
+        "Finance, Property and Legal":"Finance",// this field doesnt exists in the database
         "Services":"ServicesInstallation",
-        "Design":"Merchandise",
-        "Retail Operations":"Operations",// this field doesnt exists in the database
+        "Merchandise - Design and Sourcing":"Merchandise",
+        "Store Operations":"Operations",// this field doesnt exists in the database
         "Data":"InsightsandDataScience",// this field doesnt exists in the database
         "Property":"Property",// this field doesnt exists in the database,
         "Legal":"Legal",// this field doesnt exists in the database,
-        "Supply Chain":"Logistics",
-        "Contact Centre":"CustomerEngagementCentres",// this field doesnt exists in the database
+        "Supply Chain and Logistics":"Logistics",
+        "Contact Centres":"CustomerEngagementCentres",// this field doesnt exists in the database
         "Commercial":"CommercialSales",// this field doesnt exists in the database
     },
     excludeValues: new Set([
-        "Human Resouces",
-        "Buying",
-        "Tech",
-        "Planning",
-        "Digital",
+        "Noel Leeming Commercial",
+        "Noel Leeming Services",
+        "Sustainability"
     ])
 }
 const LINKS={
