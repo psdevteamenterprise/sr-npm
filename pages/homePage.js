@@ -18,13 +18,13 @@ async function homePageOnReady(_$w,thisObject=null) {
     if(siteconfig.categorySearch==="true") {
         const allJobs=await getAllRecords(COLLECTIONS.JOBS);
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-       await Promise.all([
-            bindPrimarySearch(_$w,allvaluesobjects,allJobs),
-            loadPrimarySearchRepeater(_$w),
-            bindTeamRepeater(_$w),
-            bindViewAllButton(_$w),
+       
+        bindPrimarySearch(_$w,allvaluesobjects,allJobs);
+        loadPrimarySearchRepeater(_$w)
+        bindTeamRepeater(_$w)
+        bindViewAllButton(_$w)
 
-        ]);
+        
     }
     else{
 
