@@ -111,7 +111,9 @@ async function saveJobsDataToCMS() {
   const customFieldsValues = {}
   
   const {companyId,templateType} = await getApiKeys();
-
+  if(siteconfig===undefined) {
+    await getSiteConfig();
+  }
   // bulk insert to jobs collection without descriptions first
   const jobsData = sourcePositions.map(position => {
     
@@ -135,7 +137,7 @@ async function saveJobsDataToCMS() {
       country: position.location?.country || '',
       remote: position.location?.remote || false,
       language: position.language?.label || '',
-      brand: getBrand(position.customField),
+      brand: siteconfig.disableMultiBrand==="false" ? getBrand(position.customField) : '',
       jobDescription: null, // Will be filled later
       employmentType: position.typeOfEmployment.label,
       releasedDate: position.releasedDate
@@ -149,9 +151,7 @@ async function saveJobsDataToCMS() {
     }
     return basicJob;
   });
-  if(siteconfig===undefined) {
-    await getSiteConfig();
-  }
+
   if (siteconfig.customFields==="true") {
   await populateCustomFieldsCollection(customFieldsLabels,templateType);
   await populateCustomValuesCollection(customFieldsValues);
@@ -468,9 +468,15 @@ async function aggregateJobs() {
 
 async function referenceJobs() {
   console.log("Reference jobs");
+  if(siteconfig===undefined) {
+    await getSiteConfig();
+  }
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.DEPARTMENT_REF, sourceCollection: COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, jobField: JOBS_COLLECTION_FIELDS.DEPARTMENT });
   await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.CITY, sourceCollection: COLLECTIONS.CITIES, jobField: JOBS_COLLECTION_FIELDS.CITY_TEXT });
-  await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
+  if(siteconfig.disableMultiBrand==="false"){
+    await referenceJobsToField({ referenceField: JOBS_COLLECTION_FIELDS.BRAND_REF, sourceCollection: COLLECTIONS.BRANDS, jobField: JOBS_COLLECTION_FIELDS.BRAND });
+  }
+  
   console.log("finished referencing jobs");
 }
 
