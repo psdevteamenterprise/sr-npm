@@ -23,7 +23,6 @@ async function homePageOnReady(_$w,thisObject=null) {
         bindTeamRepeater(_$w)
         bindViewAllButton(_$w)
 
-        
     }
     else{
 
