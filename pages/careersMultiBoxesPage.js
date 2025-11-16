@@ -255,7 +255,7 @@ async function loadJobsRepeater(_$w) {
 
         optionsByFieldId.set(key, originalOptions);
         for (const val of allvaluesobjects) {
-          counter[val.title]=val.totalJobs
+          counter[val.title]=val.count
         }
 
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
@@ -297,7 +297,16 @@ async function loadJobsRepeater(_$w) {
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
+    console.log("base: ",base)
+    console.log("optionsByFieldId : ",optionsByFieldId)
+    console.log("countsByFieldId : ",countsByFieldId)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
+    console.log("countsMap: ",countsMap)
+    console.log("fieldTitle: ",fieldTitle)
+    console.log("fieldId: ",fieldId)
+    console.log("searchQuery: ",searchQuery)
+    console.log("clearAll: ",clearAll)
+    
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
         dontUpdateThisCheckBox=null;
@@ -311,6 +320,7 @@ async function loadJobsRepeater(_$w) {
             filteredbase.push(element)
         }
     }
+    console.log("filteredbase: ",filteredbase)
     // Build display options with counts
     const withCounts = filteredbase.map(o => {
       const count = countsMap.get(o.value)
@@ -320,6 +330,7 @@ async function loadJobsRepeater(_$w) {
       };
     });
     // Apply search
+    console.log("withCounts: ",withCounts)
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
@@ -328,7 +339,9 @@ async function loadJobsRepeater(_$w) {
     let prevSelected=[]
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
+    console.log("visibleSet: ",visibleSet)
     const preserved = prevSelected.filter(v => visibleSet.has(v));
+    console.log("preserved: ",preserved)
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
   }

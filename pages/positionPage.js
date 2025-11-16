@@ -37,10 +37,9 @@ async function getCategoryValueId(customValues) {
         const item = await _$w('#datasetJobsItem').getCurrentItem();
         const multiRefField=await getPositionWithMultiRefField(item._id);
         const categoryValueId=await getCategoryValueId(multiRefField);
-
         handleReferFriendButton(_$w,item);
-
         handleApplyButton(_$w,item);
+        
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
@@ -52,12 +51,12 @@ async function getCategoryValueId(customValues) {
         }
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
-        const relatedJobs=await getRelatedJobs(categoryValueId,item._id);
+        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
           });
-          _$w('#relatedJobsRepNoDepartment').data = relatedJobs
+          _$w('#relatedJobsRepNoDepartment').data = relatedJobs;
 
 
         }
@@ -83,19 +82,25 @@ async function getCategoryValueId(customValues) {
     
   function handleReferFriendButton(_$w,item) {
     if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
-      console.log("hiding referFriendButton");
       _$w('#referFriendButton').hide();
     }
   }
 
   function handleApplyButton(_$w,item) {
+    try{
     _$w('#applyButton').target="_blank";//so it can open in new tab
-    const url=appendQueryParams(item.applyLink,query);
-    _$w('#applyButton').link=url; //so it can be clicked
+      const url=appendQueryParams(item.applyLink,query);
+      _$w('#applyButton').link=url; //so it can be clicked
+    }
+    catch(error){
+      console.warn("error in handleApplyButton: , using applyLink directly", error);
+      _$w('#applyButton').target="_blank";
+      _$w('#applyButton').link=item.applyLink;
+    }
   }
 
-  async function getRelatedJobs(categoryValueId,itemId) {
-    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).find();
+  async function getRelatedJobs(categoryValueId,itemId,limit=1000) {
+    const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).limit(limit).find();
     return relatedJobs.items;
   }
 

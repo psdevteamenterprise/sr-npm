@@ -10,6 +10,7 @@ const { COLLECTIONS } = require('../backend/collectionConsts');
 const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
 let thisObjectVar;
 let searchByCityFlag=false;
+let loadedCategories=false;
 async function homePageOnReady(_$w,thisObject=null) {
 
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
@@ -19,7 +20,10 @@ async function homePageOnReady(_$w,thisObject=null) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
        await Promise.all([
             bindPrimarySearch(_$w,allvaluesobjects,allJobs),
-            loadPrimarySearchRepeater(_$w)
+            loadPrimarySearchRepeater(_$w),
+            bindTeamRepeater(_$w),
+            bindViewAllButton(_$w),
+
         ]);
     }
     else{
@@ -32,13 +36,9 @@ async function homePageOnReady(_$w,thisObject=null) {
   }
 
   function bind(_$w) {
-    _$w('#teamRepeater').onItemReady(($item, itemData) => {
-        $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-        $item('#teamButton').onClick(()=>{
-            const department = encodeURIComponent(itemData.title);
-            location.to(`/positions?department=${department}`);
-        });
-    });
+
+    bindTeamRepeater(_$w);
+
 
     _$w('#citiesDataset').onReady(async () => {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
@@ -63,6 +63,45 @@ async function homePageOnReady(_$w,thisObject=null) {
         _$w('#googleMaps').setMarkers(markers);
     });
 }
+
+function bindTeamRepeater(_$w) {
+    _$w('#teamRepeater').onItemReady(($item, itemData) => {
+        $item('#teamButton').label = `View ${itemData.count} Open Positions`;
+        const department = encodeURIComponent(itemData.title);
+        if (itemData.customField) {
+            [$item('#teamButton'), $item('#teamButton2')].forEach(btn => {
+                btn.onClick(() => {
+                    location.to(`/search?category=${department}`);
+                });
+            });
+
+        }
+        else{
+            $item('#teamButton').onClick(()=>{
+                location.to(`/positions?department=${department}`);
+            });
+        }
+    });
+}
+
+function bindViewAllButton(_$w) {
+            
+    _$w('#viewAllCategoriesButton').onClick(()=>{
+        if(!loadedCategories) {
+            loadedCategories=true;
+            _$w('#viewAllCategoriesButton').label = "View Less";
+            _$w("#categoriesDataset").loadMore();
+        }
+        else{
+            loadedCategories=false;
+            _$w('#viewAllCategoriesButton').label = "View All";
+            _$w("#categoriesDataset").loadPage(1);
+        }
+    });
+}
+
+
+
 
 function init(_$w) {
     const debouncedInput = debounce(()=>handleSearchInput(_$w), 400,thisObjectVar);

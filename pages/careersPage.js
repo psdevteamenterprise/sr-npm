@@ -110,8 +110,6 @@ async function handleUrlParams(_$w) {
     if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
-
-    if (siteconfig.onlyBrandKeywordUrlParams==="false") { // it is something else that is not TWG
         if (queryPageVar) {
             await handlePageParam(_$w);    
         }
@@ -124,8 +122,6 @@ async function handleUrlParams(_$w) {
         if (queryJobTypeVar) {
             await handleJobTypeParam(_$w,queryJobTypeVar);
         }
-
-}
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 

@@ -147,7 +147,6 @@ async function saveJobsDataToCMS() {
     if(templateType===TEMPLATE_TYPE.INTERNAL){
      getVisibility(position,customFieldsValues);
     }
-
     return basicJob;
   });
   if(siteconfig===undefined) {
@@ -219,7 +218,7 @@ async function populateCustomValuesCollection(customFieldsValues) {
         _id: valueId,
         title: valuesMap[valueId],
         customField: fieldId,
-        totalJobs:customValuesToJobs[valueId].length,
+        count:customValuesToJobs[valueId].length,
         jobIds:customValuesToJobs[valueId],
       })
     }

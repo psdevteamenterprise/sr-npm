@@ -41,7 +41,7 @@ const CUSTOM_VALUES_COLLECTION_FIELDS = {
   TITLE: 'title',
   CUSTOM_FIELD: 'customField',
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
-  TOTAL_JOBS: 'totalJobs',
+  count: 'count',
   JOB_IDS: 'jobIds',
 }
 const CUSTOM_FIELDS_COLLECTION_FIELDS = {
@@ -112,7 +112,7 @@ const COLLECTIONS_FIELDS = {
     CUSTOM_VALUES: [
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
-      {key:'totalJobs', type: 'NUMBER'},
+      {key:'count', type: 'NUMBER'},
       {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.JOBS,referencingFieldKey:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:CUSTOM_VALUES_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES } } },
       {key:'jobIds', type: 'ARRAY'},
     ],
