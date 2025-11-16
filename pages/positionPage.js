@@ -40,9 +40,9 @@ async function getCategoryValueId(customValues) {
         const multiRefField=await getPositionWithMultiRefField(item._id);
         const categoryValueId=await getCategoryValueId(multiRefField);
         const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
-        if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
+        console.log("relatedJobs: ", relatedJobs);
+        if(_$w('#relatedJobsRepNoDepartment') && relatedJobs.length>0) // when there is no department, we filter based on category
         {
-        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
