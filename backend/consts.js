@@ -105,7 +105,14 @@ const supportTeamsPageIds={
         "Supply Chain":"Logistics",
         "Contact Centre":"CustomerEngagementCentres",// this field doesnt exists in the database
         "Commercial":"CommercialSales",// this field doesnt exists in the database
-    }
+    },
+    excludeValues: new Set([
+        "Human Resouces",
+        "Buying",
+        "Tech",
+        "Planning",
+        "Digital",
+    ])
 }
 const LINKS={
   myApplication:'https://www.smartrecruiters.com/app/employee-portal/68246e5512d84f4c00a19e62/job-applications',
