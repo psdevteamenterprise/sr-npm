@@ -22,7 +22,6 @@ async function homePageOnReady(_$w,thisObject=null) {
         loadPrimarySearchRepeater(_$w)
         bindTeamRepeater(_$w)
         bindViewAllButton(_$w)
-
     }
     else{
 
