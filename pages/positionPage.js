@@ -10,7 +10,7 @@ const {
   } = require('../public/utils');
   
   
-let siteconfig;
+
 
   async function positionPageOnReady(_$w) {
 
@@ -32,24 +32,11 @@ async function getCategoryValueId(customValues) {
 
 
   async function bind(_$w) {
-    siteconfig=await wixData.query(COLLECTIONS.SITE_CONFIGS).find().then(result => result.items[0]);
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
-        if(siteconfig.customFields==="true"){
         const multiRefField=await getPositionWithMultiRefField(item._id);
         const categoryValueId=await getCategoryValueId(multiRefField);
-        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
-        console.log("relatedJobs: ", relatedJobs);
-        if(_$w('#relatedJobsRepNoDepartment') && relatedJobs.length>0) // when there is no department, we filter based on category
-        {
-          _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
-            $item('#relatedJobTitle').text = itemData.title;
-            $item('#relatedJobLocation').text = itemData.location.fullLocation;
-          });
-          _$w('#relatedJobsRepNoDepartment').data = relatedJobs;
-        }
-        }
         handleReferFriendButton(_$w,item);
         handleApplyButton(_$w,item);
         
@@ -62,18 +49,25 @@ async function getCategoryValueId(customValues) {
         {
           _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
         }
- 
+        if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
+        {
+        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
+          _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
+            $item('#relatedJobTitle').text = itemData.title;
+            $item('#relatedJobLocation').text = itemData.location.fullLocation;
+          });
+          _$w('#relatedJobsRepNoDepartment').data = relatedJobs;
+
+
+        }
     });
-    if(isElementExistOnPage(_$w('#relatedJobsNoDepartmentItem')))
-    {
     _$w('#relatedJobsNoDepartmentItem').onClick((event) => {   
       const data = _$w("#relatedJobsRepNoDepartment").data;
-        const clickedItemData = data.find(
-          (item) => item._id === event.context.itemId,
-        );
-        location.to(clickedItemData["link-jobs-title"]);
-      });
-    }
+      const clickedItemData = data.find(
+        (item) => item._id === event.context.itemId,
+      );
+      location.to(clickedItemData["link-jobs-title"]);
+    });
     if(isElementExistOnPage(_$w('#relatedJobsDataset')))
     {
     _$w('#relatedJobsDataset').onReady(() => {
