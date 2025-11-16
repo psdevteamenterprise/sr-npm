@@ -507,15 +507,15 @@ async function updateMapMarkers(_$w){
 }
 
 async function handleBrandDropdown(_$w){
-    console.log("siteconfig: ", siteconfig);
-    console.log("siteconfig.disableMultiBrand: ", siteconfig.disableMultiBrand);
-    console.log("siteconfig.disableMultiBrand==='false': ", siteconfig.disableMultiBrand==="false");
     if(siteconfig.disableMultiBrand==="false"){
     const brands=await wixData.query(COLLECTIONS.BRANDS).find();
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
+}
+else{
+    _$w('#dropdownBrand').hide();
 }
 }  
 module.exports = {
