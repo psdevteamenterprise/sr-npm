@@ -160,7 +160,7 @@ describe('primarySearch function tests', () => {
      
      
      expect(mockprimarySearchMultiBox.changeState).toHaveBeenCalledWith('noResults');
-     expect(mockprimarySearcJobResult.data).toBeNull();
+     expect(mockprimarySearcJobResult.data.length).toBe(0);
    });
 
    it('should fill category repeater when clicking on empty primary search input', async () => {

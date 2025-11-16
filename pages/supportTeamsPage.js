@@ -14,8 +14,11 @@ async function supportTeasmPageOnReady(_$w) {
 async function handleRecentJobsSection(_$w) {
 
     const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    console.log("currentItem: ",currentItem);
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
+    console.log("valueId: ",valueId);
     const Value=await getValueFromValueId(valueId);
+    console.log("Value: ",Value);
     const latestsJobs=await getLatestJobsByValue(Value);
 
     if(latestsJobs.length === 0) {
@@ -26,12 +29,17 @@ async function handleRecentJobsSection(_$w) {
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
-        $item(supportTeamsPageIds.JOB_TITLE).onClick( () => {  
-             location.to(itemData["link-jobs-title"]);
-          })
+
     });
    
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data = latestsJobs;
+    _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS_ITEM).onClick((event) => {
+        const data = _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).data;
+        const clickedItemData = data.find(
+          (item) => item._id === event.context.itemId,
+        );
+        location.to(clickedItemData["link-jobs-title"]);
+      });
     
     _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick( () => {
          location.to(`/search?category=${Value.title}`);
