@@ -15,7 +15,6 @@ async function handleRecentJobsSection(_$w) {
 
     const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
     console.log("currentItem: ",currentItem);
-    
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
         await collapseSection(_$w);
