@@ -51,7 +51,7 @@ async function getCategoryValueId(customValues) {
         }
         if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
         {
-        const relatedJobs=await getRelatedJobs(categoryValueId,item._id,5);
+        const relatedJobs = await getRelatedJobs({ categoryValueId, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
@@ -89,7 +89,8 @@ async function getCategoryValueId(customValues) {
   function handleApplyButton(_$w,item) {
     try{
     _$w('#applyButton').target="_blank";//so it can open in new tab
-      const url=appendQueryParams(item.applyLink,query);
+    
+      const url=buildApplyLinkWithQueryParams(item.applyLink,query);
       _$w('#applyButton').link=url; //so it can be clicked
     }
     catch(error){
@@ -99,7 +100,23 @@ async function getCategoryValueId(customValues) {
     }
   }
 
-  async function getRelatedJobs(categoryValueId,itemId,limit=1000) {
+  function buildApplyLinkWithQueryParams(url, query) {
+    if (!url || typeof url !== 'string' || !url.startsWith('http')) {
+      console.warn(`Invalid URL ${url}, button link will not be set`);
+      return null;
+    }
+  
+    if (!query || typeof query !== 'object') {
+      console.warn(`Invalid query params ${query}, button link will not be set`);
+      return null;
+    }
+  
+    return appendQueryParams(url, query);
+  }
+
+  async function getRelatedJobs({ categoryValueId, itemId, limit = 1000 }) {
+    
+
     const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).limit(limit).find();
     return relatedJobs.items;
   }

@@ -16,21 +16,20 @@ let currentJobs=[] // current jobs that are displayed in the jobs repeater
 let allsecondarySearchJobs=[] // secondary search results that are displayed in the jobs repeater
 let currentSecondarySearchJobs=[] // current secondary search results that are displayed in the jobs repeater
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
+let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await loadData(_$w);
-
-    await Promise.all([
-      loadJobsRepeater(_$w),
-      loadPrimarySearchRepeater(_$w),
-      loadFilters(_$w),
-      loadSelectedValuesRepeater(_$w),
-      bindSearchInput(_$w),
-      loadPaginationButtons(_$w)
-    ]);
+    loadJobsRepeater(_$w);
+    loadPrimarySearchRepeater(_$w);
+    await loadFilters(_$w);
+    loadSelectedValuesRepeater(_$w);
+    bindSearchInput(_$w);
+    loadPaginationButtons(_$w);
+    
     await handleUrlParams(_$w, urlParams);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
@@ -47,6 +46,8 @@ async function clearAll(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value='';
     secondarySearchIsFilled=false;
+    currentJobs=alljobs;
+    keywordAllJobs=undefined;
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
@@ -55,7 +56,13 @@ async function clearAll(_$w) {
 async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
-  let keyword=false
+
+  if(urlParams.keyword) {
+    applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
+    currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
+    keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+  }
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
@@ -65,18 +72,9 @@ async function handleUrlParams(_$w,urlParams) {
     if(urlParams.category) {
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
-    if(urlParams.keyword) {
-      applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
-      keyword=true;
-      if(applyFiltering)
-      {
-        currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
-      }
-      
-    }
-    if(applyFiltering) {
-      await updateJobsAndNumbersAndFilters(_$w,false,keyword);
+
+    if(applyFiltering || keywordAllJobs) {
+      await updateJobsAndNumbersAndFilters(_$w);
     }
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -121,7 +119,7 @@ async function handleParams(_$w,param,value) {
       return applyFiltering;
 }
 
-async function loadPaginationButtons(_$w) {
+ function loadPaginationButtons(_$w) {
   try {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
@@ -143,7 +141,7 @@ async function loadPaginationButtons(_$w) {
   }
 }
 
-async function loadSelectedValuesRepeater(_$w) {
+ function loadSelectedValuesRepeater(_$w) {
   try {
        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
@@ -170,7 +168,7 @@ async function loadSelectedValuesRepeater(_$w) {
             await updateJobsAndNumbersAndFilters(_$w);
           });
     });
-    await updateSelectedValuesRepeater(_$w);
+     updateSelectedValuesRepeater(_$w);
   } catch (error) {
     console.error('Failed to load selected values repeater:', error);
   }
@@ -288,8 +286,8 @@ async function loadJobsRepeater(_$w) {
 
  
 
-  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false,keyword=false) {
-    await applyJobFilters(_$w,keyword); // re-query jobs
+  async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
+    await applyJobFilters(_$w); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
@@ -297,15 +295,7 @@ async function loadJobsRepeater(_$w) {
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
-    console.log("base: ",base)
-    console.log("optionsByFieldId : ",optionsByFieldId)
-    console.log("countsByFieldId : ",countsByFieldId)
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    console.log("countsMap: ",countsMap)
-    console.log("fieldTitle: ",fieldTitle)
-    console.log("fieldId: ",fieldId)
-    console.log("searchQuery: ",searchQuery)
-    console.log("clearAll: ",clearAll)
     
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
@@ -320,7 +310,6 @@ async function loadJobsRepeater(_$w) {
             filteredbase.push(element)
         }
     }
-    console.log("filteredbase: ",filteredbase)
     // Build display options with counts
     const withCounts = filteredbase.map(o => {
       const count = countsMap.get(o.value)
@@ -330,7 +319,6 @@ async function loadJobsRepeater(_$w) {
       };
     });
     // Apply search
-    console.log("withCounts: ",withCounts)
     const filtered = searchQuery
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
@@ -339,19 +327,23 @@ async function loadJobsRepeater(_$w) {
     let prevSelected=[]
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    console.log("visibleSet: ",visibleSet)
     const preserved = prevSelected.filter(v => visibleSet.has(v));
-    console.log("preserved: ",preserved)
+    if(filtered.length===0) {
+      _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}NoResults`);
+    }
+    else{
+      _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
+    }
   }
 
-  async function applyJobFilters(_$w,keyword=false) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
-    if(keyword) {
-      finalFilteredJobs=currentJobs
+    if(keywordAllJobs) {
+      finalFilteredJobs=keywordAllJobs
     }
     let addedJobsIds=new Set();
     // AND across categories, OR within each category
@@ -441,6 +433,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
     const currentJobsIds=jobs.map(job=>job._id);
+    
     for (const fieldId of fieldIds) {
         let currentoptions=optionsByFieldId.get(fieldId)
         let counter=new Map();
@@ -499,10 +492,9 @@ async function secondarySearch(_$w,query) {
     await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
 }
-  async function bindSearchInput(_$w) {
+   function bindSearchInput(_$w) {
     try {
-      await bindPrimarySearch(_$w,allvaluesobjects,alljobs);
-
+       bindPrimarySearch(_$w,allvaluesobjects,alljobs);
 
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
