@@ -507,11 +507,16 @@ async function updateMapMarkers(_$w){
 }
 
 async function handleBrandDropdown(_$w){
+    if(siteconfig.disableMultiBrand==="false"){
     const brands=await wixData.query(COLLECTIONS.BRANDS).find();
     if(brands.items.length>1){
         console.log("showing brand dropdown");
         _$w('#dropdownBrand').show();
     }
+}
+else{
+    _$w('#dropdownBrand').hide();
+}
 }  
 module.exports = {
     careersPageOnReady,
