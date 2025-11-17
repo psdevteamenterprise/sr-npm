@@ -63,21 +63,30 @@ function groupValuesByField(values, refKey) {
 async function loadPrimarySearchRepeater(_$w) {
   try {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).onClick(() => {
-       location.to(itemData["link-jobs-title"]);
-    })
-   
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';   
   });
-
+  
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+    );
+    location.to(clickedItemData["link-jobs-title"]);
+  });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).onClick(async () => {  
-      const baseUrl = await location.baseUrl();
-      const encodedCategory=encodeURIComponent(itemData._id);
-      location.to(`${baseUrl}/search?category=${encodedCategory}`);
-    });
   }); 
+
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER_ITEM).onClick(async (event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+    );
+    const baseUrl = await location.baseUrl();
+      const encodedCategory=encodeURIComponent(clickedItemData._id);
+      location.to(`${baseUrl}/search?category=${encodedCategory}`);
+  });
+
   } catch (error) {
     console.error('Failed to load primary search repeater:', error);
   }
@@ -110,8 +119,12 @@ _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
 
 _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
   if( event.key==='Enter') {
+    console.log("primary search input key pressed");
+    console.log("_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value: ",_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
     if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+      // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+      const baseUrl = await location.baseUrl();
+      location.to(`${baseUrl}/search`);
 
     } 
     else {
@@ -123,8 +136,11 @@ _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (even
 });
 
 _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
+  console.log("primary search button clicked");
+  console.log("_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value: ",_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
   if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+    const baseUrl = await location.baseUrl();
+    location.to(`${baseUrl}/search`);
   }
   else {
     let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
@@ -155,25 +171,26 @@ async function primarySearch(_$w,query,alljobs) {
   let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
   if(filteredJobs.length>0) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
-    return true;
   }
   else {
     console.log("searching by location")
-    //search by location
      filteredJobs=alljobs.filter(job=>job.location.fullLocation.toLowerCase().includes(query));
     if(filteredJobs.length>0) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
-      return true;
     }
+    else{
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
-    return false;
+    }
   }
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
+    return filteredJobs.length>0;
+  
 }
 
   async function getValueFromValueId(valueId) {
     const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+    console.log("result: ",result);
+    console.log("valueId: ",valueId);
     return result.find(value=>value._id===valueId);
     
   }
