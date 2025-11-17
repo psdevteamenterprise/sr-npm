@@ -89,7 +89,8 @@ async function getCategoryValueId(customValues) {
   function handleApplyButton(_$w,item) {
     try{
     _$w('#applyButton').target="_blank";//so it can open in new tab
-      const url=appendQueryParams(item.applyLink,query);
+    
+      const url=buildApplyLinkWithQueryParams(item.applyLink,query);
       _$w('#applyButton').link=url; //so it can be clicked
     }
     catch(error){
@@ -97,6 +98,20 @@ async function getCategoryValueId(customValues) {
       _$w('#applyButton').target="_blank";
       _$w('#applyButton').link=item.applyLink;
     }
+  }
+
+  function buildApplyLinkWithQueryParams(url, query) {
+    if (!url || typeof url !== 'string' || !url.startsWith('http')) {
+      console.warn(`Invalid URL ${url}, button link will not be set`);
+      return null;
+    }
+  
+    if (!query || typeof query !== 'object') {
+      console.warn(`Invalid query params ${query}, button link will not be set`);
+      return null;
+    }
+  
+    return appendQueryParams(url, query);
   }
 
   async function getRelatedJobs({ categoryValueId, itemId, limit = 1000 }) {

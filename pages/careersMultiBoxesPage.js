@@ -23,15 +23,13 @@ const pagination = {
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     await loadData(_$w);
-
-    await Promise.all([
-      loadJobsRepeater(_$w),
-      loadPrimarySearchRepeater(_$w),
-      loadFilters(_$w),
-      loadSelectedValuesRepeater(_$w),
-      bindSearchInput(_$w),
-      loadPaginationButtons(_$w)
-    ]);
+    loadJobsRepeater(_$w);
+    loadPrimarySearchRepeater(_$w);
+    await loadFilters(_$w);
+    loadSelectedValuesRepeater(_$w);
+    bindSearchInput(_$w);
+    loadPaginationButtons(_$w);
+    
     await handleUrlParams(_$w, urlParams);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
@@ -121,7 +119,7 @@ async function handleParams(_$w,param,value) {
       return applyFiltering;
 }
 
-async function loadPaginationButtons(_$w) {
+ function loadPaginationButtons(_$w) {
   try {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).onClick(async () => {
       let nextPageJobs=currentJobs.slice(pagination.pageSize*pagination.currentPage,pagination.pageSize*(pagination.currentPage+1));
@@ -143,7 +141,7 @@ async function loadPaginationButtons(_$w) {
   }
 }
 
-async function loadSelectedValuesRepeater(_$w) {
+ function loadSelectedValuesRepeater(_$w) {
   try {
        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).onItemReady(($item, itemData) => {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
@@ -170,7 +168,7 @@ async function loadSelectedValuesRepeater(_$w) {
             await updateJobsAndNumbersAndFilters(_$w);
           });
     });
-    await updateSelectedValuesRepeater(_$w);
+     updateSelectedValuesRepeater(_$w);
   } catch (error) {
     console.error('Failed to load selected values repeater:', error);
   }
@@ -494,9 +492,9 @@ async function secondarySearch(_$w,query) {
     await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
 }
-  async function bindSearchInput(_$w) {
+   function bindSearchInput(_$w) {
     try {
-      await bindPrimarySearch(_$w,allvaluesobjects,alljobs);
+       bindPrimarySearch(_$w,allvaluesobjects,alljobs);
 
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
