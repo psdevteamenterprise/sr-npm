@@ -7,5 +7,6 @@ module.exports = {
     ...require('./brandPage'),
     ...require('./supportTeamsPage'),
     ...require('./masterPage'),
+    ...require('./boardPeoplePage'),
   };
   
