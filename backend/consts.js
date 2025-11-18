@@ -81,6 +81,7 @@ const TASK_TYPE = {
 };
 
 const supportTeamsPageIds={
+    PEOPLE_DATASET: "#peopleDataset",
     RECENTLEY_ADDED_JOBS: "#recentleyAddedJobs",
     RECENTLEY_ADDED_JOBS_ITEM: "#recentleyAddedJobsItem",
     JOB_LOCATION: "#jobLocation",

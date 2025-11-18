@@ -3,21 +3,36 @@ const { location } = require("@wix/site-location");
 const { supportTeamsPageIds } = require('../backend/consts');
 
 
-
+let currentItem;
 async function supportTeasmPageOnReady(_$w) {
-    handleRecentJobsSection(_$w);
+    currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    console.log("currentItem: ",currentItem);
+   await  handleRecentJobsSection(_$w);
+    handlePeopleSection(_$w);
+    handleVideoSection(_$w);
     
 }
 
+async function handleVideoSection(_$w) {
+    console.log("inside video section");
+    console.log("currentItem: ",currentItem);
 
+}
+
+async function handlePeopleSection(_$w) {
+    const currentPeopleItem= _$w(supportTeamsPageIds.PEOPLE_DATASET).getCurrentItem();
+    console.log("currentPeopleItem: ",currentPeopleItem);
+
+    
+}
 
 async function handleRecentJobsSection(_$w) {
 
-    const currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
+    
     console.log("currentItem 2 3 4:  ",currentItem);
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
-        await collapseSection(_$w);
+        collapseSection(_$w);
         return;
     }
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
@@ -28,7 +43,7 @@ async function handleRecentJobsSection(_$w) {
 
     if(latestsJobs.length === 0) {
         console.log("No jobs found , collapsing recently Jobs Section ");
-        await collapseSection(_$w);
+        collapseSection(_$w);
         return;
     }
     _$w(supportTeamsPageIds.RECENTLEY_ADDED_JOBS).onItemReady(($item, itemData) => {
@@ -52,12 +67,10 @@ async function handleRecentJobsSection(_$w) {
 }
 
 
-async function collapseSection(_$w) {
-    Promise.all([
+ function collapseSection(_$w) {
         _$w(supportTeamsPageIds.RECENTLY_ADDED_JOBS_SECTION).collapse(),
         _$w(supportTeamsPageIds.MOST_RECENT_JOBS_TITLE).collapse(),
-        _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).collapse()
-    ]);
+        _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).collapse()    
 }
 module.exports = {
     supportTeasmPageOnReady,
