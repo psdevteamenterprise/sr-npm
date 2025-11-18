@@ -1,7 +1,8 @@
 const { getLatestJobsByValue, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const { supportTeamsPageIds } = require('../backend/consts');
-
+const { COLLECTIONS } = require('../backend/collectionConsts');
+const { getAllRecords } = require('./pagesUtils');
 
 let currentItem;
 async function supportTeasmPageOnReady(_$w) {
@@ -18,7 +19,7 @@ async function handleVideoSection(_$w) {
     console.log("currentItem: ",currentItem);
     if(!currentItem.videoExists) {
         console.log("Video does not exist , collapsing video section ");
-        collapseSection(_$w,"video");
+        await collapseSection(_$w,"video");
         return;
     }
 
@@ -27,6 +28,7 @@ async function handleVideoSection(_$w) {
 async function handlePeopleSection(_$w) {
     const currentPeopleRepeaterData= _$w(supportTeamsPageIds.PEOPLE_REPEATER).data;
     console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
+    const allpeoplesrecord=await getAllRecords(COLLECTIONS.PEOPLE);
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
     if(currentPeopleRepeaterData.length === 0) {
@@ -80,21 +82,21 @@ async function handleRecentJobsSection(_$w) {
 }
 
 
- function collapseSection(_$w,sectionName) {
+ async function collapseSection(_$w,sectionName) {
     if(sectionName === "people") {
-        _$w(supportTeamsPageIds.PEOPLE_BUTTON).collapse();
-        _$w(supportTeamsPageIds.PEOPLE_TITLE).collapse();
-        _$w(supportTeamsPageIds.PEOPLE_REPEATER).collapse();
+        await _$w(supportTeamsPageIds.PEOPLE_BUTTON).collapse();
+      await  _$w(supportTeamsPageIds.PEOPLE_TITLE).collapse();
+        await _$w(supportTeamsPageIds.PEOPLE_REPEATER).collapse();
     }
     else if(sectionName === "video") {
-        _$w(supportTeamsPageIds.VIDEO_SECTION).collapse();
-        _$w(supportTeamsPageIds.VIDEO_TITLE).collapse();
-        _$w(supportTeamsPageIds.VIDEO_PLAYER).collapse();
+        await _$w(supportTeamsPageIds.VIDEO_SECTION).collapse();
+        await _$w(supportTeamsPageIds.VIDEO_TITLE).collapse();
+       await _$w(supportTeamsPageIds.VIDEO_PLAYER).collapse();
     }
     else {
-        _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
-        _$w(supportTeamsPageIds.RECENT_JOBS_TITLE).collapse()
-        _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).collapse()    
+        await _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
+        await _$w(supportTeamsPageIds.RECENT_JOBS_TITLE).collapse()
+        await _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).collapse()    
     }
 }
 module.exports = {
