@@ -29,6 +29,7 @@ async function handlePeopleSection(_$w) {
     console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
     const allpeoplesrecord=await getAllRecordsWithoutMultiRef("OurPeople");
     console.log("allpeoplesrecord: ",allpeoplesrecord);
+    
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
     if(currentPeopleRepeaterData.length === 0) {
