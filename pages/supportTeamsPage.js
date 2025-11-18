@@ -34,6 +34,7 @@ async function handlePeopleSection(_$w) {
     console.log("peopleToDisplay: ",peopleToDisplay);
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
+    
     if(currentPeopleRepeaterData.length === 0) {
         console.log("No people found , collapsing people section ");
         collapseSection(_$w,"people");
