@@ -49,6 +49,7 @@ async function handleRecentJobsSection(_$w) {
     console.log("valueId: ",valueId);
     const Value=await getValueFromValueId(valueId);
     console.log("Value: ",Value);
+    console.log("testt@#!!@#!#@#!@!@!@#")
     if(Value===undefined) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
         collapseSection(_$w,"recentJobs");
