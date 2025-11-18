@@ -27,6 +27,8 @@ async function handleVideoSection(_$w) {
 async function handlePeopleSection(_$w) {
     const currentPeopleRepeaterData= _$w(supportTeamsPageIds.PEOPLE_REPEATER).data;
     console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
+    let itemObj = _$w("#peopleDataset").getCurrentItem();
+    console.log("itemObj: ",itemObj);
     if(currentPeopleRepeaterData.length === 0) {
         console.log("No people found , collapsing people section ");
         collapseSection(_$w,"people");
@@ -39,7 +41,7 @@ async function handlePeopleSection(_$w) {
 async function handleRecentJobsSection(_$w) {
 
     
-    console.log("currentItem 2 3 4:  ",currentItem);
+    console.log("currentItem 2 3 4 5:  ",currentItem);
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
         collapseSection(_$w,"recentJobs");
@@ -49,7 +51,6 @@ async function handleRecentJobsSection(_$w) {
     console.log("valueId: ",valueId);
     const Value=await getValueFromValueId(valueId);
     console.log("Value: ",Value);
-    console.log("testt@#!!@#!#@#!@!@!@#")
     if(Value===undefined) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
         collapseSection(_$w,"recentJobs");
@@ -57,11 +58,7 @@ async function handleRecentJobsSection(_$w) {
     }
     const latestsJobs=await getLatestJobsByValue(Value);
 
-    // if(latestsJobs.length === 0) {
-    //     console.log("No jobs found , collapsing recently Jobs Section ");
-    //     collapseSection(_$w);
-    //     return;
-    // }
+
     _$w(supportTeamsPageIds.RECENT_JOBS_REPEATER).onItemReady(($item, itemData) => {
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
@@ -77,7 +74,7 @@ async function handleRecentJobsSection(_$w) {
         location.to(clickedItemData["link-jobs-title"]);
       });
     
-    _$w(supportTeamsPageIds.SEE_ALL_JOBS_TEXT).onClick( () => {
+    _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).onClick( () => {
          location.to(`/search?category=${Value.title}`);
     });
 }
