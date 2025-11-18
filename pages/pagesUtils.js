@@ -39,6 +39,21 @@ function groupValuesByField(values, refKey) {
     return items;
   }
 
+  async function getAllRecordsWithoutMultiRef(collectionId) {
+    const q = wixData.query(collectionId)
+  
+  
+    const items = [];
+    let res = await q.limit(1000).find();
+    items.push(...res.items);
+  
+    while (res.hasNext()) {
+      res = await res.next();
+      items.push(...res.items);
+    }
+    return items;
+  }
+
   function getFieldById(fieldId,allFields) {
     return allFields.find(field=>field._id===fieldId);
   }
@@ -212,5 +227,6 @@ async function primarySearch(_$w,query,alljobs) {
     bindPrimarySearch,
     primarySearch,
     getLatestJobsByValue,
-    getValueFromValueId
+    getValueFromValueId,
+    getAllRecordsWithoutMultiRef
 }

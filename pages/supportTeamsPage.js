@@ -1,8 +1,7 @@
 const { getLatestJobsByValue, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const { supportTeamsPageIds } = require('../backend/consts');
-const { COLLECTIONS } = require('../backend/collectionConsts');
-const { getAllRecords } = require('./pagesUtils');
+const { getAllRecordsWithoutMultiRef } = require('./pagesUtils');
 
 let currentItem;
 async function supportTeasmPageOnReady(_$w) {
@@ -28,7 +27,8 @@ async function handleVideoSection(_$w) {
 async function handlePeopleSection(_$w) {
     const currentPeopleRepeaterData= _$w(supportTeamsPageIds.PEOPLE_REPEATER).data;
     console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
-    const allpeoplesrecord=await getAllRecords(COLLECTIONS.PEOPLE);
+    const allpeoplesrecord=await getAllRecordsWithoutMultiRef("OurPeople");
+    console.log("allpeoplesrecord: ",allpeoplesrecord);
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
     if(currentPeopleRepeaterData.length === 0) {
