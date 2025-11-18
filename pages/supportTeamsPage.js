@@ -16,6 +16,11 @@ async function supportTeasmPageOnReady(_$w) {
 async function handleVideoSection(_$w) {
     console.log("inside video section");
     console.log("currentItem: ",currentItem);
+    if(!currentItem.videoExists) {
+        console.log("Video does not exist , collapsing video section ");
+        collapseSection(_$w,"video");
+        return;
+    }
 
 }
 
