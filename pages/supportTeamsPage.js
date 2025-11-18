@@ -30,12 +30,12 @@ async function handlePeopleSection(_$w) {
     const allpeoplesrecord=await getAllRecordsWithoutMultiRef("OurPeople");
     console.log("allpeoplesrecord: ",allpeoplesrecord);
     console.log("currentItem inisde peolpe serion: ",currentItem);
-    const peopleToDisplay=allpeoplesrecord.filter(person=>person.supportTeamName===currentItem.title_fld);
+    const peopleToDisplay=allpeoplesrecord.filter(person=>person.supportTeamName===currentItem._id);
     console.log("peopleToDisplay: ",peopleToDisplay);
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
-    
-    if(currentPeopleRepeaterData.length === 0) {
+
+    if(peopleToDisplay.length === 0) {
         console.log("No people found , collapsing people section ");
         collapseSection(_$w,"people");
         return;
