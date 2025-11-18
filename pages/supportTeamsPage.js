@@ -29,7 +29,9 @@ async function handlePeopleSection(_$w) {
     console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
     const allpeoplesrecord=await getAllRecordsWithoutMultiRef("OurPeople");
     console.log("allpeoplesrecord: ",allpeoplesrecord);
-    
+    console.log("currentItem inisde peolpe serion: ",currentItem);
+    const peopleToDisplay=allpeoplesrecord.filter(person=>person.supportTeamName===currentItem.title_fld);
+    console.log("peopleToDisplay: ",peopleToDisplay);
     let itemObj = _$w("#peopleDataset").getCurrentItem();
     console.log("itemObj: ",itemObj);
     if(currentPeopleRepeaterData.length === 0) {
