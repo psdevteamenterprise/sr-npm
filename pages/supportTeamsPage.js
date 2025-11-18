@@ -37,7 +37,7 @@ async function handleRecentJobsSection(_$w) {
     console.log("currentItem 2 3 4:  ",currentItem);
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
-        collapseSection(_$w);
+        collapseSection(_$w,"recentJobs");
         return;
     }
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
