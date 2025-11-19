@@ -37,7 +37,7 @@ async function handlePeopleSection(_$w) {
 
     if(peopleToDisplay.length === 0) {
         console.log("No people found , collapsing people section ");
-        collapseSection(_$w,"people");
+        await collapseSection(_$w,"people");
         return;
     }
 
@@ -50,7 +50,7 @@ async function handleRecentJobsSection(_$w) {
     console.log("currentItem 2 3 4 5:  ",currentItem);
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
-        collapseSection(_$w,"recentJobs");
+        await collapseSection(_$w,"recentJobs");
         return;
     }
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
@@ -59,7 +59,7 @@ async function handleRecentJobsSection(_$w) {
     console.log("Value: ",Value);
     if(Value===undefined) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
-        collapseSection(_$w,"recentJobs");
+        await collapseSection(_$w,"recentJobs");
         return;
     }
     const latestsJobs=await getLatestJobsByValue(Value);
@@ -93,14 +93,14 @@ async function handleRecentJobsSection(_$w) {
         await _$w(supportTeamsPageIds.PEOPLE_REPEATER).collapse();
     }
     else if(sectionName === "video") {
-        await _$w(supportTeamsPageIds.VIDEO_SECTION).collapse();
         await _$w(supportTeamsPageIds.VIDEO_TITLE).collapse();
        await _$w(supportTeamsPageIds.VIDEO_PLAYER).collapse();
+       await _$w(supportTeamsPageIds.VIDEO_SECTION).collapse();
     }
     else {
-        await _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
         await _$w(supportTeamsPageIds.RECENT_JOBS_TITLE).collapse()
         await _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).collapse()    
+        await _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
     }
 }
 module.exports = {
