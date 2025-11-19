@@ -6,16 +6,10 @@ const { getAllRecordsWithoutMultiRef } = require('./pagesUtils');
 let currentItem;
 async function supportTeasmPageOnReady(_$w) {
     currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
-    console.log("currentItem: ",currentItem);
-   await  handleRecentJobsSection(_$w);
-    await handlePeopleSection(_$w);
-    await handleVideoSection(_$w);
-    
+   Promise.all([handleRecentJobsSection(_$w),handlePeopleSection(_$w),handleVideoSection(_$w)]);
 }
 
 async function handleVideoSection(_$w) {
-    console.log("inside video section");
-    console.log("currentItem: ",currentItem);
     if(!currentItem.videoExists) {
         console.log("Video does not exist , collapsing video section ");
         await collapseSection(_$w,"video");
@@ -25,15 +19,8 @@ async function handleVideoSection(_$w) {
 }
 
 async function handlePeopleSection(_$w) {
-    const currentPeopleRepeaterData= _$w(supportTeamsPageIds.PEOPLE_REPEATER).data;
-    console.log("currentPeopleRepeaterData: ",currentPeopleRepeaterData);
     const allpeoplesrecord=await getAllRecordsWithoutMultiRef("OurPeople");
-    console.log("allpeoplesrecord: ",allpeoplesrecord);
-    console.log("currentItem inisde peolpe serion: ",currentItem);
     const peopleToDisplay=allpeoplesrecord.filter(person=>person.supportTeamName===currentItem._id);
-    console.log("peopleToDisplay: ",peopleToDisplay);
-    let itemObj = _$w("#peopleDataset").getCurrentItem();
-    console.log("itemObj: ",itemObj);
 
     if(peopleToDisplay.length === 0) {
         console.log("No people found , collapsing people section ");
@@ -47,26 +34,21 @@ async function handlePeopleSection(_$w) {
 async function handleRecentJobsSection(_$w) {
 
     
-    console.log("currentItem 2 3 4 5:  ",currentItem);
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
         await collapseSection(_$w,"recentJobs");
         return;
     }
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
-    console.log("valueId: ",valueId);
     const Value=await getValueFromValueId(valueId);
-    console.log("Value: ",Value);
     if(Value===undefined) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
         await collapseSection(_$w,"recentJobs");
         return;
     }
     const latestsJobs=await getLatestJobsByValue(Value);
-    console.log("latestsJobs: ",latestsJobs);
 
     _$w(supportTeamsPageIds.RECENT_JOBS_REPEATER).onItemReady(($item, itemData) => {
-        console.log("itemData: ",itemData);
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
 
