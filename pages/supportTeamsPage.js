@@ -8,8 +8,8 @@ async function supportTeasmPageOnReady(_$w) {
     currentItem= _$w(supportTeamsPageIds.TEAM_SUPPORT_DYNAMIC_DATASET).getCurrentItem();
     console.log("currentItem: ",currentItem);
    await  handleRecentJobsSection(_$w);
-    handlePeopleSection(_$w);
-    handleVideoSection(_$w);
+    await handlePeopleSection(_$w);
+    await handleVideoSection(_$w);
     
 }
 
