@@ -130,6 +130,13 @@ const LINKS={
   login:'https://www.smartrecruiters.com/web-sso/saml/${companyId}/login',
 }
 
+
+const supportTeamsPageSections={
+  RECENT_JOBS: "recentJobs",
+  PEOPLE: "people",
+  VIDEO: "video",
+}
+
   module.exports = {
     TASKS_NAMES,
     TASK_TYPE,
@@ -137,4 +144,5 @@ const LINKS={
     QUERY_MAX_LIMIT,
     supportTeamsPageIds,
     LINKS,
+    supportTeamsPageSections,
 };

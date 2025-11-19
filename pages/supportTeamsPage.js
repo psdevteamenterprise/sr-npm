@@ -1,6 +1,6 @@
 const { getLatestJobsByValue, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
-const { supportTeamsPageIds } = require('../backend/consts');
+const { supportTeamsPageIds,supportTeamsPageSections } = require('../backend/consts');
 const { getAllRecordsWithoutMultiRef } = require('./pagesUtils');
 
 let currentItem;
@@ -12,7 +12,7 @@ async function supportTeasmPageOnReady(_$w) {
 async function handleVideoSection(_$w) {
     if(!currentItem.videoExists) {
         console.log("Video does not exist , collapsing video section ");
-        await collapseSection(_$w,"video");
+        await collapseSection(_$w,supportTeamsPageSections.VIDEO);
         return;
     }
 
@@ -24,7 +24,7 @@ async function handlePeopleSection(_$w) {
 
     if(peopleToDisplay.length === 0) {
         console.log("No people found , collapsing people section ");
-        await collapseSection(_$w,"people");
+        await collapseSection(_$w,supportTeamsPageSections.PEOPLE);
         return;
     }
 
@@ -36,14 +36,14 @@ async function handleRecentJobsSection(_$w) {
     
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
-        await collapseSection(_$w,"recentJobs");
+        await collapseSection(_$w,supportTeamsPageSections.RECENT_JOBS);
         return;
     }
     const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
     const Value=await getValueFromValueId(valueId);
     if(Value===undefined) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
-        await collapseSection(_$w,"recentJobs");
+        await collapseSection(_$w,supportTeamsPageSections.RECENT_JOBS);
         return;
     }
     const latestsJobs=await getLatestJobsByValue(Value);
@@ -69,20 +69,22 @@ async function handleRecentJobsSection(_$w) {
 }
 
  async function collapseSection(_$w,sectionName) {
-    if(sectionName === "people") {
+    if(sectionName === supportTeamsPageSections.PEOPLE) {
         await _$w(supportTeamsPageIds.PEOPLE_BUTTON).collapse();
       await  _$w(supportTeamsPageIds.PEOPLE_TITLE).collapse();
         await _$w(supportTeamsPageIds.PEOPLE_REPEATER).collapse();
     }
-    else if(sectionName === "video") {
+    else if(sectionName === supportTeamsPageSections.VIDEO) {
         await _$w(supportTeamsPageIds.VIDEO_TITLE).collapse();
        await _$w(supportTeamsPageIds.VIDEO_PLAYER).collapse();
        await _$w(supportTeamsPageIds.VIDEO_SECTION).collapse();
     }
     else {
-        await _$w(supportTeamsPageIds.RECENT_JOBS_TITLE).collapse()
-        await _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).collapse()    
-        await _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
+        if(sectionName === supportTeamsPageSections.RECENT_JOBS) {
+            await _$w(supportTeamsPageIds.RECENT_JOBS_TITLE).collapse()
+            await _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).collapse()    
+            await _$w(supportTeamsPageIds.RECENT_JOBS_SECTION).collapse()
+        }
     }
 }
 module.exports = {
