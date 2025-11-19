@@ -63,9 +63,10 @@ async function handleRecentJobsSection(_$w) {
         return;
     }
     const latestsJobs=await getLatestJobsByValue(Value);
-
+    console.log("latestsJobs: ",latestsJobs);
 
     _$w(supportTeamsPageIds.RECENT_JOBS_REPEATER).onItemReady(($item, itemData) => {
+        console.log("itemData: ",itemData);
         $item(supportTeamsPageIds.JOB_TITLE).text = itemData.title;
         $item(supportTeamsPageIds.JOB_LOCATION).text = itemData.location.fullLocation;
 
