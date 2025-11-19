@@ -20,7 +20,7 @@ const {
 
   }
 
-async function getCategoryValueId(customValues) {
+async function getCategoryValue(customValues) {
   const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find().then(result => result.items[0]);
   for(const value of customValues) {
     if(value.customField===categoryCustomField._id) {
@@ -55,7 +55,7 @@ async function getCategoryValueId(customValues) {
         {
           
             const multiRefField=await getPositionWithMultiRefField(item._id);
-            const categoryValue=await getCategoryValueId(multiRefField);
+            const categoryValue=await getCategoryValue(multiRefField);
             handleJobDetails(_$w,item,categoryValue);
 
         const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
