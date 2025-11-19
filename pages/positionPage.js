@@ -56,7 +56,10 @@ async function getCategoryValue(customValues) {
           
             const multiRefField=await getPositionWithMultiRefField(item._id);
             const categoryValue=await getCategoryValue(multiRefField);
-            handleJobDetails(_$w,item,categoryValue);
+            
+            if(isElementExistOnPage(_$w('#jobCategory'))) {
+              _$w('#jobCategory').text = categoryValue.title;
+            }
 
         const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
@@ -88,18 +91,7 @@ async function getCategoryValue(customValues) {
   }
  
 }
-  function handleJobDetails(_$w,item,categoryValue) {
-    if(isElementExistOnPage(_$w('#jobLocation'))) {
-      _$w('#jobLocation').text = item.location.fullLocation;
-    }
-    if(isElementExistOnPage(_$w('#jobCategory'))) {
-      _$w('#jobCategory').text = categoryValue.title;
-    }
-    if(isElementExistOnPage(_$w('#jobEmploymentTime'))) {
-      _$w('#jobEmploymentTime').text = item.employmentType;
-    }
-    
-  }
+
   function handleReferFriendButton(_$w,item) {
     if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
       _$w('#referFriendButton').hide();
