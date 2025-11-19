@@ -20,11 +20,11 @@ const {
 
   }
 
-async function getCategoryValueId(customValues) {
+async function getCategoryValue(customValues) {
   const categoryCustomField=await wixData.query(COLLECTIONS.CUSTOM_FIELDS).eq(CUSTOM_FIELDS_COLLECTION_FIELDS.TITLE,"Category").find().then(result => result.items[0]);
   for(const value of customValues) {
     if(value.customField===categoryCustomField._id) {
-      return value._id;
+      return value;
       
     }
   }
@@ -35,9 +35,12 @@ async function getCategoryValueId(customValues) {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
-     
+     console.log("item: ",item);
+
         handleReferFriendButton(_$w,item);
         handleApplyButton(_$w,item);
+        
+
         
 
         _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
@@ -52,9 +55,13 @@ async function getCategoryValueId(customValues) {
         {
           
             const multiRefField=await getPositionWithMultiRefField(item._id);
-            const categoryValueId=await getCategoryValueId(multiRefField);
-          
-        const relatedJobs = await getRelatedJobs({ categoryValueId, itemId: item._id ,limit:5});
+            const categoryValue=await getCategoryValue(multiRefField);
+            
+            if(isElementExistOnPage(_$w('#jobCategory'))) {
+              _$w('#jobCategory').text = categoryValue.title;
+            }
+
+        const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
@@ -84,7 +91,7 @@ async function getCategoryValueId(customValues) {
   }
  
 }
-    
+
   function handleReferFriendButton(_$w,item) {
     if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
       _$w('#referFriendButton').hide();
