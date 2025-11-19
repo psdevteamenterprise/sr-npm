@@ -13,7 +13,7 @@ async function bindBoardPeopleRepeaters(_$w) {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dynamicDataset').getCurrentItem();
         console.log("clickedItemData: ",clickedItemData);
-        location.to(`/board-people/${clickedItemData['link-board-people-title_fld']}`);
+        location.to(`/${clickedItemData['link-board-people-title_fld']}`);
 
     });
 
@@ -21,7 +21,7 @@ async function bindBoardPeopleRepeaters(_$w) {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dataset1').getCurrentItem();
         console.log("clickedItemData: ",clickedItemData);
-        location.to(`/board-people/${clickedItemData['link-board-people-title_fld']}`);
+        location.to(`/${clickedItemData['link-board-people-title_fld']}`);
 
     });
 }
