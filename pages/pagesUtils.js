@@ -109,7 +109,7 @@ function loadPrimarySearchRepeater(_$w) {
   const primarySearchDebounced = debounce(async () => {
     const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
     await primarySearch(_$w, query, alljobs);
-  }, 150);
+  }, 300);
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => {
     await primarySearchDebounced();
