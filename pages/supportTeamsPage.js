@@ -85,7 +85,6 @@ async function handleRecentJobsSection(_$w) {
     });
 }
 
-
  async function collapseSection(_$w,sectionName) {
     if(sectionName === "people") {
         await _$w(supportTeamsPageIds.PEOPLE_BUTTON).collapse();
