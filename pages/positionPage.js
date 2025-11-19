@@ -60,7 +60,6 @@ async function getCategoryValue(customValues) {
 
         const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
-            
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
           });
