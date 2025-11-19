@@ -12,7 +12,6 @@ async function bindBoardPeopleRepeaters(_$w) {
     _$w('#directorsRepeaterItem').onClick((event) => {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dynamicDataset').getCurrentItem();
-        console.log("clickedItemData: ",clickedItemData);
         location.to(`/${clickedItemData['link-board-people-title_fld']}`);
 
     });
@@ -20,7 +19,6 @@ async function bindBoardPeopleRepeaters(_$w) {
     _$w('#executivesRepeaterItem').onClick((event) => {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dataset1').getCurrentItem();
-        console.log("clickedItemData: ",clickedItemData);
         location.to(`/${clickedItemData['link-board-people-title_fld']}`);
 
     });
