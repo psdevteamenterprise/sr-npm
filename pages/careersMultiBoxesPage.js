@@ -260,8 +260,13 @@ async function loadJobsRepeater(_$w) {
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
+          console.log("i am here !!!!!")
+          console.log("field.title: ",field.title)
+          console.log("value: ",value)
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
+        console.log("ev: ",ev)
+        console.log("ev.target: ",ev.target)
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
         } else {

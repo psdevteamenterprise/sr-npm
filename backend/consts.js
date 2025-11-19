@@ -81,14 +81,25 @@ const TASK_TYPE = {
 };
 
 const supportTeamsPageIds={
-    RECENTLEY_ADDED_JOBS: "#recentleyAddedJobs",
+    PEOPLE_REPEATER: "#peopleRepeater",
+    PEOPLE_BUTTON: "#peopleButton",
+    PEOPLE_TITLE: "#peopleTitle",
+    RECENT_JOBS_REPEATER: "#recentJobsRepeater",
+    RECENT_JOBS_TITLE: "#recentJobsTitle",
+    RECENT_JOBS_BUTTON: "#recentJobsButton",
+    RECENT_JOBS_SECTION: "#recentJobsSection",
+    VIDEO_SECTION: "#videoSection",
+    VIDEO_TITLE: "#videoTitle",
+    VIDEO_PLAYER: "#videoPlayer",
+
+
+
+
+
     RECENTLEY_ADDED_JOBS_ITEM: "#recentleyAddedJobsItem",
     JOB_LOCATION: "#jobLocation",
     JOB_TITLE: "#jobTitle",
-    SEE_ALL_JOBS_TEXT: "#seeAllJobsText",
     TEAM_SUPPORT_DYNAMIC_DATASET: "#dynamicDataset",
-    RECENTLY_ADDED_JOBS_SECTION: "#recentlyJobsSection",
-    MOST_RECENT_JOBS_TITLE: "#mostRecentJobsTitle",
     valueToValueIdMap: {
         "Human Resouces":"PeopleSupport",
         "Merchandise - Buying":"Merchandise",
@@ -119,6 +130,13 @@ const LINKS={
   login:'https://www.smartrecruiters.com/web-sso/saml/${companyId}/login',
 }
 
+
+const supportTeamsPageSections={
+  RECENT_JOBS: "recentJobs",
+  PEOPLE: "people",
+  VIDEO: "video",
+}
+
   module.exports = {
     TASKS_NAMES,
     TASK_TYPE,
@@ -126,4 +144,5 @@ const LINKS={
     QUERY_MAX_LIMIT,
     supportTeamsPageIds,
     LINKS,
+    supportTeamsPageSections,
 };

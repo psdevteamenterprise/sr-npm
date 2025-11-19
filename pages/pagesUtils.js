@@ -39,6 +39,21 @@ function groupValuesByField(values, refKey) {
     return items;
   }
 
+  async function getAllRecordsWithoutMultiRef(collectionId) {
+    const q = wixData.query(collectionId)
+  
+  
+    const items = [];
+    let res = await q.limit(1000).find();
+    items.push(...res.items);
+  
+    while (res.hasNext()) {
+      res = await res.next();
+      items.push(...res.items);
+    }
+    return items;
+  }
+
   function getFieldById(fieldId,allFields) {
     return allFields.find(field=>field._id===fieldId);
   }
@@ -67,7 +82,7 @@ function loadPrimarySearchRepeater(_$w) {
   });
   
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
-    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).data;
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
     );
@@ -212,5 +227,6 @@ async function primarySearch(_$w,query,alljobs) {
     bindPrimarySearch,
     primarySearch,
     getLatestJobsByValue,
-    getValueFromValueId
+    getValueFromValueId,
+    getAllRecordsWithoutMultiRef
 }

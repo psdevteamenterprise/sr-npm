@@ -35,8 +35,7 @@ async function getCategoryValueId(customValues) {
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
-        const multiRefField=await getPositionWithMultiRefField(item._id);
-        const categoryValueId=await getCategoryValueId(multiRefField);
+     
         handleReferFriendButton(_$w,item);
         handleApplyButton(_$w,item);
         
@@ -49,8 +48,12 @@ async function getCategoryValueId(customValues) {
         {
           _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
         }
-        if(_$w('#relatedJobsRepNoDepartment')) // when there is no department, we filter based on category
+        if(isElementExistOnPage(_$w('#relatedJobsRepNoDepartment'))) // when there is no department, we filter based on category
         {
+          
+            const multiRefField=await getPositionWithMultiRefField(item._id);
+            const categoryValueId=await getCategoryValueId(multiRefField);
+          
         const relatedJobs = await getRelatedJobs({ categoryValueId, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
@@ -61,6 +64,7 @@ async function getCategoryValueId(customValues) {
 
         }
     });
+    if(isElementExistOnPage(_$w('#relatedJobsRepNoDepartment'))) {
     _$w('#relatedJobsNoDepartmentItem').onClick((event) => {   
       const data = _$w("#relatedJobsRepNoDepartment").data;
       const clickedItemData = data.find(
@@ -68,6 +72,7 @@ async function getCategoryValueId(customValues) {
       );
       location.to(clickedItemData["link-jobs-title"]);
     });
+  }
     if(isElementExistOnPage(_$w('#relatedJobsDataset')))
     {
     _$w('#relatedJobsDataset').onReady(() => {
