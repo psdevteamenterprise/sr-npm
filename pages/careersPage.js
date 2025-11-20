@@ -62,7 +62,7 @@ async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
 
 function handleFilterInMobile(_$w) {
     _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
-        _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
+        _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).show();
     });
 }
 
