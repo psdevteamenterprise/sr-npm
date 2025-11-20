@@ -83,7 +83,6 @@ function loadPrimarySearchRepeater(_$w) {
   
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
     const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
-    console.log("data: ",data);
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
     );
@@ -97,7 +96,6 @@ function loadPrimarySearchRepeater(_$w) {
       location.to(clickedItemData[linkKey]);
     }
 
-    location.to(clickedItemData["link-jobs-title"]);
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
