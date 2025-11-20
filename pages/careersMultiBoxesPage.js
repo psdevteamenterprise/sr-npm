@@ -68,6 +68,7 @@ async function handleUrlParams(_$w,urlParams) {
     keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
   console.log("possibleUrlParams: ",possibleUrlParams)
+  console.log("urlParams: ",urlParams)
   for (const url of possibleUrlParams)
   {
     console.log(url)
@@ -339,7 +340,7 @@ async function loadJobsRepeater(_$w) {
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
-          queryParams.add({ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
+          queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
         } else {
           selectedByField.delete(field._id);  
           console.log("url values to remove: ",fieldTitle);
