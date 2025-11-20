@@ -58,6 +58,8 @@ async function clearAll(_$w) {
 
 async function handleUrlParams(_$w,urlParams) {
   try { 
+    console.log("currentJobs: ",currentJobs);
+    console.log("currentJobs.length: ",currentJobs.length);
   let applyFiltering=false;
 
   //apply this first to determine all jobs
@@ -84,6 +86,9 @@ async function handleUrlParams(_$w,urlParams) {
     if(applyFiltering || keywordAllJobs) {
       await updateJobsAndNumbersAndFilters(_$w);
     }
+    console.log("currentJobs: ",currentJobs);
+    console.log("currentJobs.length: ",currentJobs.length);
+    console.log("Math.ceil(currentJobs.length/pagination.pageSize): ",Math.ceil(currentJobs.length/pagination.pageSize));
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
         console.warn("page number is invalid, removing page from url");
@@ -140,8 +145,6 @@ async function handleParams(_$w,param,values) {
       }
     }
 
-    console.log("existing after for loop: ",existing);
-    console.log("selectedIndices after for loop: ",selectedIndices);
     selectedByField.set(field._id, existing);
     _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
     return applyFiltering;
@@ -177,7 +180,6 @@ async function handleParams(_$w,param,values) {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
-            console.log("deselect button clicked , itemData: ",itemData);
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
