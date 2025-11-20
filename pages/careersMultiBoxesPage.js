@@ -23,6 +23,7 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
+  //to handle back and forth , url changes
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
@@ -44,6 +45,10 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 async function handleBackAndForth(_$w){
     const newQueryParams=await location.query();
     console.log("newQueryParams: ", newQueryParams);
+    //selectedByField.clear();
+    await clearAll(_$w);
+
+
     await handleUrlParams(_$w,newQueryParams);
     
 }
