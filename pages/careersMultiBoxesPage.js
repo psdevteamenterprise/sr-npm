@@ -206,7 +206,7 @@ async function handleParams(_$w,param,values) {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
-            
+            console.log("deselect button clicked , itemData: ",itemData);
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
@@ -214,13 +214,20 @@ async function handleParams(_$w,param,values) {
 
             const existing = selectedByField.get(fieldId) || [];
             const updated = existing.filter(v => v !== valueId);
+            const field=getFieldById(fieldId,allfields);
+            console.log("field: ",field);
+            const fieldTitle=field.title.toLowerCase();
             if (updated.length) {
               selectedByField.set(fieldId, updated);
+              console.log("url values to add: ",{ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
+              queryParams.add({ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
+              console.log("url values to remove: ",fieldTitle);
+              queryParams.remove([fieldTitle ]);
             }
 
-            const field=getFieldById(fieldId,allfields);
+            
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
