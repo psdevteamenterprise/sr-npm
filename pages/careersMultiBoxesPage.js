@@ -74,6 +74,7 @@ async function handleUrlParams(_$w,urlParams) {
     {
       console.log("urlParams[url]: ",urlParams[url])
       applyFiltering=await handleParams(_$w,url,urlParams[url])
+      
     }
   }
     // if(urlParams.brand) {
@@ -142,7 +143,7 @@ async function handleParams(_$w,param,values) {
   valuesAsArray=valuesAsArray.filter(value=>value.trim()!=='');
   console.log("valuesAsArray: ",valuesAsArray);
   console.log("param: ",param);
-  
+
   let selectedIndices=[];
   const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
   console.log("field: ",field);
