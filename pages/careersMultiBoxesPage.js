@@ -319,6 +319,7 @@ async function loadJobsRepeater(_$w) {
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
+            //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
             console.log("brand and storename url values: ",{ fieldTitle : valueLabels });
             queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
