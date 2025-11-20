@@ -1,6 +1,6 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 
-const { queryParams} = require('wix-location-frontend');
+const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox,loadPrimarySearchRepeater,bindPrimarySearch,primarySearch } = require('./pagesUtils');
@@ -23,7 +23,9 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
-  
+  onChange(async ()=>{
+    await handleBackAndForth(_$w);
+  });
     await loadData(_$w);
     loadJobsRepeater(_$w);
     loadPrimarySearchRepeater(_$w);
@@ -37,6 +39,13 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
       await clearAll(_$w);
     });
 
+}
+
+async function handleBackAndForth(_$w){
+    const newQueryParams=await location.query();
+    console.log("newQueryParams: ", newQueryParams);
+    await handleUrlParams(_$w,newQueryParams);
+    
 }
 
 async function clearAll(_$w) {
