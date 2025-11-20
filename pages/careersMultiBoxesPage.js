@@ -109,13 +109,21 @@ async function handleParams(_$w,param,values) {
   let valuesAsArray = values.split(',')
   console.log("values: ",values);
   console.log("valuesAsArray: ",valuesAsArray);
+  let selectedIndices=[];
   for(const value of valuesAsArray) {
        const decodedValue = decodeURIComponent(value);
+       console.log("decodedValue: ",decodedValue);
       const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
+      console.log("field: ",field);
       const options=optionsByFieldId.get(field._id);
+      console.log("options: ",options);
       const option=getCorrectOption(decodedValue,options);
+      console.log("option: ",option);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
+       console.log("optionIndex: ",optionIndex);
+       console.log(" _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
+       selectedIndices.push(optionIndex);
        _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices.push(optionIndex);
        let existing = selectedByField.get(field._id) || [];
        existing.push(option.value);
@@ -127,6 +135,8 @@ async function handleParams(_$w,param,values) {
         console.warn(`${param} value not found in dropdown options`);
       }
     }
+
+    
       return applyFiltering;
 }
 
