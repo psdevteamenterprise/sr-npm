@@ -52,16 +52,16 @@ const FiltersIds={
    Visibility: 'Visibility',
 }
 
-const possibleUrlParams={
-    "brand": "brand",
-    "location": "location",
-    "employmentType": "employmentType",
-    "contractType": "contractType",
-    "visibility": "visibility",
-    "category": "category",
-    "companySegment": "companySegment",
-    "storeName": "storeName",
-}
+const possibleUrlParams=[
+     "brand",
+     "location",
+    "employmentType",
+    "contractType",
+    "visibility",
+    "category",
+    "companySegment",
+    "storeName",
+]
 
 
 module.exports = {
