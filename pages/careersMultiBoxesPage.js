@@ -142,8 +142,7 @@ async function handleParams(_$w,param,values) {
     console.log("selectedIndices after for loop: ",selectedIndices);
     selectedByField.set(field._id, existing);
     _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
-    
-      return applyFiltering;
+    return applyFiltering;
 }
 
  function loadPaginationButtons(_$w) {
