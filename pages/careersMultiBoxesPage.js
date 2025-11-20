@@ -345,6 +345,9 @@ async function loadJobsRepeater(_$w) {
   }
 
 function getValueFromValueId(valueIds,value) {
+  console.log("inside getValueFromValueId")
+  console.log("valueIds: ",valueIds);
+  console.log(" value: ",value);
   let valueLabels=[];
   let currentVal
   for(const valueId of valueIds) {
@@ -353,7 +356,7 @@ function getValueFromValueId(valueIds,value) {
       valueLabels.push(currentVal.label);
     }
   }
-  
+  console.log("valueLabels: ",valueLabels);
   return valueLabels
 }
 
