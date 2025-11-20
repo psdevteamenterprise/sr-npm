@@ -142,6 +142,7 @@ async function handleParams(_$w,param,values) {
   valuesAsArray=valuesAsArray.filter(value=>value.trim()!=='');
   console.log("valuesAsArray: ",valuesAsArray);
   console.log("param: ",param);
+  
   let selectedIndices=[];
   const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
   console.log("field: ",field);
@@ -163,7 +164,7 @@ async function handleParams(_$w,param,values) {
         console.warn(`${param} value not found in dropdown options`);
       }
     }
-    
+
     console.log("existing after for loop: ",existing);
     console.log("selectedIndices after for loop: ",selectedIndices);
     selectedByField.set(field._id, existing);
