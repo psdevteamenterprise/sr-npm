@@ -68,12 +68,10 @@ async function clearAll(_$w,urlOnChange=false) {
     }
 }
 
-
 async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
   let currentApplyFilterFlag=false;
-
   //apply this first to determine all jobs
   if(urlParams.keyword) {
     applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
