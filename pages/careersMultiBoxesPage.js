@@ -192,7 +192,6 @@ async function handleParams(_$w,param,values) {
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
             if (!fieldId || !valueId) return;
-
             const existing = selectedByField.get(fieldId) || [];
             const updated = existing.filter(v => v !== valueId);
             const field=getFieldById(fieldId,allfields);
