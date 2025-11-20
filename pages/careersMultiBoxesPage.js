@@ -68,7 +68,7 @@ async function handleUrlParams(_$w,urlParams) {
     keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
   console.log("possibleUrlParams: ",possibleUrlParams)
-  for(let url in possibleUrlParams)
+  for (const url of possibleUrlParams)
   {
     console.log(url)
     console.log("urlParams[url]: ",urlParams[url])
