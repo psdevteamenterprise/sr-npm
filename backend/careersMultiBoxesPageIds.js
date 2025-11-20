@@ -68,7 +68,6 @@ const possibleUrlParams=[
     "storename",
 ]
 
-
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
