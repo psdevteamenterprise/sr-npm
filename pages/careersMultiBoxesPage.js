@@ -103,14 +103,14 @@ async function handleUrlParams(_$w,urlParams) {
         return;
       }
         pagination.currentPage=Number(urlParams.page);
-        let paginationCurrentText=urlParams.page;
+        //let paginationCurrentText=urlParams.page;
         let startSlicIndex=pagination.pageSize*(pagination.currentPage-1);
         let endSlicIndex=(pagination.pageSize)*(pagination.currentPage);
         if(Number(urlParams.page)==Math.ceil(currentJobs.length/pagination.pageSize)) {
-          paginationCurrentText=(paginationCurrentText-(pagination.pageSize-(currentJobs.length%pagination.pageSize))).toString();          
+         // paginationCurrentText=(paginationCurrentText-(pagination.pageSize-(currentJobs.length%pagination.pageSize))).toString();          
           endSlicIndex=currentJobs.length;
         }
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = paginationCurrentText
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = urlParams.page
         const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
