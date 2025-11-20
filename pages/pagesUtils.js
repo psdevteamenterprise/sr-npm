@@ -89,6 +89,9 @@ function loadPrimarySearchRepeater(_$w) {
     );
     console.log("clickedItemData: ",clickedItemData);
     console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
+    if(clickedItemData["link-jobs-title"]===undefined) {
+      location.to(clickedItemData["link-copy-of-jobs-title"]);
+    }
     location.to(clickedItemData["link-jobs-title"]);
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
