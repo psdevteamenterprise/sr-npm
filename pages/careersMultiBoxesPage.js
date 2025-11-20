@@ -224,8 +224,9 @@ async function handleParams(_$w,param,values) {
             } else {
               selectedByField.delete(fieldId);
               console.log("url values to remove: ",fieldTitle);
-              queryParams.remove([fieldTitle ]);
               
+              queryParams.remove([fieldTitle ]);
+
             }
 
             
