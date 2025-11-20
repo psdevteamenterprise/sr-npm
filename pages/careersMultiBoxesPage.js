@@ -208,7 +208,6 @@ async function handleParams(_$w,param,values) {
               console.log("url values to remove: ",fieldTitle);
               queryParams.remove([fieldTitle ]);
             }
-
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
