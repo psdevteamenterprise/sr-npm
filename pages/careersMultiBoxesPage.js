@@ -368,7 +368,6 @@ function getValueFromValueId(valueIds,value) {
   console.log("valueLabels: ",valueLabels);
   return valueLabels
 }
-
  
   async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
     await applyJobFilters(_$w); // re-query jobs
