@@ -61,6 +61,7 @@ async function handleUrlParams(_$w,urlParams) {
     console.log("currentJobs: ",currentJobs);
     console.log("currentJobs.length: ",currentJobs.length);
   let applyFiltering=false;
+  let currentApplyFilterFlag=false;
 
   //apply this first to determine all jobs
   if(urlParams.keyword) {
@@ -79,9 +80,12 @@ async function handleUrlParams(_$w,urlParams) {
     if(urlParams[url])
     {
       console.log("urlParams[url]: ",urlParams[url])
-      applyFiltering=await handleParams(_$w,url,urlParams[url])
-
+      currentApplyFilterFlag=await handleParams(_$w,url,urlParams[url])
+      if(currentApplyFilterFlag) {
+        applyFiltering=true;
+      }
     }
+    currentApplyFilterFlag=false;
   }
     if(applyFiltering || keywordAllJobs) {
       await updateJobsAndNumbersAndFilters(_$w);
