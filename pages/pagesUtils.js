@@ -96,7 +96,11 @@ function loadPrimarySearchRepeater(_$w) {
     console.log("clickedItemData[linkKey]: ",clickedItemData[linkKey]);
     console.log(" Object.keys(clickedItemData): ", Object.keys(clickedItemData));
     if (linkKey && clickedItemData[linkKey]) {
+      console.log("redirecting to: ",clickedItemData[linkKey]);
       location.to(clickedItemData[linkKey]);
+    }
+    else{
+      console.log("no link key found, returning");
     }
 
   });
