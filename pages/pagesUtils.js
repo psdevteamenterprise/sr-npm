@@ -65,7 +65,7 @@ function groupValuesByField(values, refKey) {
 
   function getCorrectOption(value,options,param) {
     const standardizedValue = normalizeString(value.toLowerCase())
-    if(param==="employmenttype")
+    if(param==="employmenttype") //employmenttype have a problematic value
     {
       return options.find(option=>normalizeString(option.value.toLowerCase())===standardizedValue);
     }

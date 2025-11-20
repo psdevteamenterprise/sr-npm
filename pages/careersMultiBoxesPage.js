@@ -154,7 +154,7 @@ async function handleParams(_$w,param,values) {
 
     selectedByField.set(field._id, existing);
     _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
-    
+
     return applyFiltering;
 
 }
@@ -199,7 +199,6 @@ async function handleParams(_$w,param,values) {
             console.log("field: ",field);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-            
             if (updated.length) {
               selectedByField.set(fieldId, updated);
               console.log("url values to add: ",{ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
