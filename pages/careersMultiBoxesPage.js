@@ -351,7 +351,7 @@ function getValueFromValueId(valueIds,value) {
   let valueLabels=[];
   let currentVal
   for(const valueId of valueIds) {
-    currentVal=value.find(val=>val._id===valueId);
+    currentVal=value.find(val=>val.value===valueId);
     if(currentVal) {
       valueLabels.push(currentVal.label);
     }
@@ -499,7 +499,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
   secondarySearchIsFilled? countJobsPerField(currentSecondarySearchJobs):countJobsPerField(currentJobs);
     for(const field of allfields) {
-      
+
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
         clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
         // no search query
