@@ -73,6 +73,7 @@ async function handleUrlParams(_$w,urlParams) {
     }
     if(urlParams.category) {
       console.log("category url param is present ",urlParams.category);
+      
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
 
@@ -103,22 +104,29 @@ async function handleUrlParams(_$w,urlParams) {
   }
 }
 
-async function handleParams(_$w,param,value) {
+async function handleParams(_$w,param,values) {
   let applyFiltering=false;
+  let valuesAsArray = values.split(',')
+  console.log("values: ",values);
+  console.log("valuesAsArray: ",valuesAsArray);
+  for(const value of valuesAsArray) {
        const decodedValue = decodeURIComponent(value);
       const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
       const options=optionsByFieldId.get(field._id);
       const option=getCorrectOption(decodedValue,options);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
-       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [optionIndex];
-        selectedByField.set(field._id, [option.value]);
+       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices.push(optionIndex);
+       let existing = selectedByField.get(field._id) || [];
+       existing.push(option.value);
+        selectedByField.set(field._id, existing);
         applyFiltering=true;
         dontUpdateThisCheckBox=field._id;
       }
       else {
         console.warn(`${param} value not found in dropdown options`);
       }
+    }
       return applyFiltering;
 }
 
