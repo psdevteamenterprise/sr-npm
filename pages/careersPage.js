@@ -65,6 +65,28 @@ function handleFilterInMobile(_$w) {
 
     _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
         _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
+        _$w(CAREERS_PAGE_SELECTORS.RESULT_BOX).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.PAGINATION_BTN).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.HEAD_BTNS).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.SELECTED_VALUES_REPEATER).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.BUTTOM_TXT).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.SECTION_24).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.SECTION_3).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.LINE_3).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).collapse();
+    });
+
+    _$w(CAREERS_PAGE_SELECTORS.EXIT_BUTTON).onClick(()=>{
+        _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
+        _$w(CAREERS_PAGE_SELECTORS.RESULT_BOX).expand();
+        _$w(CAREERS_PAGE_SELECTORS.PAGINATION_BTN).expand();
+        _$w(CAREERS_PAGE_SELECTORS.HEAD_BTNS).expand();
+        _$w(CAREERS_PAGE_SELECTORS.SELECTED_VALUES_REPEATER).expand();
+        _$w(CAREERS_PAGE_SELECTORS.BUTTOM_TXT).expand();
+        _$w(CAREERS_PAGE_SELECTORS.SECTION_24).expand();
+        _$w(CAREERS_PAGE_SELECTORS.SECTION_3).expand();
+        _$w(CAREERS_PAGE_SELECTORS.LINE_3).expand();
+        _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).expand();
     });
 }
 
