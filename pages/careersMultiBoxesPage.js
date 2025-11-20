@@ -138,7 +138,7 @@ async function handleParams(_$w,param,values) {
        console.log("decodedValue: ",decodedValue);
       const options=optionsByFieldId.get(field._id);
       console.log("options: ",options);
-      const option=getCorrectOption(decodedValue,options);
+      const option=getCorrectOption(decodedValue,options,param);
       console.log("option: ",option);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);

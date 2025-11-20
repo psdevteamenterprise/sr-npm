@@ -63,8 +63,12 @@ function groupValuesByField(values, refKey) {
     return allFields.find(field=>field.title===title);
   }
 
-  function getCorrectOption(value,options) {
+  function getCorrectOption(value,options,param) {
     const standardizedValue = normalizeString(value.toLowerCase())
+    if(param==="employmenttype")
+    {
+      return options.find(option=>normalizeString(option.value.toLowerCase())===standardizedValue);
+    }
     return options.find(option=>normalizeString(option.label.toLowerCase())===standardizedValue);
   }
 
