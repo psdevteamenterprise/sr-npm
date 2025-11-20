@@ -86,21 +86,13 @@ function loadPrimarySearchRepeater(_$w) {
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
     );
-    console.log("clickedItemData: ",clickedItemData);
-    console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
     // 'link-jobs-title' or 'link-copy-of-jobs-title'
     const linkKey = Object.keys(clickedItemData).find(
       key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
     );
-    console.log("linkKey: ",linkKey);
-    console.log("clickedItemData[linkKey]: ",clickedItemData[linkKey]);
-    console.log(" Object.keys(clickedItemData): ", Object.keys(clickedItemData));
     if (linkKey && clickedItemData[linkKey]) {
       console.log("redirecting to: ",clickedItemData[linkKey]);
       location.to(clickedItemData[linkKey]);
-    }
-    else{
-      console.log("no link key found, returning");
     }
 
   });
