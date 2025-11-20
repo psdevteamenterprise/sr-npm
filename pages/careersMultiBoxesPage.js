@@ -82,8 +82,6 @@ async function handleUrlParams(_$w,urlParams) {
   
   for (const url of possibleUrlParams)
   {
-  
-
     if(urlParams[url])
     {
   
