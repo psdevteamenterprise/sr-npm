@@ -81,39 +81,6 @@ async function handleUrlParams(_$w,urlParams) {
 
     }
   }
-    // if(urlParams.brand) {
-    //   applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
-    // }
-    // if(urlParams.location) {
-    //   applyFiltering=await handleParams(_$w,"location",urlParams.location)
-    // }
-    // if(urlParams.employmentType) {
-    //   applyFiltering=await handleParams(_$w,"employmentType",urlParams.employmentType)
-    // }
-    // if(urlParams.contractType) {
-    //   applyFiltering=await handleParams(_$w,"contractType",urlParams.contractType)
-    // }
-    // if(urlParams.visibility) {
-    //   applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
-    // }
-    // if(urlParams.category) {
-    //   console.log("category url param is present ",urlParams.category);
-      
-    //   applyFiltering=await handleParams(_$w,"category",urlParams.category)
-    // }
-    // if(urlParams.companySegment) {
-    //   console.log("companySegment url param is present ",urlParams.companySegment);
-      
-    //   applyFiltering=await handleParams(_$w,"companySegment",urlParams.companySegment)
-    // }
-    // if(urlParams.storeName) {
-    //   console.log("storeName url param is present ",urlParams.storeName);
-      
-    //   applyFiltering=await handleParams(_$w,"storeName",urlParams.storeName)
-    // }
-
-
-
     if(applyFiltering || keywordAllJobs) {
       await updateJobsAndNumbersAndFilters(_$w);
     }
