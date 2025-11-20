@@ -110,6 +110,7 @@ async function handleParams(_$w,param,values) {
   console.log("values: ",values);
   console.log("valuesAsArray: ",valuesAsArray);
   let selectedIndices=[];
+  
   for(const value of valuesAsArray) {
        const decodedValue = decodeURIComponent(value);
        console.log("decodedValue: ",decodedValue);
@@ -122,9 +123,11 @@ async function handleParams(_$w,param,values) {
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
        console.log("optionIndex: ",optionIndex);
-       console.log(" _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
+       console.log("before {FiltersIds[field.title]}CheckBox).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
        selectedIndices.push(optionIndex);
-       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices.push(optionIndex);
+       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
+       console.log("selectedIndices: ",selectedIndices);
+       console.log("after {FiltersIds[field.title]}CheckBox).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
        let existing = selectedByField.get(field._id) || [];
        existing.push(option.value);
         selectedByField.set(field._id, existing);
