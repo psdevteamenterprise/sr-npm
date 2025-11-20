@@ -300,7 +300,6 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
