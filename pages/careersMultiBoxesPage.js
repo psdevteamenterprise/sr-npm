@@ -185,7 +185,9 @@ async function handleParams(_$w,param,values) {
             const updated = existing.filter(v => v !== valueId);
             const field=getFieldById(fieldId,allfields);
             console.log("field: ",field);
-            const fieldTitle=field.title.toLowerCase().replace(' ', '');
+            let fieldTitle=field.title.toLowerCase().replace(' ', '');
+            fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
+            
             if (updated.length) {
               selectedByField.set(fieldId, updated);
               console.log("url values to add: ",{ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
