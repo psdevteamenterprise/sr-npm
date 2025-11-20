@@ -337,11 +337,22 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         console.log("ev: ",ev)
         console.log("ev.target: ",ev.target)
-        const fieldTitle=field.title.toLowerCase().replace(' ', '');
+        let fieldTitle=field.title.toLowerCase().replace(' ', '');
+        fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
+        
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
-          console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
-          queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
+          if(fieldTitle==="brand" || fieldTitle==="storename") {
+            const valueLabels=getValueFromValueId(selected,value);
+            console.log("brand and storename url values: ",{ fieldTitle : valueLabels });
+            queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
+          }
+          else{
+            console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
+            queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
+          }
+          
+          
         } else {
           selectedByField.delete(field._id);  
           console.log("url values to remove: ",fieldTitle);
@@ -364,6 +375,19 @@ async function loadJobsRepeater(_$w) {
       console.error('Failed to load filters:', err);
     }
   }
+
+function getValueFromValueId(valueIds,value) {
+  let valueLabels=[];
+  let currentVal
+  for(const valueId of valueIds) {
+    currentVal=value.find(val=>val._id===valueId);
+    if(currentVal) {
+      valueLabels.push(currentVal.label);
+    }
+  }
+  
+  return valueLabels
+}
 
  
 
