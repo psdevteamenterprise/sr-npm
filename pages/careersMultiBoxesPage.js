@@ -217,11 +217,11 @@ async function handleParams(_$w,param,values) {
             const updated = existing.filter(v => v !== valueId);
             const field=getFieldById(fieldId,allfields);
             console.log("field: ",field);
-            const fieldTitle=field.title.toLowerCase();
+            const fieldTitle=field.title.toLowerCase().replace(' ', '');
             if (updated.length) {
               selectedByField.set(fieldId, updated);
               console.log("url values to add: ",{ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
-              queryParams.add({ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
+              queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
               console.log("url values to remove: ",fieldTitle);
@@ -336,7 +336,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         console.log("ev: ",ev)
         console.log("ev.target: ",ev.target)
-        const fieldTitle=field.title.toLowerCase();
+        const fieldTitle=field.title.toLowerCase().replace(' ', '');
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });

@@ -55,12 +55,12 @@ const FiltersIds={
 const possibleUrlParams=[
      "brand",
      "location",
-    "employmentType",
-    "contractType",
+    "employmenttype",
+    "contracttype",
     "visibility",
     "category",
-    "companySegment",
-    "storeName",
+    "companysegment",
+    "storename",
 ]
 
 
