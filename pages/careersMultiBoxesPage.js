@@ -87,7 +87,10 @@ async function handleUrlParams(_$w,urlParams) {
     }
     currentApplyFilterFlag=false;
   }
+  console.log("inside handleUrlParams, applyFiltering: ",applyFiltering);
+
     if(applyFiltering || keywordAllJobs) {
+      console.log("inside handlePageUrlParam, applyFiltering: ",applyFiltering);
       await updateJobsAndNumbersAndFilters(_$w);
     }
     console.log("currentJobs: ",currentJobs);
@@ -458,7 +461,10 @@ function getValueFromValueId(valueIds,value) {
         finalFilteredJobs=tempFilteredJobs;
         tempFilteredJobs=[];
     }
+    console.log("inside applyJobFilters, finalFilteredJobs: ",finalFilteredJobs);
     secondarySearchIsFilled? currentSecondarySearchJobs=finalFilteredJobs:currentJobs=finalFilteredJobs;
+   
+    console.log("inside applyJobFilters, currentJobs: ",currentJobs);
     let jobsFirstPage=[];
     secondarySearchIsFilled? jobsFirstPage=currentSecondarySearchJobs.slice(0,pagination.pageSize):jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
