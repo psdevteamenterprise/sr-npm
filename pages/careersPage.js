@@ -6,9 +6,9 @@ const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { careersMultiBoxesPageOnReady } = require('./careersMultiBoxesPage');
 const { debounce, getFilter} = require('../public/filterUtils');
-const { CAREERS_PAGE_SELECTORS, FILTER_FIELDS } = require('public/selectors');
-
+const { CAREERS_PAGE_SELECTORS, FILTER_FIELDS } = require('../public/selectors');
   const { filterBrokenMarkers } = require('../public/utils');
+  
   let currentLoadedItems =100;
   const itemsPerPage = 100;
   let allJobs=[]
