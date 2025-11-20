@@ -2,6 +2,7 @@ const { items: wixData } = require('@wix/data');
 const { JOBS_COLLECTION_FIELDS,COLLECTIONS } = require('../backend/collectionConsts');
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
+const { normalizeString } = require('../backend/utils');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
@@ -63,13 +64,14 @@ function groupValuesByField(values, refKey) {
   }
 
   function getCorrectOption(value,options) {
-    const standardizedValue = value.toLowerCase().trim().replace(/[^a-z0-9]/gi, '');
-    return options.find(option=>option.label.toLowerCase().trim().replace(/[^a-z0-9]/gi, '')===standardizedValue);
+    const standardizedValue = normalizeString(value.toLowerCase())
+    return options.find(option=>normalizeString(option.label.toLowerCase())===standardizedValue);
   }
 
   function getOptionIndexFromCheckBox(options,value) {
+    const normalizedValue=normalizeString(value.toLowerCase());
     for(let index=0;index<options.length;index++) {
-      if(options[index].value===value) {
+      if(normalizeString(options[index].value.toLowerCase())===normalizedValue) {
         return index;
       }
     }

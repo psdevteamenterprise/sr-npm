@@ -121,7 +121,9 @@ async function handleParams(_$w,param,values) {
   console.log("field: ",field);
   let existing = selectedByField.get(field._id) || [];
   for(const value of valuesAsArray) {
+    console.log("value: ",value);
        const decodedValue = decodeURIComponent(value);
+       console.log("decodedValue: ",decodedValue);
       const options=optionsByFieldId.get(field._id);
       console.log("options: ",options);
       const option=getCorrectOption(decodedValue,options);
