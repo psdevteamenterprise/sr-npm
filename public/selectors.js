@@ -10,6 +10,7 @@ const CAREERS_PAGE_SELECTORS = {
     SECTION_3: '#section3',
     LINE_3: '#line3',
     EXIT_BUTTON: '#exitBtn',
+    REFINE_SEARCH_BUTTON: '#refineSearchBtn',
     
     POSITIONS_REPEATER: '#positionsRepeater',
     POSITION_ITEM: '#positionItem',
