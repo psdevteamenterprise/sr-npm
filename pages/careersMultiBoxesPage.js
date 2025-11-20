@@ -68,6 +68,15 @@ async function handleUrlParams(_$w,urlParams) {
     if(urlParams.brand) {
       applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
     }
+    if(urlParams.location) {
+      applyFiltering=await handleParams(_$w,"location",urlParams.location)
+    }
+    if(urlParams.employmentType) {
+      applyFiltering=await handleParams(_$w,"employmentType",urlParams.employmentType)
+    }
+    if(urlParams.contractType) {
+      applyFiltering=await handleParams(_$w,"contractType",urlParams.contractType)
+    }
     if(urlParams.visibility) {
       applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
     }
@@ -76,6 +85,18 @@ async function handleUrlParams(_$w,urlParams) {
       
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
+    if(urlParams.companySegment) {
+      console.log("companySegment url param is present ",urlParams.companySegment);
+      
+      applyFiltering=await handleParams(_$w,"companySegment",urlParams.companySegment)
+    }
+    if(urlParams.storeName) {
+      console.log("storeName url param is present ",urlParams.storeName);
+      
+      applyFiltering=await handleParams(_$w,"storeName",urlParams.storeName)
+    }
+
+
 
     if(applyFiltering || keywordAllJobs) {
       await updateJobsAndNumbersAndFilters(_$w);
@@ -107,30 +128,18 @@ async function handleUrlParams(_$w,urlParams) {
 async function handleParams(_$w,param,values) {
   let applyFiltering=false;
   let valuesAsArray = values.split(',')
-  console.log("values: ",values);
-  console.log("valuesAsArray: ",valuesAsArray);
+  valuesAsArray=valuesAsArray.filter(value=>value.trim()!=='');
   let selectedIndices=[];
-  
+  const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
+  let existing = selectedByField.get(field._id) || [];
   for(const value of valuesAsArray) {
        const decodedValue = decodeURIComponent(value);
-       console.log("decodedValue: ",decodedValue);
-      const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
-      console.log("field: ",field);
       const options=optionsByFieldId.get(field._id);
-      console.log("options: ",options);
       const option=getCorrectOption(decodedValue,options);
-      console.log("option: ",option);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
-       console.log("optionIndex: ",optionIndex);
-       console.log("before {FiltersIds[field.title]}CheckBox).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
        selectedIndices.push(optionIndex);
-       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
-       console.log("selectedIndices: ",selectedIndices);
-       console.log("after {FiltersIds[field.title]}CheckBox).selectedIndices: ",_$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices);
-       let existing = selectedByField.get(field._id) || [];
        existing.push(option.value);
-        selectedByField.set(field._id, existing);
         applyFiltering=true;
         dontUpdateThisCheckBox=field._id;
       }
@@ -138,7 +147,8 @@ async function handleParams(_$w,param,values) {
         console.warn(`${param} value not found in dropdown options`);
       }
     }
-
+    selectedByField.set(field._id, existing);
+    _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices=selectedIndices;
     
       return applyFiltering;
 }
