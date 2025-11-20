@@ -163,6 +163,7 @@ async function handleParams(_$w,param,values) {
         console.warn(`${param} value not found in dropdown options`);
       }
     }
+    
     console.log("existing after for loop: ",existing);
     console.log("selectedIndices after for loop: ",selectedIndices);
     selectedByField.set(field._id, existing);
