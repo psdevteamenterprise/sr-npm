@@ -292,7 +292,6 @@ async function loadJobsRepeater(_$w) {
         for (const val of allvaluesobjects) {
           counter[val.title]=val.count
         }
-
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
