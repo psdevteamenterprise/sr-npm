@@ -46,14 +46,14 @@ async function handleBackAndForth(_$w){
     const newQueryParams=await location.query();
     console.log("newQueryParams: ", newQueryParams);
     //selectedByField.clear();
-    await clearAll(_$w);
+    await clearAll(_$w,true);
 
 
     await handleUrlParams(_$w,newQueryParams);
     
 }
 
-async function clearAll(_$w) {
+async function clearAll(_$w,urlOnChange=false) {
   if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
@@ -64,7 +64,9 @@ async function clearAll(_$w) {
     secondarySearchIsFilled=false;
     currentJobs=alljobs;
     keywordAllJobs=undefined;
-    queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
+    if(!urlOnChange) {
+      queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
+    }
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
