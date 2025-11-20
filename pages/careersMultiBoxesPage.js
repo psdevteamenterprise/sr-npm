@@ -140,13 +140,18 @@ async function handleParams(_$w,param,values) {
   let applyFiltering=false;
   let valuesAsArray = values.split(',')
   valuesAsArray=valuesAsArray.filter(value=>value.trim()!=='');
+  console.log("valuesAsArray: ",valuesAsArray);
+  console.log("param: ",param);
   let selectedIndices=[];
   const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
+  console.log("field: ",field);
   let existing = selectedByField.get(field._id) || [];
   for(const value of valuesAsArray) {
        const decodedValue = decodeURIComponent(value);
       const options=optionsByFieldId.get(field._id);
+      console.log("options: ",options);
       const option=getCorrectOption(decodedValue,options);
+      console.log("option: ",option);
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
        selectedIndices.push(optionIndex);
