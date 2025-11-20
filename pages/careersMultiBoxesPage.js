@@ -84,7 +84,6 @@ async function handleUrlParams(_$w,urlParams) {
   {
     if(urlParams[url])
     {
-  
       currentApplyFilterFlag=await handleParams(_$w,url,urlParams[url])
       if(currentApplyFilterFlag) {
         applyFiltering=true;
@@ -92,10 +91,7 @@ async function handleUrlParams(_$w,urlParams) {
     }
     currentApplyFilterFlag=false;
   }
-  
-
     if(applyFiltering || keywordAllJobs) {
-  
       await updateJobsAndNumbersAndFilters(_$w);
     }
   
