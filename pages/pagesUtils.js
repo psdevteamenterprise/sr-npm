@@ -89,9 +89,14 @@ function loadPrimarySearchRepeater(_$w) {
     );
     console.log("clickedItemData: ",clickedItemData);
     console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
-    if(clickedItemData["link-jobs-title"]===undefined) {
-      location.to(clickedItemData["link-copy-of-jobs-title"]);
+    // 'link-jobs-title' or 'link-copy-of-jobs-title'
+    const linkKey = Object.keys(clickedItemData).find(
+      key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
+    );
+    if (linkKey && clickedItemData[linkKey]) {
+      location.to(clickedItemData[linkKey]);
     }
+
     location.to(clickedItemData["link-jobs-title"]);
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
