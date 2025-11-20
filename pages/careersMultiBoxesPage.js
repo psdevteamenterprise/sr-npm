@@ -326,11 +326,17 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         console.log("ev: ",ev)
         console.log("ev.target: ",ev.target)
+        const fieldTitle=field.title.toLowerCase();
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
+          console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
+          queryParams.add({ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
         } else {
           selectedByField.delete(field._id);  
+          console.log("url values to remove: ",fieldTitle);
+          queryParams.remove([fieldTitle ]);
         }
+
         await updateJobsAndNumbersAndFilters(_$w);
     
       });
