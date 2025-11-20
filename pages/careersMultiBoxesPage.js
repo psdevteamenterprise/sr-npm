@@ -306,6 +306,7 @@ async function loadJobsRepeater(_$w) {
         console.log("ev.target: ",ev.target)
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
+        console.log("fieldTitle that is going to url: ",fieldTitle);
         
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
