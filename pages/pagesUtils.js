@@ -96,6 +96,7 @@ function loadPrimarySearchRepeater(_$w) {
       console.log(typeof clickedItemData[linkKey]);
       console.log(clickedItemData[linkKey].toString().includes("copy-of-jobs"));
       if(clickedItemData[linkKey].includes("copy-of-jobs")) {
+        
         clickedItemData[linkKey]=clickedItemData[linkKey].replace("copy-of-jobs","jobs")
       }
       console.log("new link: ",clickedItemData[linkKey]);
