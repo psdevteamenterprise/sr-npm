@@ -23,7 +23,7 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
-  console.log("urlParams is inside multi boxes page on ready ",urlParams);
+  
     await loadData(_$w);
     loadJobsRepeater(_$w);
     loadPrimarySearchRepeater(_$w);
@@ -58,8 +58,6 @@ async function clearAll(_$w) {
 
 async function handleUrlParams(_$w,urlParams) {
   try { 
-    console.log("currentJobs: ",currentJobs);
-    console.log("currentJobs.length: ",currentJobs.length);
   let applyFiltering=false;
   let currentApplyFilterFlag=false;
 
@@ -70,16 +68,14 @@ async function handleUrlParams(_$w,urlParams) {
     currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
     keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
-  console.log("possibleUrlParams: ",possibleUrlParams)
-  console.log("urlParams: ",urlParams)
+  
   for (const url of possibleUrlParams)
   {
-    console.log(url)
-    console.log("urlParams[url]: ",urlParams[url])
+  
 
     if(urlParams[url])
     {
-      console.log("urlParams[url]: ",urlParams[url])
+  
       currentApplyFilterFlag=await handleParams(_$w,url,urlParams[url])
       if(currentApplyFilterFlag) {
         applyFiltering=true;
@@ -87,15 +83,13 @@ async function handleUrlParams(_$w,urlParams) {
     }
     currentApplyFilterFlag=false;
   }
-  console.log("inside handleUrlParams, applyFiltering: ",applyFiltering);
+  
 
     if(applyFiltering || keywordAllJobs) {
-      console.log("inside handlePageUrlParam, applyFiltering: ",applyFiltering);
+  
       await updateJobsAndNumbersAndFilters(_$w);
     }
-    console.log("currentJobs: ",currentJobs);
-    console.log("currentJobs.length: ",currentJobs.length);
-    console.log("Math.ceil(currentJobs.length/pagination.pageSize): ",Math.ceil(currentJobs.length/pagination.pageSize));
+  
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
         console.warn("page number is invalid, removing page from url");
@@ -124,22 +118,19 @@ async function handleParams(_$w,param,values) {
   let applyFiltering=false;
   let valuesAsArray = values.split(',')
   valuesAsArray=valuesAsArray.filter(value=>value.trim()!=='');
-  console.log("valuesAsArray: ",valuesAsArray);
-  console.log("param: ",param);
 
   let selectedIndices=[];
   const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
-  console.log("allfields: ",allfields);
-  console.log("field: ",field);
+
   let existing = selectedByField.get(field._id) || [];
   for(const value of valuesAsArray) {
-    console.log("value: ",value);
+    
        const decodedValue = decodeURIComponent(value);
-       console.log("decodedValue: ",decodedValue);
+    
       const options=optionsByFieldId.get(field._id);
-      console.log("options: ",options);
+    
       const option=getCorrectOption(decodedValue,options,param);
-      console.log("option: ",option);
+    
       if(option) {
        const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
        selectedIndices.push(optionIndex);
@@ -195,16 +186,13 @@ async function handleParams(_$w,param,values) {
             const existing = selectedByField.get(fieldId) || [];
             const updated = existing.filter(v => v !== valueId);
             const field=getFieldById(fieldId,allfields);
-            console.log("field: ",field);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
-              console.log("url values to add: ",{ fieldTitle : updated.map(val=>encodeURIComponent(val)).join(',') });
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
-              console.log("url values to remove: ",fieldTitle);
               queryParams.remove([fieldTitle ]);
             }
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
@@ -305,34 +293,25 @@ async function loadJobsRepeater(_$w) {
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-          console.log("i am here !!!!!")
-          console.log("field.title: ",field.title)
-          console.log("value: ",value)
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
-        console.log("ev: ",ev)
-        console.log("ev.target: ",ev.target)
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        console.log("fieldTitle that is going to url: ",fieldTitle);
         
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
             //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
-            console.log("brand and storename url values: ",{ fieldTitle : valueLabels });
             queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
           }
           else{
-            console.log("url calues: ",{ fieldTitle : selected.map(val=>encodeURIComponent(val)).join(',') });
             queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
           }
           
           
         } else {
           selectedByField.delete(field._id);  
-          console.log("url values to remove: ",fieldTitle);
           queryParams.remove([fieldTitle ]);
         }
 
@@ -354,9 +333,6 @@ async function loadJobsRepeater(_$w) {
   }
 
 function getValueFromValueId(valueIds,value) {
-  console.log("inside getValueFromValueId")
-  console.log("valueIds: ",valueIds);
-  console.log(" value: ",value);
   let valueLabels=[];
   let currentVal
   for(const valueId of valueIds) {
@@ -365,7 +341,6 @@ function getValueFromValueId(valueIds,value) {
       valueLabels.push(currentVal.label);
     }
   }
-  console.log("valueLabels: ",valueLabels);
   return valueLabels
 }
  
@@ -454,10 +429,10 @@ function getValueFromValueId(valueIds,value) {
         finalFilteredJobs=tempFilteredJobs;
         tempFilteredJobs=[];
     }
-    console.log("inside applyJobFilters, finalFilteredJobs: ",finalFilteredJobs);
+    
     secondarySearchIsFilled? currentSecondarySearchJobs=finalFilteredJobs:currentJobs=finalFilteredJobs;
    
-    console.log("inside applyJobFilters, currentJobs: ",currentJobs);
+    
     let jobsFirstPage=[];
     secondarySearchIsFilled? jobsFirstPage=currentSecondarySearchJobs.slice(0,pagination.pageSize):jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
