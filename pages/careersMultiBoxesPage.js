@@ -370,7 +370,6 @@ function getValueFromValueId(valueIds,value) {
 }
 
  
-
   async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
     await applyJobFilters(_$w); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
