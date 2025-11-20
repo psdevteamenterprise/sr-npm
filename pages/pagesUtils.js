@@ -92,6 +92,9 @@ function loadPrimarySearchRepeater(_$w) {
     const linkKey = Object.keys(clickedItemData).find(
       key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
     );
+    console.log("linkKey: ",linkKey);
+    console.log("clickedItemData[linkKey]: ",clickedItemData[linkKey]);
+    console.log(" Object.keys(clickedItemData): ", Object.keys(clickedItemData));
     if (linkKey && clickedItemData[linkKey]) {
       location.to(clickedItemData[linkKey]);
     }
