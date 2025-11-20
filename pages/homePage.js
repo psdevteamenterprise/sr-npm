@@ -20,6 +20,7 @@ async function homePageOnReady(_$w,thisObject=null) {
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         bindPrimarySearch(_$w,allvaluesobjects,allJobs);
         loadPrimarySearchRepeater(_$w)
+        console.log("siteconfig.twg: ",siteconfig.twg);
         if(siteconfig.twg==="external") {
         bindTeamRepeater(_$w)
         bindViewAllButton(_$w)
