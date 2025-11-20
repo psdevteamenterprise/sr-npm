@@ -91,16 +91,9 @@ function loadPrimarySearchRepeater(_$w) {
       key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
     );
     if (linkKey && clickedItemData[linkKey] ) {
-      console.log("original link: ",clickedItemData[linkKey]);
-      console.log("original clickedItemData: ",clickedItemData);
-      console.log(typeof clickedItemData[linkKey]);
-      console.log(clickedItemData[linkKey].toString().includes("copy-of-jobs"));
       if(clickedItemData[linkKey].includes("copy-of-jobs")) {
         clickedItemData[linkKey]=clickedItemData[linkKey].replace("copy-of-jobs","jobs")
       }
-      console.log("new link: ",clickedItemData[linkKey]);
-      console.log("new clickedItemData: ",clickedItemData);
-      console.log("redirecting to: ",clickedItemData[linkKey]);
       location.to(clickedItemData[linkKey]);
     }
 
