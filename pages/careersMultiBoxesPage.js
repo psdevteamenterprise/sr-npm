@@ -209,7 +209,6 @@ async function handleParams(_$w,param,values) {
               queryParams.remove([fieldTitle ]);
             }
 
-            
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
