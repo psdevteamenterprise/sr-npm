@@ -39,6 +39,11 @@ const fieldTitlesInCMS={
     "brand": "Brands",
     category: "Category",
     visibility: "Visibility",
+    location: "Location",
+    employmenttype: "Employment Type",
+    contracttype: "Contract Type",
+    companysegment: "Company Segment",
+    storename: "Store Name",
 }
 
 const FiltersIds={

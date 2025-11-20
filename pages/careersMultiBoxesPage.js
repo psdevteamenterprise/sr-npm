@@ -50,7 +50,7 @@ async function clearAll(_$w) {
     secondarySearchIsFilled=false;
     currentJobs=alljobs;
     keywordAllJobs=undefined;
-    queryParams.remove(["keyword", "brand","visibility","category","page"]);
+    queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
@@ -150,6 +150,7 @@ async function handleParams(_$w,param,values) {
 
   let selectedIndices=[];
   const field=getFieldByTitle(fieldTitlesInCMS[param],allfields);
+  console.log("allfields: ",allfields);
   console.log("field: ",field);
   let existing = selectedByField.get(field._id) || [];
   for(const value of valuesAsArray) {
