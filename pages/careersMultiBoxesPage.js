@@ -22,6 +22,7 @@ const pagination = {
   currentPage: 1,
 };
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
+  console.log("urlParams is inside multi boxes page on ready ",urlParams);
     await loadData(_$w);
     loadJobsRepeater(_$w);
     loadPrimarySearchRepeater(_$w);
@@ -71,6 +72,7 @@ async function handleUrlParams(_$w,urlParams) {
       applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
     }
     if(urlParams.category) {
+      console.log("category url param is present ",urlParams.category);
       applyFiltering=await handleParams(_$w,"category",urlParams.category)
     }
 
