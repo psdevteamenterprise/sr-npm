@@ -21,7 +21,6 @@ async function homePageOnReady(_$w,thisObject=null) {
         bindPrimarySearch(_$w,allvaluesobjects,allJobs);
         loadPrimarySearchRepeater(_$w)
         console.log("siteconfig.twg: ",siteconfig.twg);
-        
         if(siteconfig.twg==="external") {
         bindTeamRepeater(_$w)
         bindViewAllButton(_$w)
