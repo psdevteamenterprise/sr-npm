@@ -73,6 +73,7 @@ async function handleUrlParams(_$w,urlParams) {
     
     console.log(url)
     console.log("urlParams[url]: ",urlParams[url])
+    
     if(urlParams[url])
     {
       console.log("urlParams[url]: ",urlParams[url])
