@@ -85,6 +85,7 @@ function loadPrimarySearchRepeater(_$w) {
     const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
+      
     );
     console.log("clickedItemData: ",clickedItemData);
     console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
