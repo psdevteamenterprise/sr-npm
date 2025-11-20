@@ -52,10 +52,22 @@ const FiltersIds={
    Visibility: 'Visibility',
 }
 
+const possibleUrlParams={
+    "brand": "brand",
+    "location": "location",
+    "employmentType": "employmentType",
+    "contractType": "contractType",
+    "visibility": "visibility",
+    "category": "category",
+    "companySegment": "companySegment",
+    "storeName": "storeName",
+}
+
 
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
     fieldTitlesInCMS,   
     CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
+    possibleUrlParams,
 }

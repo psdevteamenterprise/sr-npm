@@ -1,7 +1,8 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+
 const { queryParams} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS} = require('../backend/careersMultiBoxesPageIds');
+const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox,loadPrimarySearchRepeater,bindPrimarySearch,primarySearch } = require('./pagesUtils');
 
 let dontUpdateThisCheckBox;
@@ -59,42 +60,52 @@ async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
 
+  //apply this first to determine all jobs
   if(urlParams.keyword) {
     applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
     currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
     keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
-    if(urlParams.brand) {
-      applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
+  for(let url in possibleUrlParams)
+  {
+    console.log(url)
+    if(urlParams[url])
+    {
+      console.log("urlParams[url]: ",urlParams[url])
+      applyFiltering=await handleParams(_$w,url,urlParams[url])
     }
-    if(urlParams.location) {
-      applyFiltering=await handleParams(_$w,"location",urlParams.location)
-    }
-    if(urlParams.employmentType) {
-      applyFiltering=await handleParams(_$w,"employmentType",urlParams.employmentType)
-    }
-    if(urlParams.contractType) {
-      applyFiltering=await handleParams(_$w,"contractType",urlParams.contractType)
-    }
-    if(urlParams.visibility) {
-      applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
-    }
-    if(urlParams.category) {
-      console.log("category url param is present ",urlParams.category);
+  }
+    // if(urlParams.brand) {
+    //   applyFiltering=await handleParams(_$w,"brand",urlParams.brand)
+    // }
+    // if(urlParams.location) {
+    //   applyFiltering=await handleParams(_$w,"location",urlParams.location)
+    // }
+    // if(urlParams.employmentType) {
+    //   applyFiltering=await handleParams(_$w,"employmentType",urlParams.employmentType)
+    // }
+    // if(urlParams.contractType) {
+    //   applyFiltering=await handleParams(_$w,"contractType",urlParams.contractType)
+    // }
+    // if(urlParams.visibility) {
+    //   applyFiltering=await handleParams(_$w,"visibility",urlParams.visibility)
+    // }
+    // if(urlParams.category) {
+    //   console.log("category url param is present ",urlParams.category);
       
-      applyFiltering=await handleParams(_$w,"category",urlParams.category)
-    }
-    if(urlParams.companySegment) {
-      console.log("companySegment url param is present ",urlParams.companySegment);
+    //   applyFiltering=await handleParams(_$w,"category",urlParams.category)
+    // }
+    // if(urlParams.companySegment) {
+    //   console.log("companySegment url param is present ",urlParams.companySegment);
       
-      applyFiltering=await handleParams(_$w,"companySegment",urlParams.companySegment)
-    }
-    if(urlParams.storeName) {
-      console.log("storeName url param is present ",urlParams.storeName);
+    //   applyFiltering=await handleParams(_$w,"companySegment",urlParams.companySegment)
+    // }
+    // if(urlParams.storeName) {
+    //   console.log("storeName url param is present ",urlParams.storeName);
       
-      applyFiltering=await handleParams(_$w,"storeName",urlParams.storeName)
-    }
+    //   applyFiltering=await handleParams(_$w,"storeName",urlParams.storeName)
+    // }
 
 
 
