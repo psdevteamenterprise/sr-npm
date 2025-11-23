@@ -30,10 +30,6 @@ async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
         siteconfig = queryResult.items[0];
     }
 
-    if (await window.formFactor() === "Mobile") {
-        handleFilterInMobile(_$w);
-    }
-
     if(siteconfig.customFields==="true") {
         await careersMultiBoxesPageOnReady(_$w,queryParams);
     }
@@ -59,47 +55,6 @@ async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
 
 
 }
-
-function handleFilterInMobile(_$w) {
-    const searchResultsSelectors = [
-        CAREERS_PAGE_SELECTORS.RESULT_BOX,
-        CAREERS_PAGE_SELECTORS.PAGINATION_BTN, 
-        CAREERS_PAGE_SELECTORS.HEAD_BTNS, 
-        CAREERS_PAGE_SELECTORS.SELECTED_VALUES_REPEATER, 
-        CAREERS_PAGE_SELECTORS.BUTTOM_TXT, 
-        CAREERS_PAGE_SELECTORS.SECTION_24, 
-        CAREERS_PAGE_SELECTORS.SECTION_3, 
-        CAREERS_PAGE_SELECTORS.LINE_3,
-        CAREERS_PAGE_SELECTORS.FILTER_ICON];
-
-
-    _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
-
-    _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
-        _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
-        searchResultsSelectors.forEach(selector => {
-            _$w(selector).collapse();
-        });
-    });
-
-    const exitFilterBox = () => {
-        _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
-        searchResultsSelectors.forEach(selector => {
-            _$w(selector).expand();
-        });
-    }
-
-    _$w(CAREERS_PAGE_SELECTORS.EXIT_BUTTON).onClick(()=>{
-        exitFilterBox();
-    });
-
-    _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).onClick(()=>{
-        exitFilterBox();
-    });
-
-
-}
-
   
 function activateAutoLoad(_$w)
 {
