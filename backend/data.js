@@ -502,6 +502,7 @@ async function syncJobsFast() {
     error.message="Error syncing jobs: "+error.message;
     throw error;
   }
+  
 }
 
 
