@@ -72,9 +72,6 @@ const TASKS = {
     }
 }
 
-
-
-
 const TASK_TYPE = {
   SCHEDULED: 'scheduled',
   EVENT: 'event',
