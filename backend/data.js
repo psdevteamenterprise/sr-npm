@@ -499,7 +499,7 @@ async function syncJobsFast() {
   console.log("syncing jobs fast finished successfully");
   }
   catch (error) {
-    console.error("Error syncing jobs:", error);
+    error.message="Error syncing jobs: "+error.message;
     throw error;
   }
 }
