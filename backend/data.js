@@ -443,6 +443,7 @@ function fetchJobLocation(jobDetails) {
 
 
 async function createCollections() {
+  throw new Error("test");
   console.log("Creating collections");
   await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
@@ -481,6 +482,7 @@ async function referenceJobs() {
 }
 
 async function syncJobsFast() {
+  try{
   console.log("Syncing jobs fast");
   await createCollections();
   await clearCollections();
@@ -494,6 +496,11 @@ async function syncJobsFast() {
   await aggregateJobs();
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
+  }
+  catch (error) {
+    console.error("Error syncing jobs:", error);
+    throw error;
+  }
 }
 
 
