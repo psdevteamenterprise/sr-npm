@@ -15,7 +15,6 @@ const {
   async function positionPageOnReady(_$w) {
     await bind(_$w);
     
-    
 
   }
 
