@@ -140,7 +140,8 @@ async function saveJobsDataToCMS() {
       brand: siteconfig.disableMultiBrand==="false" ? getBrand(position.customField) : '',
       jobDescription: null, // Will be filled later
       employmentType: position.typeOfEmployment.label,
-      releasedDate: position.releasedDate
+      releasedDate: position.releasedDate,
+      refId: position.refNumber
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
@@ -485,11 +486,14 @@ async function syncJobsFast() {
   await createCollections();
   await clearCollections();
   await fillSecretManagerMirror();
+
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
+  
   console.log("saving jobs descriptions and location apply url to CMS");
   await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
+
   console.log("saved jobs descriptions and location apply url to CMS successfully");
   await aggregateJobs();
   await referenceJobs();
