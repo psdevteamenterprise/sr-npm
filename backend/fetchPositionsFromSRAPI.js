@@ -113,11 +113,48 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
+async function htmlRichContentConverter(sections) {
+  console.log("sections: are  ",sections);
+  const richContentObject = {}
+  for (const section of sections) {
+    console.log("section: is  ",section);
+    if (section.text) {
+      const raw = JSON.stringify({
+        content: section.text,
+      });
+      const requestOptions = {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: 'XSRF-TOKEN=1753949844|p--a7HsuVjR4',
+          Authorization: 'Bearer 2e19efe5f44d29d74480f5b744a5a90f19ba6ca7012ced19e7b14edb1ad6a641',
+        },
+        body: raw,
+      };
+      const response = await fetch(
+        'https://www.wixapis.com/data-sync/v1/abmp-content-converter',
+        requestOptions
+      );
+      if (response.ok) {
+        const data = await response.json();
+        console.log("response is ok")
+        richContentObject[section.title] = data.richContent.richContent;
+      }
+      else {
+        throw new Error("Error converting html to rich content response: "+response);
+      }
+    }
+  }
+  console.log("richContentObject: are  ",richContentObject);
+  return richContentObject;
+}
+
 
 
 
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  makeSmartRecruitersRequest
+  makeSmartRecruitersRequest,
+  htmlRichContentConverter
 };

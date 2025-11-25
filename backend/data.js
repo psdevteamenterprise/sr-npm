@@ -1,5 +1,5 @@
 const { items: wixData } = require('@wix/data');
-const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
+const { fetchPositionsFromSRAPI, fetchJobDescription, htmlRichContentConverter } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
 const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
 const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
@@ -269,6 +269,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
         const chunkPromises = chunk.map(async job => {
           try {
             const jobDetails = await fetchJobDescription(job._id);
+            const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections);
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
 
@@ -276,7 +277,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
-              jobDescription: jobDetails.jobAd.sections,
+              jobDescription: richContentDescription,
               applyLink: applyLink,
               referFriendLink: referFriendLink,
             };
