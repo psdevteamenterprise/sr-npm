@@ -72,9 +72,6 @@ const TASKS = {
     }
 }
 
-
-
-
 const TASK_TYPE = {
   SCHEDULED: 'scheduled',
   EVENT: 'event',
@@ -91,10 +88,6 @@ const supportTeamsPageIds={
     VIDEO_SECTION: "#videoSection",
     VIDEO_TITLE: "#videoTitle",
     VIDEO_PLAYER: "#videoPlayer",
-
-
-
-
 
     RECENTLEY_ADDED_JOBS_ITEM: "#recentleyAddedJobsItem",
     JOB_LOCATION: "#jobLocation",
@@ -137,12 +130,13 @@ const supportTeamsPageSections={
   VIDEO: "video",
 }
 
-  module.exports = {
-    TASKS_NAMES,
-    TASK_TYPE,
-    TASKS,
-    QUERY_MAX_LIMIT,
-    supportTeamsPageIds,
-    LINKS,
-    supportTeamsPageSections,
+
+module.exports = {
+  TASKS_NAMES,
+  TASK_TYPE,
+  TASKS,
+  QUERY_MAX_LIMIT,
+  supportTeamsPageIds,
+  LINKS,
+  supportTeamsPageSections,
 };
