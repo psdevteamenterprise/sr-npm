@@ -2,6 +2,7 @@ const { items: wixData } = require('@wix/data');
 const { JOBS_COLLECTION_FIELDS,COLLECTIONS } = require('../backend/collectionConsts');
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
+const { normalizeString } = require('../backend/utils');
 
 function groupValuesByField(values, refKey) {
     const map = new Map();
@@ -62,14 +63,19 @@ function groupValuesByField(values, refKey) {
     return allFields.find(field=>field.title===title);
   }
 
-  function getCorrectOption(value,options) {
-    const standardizedValue = value.toLowerCase().trim().replace(/[^a-z0-9]/gi, '');
-    return options.find(option=>option.label.toLowerCase().trim().replace(/[^a-z0-9]/gi, '')===standardizedValue);
+  function getCorrectOption(value,options,param) {
+    const standardizedValue = normalizeString(value.toLowerCase())
+    if(param==="employmenttype") //employmenttype have a problematic value
+    {
+      return options.find(option=>normalizeString(option.value.toLowerCase())===standardizedValue);
+    }
+    return options.find(option=>normalizeString(option.label.toLowerCase())===standardizedValue);
   }
 
   function getOptionIndexFromCheckBox(options,value) {
+    const normalizedValue=normalizeString(value.toLowerCase());
     for(let index=0;index<options.length;index++) {
-      if(options[index].value===value) {
+      if(normalizeString(options[index].value.toLowerCase())===normalizedValue) {
         return index;
       }
     }
@@ -85,7 +91,10 @@ function loadPrimarySearchRepeater(_$w) {
     const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
+      
     );
+    console.log("clickedItemData: ",clickedItemData);
+    console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
     location.to(clickedItemData["link-jobs-title"]);
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
@@ -109,7 +118,7 @@ function loadPrimarySearchRepeater(_$w) {
   const primarySearchDebounced = debounce(async () => {
     const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
     await primarySearch(_$w, query, alljobs);
-  }, 150);
+  }, 300);
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => {
     await primarySearchDebounced();

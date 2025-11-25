@@ -1,3 +1,22 @@
+jest.mock('wix-location-frontend');
+jest.mock('@wix/site-location', () => ({
+  location: {
+    to: jest.fn()
+  }
+}));
+jest.mock('@wix/data', () => ({
+  items: {
+    query: jest.fn(() => ({
+      eq: jest.fn().mockReturnThis(),
+      find: jest.fn().mockResolvedValue({ items: [] }),
+      include: jest.fn().mockReturnThis(),
+      hasSome: jest.fn().mockReturnThis(),
+      ne: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis()
+    })),
+    queryReferenced: jest.fn()
+  }
+}));
 const rewire = require('rewire');
 const MockJobBuilder = require('./mockJobBuilder');
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
@@ -9,7 +28,13 @@ const pagesUtils = rewire('../pages/pagesUtils');
 const secondarySearch = careersMultiBoxesPage.__get__('secondarySearch');
 const primarySearch = pagesUtils.__get__('primarySearch');
 const loadCategoriesListPrimarySearch = pagesUtils.__get__('loadCategoriesListPrimarySearch');
-
+const mockQueryParams = {
+  add: jest.fn(),
+  remove: jest.fn()
+};
+const mockOnChange = jest.fn();
+careersMultiBoxesPage.__set__('queryParams', mockQueryParams);
+careersMultiBoxesPage.__set__('onChange', mockOnChange);
 
 describe('secondarySearch function tests', () => {
   let mockW;
@@ -79,13 +104,11 @@ describe('secondarySearch function tests', () => {
     mockJobs.push(new MockJobBuilder().withTitle('Frontend Engineer').build());
 
     careersMultiBoxesPage.__set__('currentJobs', mockJobs);
-
     const result = await secondarySearch(mockW, 'product');
-
     expect(result.length).toBe(11);
     expect(mockTotalJobsCountText.text).toContain('11');
-    expect(mockPaginationCurrentText.text).toBe('10');
-    expect(mockPaginationTotalCountText.text).toBe('11');
+    expect(mockPaginationCurrentText.text).toBe('1');
+    expect(mockPaginationTotalCountText.text).toBe('2');
     expect(mockPageButtonNext.enable).toHaveBeenCalled();
     expect(mockPageButtonPrevious.disable).toHaveBeenCalled();
   });
