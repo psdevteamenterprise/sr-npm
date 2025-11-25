@@ -6,8 +6,6 @@ const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocatio
 const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS ,getApiKeys} = require('./secretsData');
 
-
-
 let customValuesToJobs = {}
 let locationToJobs = {}
 let siteconfig;
@@ -21,6 +19,7 @@ async function getSiteConfig() {
   const queryresult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
   siteconfig = queryresult.items[0];
 }
+
 function validatePosition(position) {
   if (!position.id) {
     throw new Error('Position id is required');
@@ -40,22 +39,22 @@ function validatePosition(position) {
 async function filterBasedOnBrand(positions) {
   try{
 
-  const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
-  validateSingleDesiredBrand(desiredBrand);
-  console.log("filtering positions based on brand: ", desiredBrand);
-  return positions.content.filter(position => {
-    const brand = getBrand(position.customField);
-    if (!brand) return false;
-    return brand === desiredBrand;
-  });
-} catch (error) {
-  if(error.message==="[getTokenFromCMS], No desiredBrand found")
-  {
-    console.log("no desiredBrand found, fetching all positions")
-    return positions.content;
+    const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
+    validateSingleDesiredBrand(desiredBrand);
+    console.log("filtering positions based on brand: ", desiredBrand);\
+    return positions.content.filter(position => {
+      const brand = getBrand(position.customField);
+      if (!brand) return false;
+      return brand === desiredBrand;
+    });
+  } catch (error) {
+    if(error.message==="[getTokenFromCMS], No desiredBrand found")
+    {
+      console.log("no desiredBrand found, fetching all positions")
+      return positions.content;
+    }
+    throw error;
   }
-  throw error;
-}
 }
 
 function validateSingleDesiredBrand(desiredBrand) {
@@ -63,11 +62,12 @@ function validateSingleDesiredBrand(desiredBrand) {
     throw new Error("Desired brand must be a single brand");
   }
 }
-function getLocation(position,basicJob) {
 
+function getLocation(position,basicJob) {
   locationToJobs[basicJob.cityText] ? locationToJobs[basicJob.cityText].push(position.id) : locationToJobs[basicJob.cityText]=[position.id]
 
 }
+
 function getVisibility(position,customFieldsValues) {
   if (!customFieldsValues["Visibility"]) {
     customFieldsValues["Visibility"] = {};
@@ -99,8 +99,8 @@ function getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,custom
     if (!customFieldsValues[fieldId]) {
       customFieldsValues[fieldId] = {};
     }
+    
     customFieldsValues[fieldId][valueId] = valueLabel;
-
     customValuesToJobs[valueId] ? customValuesToJobs[valueId].add(position.id) : customValuesToJobs[valueId]=new Set([position.id])
   }
 }
@@ -140,7 +140,8 @@ async function saveJobsDataToCMS() {
       brand: siteconfig.disableMultiBrand==="false" ? getBrand(position.customField) : '',
       jobDescription: null, // Will be filled later
       employmentType: position.typeOfEmployment.label,
-      releasedDate: position.releasedDate
+      releasedDate: position.releasedDate,
+      refId: position.refNumber
     };
 
     getCustomFieldsAndValuesFromPosition(position,customFieldsLabels,customFieldsValues);
@@ -485,11 +486,14 @@ async function syncJobsFast() {
   await createCollections();
   await clearCollections();
   await fillSecretManagerMirror();
+
   console.log("saving jobs data to CMS");
   await saveJobsDataToCMS();
   console.log("saved jobs data to CMS successfully");
+  
   console.log("saving jobs descriptions and location apply url to CMS");
   await saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS();
+
   console.log("saved jobs descriptions and location apply url to CMS successfully");
   await aggregateJobs();
   await referenceJobs();
