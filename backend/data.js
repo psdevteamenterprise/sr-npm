@@ -272,7 +272,6 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
             const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections);
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
-
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
