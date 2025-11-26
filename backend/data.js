@@ -273,6 +273,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
 
+            
             const updatedJob = {
               ...job,
               locationAddress: jobLocation,
