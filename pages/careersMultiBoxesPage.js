@@ -28,13 +28,14 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
-    await loadData(_$w);
-    loadJobsRepeater(_$w);
-    loadPrimarySearchRepeater(_$w);
-    await loadFilters(_$w);
-    loadSelectedValuesRepeater(_$w);
-    bindSearchInput(_$w);
-    loadPaginationButtons(_$w);
+  
+  await loadData(_$w);
+  loadJobsRepeater(_$w);
+  loadPrimarySearchRepeater(_$w);
+  await loadFilters(_$w);
+  loadSelectedValuesRepeater(_$w);
+  bindSearchInput(_$w);
+  loadPaginationButtons(_$w);
 
     if (await window.formFactor() === "Mobile") {
       handleFilterInMobile(_$w);
