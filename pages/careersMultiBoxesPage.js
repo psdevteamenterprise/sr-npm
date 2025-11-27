@@ -1,5 +1,5 @@
 const { CAREERS_PAGE_SELECTORS, COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-
+const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
