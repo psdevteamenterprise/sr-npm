@@ -1,4 +1,4 @@
-const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { CAREERS_PAGE_SELECTORS, COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
 
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
@@ -23,18 +23,20 @@ const pagination = {
   pageSize: 10,
   currentPage: 1,
 };
+
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   //to handle back and forth , url changes
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
-    await loadData(_$w);
-    loadJobsRepeater(_$w);
-    loadPrimarySearchRepeater(_$w);
-    await loadFilters(_$w);
-    loadSelectedValuesRepeater(_$w);
-    bindSearchInput(_$w);
-    loadPaginationButtons(_$w);
+
+  await loadData(_$w);
+  loadJobsRepeater(_$w);
+  loadPrimarySearchRepeater(_$w);
+  await loadFilters(_$w);
+  loadSelectedValuesRepeater(_$w);
+  bindSearchInput(_$w);
+  loadPaginationButtons(_$w);
 
     if (await window.formFactor() === "Mobile") {
       handleFilterInMobile(_$w);
