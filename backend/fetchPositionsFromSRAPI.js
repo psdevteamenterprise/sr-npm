@@ -114,6 +114,7 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 }
 
 async function htmlRichContentConverter(sections) {
+  
   console.log("sections: are  ",sections);
   const richContentObject = {}
   for (const section of sections) {
