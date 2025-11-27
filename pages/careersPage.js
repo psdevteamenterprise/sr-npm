@@ -221,7 +221,6 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryDepartmentVar=undefined;
-            deletedParam=true;
             _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).value = '';
         }
         if(newQueryParams.location){
@@ -229,7 +228,6 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryLocationVar=undefined;
-            deletedParam=true
             _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).value = '';
         }
         if(newQueryParams.keyWord){
@@ -237,7 +235,6 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryKeyWordVar=undefined;
-            deletedParam=true;
             _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).value = '';
         }
         if(newQueryParams.jobType){
@@ -245,7 +242,6 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryJobTypeVar=undefined;
-            deletedParam=true;
             _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE).value = '';
         }
         if(_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).isVisible){
@@ -254,7 +250,6 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryBrandVar=undefined;
-            deletedParam=true;
             _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value = '';
         }
     }

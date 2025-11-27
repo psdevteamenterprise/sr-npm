@@ -41,7 +41,7 @@ async function filterBasedOnBrand(positions) {
 
     const desiredBrand = await getTokenFromCMS(TOKEN_NAME.DESIRED_BRAND);
     validateSingleDesiredBrand(desiredBrand);
-    console.log("filtering positions based on brand: ", desiredBrand);\
+    console.log("filtering positions based on brand: ", desiredBrand);
     return positions.content.filter(position => {
       const brand = getBrand(position.customField);
       if (!brand) return false;
