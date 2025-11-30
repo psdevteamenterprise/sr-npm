@@ -232,8 +232,7 @@ async function loadJobsRepeater(_$w) {
       // 2) Load all values once and group them by referenced field
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
-          // Build CheckboxGroup options for this field
-        
+          // Build CheckboxGroup options for this field  
       const counter={}
       for(const city of cities) {
         counter[city.city]=city.count
