@@ -60,7 +60,8 @@ async function handleBackAndForth(_$w){
 
       ActivateURLOnchange=false;
       console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
-      await clearAll(_$w,true);
+    //  await clearAll(_$w,true);
+      selectedByField.clear();
       await handleUrlParams(_$w,newQueryParams); 
       ActivateURLOnchange=true;
       console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
