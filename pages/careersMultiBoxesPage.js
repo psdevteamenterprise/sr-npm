@@ -429,6 +429,10 @@ function getValueFromValueId(valueIds,value) {
 
     // Preserve currently selected values that are still visible
     let prevSelected=[]
+    console.log("inside updateOptionsUI prevSelected: ",prevSelected);
+    console.log("fieldTitle: ",fieldTitle);
+    console.log("FiltersIds[fieldTitle]: ",FiltersIds[fieldTitle]);
+    console.log("_$w(`#${FiltersIds[fieldTitle]}CheckBox`) ",_$w(`#${FiltersIds[fieldTitle]}CheckBox`));
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
