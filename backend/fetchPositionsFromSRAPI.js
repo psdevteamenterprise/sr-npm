@@ -116,11 +116,11 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 async function htmlRichContentConverter(sections) {
   console.log("sections: are  ",sections);
   const richContentObject = {}
-  for (const section of sections) {
-    console.log("section: is  ",section);
-    if (section.text) {
+  for (const [sectionTitle, sectionData] of Object.entries(sections)) {
+    console.log("section: is  ",sectionTitle);
+    if (sectionData.text) {
       const raw = JSON.stringify({
-        content: section.text,
+        content: sectionData.text,
       });
       const requestOptions = {
         method: 'post',
@@ -138,7 +138,7 @@ async function htmlRichContentConverter(sections) {
       if (response.ok) {
         const data = await response.json();
         console.log("response is ok")
-        richContentObject[section.title] = data.richContent.richContent;
+        richContentObject[sectionTitle] = data.richContent.richContent;
       }
       else {
         throw new Error("Error converting html to rich content response: "+response);
