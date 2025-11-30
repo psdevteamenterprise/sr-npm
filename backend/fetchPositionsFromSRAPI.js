@@ -114,7 +114,6 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 }
 
 async function htmlRichContentConverter(sections,richContentConverterToken) {
-  console.log("sections: are  ",sections);
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
@@ -143,7 +142,6 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
       }
     }
   }
-  console.log("richContentObject: are  ",richContentObject);
   return richContentObject;
 }
 
