@@ -86,9 +86,8 @@ async function clearAll(_$w,urlOnChange=false) {
     keywordAllJobs=undefined;
     if(!urlOnChange) {
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
-      await updateJobsAndNumbersAndFilters(_$w,true);
     }
-    
+    await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
 
@@ -415,7 +414,7 @@ function getValueFromValueId(valueIds,value) {
 }
  
   async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
-    await applyJobFilters(_$w); // re-query jobs
+    await applyJobFilters(_$w,clearAll); // re-query jobs
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
     await updateSelectedValuesRepeater(_$w);
     updateTotalJobsCountText(_$w);
@@ -465,7 +464,8 @@ function getValueFromValueId(valueIds,value) {
     }
   }
 
-  async function applyJobFilters(_$w) {
+  async function applyJobFilters(_$w,clearAll=false) {
+    if(!clearAll) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
@@ -518,6 +518,7 @@ function getValueFromValueId(valueIds,value) {
     }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
+  }
   }
 
 function handlePaginationButtons(_$w)
