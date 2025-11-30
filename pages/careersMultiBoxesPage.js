@@ -434,6 +434,11 @@ function getValueFromValueId(valueIds,value) {
     console.log("FiltersIds[fieldTitle]: ",FiltersIds[fieldTitle]);
     console.log("_$w(`#${FiltersIds[fieldTitle]}CheckBox`) ",_$w(`#${FiltersIds[fieldTitle]}CheckBox`));
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
+    if(prevSelected===undefined) {
+      //to handle visiblity in external and internal poages
+      return;
+    }
+
     const visibleSet = new Set(filtered.map(o => o.value));
     const preserved = prevSelected.filter(v => visibleSet.has(v));
     if(filtered.length===0) {
