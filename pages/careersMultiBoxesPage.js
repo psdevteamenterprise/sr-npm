@@ -491,7 +491,6 @@ async function secondarySearch(_$w,query) {
     }
     secondarySearchIsFilled=true
   }
-  
     handlePaginationButtons(_$w);
     updateTotalJobsCountText(_$w);
     await refreshFacetCounts(_$w); 
