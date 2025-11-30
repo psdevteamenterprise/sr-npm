@@ -250,12 +250,13 @@ async function handleParams(_$w,param,values) {
               selectedByField.delete(fieldId);
               queryParams.remove([fieldTitle ]);
             }
-            ActivateURLOnchange=true;
-            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange after: ",ActivateURLOnchange);
+
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
             await updateJobsAndNumbersAndFilters(_$w);
+            ActivateURLOnchange=true;
+            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange after: ",ActivateURLOnchange);
           });
     });
      updateSelectedValuesRepeater(_$w);
@@ -369,10 +370,11 @@ async function loadJobsRepeater(_$w) {
           selectedByField.delete(field._id);  
           queryParams.remove([fieldTitle ]);
         }
-        ActivateURLOnchange=true;
-        console.log("inside checkbox onChange ActivateURLOnchange after: ",ActivateURLOnchange);
+       
         console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
+        ActivateURLOnchange=true;
+        console.log("inside checkbox onChange ActivateURLOnchange after: ",ActivateURLOnchange);
       });
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
@@ -528,8 +530,6 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
-  console.log("inside handlePageUrlParam ActivateURLOnchange before: ",ActivateURLOnchange);
-  ActivateURLOnchange=false;
   if(pagination.currentPage==1)
   {
     
@@ -538,8 +538,6 @@ function handlePageUrlParam() {
   else{
     queryParams.add({ page: pagination.currentPage });
   }
-  console.log("inside handlePageUrlParam ActivateURLOnchange after: ",ActivateURLOnchange);
-  ActivateURLOnchange=true;
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
