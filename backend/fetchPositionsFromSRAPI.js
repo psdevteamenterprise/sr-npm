@@ -117,7 +117,6 @@ async function htmlRichContentConverter(sections) {
   console.log("sections: are  ",sections);
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
-    console.log("section: is  ",sectionTitle);
     if (sectionData.text) {
       const raw = JSON.stringify({
         content: sectionData.text,
@@ -137,7 +136,6 @@ async function htmlRichContentConverter(sections) {
       );
       if (response.ok) {
         const data = await response.json();
-        console.log("response is ok")
         richContentObject[sectionTitle] = data.richContent.richContent;
       }
       else {

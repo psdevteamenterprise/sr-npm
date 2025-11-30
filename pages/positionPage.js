@@ -43,13 +43,17 @@ async function getCategoryValue(customValues) {
 
         
 
-        _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
-        _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
-        _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
+        //_$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
+        _$w('#companyDescriptionText').content = item.jobDescription.companyDescription;        
+        //_$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
+        _$w('#responsibilitiesText').content = item.jobDescription.jobDescription;
+        //_$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
+        _$w('#qualificationsText').content = item.jobDescription.qualifications;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
         if(isElementExistOnPage(_$w('#additionalInfoText')))
         {
-          _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
+          //_$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
+          _$w('#additionalInfoText').content = item.jobDescription.additionalInformation;
         }
         if(isElementExistOnPage(_$w('#relatedJobsRepNoDepartment'))) // when there is no department, we filter based on category
         {
