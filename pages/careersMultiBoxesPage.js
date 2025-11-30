@@ -362,6 +362,7 @@ async function loadJobsRepeater(_$w) {
             queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
           }
           dontActivateURLOnchange=false;
+          
         } else {
           selectedByField.delete(field._id);  
           queryParams.remove([fieldTitle ]);
