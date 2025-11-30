@@ -351,7 +351,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        console.log("inside loadFilters ActivateURLOnchange: ",ActivateURLOnchange);
+        console.log("inside checkbox onChange ActivateURLOnchange: ",ActivateURLOnchange);
         ActivateURLOnchange=false;
         console.log("selected: ",selected)
         if (selected && selected.length) {
@@ -370,7 +370,7 @@ async function loadJobsRepeater(_$w) {
           queryParams.remove([fieldTitle ]);
         }
         ActivateURLOnchange=true;
-        console.log("inside loadFilters ActivateURLOnchange after: ",ActivateURLOnchange);
+        console.log("inside checkbox onChange ActivateURLOnchange after: ",ActivateURLOnchange);
         console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
       });
@@ -530,6 +530,7 @@ function handlePaginationButtons(_$w)
 function handlePageUrlParam() {
   if(pagination.currentPage==1)
   {
+    console.log("inside handlePageUrlParam ActivateURLOnchange before: ",ActivateURLOnchange);
       queryParams.remove(["page"]);
   }
   else{
