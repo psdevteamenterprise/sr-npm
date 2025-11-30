@@ -528,15 +528,18 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
+  console.log("inside handlePageUrlParam ActivateURLOnchange before: ",ActivateURLOnchange);
+  ActivateURLOnchange=false;
   if(pagination.currentPage==1)
   {
-    console.log("inside handlePageUrlParam ActivateURLOnchange before: ",ActivateURLOnchange);
+    
       queryParams.remove(["page"]);
   }
   else{
     queryParams.add({ page: pagination.currentPage });
   }
-  
+  console.log("inside handlePageUrlParam ActivateURLOnchange after: ",ActivateURLOnchange);
+  ActivateURLOnchange=true;
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
