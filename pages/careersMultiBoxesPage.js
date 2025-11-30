@@ -267,11 +267,13 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         console.log("ev: ",ev)
         console.log("ev.target: ",ev.target)
+        console.log("selected: ",selected)
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
         } else {
           selectedByField.delete(field._id);  
         }
+        console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
     
       });
@@ -377,9 +379,12 @@ async function loadJobsRepeater(_$w) {
         finalFilteredJobs=tempFilteredJobs;
         tempFilteredJobs=[];
     }
+    console.log("finalFilteredJobs: ",finalFilteredJobs)
     secondarySearchIsFilled? currentSecondarySearchJobs=finalFilteredJobs:currentJobs=finalFilteredJobs;
     let jobsFirstPage=[];
+    console.log("currentSecondarySearchJobs: ",currentSecondarySearchJobs)
     secondarySearchIsFilled? jobsFirstPage=currentSecondarySearchJobs.slice(0,pagination.pageSize):jobsFirstPage=currentJobs.slice(0,pagination.pageSize);
+    console.log("jobsFirstPage: ",jobsFirstPage)
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = jobsFirstPage.length.toString();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchIsFilled? currentSecondarySearchJobs.length.toString():currentJobs.length.toString();
