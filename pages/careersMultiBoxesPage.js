@@ -176,17 +176,15 @@ async function handleParams(_$w,param,values) {
   for(const value of valuesAsArray) {
     
        const decodedValue = decodeURIComponent(value);
-    
-      const options=optionsByFieldId.get(field._id);
-    
-      const option=getCorrectOption(decodedValue,options,param);
+      const options = optionsByFieldId.get(field._id);
+      const option = getCorrectOption(decodedValue, options, param);
     
       if(option) {
-       const optionIndex=getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
-       selectedIndices.push(optionIndex);
-       existing.push(option.value);
-        applyFiltering=true;
-        dontUpdateThisCheckBox=field._id;
+        const optionIndex = getOptionIndexFromCheckBox(_$w(`#${FiltersIds[field.title]}CheckBox`).options,option.value);
+        selectedIndices.push(optionIndex);
+        existing.push(option.value);
+        applyFiltering = true;
+        dontUpdateThisCheckBox = field._id;
       }
       else {
         console.warn(`${param} value not found in dropdown options`);
@@ -308,9 +306,9 @@ async function loadJobsRepeater(_$w) {
   async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
-      const cities=await getAllRecords(COLLECTIONS.CITIES);
+      const cities = await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
-        valueToJobs[city._id]=city.jobIds;
+        valueToJobs[city._id] = city.jobIds;
       }
       // 2) Load all values once and group them by referenced field
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
@@ -321,6 +319,7 @@ async function loadJobsRepeater(_$w) {
       for(const city of cities) {
         counter[city.city]=city.count
       }
+      
       for(const [key, value] of valuesByFieldId) {
         const field = getFieldById(key,allfields);
         let originalOptions=[];
@@ -333,38 +332,41 @@ async function loadJobsRepeater(_$w) {
         else{
             originalOptions = value
         }
+
         optionsByFieldId.set(key, originalOptions);
+
         for (const val of allvaluesobjects) {
           counter[val.title]=val.count
         }
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
-        updateOptionsUI(_$w,field.title, field._id, ''); // no search query
+        updateOptionsUI(_$w, field.title, field._id, ''); // no search query
+
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-          dontUpdateThisCheckBox=field._id;
-        const selected = ev.target.value; // array of selected value IDs
-        let fieldTitle=field.title.toLowerCase().replace(' ', '');
-        fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
+          dontUpdateThisCheckBox = field._id;
+          const selected = ev.target.value; // array of selected value IDs
+          let fieldTitle=field.title.toLowerCase().replace(' ', '');
+          fieldTitle === "brands"? fieldTitle = "brand" : fieldTitle;
 
-        if (selected && selected.length) {
-          selectedByField.set(field._id, selected); 
-          if(fieldTitle==="brand" || fieldTitle==="storename") {
-            //in this case we need the label not valueid
-            const valueLabels = getValueFromValueId(selected, value);
-            queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
-          }
-          else{
-            queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
-          }
+          if (selected && selected.length) {
+            selectedByField.set(field._id, selected); 
+            if(fieldTitle==="brand" || fieldTitle==="storename") {
+              //in this case we need the label not valueid
+              const valueLabels = getValueFromValueId(selected, value);
+              queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
+            }
+            else{
+              queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
+            }
           
-        } else {
-          selectedByField.delete(field._id);  
-          queryParams.remove([fieldTitle ]);
-        }
+          } else {
+            selectedByField.delete(field._id);  
+            queryParams.remove([fieldTitle ]);
+          }
 
         await updateJobsAndNumbersAndFilters(_$w);
       });
-      
+
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
       updateOptionsUI(_$w, field.title, field._id, query);
@@ -543,7 +545,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
     const currentJobsIds=jobs.map(job=>job._id);
     
     for (const fieldId of fieldIds) {
-        let currentoptions=optionsByFieldId.get(fieldId)
+        let currentoptions = optionsByFieldId.get(fieldId)
         let counter=new Map();
         for(const option of currentoptions) {
             for (const jobId of currentJobsIds) {
