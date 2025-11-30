@@ -93,9 +93,17 @@ function loadPrimarySearchRepeater(_$w) {
       (item) => item._id === event.context.itemId,
       
     );
-    console.log("clickedItemData: ",clickedItemData);
-    console.log("clickedItemData['link-jobs-title']: ",clickedItemData["link-jobs-title"]);
-    location.to(clickedItemData["link-jobs-title"]);
+    // 'link-jobs-title' or 'link-copy-of-jobs-title'
+    const linkKey = Object.keys(clickedItemData).find(
+      key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
+    );
+    if (linkKey && clickedItemData[linkKey] ) {
+      if(clickedItemData[linkKey].includes("copy-of-jobs")) {
+        clickedItemData[linkKey]=clickedItemData[linkKey].replace("copy-of-jobs","jobs")
+      }
+      location.to(clickedItemData[linkKey]);
+    }
+
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
