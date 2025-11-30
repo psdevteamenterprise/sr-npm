@@ -1,10 +1,17 @@
 const { items: wixData } = require('@wix/data');
 const { fetchPositionsFromSRAPI, fetchJobDescription } = require('./fetchPositionsFromSRAPI');
 const { createCollectionIfMissing } = require('@hisense-staging/velo-npm/backend');
-const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
-const { chunkedBulkOperation, countJobsPerGivenField, fillCityLocationAndLocationAddress ,prepareToSaveArray,normalizeString} = require('./utils');
+        
 const { getAllPositions } = require('./queries');
 const { retrieveSecretVal, getTokenFromCMS ,getApiKeys} = require('./secretsData');
+const { COLLECTIONS, COLLECTIONS_FIELDS,JOBS_COLLECTION_FIELDS,TEMPLATE_TYPE,TOKEN_NAME,CUSTOM_VALUES_COLLECTION_FIELDS } = require('./collectionConsts');
+const { chunkedBulkOperation, 
+        countJobsPerGivenField, 
+        fillCityLocationAndLocationAddress,
+        prepareToSaveArray,
+        normalizeString,
+        generateSlug} 
+        = require('./utils');
 
 let customValuesToJobs = {}
 let locationToJobs = {}
@@ -110,7 +117,7 @@ async function saveJobsDataToCMS() {
   const customFieldsLabels = {}
   const customFieldsValues = {}
   
-  const {companyId,templateType} = await getApiKeys();
+  const {companyId ,templateType} = await getApiKeys();
   if(siteconfig===undefined) {
     await getSiteConfig();
   }
@@ -120,6 +127,7 @@ async function saveJobsDataToCMS() {
     const basicJob = {
       _id: position.id,
       title: position.name || '',
+      slug: generateSlug(position.name || ''),
       department: position.department?.label || 'Other',
       cityText: normalizeString(position.location?.city),
       location: position.location && Object.keys(position.location).length > 0

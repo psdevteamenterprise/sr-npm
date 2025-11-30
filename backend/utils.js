@@ -65,6 +65,12 @@ function normalizeString(str) {
     .trim();
 }
 
+function generateSlug(title){
+  return title
+  .replace(/[^a-z0-9-]+/g, "-")
+  .replace(/-+/g, "-")
+  .replace(/^-|-$/g, "");
+}
 
 
 module.exports = {
@@ -74,5 +80,5 @@ module.exports = {
   fillCityLocationAndLocationAddress,
   prepareToSaveArray,
   normalizeString,
-  
+  generateSlug,
 };
