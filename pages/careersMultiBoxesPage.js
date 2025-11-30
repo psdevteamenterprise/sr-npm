@@ -28,6 +28,7 @@ const pagination = {
 
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   //to handle back and forth , url changes
+  console.log("FiltersIds in careersMultiBoxesPageOnReady: ",FiltersIds);
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
@@ -340,6 +341,9 @@ async function loadJobsRepeater(_$w) {
         countsByFieldId.set(key, new Map(originalOptions.map(o => [o.value, counter[o.label]])));
         updateOptionsUI(_$w,field.title, field._id, ''); // no search query
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
+        console.log("fieldTitle: ",field.title);
+        console.log("FiltersIds[field.title]: ",FiltersIds[field.title]);
+        console.log("_$w(`#${FiltersIds[field.title]}CheckBox`) ",_$w(`#${FiltersIds[field.title]}CheckBox`));
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
