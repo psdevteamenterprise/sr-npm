@@ -60,6 +60,10 @@ async function handleBackAndForth(_$w){
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams); 
     }
+    else{
+      console.log("inside handleBackAndForth ActivateURLOnchange is false, not doing anything");
+      ActivateURLOnchange=true;
+    }
 }
 
 async function clearAll(_$w,urlOnChange=false) {
@@ -255,8 +259,7 @@ async function handleParams(_$w,param,values) {
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
             await updateJobsAndNumbersAndFilters(_$w);
-            ActivateURLOnchange=true;
-            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange after: ",ActivateURLOnchange);
+           
           });
     });
      updateSelectedValuesRepeater(_$w);
@@ -373,8 +376,6 @@ async function loadJobsRepeater(_$w) {
        
         console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
-        ActivateURLOnchange=true;
-        console.log("inside checkbox onChange ActivateURLOnchange after: ",ActivateURLOnchange);
       });
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
