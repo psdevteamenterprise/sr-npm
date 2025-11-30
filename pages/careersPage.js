@@ -5,12 +5,10 @@ const { query,queryParams,onChange} = require("wix-location-frontend");
 const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { careersMultiBoxesPageOnReady } = require('./careersMultiBoxesPage');
-
-const {
-    debounce,
-    getFilter,
-  } = require('../public/filterUtils');
-  const { filterBrokenMarkers } = require('../public/utils');
+const { debounce, getFilter} = require('../public/filterUtils');
+const { CAREERS_PAGE_SELECTORS, FILTER_FIELDS } = require('../public/selectors');
+const { filterBrokenMarkers } = require('../public/utils');
+  
   let currentLoadedItems =100;
   const itemsPerPage = 100;
   let allJobs=[]
@@ -27,41 +25,43 @@ const {
   let siteconfig;
 
 async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
-if(siteconfig===undefined) {
-    const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
-    siteconfig = queryResult.items[0];
-}
+    if(siteconfig===undefined) {
+        const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
+        siteconfig = queryResult.items[0];
+    }
 
-if(siteconfig.customFields==="true") {
-    await careersMultiBoxesPageOnReady(_$w,queryParams);
-}
-else{
-console.log("queryParams: ", queryParams);
-const { page, keyWord, department, location,jobType,brand } = queryParams;
-queryPageVar=page;
-queryKeyWordVar=keyWord;
-queryDepartmentVar=department;
-queryLocationVar=location;
-queryJobTypeVar=jobType;
-queryBrandVar=brand;
-thisObjectVar=thisObject;
-allJobs=await getAllPositions();
-await activateAutoLoad(_$w);
-await bind(_$w);
-await init(_$w);
-await handleBrandDropdown(_$w);
-await handleUrlParams(_$w);
+    if(siteconfig.customFields==="true") {
+        await careersMultiBoxesPageOnReady(_$w,queryParams);
+    }
+    else{
+        console.log("queryParams: ", queryParams);
+        const { page, keyWord, department, location,jobType,brand } = queryParams;
+        queryPageVar=page;
+        queryKeyWordVar=keyWord;
+        queryDepartmentVar=department;
+        queryLocationVar=location;
+        queryJobTypeVar=jobType;
+        queryBrandVar=brand;
+        thisObjectVar=thisObject;
+        allJobs = await getAllPositions();
+
+        activateAutoLoad(_$w);
+        await bind(_$w);
+        init(_$w);
+        await handleBrandDropdown(_$w);
+        await handleUrlParams(_$w);
+
+    }
+
 
 }
-}
-
   
 function activateAutoLoad(_$w)
 {
-    _$w("#jobsDataset").onReady(() => {
+    _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).onReady(() => {
         updateCount(_$w);
-        _$w("#section2").onViewportEnter(() => {
-            if (currentLoadedItems<_$w("#jobsDataset").getTotalCount()) {
+        _$w(CAREERS_PAGE_SELECTORS.FOOTER).onViewportEnter(() => {
+            if (currentLoadedItems<_$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount()) {
                 loadMoreJobs(_$w);  
             }   
             else {
@@ -81,10 +81,12 @@ async function loadMoreJobs(_$w) {
         pageParamSet = Number(pageParamSet) + 1;
     }
     if (shouldLoad) {
-        _$w("#jobsDataset").loadMore();
+        _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).loadMore();
         console.log("loading more jobs");
+
         currentLoadedItems = currentLoadedItems + itemsPerPage;
-        const data = _$w("#positionsRepeater").data;
+        const data = _$w(CAREERS_PAGE_SELECTORS.POSITIONS_REPEATER).data;
+
         console.log("data length is :    ", data.length);
         setPageParamInUrl();
     }
@@ -107,26 +109,26 @@ async function handleUrlParams(_$w) {
     if (queryKeyWordVar) {
         await handleKeyWordParam(_$w,queryKeyWordVar);
     }
-    if (queryBrandVar && _$w('#dropdownBrand').isVisible) { //if it is not visible, ignore it
+    if (queryBrandVar && _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).isVisible) { //if it is not visible, ignore it
         await handleBrandParam(_$w,queryBrandVar);
     }
-        if (queryPageVar) {
-            await handlePageParam(_$w);    
-        }
-        if (queryDepartmentVar) {
-            await handleDepartmentParam(_$w,queryDepartmentVar);
-        }
-        if (queryLocationVar) {
-            await handleLocationParam(_$w,queryLocationVar);
-        }
-        if (queryJobTypeVar) {
-            await handleJobTypeParam(_$w,queryJobTypeVar);
-        }
+    if (queryPageVar) {
+        await handlePageParam(_$w);    
+    }
+    if (queryDepartmentVar) {
+        await handleDepartmentParam(_$w,queryDepartmentVar);
+    }
+    if (queryLocationVar) {
+        await handleLocationParam(_$w,queryLocationVar);
+    }
+    if (queryJobTypeVar) {
+        await handleJobTypeParam(_$w,queryJobTypeVar);
+    }
     await applyFilters(_$w, true); // Skip URL update since we're handling initial URL params
 }
 
 async function handleKeyWordParam(_$w,keyWord) {
-    _$w('#searchInput').value = keyWord;
+    _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).value = keyWord;
     // Use applyFilters to maintain consistency instead of directly setting filter
 }
 
@@ -146,18 +148,18 @@ async function handlePageParam(_$w) {
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
         for (let i = 2; i <= queryPageVar; i++) {
-           await _$w("#jobsDataset").loadMore();
+           await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
         // the timeout is to wait for the repeater to render, then scroll to the last item.
             setTimeout(() => {
-            const data = _$w("#positionsRepeater").data;
+            const data = _$w(CAREERS_PAGE_SELECTORS.POSITIONS_REPEATER).data;
             if (data && data.length > 0) {
                 //the dataset each time it loads 100 items
                 const lastIndex = data.length - itemsPerPage;
-                _$w("#positionsRepeater").forEachItem(async ($item, itemData, index) => {
+                _$w(CAREERS_PAGE_SELECTORS.POSITIONS_REPEATER).forEachItem(async ($item, itemData, index) => {
                     if (index === lastIndex) {
-                        await $item("#positionItem").scrollTo();
+                        await $item(CAREERS_PAGE_SELECTORS.POSITION_ITEM).scrollTo();
                         console.log("finishied scrolling inside handlePageParam")
                     }
                 });
@@ -168,40 +170,40 @@ async function handlePageParam(_$w) {
 }
 
 async function bind(_$w) {
-	await _$w('#jobsDataset').onReady(async () => {
+	await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).onReady(async () => {
 		await updateCount(_$w);
         await updateMapMarkers(_$w);
 		
 	});
 
 	if (await window.formFactor() === "Mobile") {
-		_$w('#dropdownsContainer').collapse();
+		_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_CONTAINER).collapse();
     } 
 
 }
 
 function init(_$w) {
     const debouncedSearch = debounce(()=>applyFilters(_$w), 400,thisObjectVar);
-    _$w('#searchInput').onInput(debouncedSearch);
-    _$w('#searchInput').onBlur(()=>{
-        if(searchInputBlurredFirstTime && _$w('#searchInput').value.trim() !== '')
+    _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).onInput(debouncedSearch);
+    _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).onBlur(()=>{
+        if(searchInputBlurredFirstTime && _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).value.trim() !== '')
         {
-        _$w('#searchInput').focus();
+        _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).focus();
         searchInputBlurredFirstTime=false;
         }
     });
-    _$w('#dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').onChange(()=>{
+    _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT, CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION, CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE, CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).onChange(()=>{
         console.log("dropdown onChange is triggered");
         applyFilters(_$w);
     });
-	_$w('#resetFiltersButton, #clearSearch').onClick(()=>resetFilters(_$w));
+	_$w(CAREERS_PAGE_SELECTORS.RESET_FILTERS_BUTTON, CAREERS_PAGE_SELECTORS.CLEAR_SEARCH).onClick(()=>resetFilters(_$w));
 
-	_$w('#openFiltersButton').onClick(()=>{
-		_$w('#dropdownsContainer, #closeFiltersButton').expand();
+	_$w(CAREERS_PAGE_SELECTORS.OPEN_FILTERS_BUTTON).onClick(()=>{
+		_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_CONTAINER, CAREERS_PAGE_SELECTORS.CLOSE_FILTERS_BUTTON).expand();
 	});
 
-	_$w('#closeFiltersButton').onClick(()=>{
-		_$w('#dropdownsContainer, #closeFiltersButton').collapse();
+	_$w(CAREERS_PAGE_SELECTORS.CLOSE_FILTERS_BUTTON).onClick(()=>{
+		_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_CONTAINER, CAREERS_PAGE_SELECTORS.CLOSE_FILTERS_BUTTON).collapse();
 	});
 
     //URL onChange
@@ -219,41 +221,36 @@ async function handleBackAndForth(_$w){
         }
         else{
             queryDepartmentVar=undefined;
-            deletedParam=true;
-            _$w('#dropdownDepartment').value = '';
+            _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).value = '';
         }
         if(newQueryParams.location){
             queryLocationVar=newQueryParams.location;
         }
         else{
             queryLocationVar=undefined;
-            deletedParam=true
-            _$w('#dropdownLocation').value = '';
+            _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).value = '';
         }
         if(newQueryParams.keyWord){
             queryKeyWordVar=newQueryParams.keyWord;
         }
         else{
             queryKeyWordVar=undefined;
-            deletedParam=true;
-            _$w('#searchInput').value = '';
+            _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).value = '';
         }
         if(newQueryParams.jobType){
             queryJobTypeVar=newQueryParams.jobType;
         }
         else{
             queryJobTypeVar=undefined;
-            deletedParam=true;
-            _$w('#dropdownJobType').value = '';
+            _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE).value = '';
         }
-        if(_$w('#dropdownBrand').isVisible){
+        if(_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).isVisible){
         if(newQueryParams.brand){
             queryBrandVar=newQueryParams.brand;
         }
         else{
             queryBrandVar=undefined;
-            deletedParam=true;
-            _$w('#dropdownBrand').value = '';
+            _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value = '';
         }
     }
         await handleUrlParams(_$w);
@@ -263,11 +260,11 @@ async function handleBackAndForth(_$w){
 async function applyFilters(_$w, skipUrlUpdate = false) {
     console.log("applying filters");
 	const dropdownFiltersMapping = [
-		{ elementId: '#dropdownDepartment', field: 'department', value: _$w('#dropdownDepartment').value },
-		{ elementId: '#dropdownLocation', field: 'cityText', value: _$w('#dropdownLocation').value },
-		{ elementId: '#dropdownJobType', field: 'remote', value: _$w('#dropdownJobType').value},
-		{ elementId: '#dropdownBrand', field: 'brand', value: _$w('#dropdownBrand').value},
-		{ elementId: '#searchInput', field: 'title', value: _$w('#searchInput').value }
+        { elementId: CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT, field: 'department', value: _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).value },
+		{ elementId: CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION, field: 'cityText', value: _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).value },
+		{ elementId: CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE, field: 'remote', value: _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE).value},
+		{ elementId: CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND, field: 'brand', value: _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value},
+		{ elementId: CAREERS_PAGE_SELECTORS.SEARCH_INPUT, field: 'title', value: _$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT).value }
 		];
     console.log("dropdownFiltersMapping: ", dropdownFiltersMapping);
     
@@ -286,16 +283,16 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		// build filters
 		if (filter.value && filter.value.trim() !== '') {
             if (!skipUrlUpdate) {
-                if(filter.field === 'title'){
+                if(filter.field === FILTER_FIELDS.SEARCH){
                     queryParams.add({ keyWord: filter.value });
                 }
-                if(filter.field === 'department'){
+                if(filter.field === FILTER_FIELDS.DEPARTMENT){
                     queryParams.add({ department: encodeURIComponent(filter.value) });
                 }
-                if(filter.field === 'cityText'){
+                if(filter.field === FILTER_FIELDS.LOCATION){
                     queryParams.add({ location:  encodeURIComponent(filter.value) });
                 }
-                if(filter.field === 'remote'){
+                if(filter.field === FILTER_FIELDS.JOB_TYPE){
                     if(filter.value === 'true'){
                         queryParams.add({ jobType: encodeURIComponent("remote") });
                     }
@@ -303,11 +300,11 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
                         queryParams.add({ jobType: encodeURIComponent("onsite") });
                     }
                 }
-                if(filter.field === 'brand'){
+                if(filter.field === FILTER_FIELDS.BRAND){
                     queryParams.add({ brand: encodeURIComponent(filter.value) });
                 }
             }
-			if(filter.field === 'remote') {	
+			if(filter.field === FILTER_FIELDS.JOB_TYPE) {	
 				value = filter.value === 'true';
 			} else {
 				value = filter.value;
@@ -316,22 +313,22 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 		}
     else{
         if (!skipUrlUpdate) {
-            if(filter.field === 'title'){
+            if(filter.field === FILTER_FIELDS.SEARCH){
                 queryParams.remove(["keyWord" ]);
             }
-            if(filter.field === 'department'){
+            if(filter.field === FILTER_FIELDS.DEPARTMENT){
                 console.log("removing department from url")
                 queryParams.remove(["department" ]);
             }
-            if(filter.field === 'cityText'){
+            if(filter.field === FILTER_FIELDS.LOCATION){
                 console.log("removing location from url")
                 queryParams.remove(["location" ]);
             }
-            if(filter.field === 'remote'){
+            if(filter.field === FILTER_FIELDS.JOB_TYPE){
                 console.log("removing jobType from url")
                 queryParams.remove(["jobType" ]);
             }
-            if(filter.field === 'brand'){
+            if(filter.field === FILTER_FIELDS.BRAND){
                 console.log("removing brand from url")
                 queryParams.remove(["brand" ]);
             }
@@ -340,32 +337,32 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 	});
 	
 	const filter = await getFilter(filters, 'and');
-    await _$w('#jobsDataset').setFilter(filter);
-    await _$w('#jobsDataset').refresh();
+    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).setFilter(filter);
+    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).refresh();
     
 	const count = await updateCount(_$w);
     console.log("updating map markers");
     await updateMapMarkers(_$w);
     console.log("updating map markers completed");
-    count ? _$w('#resultsMultiState').changeState('results') : _$w('#resultsMultiState').changeState('noResults');
+    count ? _$w(CAREERS_PAGE_SELECTORS.RESULTS_MULTI_STATE).changeState('results') : _$w(CAREERS_PAGE_SELECTORS.RESULTS_MULTI_STATE).changeState('noResults');
     
     
     // Update reset button state
 	const hasActiveFilters = filters.length > 0;
-	hasActiveFilters? _$w('#resetFiltersButton').enable() : _$w('#resetFiltersButton').disable();
+	hasActiveFilters? _$w(CAREERS_PAGE_SELECTORS.RESET_FILTERS_BUTTON).enable() : _$w(CAREERS_PAGE_SELECTORS.RESET_FILTERS_BUTTON).disable();
     
     
 }
 
 async function resetFilters(_$w) {
-	_$w('#searchInput, #dropdownDepartment, #dropdownLocation, #dropdownJobType, #dropdownBrand').value = '';
+	_$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT, CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT, CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION, CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE, CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value = '';
 
-    await _$w('#jobsDataset').setFilter(wixData.filter());
-    await _$w('#jobsDataset').refresh();
+    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).setFilter(wixData.filter());
+    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).refresh();
 
-	_$w('#resultsMultiState').changeState('results');
+	_$w(CAREERS_PAGE_SELECTORS.RESULTS_MULTI_STATE).changeState('results');
 
-	_$w('#resetFiltersButton').disable();
+	_$w(CAREERS_PAGE_SELECTORS.RESET_FILTERS_BUTTON).disable();
 
     queryParams.remove(["keyWord", "department","page","location","jobType","brand"]);
     
@@ -377,7 +374,7 @@ async function resetFilters(_$w) {
 }
 
 async function updateCount(_$w) {
-	const count = await _$w('#jobsDataset').getTotalCount();
+	const count = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount();
     _$w('#numOfPositionText').text = `Showing ${count} Open Positions`;
 
 	return count;
@@ -388,19 +385,19 @@ async function handleDepartmentParam(_$w,department) {
     
         
     
-    let dropdownOptions = _$w('#dropdownDepartment').options;
+    let dropdownOptions = _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).options;
     console.log("dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("AmountOfJobsPerDepartment").find();
     //+1 because of the "All" option
 
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        fixDropdownOptions('#dropdownDepartment',optionsFromCMS, _$w);
+        fixDropdownOptions(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT,optionsFromCMS, _$w);
     }
 
-    if (_$w('#dropdownDepartment').options.find(option => option.value === departmentValue))
+    if (_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).options.find(option => option.value === departmentValue))
     {
         console.log("department value found in dropdown options ",departmentValue);
-        _$w('#dropdownDepartment').value = departmentValue;
+        _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT).value = departmentValue;
     }
     else{
         console.warn("department value not found in dropdown options");
@@ -429,18 +426,18 @@ function fixDropdownOptions(dropdown,optionsFromCMS, _$w){
 
 async function handleLocationParam(_$w,location) {
     const locationValue = decodeURIComponent(location);
-    let dropdownOptions = _$w('#dropdownLocation').options;
+    let dropdownOptions = _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).options;
     console.log("location dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query("cities").find();
     //+1 because of the "All" option
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        fixDropdownOptions('#dropdownLocation',optionsFromCMS, _$w);
+        fixDropdownOptions(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION,optionsFromCMS, _$w);
     }
     
-    const option=_$w('#dropdownLocation').options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
+    const option=_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).options.find(option => option.value.toLowerCase() === locationValue.toLowerCase())
 
     if(option){
-        _$w('#dropdownLocation').value = option.value;
+        _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION).value = option.value;
     }
     else{
         console.warn("location value not found in dropdown options");
@@ -451,15 +448,15 @@ async function handleLocationParam(_$w,location) {
 
 async function handleBrandParam(_$w,brand){
     const brandValue = decodeURIComponent(brand);
-    let dropdownOptions = _$w('#dropdownBrand').options;
+    let dropdownOptions = _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).options;
     console.log("brand dropdown options:", dropdownOptions);
     const optionsFromCMS=await wixData.query(COLLECTIONS.BRANDS).find();
     if(dropdownOptions.length!==optionsFromCMS.items.length+1){
-        fixDropdownOptions('#dropdownBrand',optionsFromCMS, _$w);
+        fixDropdownOptions(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND,optionsFromCMS, _$w);
     }
-    const option=_$w('#dropdownBrand').options.find(option => option.value.toLowerCase() === brandValue.toLowerCase())
+    const option=_$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).options.find(option => option.value.toLowerCase() === brandValue.toLowerCase())
     if(option){
-        _$w('#dropdownBrand').value = option.value;
+        _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value = option.value;
     }
     else{
         console.warn("brand value not found in dropdown options");
@@ -469,7 +466,7 @@ async function handleBrandParam(_$w,brand){
 
 async function handleJobTypeParam(_$w,jobType) {
     const jobTypeValue = decodeURIComponent(jobType);
-    let dropdownOptions = _$w('#dropdownJobType').options;
+    let dropdownOptions = _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE).options;
     console.log("jobType dropdown options:", dropdownOptions);
     let option;
     if(jobTypeValue.toLowerCase()==="remote"){
@@ -479,7 +476,7 @@ async function handleJobTypeParam(_$w,jobType) {
         option="false";
     }
     if(option){
-        _$w('#dropdownJobType').value = option;
+        _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE).value = option;
     }
     else{
         console.warn("jobType value not found in dropdown options");
@@ -488,8 +485,8 @@ async function handleJobTypeParam(_$w,jobType) {
 }
 
 async function updateMapMarkers(_$w){
-    const numOfItems = await _$w('#jobsDataset').getTotalCount();
-    const items = await _$w('#jobsDataset').getItems(0, numOfItems);
+    const numOfItems = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount();
+    const items = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getItems(0, numOfItems);
     const markers = filterBrokenMarkers(items.items).map(item => {
             const location = item.locationAddress.location;
             return {
@@ -502,21 +499,21 @@ async function updateMapMarkers(_$w){
             };
         });
     //@ts-ignore
-    _$w('#googleMaps').setMarkers(markers);
+    _$w(CAREERS_PAGE_SELECTORS.GOOGLE_MAPS).setMarkers(markers);
 
 }
 
 async function handleBrandDropdown(_$w){
     if(siteconfig.disableMultiBrand==="false"){
-    const brands=await wixData.query(COLLECTIONS.BRANDS).find();
-    if(brands.items.length>1){
-        console.log("showing brand dropdown");
-        _$w('#dropdownBrand').show();
+        const brands=await wixData.query(COLLECTIONS.BRANDS).find();
+        if(brands.items.length>1){
+            console.log("showing brand dropdown");
+            _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).show();
+        }
     }
-}
-else{
-    _$w('#dropdownBrand').hide();
-}
+    else{
+        _$w(CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).hide();
+    }
 }  
 module.exports = {
     careersPageOnReady,

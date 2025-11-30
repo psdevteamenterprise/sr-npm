@@ -39,6 +39,11 @@ const fieldTitlesInCMS={
     "brand": "Brands",
     category: "Category",
     visibility: "Visibility",
+    location: "Location",
+    employmenttype: "Employment Type",
+    contracttype: "Contract Type",
+    companysegment: "Company Segment",
+    storename: "Store Name",
 }
 
 const FiltersIds={
@@ -52,10 +57,21 @@ const FiltersIds={
    Visibility: 'Visibility',
 }
 
+const possibleUrlParams=[
+     "brand",
+     "location",
+    "employmenttype",
+    "contracttype",
+    "visibility",
+    "category",
+    "companysegment",
+    "storename",
+]
 
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
     fieldTitlesInCMS,   
     CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
+    possibleUrlParams,
 }

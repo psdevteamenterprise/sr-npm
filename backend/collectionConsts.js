@@ -31,6 +31,7 @@ const JOBS_COLLECTION_FIELDS = {
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
   EMPLOYMENT_TYPE: 'employmentType',
   RELEASED_DATE: 'releasedDate',
+  REF_ID: 'refId',
 }
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
@@ -93,6 +94,7 @@ const COLLECTIONS_FIELDS = {
         {key: 'image', type: 'IMAGE' },
         {key:'employmentType', type: 'TEXT'},
         {key:'releasedDate', type: 'TEXT'},
+        {key:'refId', type: 'TEXT'},
     ],  
     TEMPLATE_TYPE: [
       {key:'templateType', type: 'TEXT'},
