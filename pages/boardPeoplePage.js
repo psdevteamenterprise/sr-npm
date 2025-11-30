@@ -1,11 +1,9 @@
 
 const { location } = require("@wix/site-location");
+
 async function boardPeoplePageOnReady(_$w,) {
-
     await bindBoardPeopleRepeaters(_$w);
-
-
-  }
+}
 
 async function bindBoardPeopleRepeaters(_$w) {
 
