@@ -57,8 +57,13 @@ async function handleBackAndForth(_$w){
   if(ActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
+      console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
+      ActivateURLOnchange=false;
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams); 
+      ActivateURLOnchange=true;
+      console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
+
     }
     else{
       console.log("inside handleBackAndForth ActivateURLOnchange is false, not doing anything");
