@@ -363,7 +363,6 @@ async function loadJobsRepeater(_$w) {
           }
           dontActivateURLOnchange=false;
 
-
         } else {
           selectedByField.delete(field._id);  
           queryParams.remove([fieldTitle ]);
