@@ -55,8 +55,7 @@ async function handleBackAndForth(_$w){
     const newQueryParams=await location.query();
     console.log("newQueryParams: ", newQueryParams);
     await clearAll(_$w,true);
-    await handleUrlParams(_$w,newQueryParams);
-    
+    await handleUrlParams(_$w,newQueryParams); 
 }
 
 async function clearAll(_$w,urlOnChange=false) {
