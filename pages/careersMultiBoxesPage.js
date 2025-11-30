@@ -144,7 +144,11 @@ async function handleUrlParams(_$w,urlParams) {
     currentApplyFilterFlag=false;
   }
     if(applyFiltering || keywordAllJobs) {
+      ActivateURLOnchange=false;
+      console.log("inside handleUrlParams ActivateURLOnchange before: ",ActivateURLOnchange);
       await updateJobsAndNumbersAndFilters(_$w);
+      ActivateURLOnchange=true;
+      console.log("inside handleUrlParams ActivateURLOnchange after: ",ActivateURLOnchange);
     }
   
     if(urlParams.page) {
