@@ -58,7 +58,7 @@ async function getCategoryValue(customValues) {
               _$w('#jobCategory').text = categoryValue.title;
             }
 
-        const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
+        const relatedJobs = await getRelatedJobs({ categoryValueId: categoryValue._id, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
@@ -124,8 +124,6 @@ async function getCategoryValue(customValues) {
   }
 
   async function getRelatedJobs({ categoryValueId, itemId, limit = 1000 }) {
-    
-
     const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).limit(limit).find();
     return relatedJobs.items;
   }

@@ -264,14 +264,14 @@ async function loadData() {
         currentJobs=alljobs;
       }
     if(Object.keys(valueToJobs).length === 0){
-        allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        allvaluesobjects = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         for (const value of allvaluesobjects) {
-            valueToJobs[value._id]= value.jobIds;
+            valueToJobs[value.valueId]= value.jobIds;
         }
     }
     if(allfields.length===0) {
-        allfields=await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
-        allfields.push({_id:"Location",title:"Location"}); 
+        allfields = await getAllRecords(COLLECTIONS.CUSTOM_FIELDS);
+        allfields.push({ _id:"Location", title:"Location" }); 
     }
   } catch (error) {
     console.error('Failed to load data:', error);
@@ -315,23 +315,23 @@ async function loadJobsRepeater(_$w) {
       // 2) Load all values once and group them by referenced field
       let valuesByFieldId = groupValuesByField(allvaluesobjects, CUSTOM_VALUES_COLLECTION_FIELDS.CUSTOM_FIELD);
       valuesByFieldId.set("Location",cities)
-          // Build CheckboxGroup options for this field
-        
+      
+      // Build CheckboxGroup options for this field  
       const counter={}
       for(const city of cities) {
         counter[city.city]=city.count
       }
       for(const [key, value] of valuesByFieldId) {
-        const field=getFieldById(key,allfields);
+        const field = getFieldById(key,allfields);
         let originalOptions=[];
-        if(key==="Location") {
-          originalOptions=value.map(city=>({
+        if(key === "Location") {
+          originalOptions = value.map(city=>({
               label: city.city,
-              value: city._id
+              value: city.valueId
           }));
         }
         else{
-            originalOptions=value
+            originalOptions = value
         }
         optionsByFieldId.set(key, originalOptions);
         for (const val of allvaluesobjects) {
@@ -350,7 +350,7 @@ async function loadJobsRepeater(_$w) {
           selectedByField.set(field._id, selected); 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
             //in this case we need the label not valueid
-            const valueLabels=getValueFromValueId(selected,value);
+            const valueLabels = getValueFromValueId(selected, value);
             queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
           }
           else{
@@ -363,8 +363,8 @@ async function loadJobsRepeater(_$w) {
         }
 
         await updateJobsAndNumbersAndFilters(_$w);
-    
       });
+      
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
       updateOptionsUI(_$w, field.title, field._id, query);
@@ -379,11 +379,11 @@ async function loadJobsRepeater(_$w) {
     }
   }
 
-function getValueFromValueId(valueIds,value) {
-  let valueLabels=[];
+function getValueFromValueId(valueIds, value) {
+  let valueLabels = [];
   let currentVal
-  for(const valueId of valueIds) {
-    currentVal=value.find(val=>val.value===valueId);
+  for (const valueId of valueIds) {
+    currentVal = value.find(val => val.value === valueId);
     if(currentVal) {
       valueLabels.push(currentVal.label);
     }
@@ -556,8 +556,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
     }
   }
  
-
-  function updateSelectedValuesRepeater(_$w) {
+function updateSelectedValuesRepeater(_$w) {
     const selectedItems = [];
     for (const [fieldId, valueIds] of selectedByField.entries()) {
       const opts = optionsByFieldId.get(fieldId) || [];
@@ -568,7 +567,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER).data = selectedItems;
-  }
+}
 
 
 
