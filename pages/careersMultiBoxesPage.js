@@ -530,6 +530,7 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
+  console.log("inside handlePageUrlParam ActivateURLOnchange ",ActivateURLOnchange);
   if(pagination.currentPage==1)
   {
     
