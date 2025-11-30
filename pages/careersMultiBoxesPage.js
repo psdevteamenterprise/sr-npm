@@ -21,7 +21,7 @@ let allsecondarySearchJobs=[] // secondary search results that are displayed in 
 let currentSecondarySearchJobs=[] // current secondary search results that are displayed in the jobs repeater
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
 let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
-let dontActivateURLOnchange=false; // whether to activate the url onchange
+let ActivateURLOnchange=false; // whether to activate the url onchange
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -53,8 +53,8 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
-  console.log("inside handleBackAndForth dontActivateURLOnchange: ",dontActivateURLOnchange);
-  if(!dontActivateURLOnchange) {
+  console.log("inside handleBackAndForth ActivateURLOnchange: ",ActivateURLOnchange);
+  if(ActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
       await clearAll(_$w,true);
@@ -241,7 +241,7 @@ async function handleParams(_$w,param,values) {
             const field=getFieldById(fieldId,allfields);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-            dontActivateURLOnchange=true;
+            ActivateURLOnchange=true;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
@@ -249,7 +249,7 @@ async function handleParams(_$w,param,values) {
               selectedByField.delete(fieldId);
               queryParams.remove([fieldTitle ]);
             }
-            dontActivateURLOnchange=false;
+            ActivateURLOnchange=false;
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
@@ -349,7 +349,8 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        dontActivateURLOnchange=true;
+        console.log("inside onChange ActivateURLOnchange: ",ActivateURLOnchange);
+        ActivateURLOnchange=true;
         console.log("selected: ",selected)
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
@@ -361,11 +362,12 @@ async function loadJobsRepeater(_$w) {
           else{
             queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
           }
-          dontActivateURLOnchange=false;
+          
         } else {
           selectedByField.delete(field._id);  
           queryParams.remove([fieldTitle ]);
         }
+        ActivateURLOnchange=false;
         console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
       });
