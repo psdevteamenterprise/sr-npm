@@ -113,7 +113,7 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function htmlRichContentConverter(sections) {
+async function htmlRichContentConverter(sections,richContentConverterToken) {
   console.log("sections: are  ",sections);
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
@@ -126,7 +126,7 @@ async function htmlRichContentConverter(sections) {
         headers: {
           'Content-Type': 'application/json',
           Cookie: 'XSRF-TOKEN=1753949844|p--a7HsuVjR4',
-          Authorization: 'Bearer 2e19efe5f44d29d74480f5b744a5a90f19ba6ca7012ced19e7b14edb1ad6a641',
+          Authorization: 'Bearer '+richContentConverterToken,
         },
         body: raw,
       };

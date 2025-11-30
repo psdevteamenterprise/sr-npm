@@ -131,6 +131,7 @@ const COLLECTIONS_FIELDS = {
     COMPANY_ID: 'companyId',
     SMART_TOKEN: 'x-smarttoken',
     DESIRED_BRAND: 'desiredBrand',
+    RICH_CONTENT_CONVERTER_TOKEN: 'richContentConverterToken',
   }
   
 

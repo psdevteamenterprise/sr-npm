@@ -5,7 +5,6 @@ const { items: wixData } = require('@wix/data');
 const { location } = require("@wix/site-location");
 const{isElementExistOnPage} = require('psdev-utils');
 const {
-    htmlToText,
     appendQueryParams
   } = require('../public/utils');
   
@@ -39,20 +38,13 @@ async function getCategoryValue(customValues) {
 
         handleReferFriendButton(_$w,item);
         handleApplyButton(_$w,item);
-        
 
-        
-
-        //_$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
         _$w('#companyDescriptionText').content = item.jobDescription.companyDescription;        
-        //_$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
         _$w('#responsibilitiesText').content = item.jobDescription.jobDescription;
-        //_$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
         _$w('#qualificationsText').content = item.jobDescription.qualifications;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
         if(isElementExistOnPage(_$w('#additionalInfoText')))
         {
-          //_$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
           _$w('#additionalInfoText').content = item.jobDescription.additionalInformation;
         }
         if(isElementExistOnPage(_$w('#relatedJobsRepNoDepartment'))) // when there is no department, we filter based on category

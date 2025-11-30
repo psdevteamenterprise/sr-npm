@@ -260,7 +260,8 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
 
     const API_CHUNK_SIZE = 80;
     const pageChunks = Math.ceil(jobsWithNoDescriptions.items.length / API_CHUNK_SIZE);
-
+    const richContentConverterToken = await getTokenFromCMS(TOKEN_NAME.RICH_CONTENT_CONVERTER_TOKEN);
+    console.log(richContentConverterToken + " is the rich content converter token");
     await chunkedBulkOperation({
       items: jobsWithNoDescriptions.items,
       chunkSize: API_CHUNK_SIZE,
@@ -269,7 +270,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
         const chunkPromises = chunk.map(async job => {
           try {
             const jobDetails = await fetchJobDescription(job._id);
-            const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections);
+            const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections,richContentConverterToken);
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
             const updatedJob = {
