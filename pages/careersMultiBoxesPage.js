@@ -436,6 +436,11 @@ function getValueFromValueId(valueIds,value) {
     clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     if(prevSelected===undefined) {
       //to handle visiblity in external and internal poages
+      console.log("prevSelected is undefined, returning");
+      console.log("prevSelected: ",prevSelected);
+      console.log("fieldTitle: ",fieldTitle);
+      console.log("FiltersIds[fieldTitle]: ",FiltersIds[fieldTitle]);
+      console.log("_$w(`#${FiltersIds[fieldTitle]}CheckBox`) ",_$w(`#${FiltersIds[fieldTitle]}CheckBox`));
       return;
     }
 
@@ -445,6 +450,11 @@ function getValueFromValueId(valueIds,value) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}NoResults`);
     }
     else{
+      console.log("prevSelected is defined, continuing");
+      console.log("prevSelected: ",prevSelected);
+      console.log("fieldTitle: ",fieldTitle);
+      console.log("FiltersIds[fieldTitle]: ",FiltersIds[fieldTitle]);
+      console.log("_$w(`#${FiltersIds[fieldTitle]}CheckBox`) ",_$w(`#${FiltersIds[fieldTitle]}CheckBox`));
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
