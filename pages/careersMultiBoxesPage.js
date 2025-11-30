@@ -319,14 +319,14 @@ async function loadJobsRepeater(_$w) {
       for(const city of cities) {
         counter[city.city]=city.count
       }
-      
+
       for(const [key, value] of valuesByFieldId) {
         const field = getFieldById(key,allfields);
         let originalOptions=[];
         if(key === "Location") {
           originalOptions = value.map(city=>({
               label: city.city,
-              value: city.valueId
+              value: city._id
           }));
         }
         else{
