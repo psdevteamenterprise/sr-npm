@@ -58,6 +58,7 @@ async function handleBackAndForth(_$w){
     await handleUrlParams(_$w,newQueryParams); 
 }
 
+
 async function clearAll(_$w,urlOnChange=false) {
   if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     for(const field of allfields) {
