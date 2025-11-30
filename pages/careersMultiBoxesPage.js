@@ -33,7 +33,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   });
 
   await loadData(_$w);
-  loadJobsRepeater(_$w);
+  await loadJobsRepeater(_$w);
   loadPrimarySearchRepeater(_$w);
   await loadFilters(_$w);
   loadSelectedValuesRepeater(_$w);
