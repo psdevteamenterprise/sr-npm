@@ -32,16 +32,16 @@ async function handlePeopleSection(_$w) {
 }
 
 async function handleRecentJobsSection(_$w) {
-
-    
     if(supportTeamsPageIds.excludeValues.has(currentItem.title_fld)) {
         console.log("Value is excluded , collapsing recently Jobs Section ");
-        await collapseSection(_$w,supportTeamsPageSections.RECENT_JOBS);
+        await collapseSection(_$w, supportTeamsPageSections.RECENT_JOBS);
         return;
     }
-    const valueId=supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
-    const Value=await getValueFromValueId(valueId);
-    if(Value===undefined) {
+
+    const valueId = supportTeamsPageIds.valueToValueIdMap[currentItem.title_fld]
+    const Value = await getValueFromValueId(valueId);
+
+    if( Value === undefined ) {
         console.log("Value is undefined , collapsing recently Jobs Section ");
         await collapseSection(_$w,supportTeamsPageSections.RECENT_JOBS);
         return;

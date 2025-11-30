@@ -11,6 +11,7 @@ const COLLECTIONS = {
     SUPPORT_TEAMS: 'SupportTeams',
 
 }
+
 const JOBS_COLLECTION_FIELDS = {
   LOCATION: 'location',
   TITLE: 'title',
@@ -34,25 +35,31 @@ const JOBS_COLLECTION_FIELDS = {
   RELEASED_DATE: 'releasedDate',
   REF_ID: 'refId',
 }
+
 const AMOUNT_OF_JOBS_PER_DEPARTMENT_COLLECTION_FIELDS = {
   TITLE: 'title',
   COUNT: 'count',
   IMAGE: 'image',
 }
+
 const CUSTOM_VALUES_COLLECTION_FIELDS = {
+  VALUE_ID: 'valueId',
   TITLE: 'title',
   CUSTOM_FIELD: 'customField',
   MULTI_REF_JOBS_CUSTOM_VALUES: 'multiRefJobsCustomValues',
   count: 'count',
   JOB_IDS: 'jobIds',
 }
+
 const CUSTOM_FIELDS_COLLECTION_FIELDS = {
   TITLE: 'title',
 }
+
 const BRANDS_COLLECTION_FIELDS = {
   TITLE: 'title',
   COUNT: 'count',
 }
+
 const CITIES_COLLECTION_FIELDS = {
   TITLE: 'title',
   CITY: 'city',
@@ -61,6 +68,7 @@ const CITIES_COLLECTION_FIELDS = {
   COUNTRY: 'country',
   JOB_IDS: 'jobIds',
 }
+
 const COLLECTIONS_FIELDS = {
     AMOUNT_OF_JOBS_PER_DEPARTMENT: [
       {key:'title', type: 'TEXT'},
@@ -85,7 +93,7 @@ const COLLECTIONS_FIELDS = {
         {key:'language', type: 'TEXT'},
         {key:'remote', type: 'BOOLEAN'},
         {key:'jobDescription', type: 'OBJECT'},  
-        {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES,referencingFieldKey:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES } } },
+        {key:'multiRefJobsCustomValues', type: 'MULTI_REFERENCE', typeMetadata: { multiReference: { referencedCollectionId: COLLECTIONS.CUSTOM_VALUES, referencingFieldKey:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,referencingDisplayName:JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES } } },
         {key:'cityText', type: 'TEXT'},
         {key:'applyLink', type: 'URL'},
         {key:'referFriendLink', type: 'URL'},     
@@ -114,6 +122,7 @@ const COLLECTIONS_FIELDS = {
       { key: 'count', type: 'NUMBER' },
     ],
     CUSTOM_VALUES: [
+      {key:'valueId', type: 'TEXT'},
       {key:'title', type: 'TEXT'},
       {key:'customField', type: 'REFERENCE', typeMetadata: { reference: { referencedCollectionId: COLLECTIONS.CUSTOM_FIELDS } } },
       {key:'count', type: 'NUMBER'},
