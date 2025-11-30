@@ -60,8 +60,8 @@ async function handleBackAndForth(_$w){
 
       ActivateURLOnchange=false;
       console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
-    //  await clearAll(_$w,true);
-      selectedByField.clear();
+      await clearAll(_$w,true);
+     // selectedByField.clear();
       await handleUrlParams(_$w,newQueryParams); 
       ActivateURLOnchange=true;
       console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
@@ -86,8 +86,9 @@ async function clearAll(_$w,urlOnChange=false) {
     keywordAllJobs=undefined;
     if(!urlOnChange) {
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
+      await updateJobsAndNumbersAndFilters(_$w,true);
     }
-    await updateJobsAndNumbersAndFilters(_$w,true);
+    
     }
 }
 
