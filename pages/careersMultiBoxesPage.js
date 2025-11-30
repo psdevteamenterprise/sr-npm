@@ -345,8 +345,6 @@ async function loadJobsRepeater(_$w) {
         console.log("FiltersIds[field.title]: ",FiltersIds[field.title]);
         console.log("_$w(`#${FiltersIds[field.title]}CheckBox`) ",_$w(`#${FiltersIds[field.title]}CheckBox`));
 
-        if(_$w(`#${FiltersIds[field.title]}CheckBox`).length!=0)//to handle visiblity in external and internal pages
-        {
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
@@ -372,7 +370,7 @@ async function loadJobsRepeater(_$w) {
         await updateJobsAndNumbersAndFilters(_$w);
     
       });
-     }
+     
       const runFilter = debounce(() => {
       const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
       updateOptionsUI(_$w, field.title, field._id, query);
