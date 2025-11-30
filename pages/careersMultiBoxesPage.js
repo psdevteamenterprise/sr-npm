@@ -53,6 +53,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
+  console.log("inside handleBackAndForth dontActivateURLOnchange: ",dontActivateURLOnchange);
   if(!dontActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
@@ -363,7 +364,7 @@ async function loadJobsRepeater(_$w) {
           }
           dontActivateURLOnchange=false;
 
-          
+
         } else {
           selectedByField.delete(field._id);  
           queryParams.remove([fieldTitle ]);
