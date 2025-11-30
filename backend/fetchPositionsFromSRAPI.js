@@ -1,8 +1,9 @@
 const { fetch } = require('wix-fetch');
 const { TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
 const { getTokenFromCMS,getApiKeys } = require('./secretsData');
+
 async function makeSmartRecruitersRequest(path,templateType) {
-   const baseUrl = 'https://api.smartrecruiters.com';
+  const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
   try {
