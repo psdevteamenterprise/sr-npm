@@ -13,7 +13,7 @@ const {
 
 
   async function positionPageOnReady(_$w) {
-
+    console.log("positionPageOnReady called");
     await bind(_$w);
     
     
@@ -32,6 +32,7 @@ async function getCategoryValue(customValues) {
 
 
   async function bind(_$w) {
+    console.log("bind called");
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
