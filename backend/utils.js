@@ -67,9 +67,9 @@ function normalizeString(str) {
 
 function generateSlug(title){
   return title
-  .replace(/[^a-z0-9-]+/g, "-")
-  .replace(/-+/g, "-")
-  .replace(/^-|-$/g, "");
+  .replace(/[^a-zA-Z0-9-]+/g, "-")  // allow uppercase AND lowercase letters
+  .replace(/-+/g, "-")             // collapse multiple hyphens
+  .replace(/^-|-$/g, "");          // remove leading/trailing hyphens
 }
 
 
