@@ -241,6 +241,7 @@ async function handleParams(_$w,param,values) {
             const field=getFieldById(fieldId,allfields);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
+            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange: ",ActivateURLOnchange);
             ActivateURLOnchange=true;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
@@ -250,6 +251,7 @@ async function handleParams(_$w,param,values) {
               queryParams.remove([fieldTitle ]);
             }
             ActivateURLOnchange=false;
+            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange after: ",ActivateURLOnchange);
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
             const nextVals = currentVals.filter(v => v !== valueId);
             _$w(`#${FiltersIds[field.title]}CheckBox`).value = nextVals;
@@ -349,7 +351,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        console.log("inside onChange ActivateURLOnchange: ",ActivateURLOnchange);
+        console.log("inside loadFilters ActivateURLOnchange: ",ActivateURLOnchange);
         ActivateURLOnchange=true;
         console.log("selected: ",selected)
         if (selected && selected.length) {
@@ -368,6 +370,7 @@ async function loadJobsRepeater(_$w) {
           queryParams.remove([fieldTitle ]);
         }
         ActivateURLOnchange=false;
+        console.log("inside loadFilters ActivateURLOnchange after: ",ActivateURLOnchange);
         console.log("selectedByField: ",selectedByField)
         await updateJobsAndNumbersAndFilters(_$w);
       });
