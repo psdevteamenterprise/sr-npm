@@ -119,10 +119,10 @@ async function handleUrlParams(_$w,urlParams) {
   let currentApplyFilterFlag=false;
   //apply this first to determine all jobs
   if(urlParams.keyword) {
-    applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
-    currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
-    keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+    applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
+    currentJobs = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
+    keywordAllJobs = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
   }
   
   for (const url of possibleUrlParams)

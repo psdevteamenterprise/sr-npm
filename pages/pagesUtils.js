@@ -84,6 +84,9 @@ function groupValuesByField(values, refKey) {
 function loadPrimarySearchRepeater(_$w) {
   
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
+    if(!itemData.title) {
+      console.log("!!!!!!!!!!!! itemData has no title: ",itemData);
+    }
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';   
   });
   
@@ -197,8 +200,10 @@ async function primarySearch(_$w,query,alljobs) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
     return false;
   }
-  let filteredJobs=alljobs.filter(job=>job.title.toLowerCase().includes(query));
+ 
+  let filteredJobs = alljobs.filter(job=>job.title.toLowerCase().includes(query));
   if(filteredJobs.length>0) {
+    console.log('filteredJobs is not empty');
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
   }
   else {
@@ -208,9 +213,12 @@ async function primarySearch(_$w,query,alljobs) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
     }
     else{
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
+      console.log('filteredJobs is empty');
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
     }
   }
+  
+  console.log("filteredJobs: ",filteredJobs);
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
     return filteredJobs.length>0;
   
