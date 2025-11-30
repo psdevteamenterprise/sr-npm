@@ -65,6 +65,12 @@ function normalizeString(str) {
     .trim();
 }
 
+function generateSlug(title){
+  return title
+  .replace(/[^a-zA-Z0-9-]+/g, "-")  // allow uppercase AND lowercase letters
+  .replace(/-+/g, "-")             // collapse multiple hyphens
+  .replace(/^-|-$/g, "");          // remove leading/trailing hyphens
+}
 
 
 module.exports = {
@@ -74,5 +80,5 @@ module.exports = {
   fillCityLocationAndLocationAddress,
   prepareToSaveArray,
   normalizeString,
-  
+  generateSlug,
 };
