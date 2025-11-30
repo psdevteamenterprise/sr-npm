@@ -345,7 +345,7 @@ async function loadJobsRepeater(_$w) {
         console.log("FiltersIds[field.title]: ",FiltersIds[field.title]);
         console.log("_$w(`#${FiltersIds[field.title]}CheckBox`) ",_$w(`#${FiltersIds[field.title]}CheckBox`));
 
-        if(_$w(`#${FiltersIds[field.title]}CheckBox`)!=[])//to handle visiblity in external and internal pages
+        if(_$w(`#${FiltersIds[field.title]}CheckBox`).length!=0)//to handle visiblity in external and internal pages
         {
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
           dontUpdateThisCheckBox=field._id;
