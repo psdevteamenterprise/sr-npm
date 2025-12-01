@@ -88,8 +88,12 @@ async function clearAll(_$w,urlOnChange=false) {
     currentJobs=alljobs;
     keywordAllJobs=undefined;
     if(!urlOnChange) {
+      console.log("inside clearAll removing url params");
+      ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
+     // ActivateURLOnchange=true;
     }
+    console.log("before updateJobsAndNumbersAndFilters");
     await updateJobsAndNumbersAndFilters(_$w,true);
     }
 }
@@ -417,10 +421,19 @@ function getValueFromValueId(valueIds,value) {
 }
  
   async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
+    console.log("before applyJobFilters");
     await applyJobFilters(_$w,clearAll); // re-query jobs
+    console.log("after applyJobFilters");
+    console.log("before refreshFacetCounts");
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
+    console.log("after refreshFacetCounts");
+    console.log("before updateSelectedValuesRepeater");
     await updateSelectedValuesRepeater(_$w);
-    updateTotalJobsCountText(_$w);
+    console.log("after updateSelectedValuesRepeater");
+    console.log("before updateTotalJobsCountText");
+    updateTotalJobsCountText(_$w);  
+    console.log("after updateTotalJobsCountText");
+    console.log("after updateJobsAndNumbersAndFilters");
   }
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
