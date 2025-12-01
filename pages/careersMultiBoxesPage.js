@@ -127,7 +127,7 @@ async function handleUrlParams(_$w,urlParams) {
 
       while (_$w("#jobsDataset").hasNextPage()) {
         const nextItems = await _$w("#jobsDataset").nextPage();
-        items.push(...nextItems.items);
+        items.push(...nextItems);
       }
       
       currentJobs = items;   
