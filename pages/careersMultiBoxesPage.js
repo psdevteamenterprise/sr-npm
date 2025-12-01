@@ -125,8 +125,8 @@ async function handleUrlParams(_$w,urlParams) {
       let data = await _$w("#jobsDataset").getItems(0, 1000);
       items.push(...data.items);
 
-      while (_$w("#jobsDataset").hasNext()) {
-        _$w("#jobsDataset").next();
+      while (_$w("#jobsDataset").hasNextPage()) {
+        await _$w("#jobsDataset").nextPage();
         const nextItems = await _$w("#jobsDataset").getItems(0, 1000);
         items.push(...nextItems.items);
       }
