@@ -481,7 +481,7 @@ function getValueFromValueId(valueIds,value) {
   }
 
   async function applyJobFilters(_$w,clearAll=false) {
-    if(!clearAll) {
+   // if(!clearAll) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
@@ -535,7 +535,7 @@ function getValueFromValueId(valueIds,value) {
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
   }
-  }
+ // }
 
 function handlePaginationButtons(_$w)
 {
