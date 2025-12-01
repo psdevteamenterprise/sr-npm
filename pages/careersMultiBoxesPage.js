@@ -121,8 +121,9 @@ async function handleUrlParams(_$w,urlParams) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
-    currentJobs = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
-    keywordAllJobs = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+    const data = _$w("#jobsDataset").getItems()?.items || [];
+    currentJobs = data;   
+    keywordAllJobs = data;
   }
   
   for (const url of possibleUrlParams)

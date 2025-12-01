@@ -182,6 +182,7 @@ _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
 
 async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
+  
   let categoryValues=[]
   for(const value of allvaluesobjects) {
     if(value.customField===CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
