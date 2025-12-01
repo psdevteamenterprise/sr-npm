@@ -5,7 +5,6 @@ const { items: wixData } = require('@wix/data');
 const { location } = require("@wix/site-location");
 const{isElementExistOnPage} = require('psdev-utils');
 const {
-    htmlToText,
     appendQueryParams
   } = require('../public/utils');
   
@@ -13,6 +12,7 @@ const {
 
 
   async function positionPageOnReady(_$w) {
+    console.log("positionPageOnReady called");
     await bind(_$w);
     
 
@@ -30,6 +30,7 @@ async function getCategoryValue(customValues) {
 
 
   async function bind(_$w) {
+    console.log("bind called");
     _$w('#datasetJobsItem').onReady(async () => {
 
         const item = await _$w('#datasetJobsItem').getCurrentItem();
@@ -37,17 +38,14 @@ async function getCategoryValue(customValues) {
 
         handleReferFriendButton(_$w,item);
         handleApplyButton(_$w,item);
-        
 
-        
-
-        _$w('#companyDescriptionText').text = htmlToText(item.jobDescription.companyDescription.text);        
-        _$w('#responsibilitiesText').text = htmlToText(item.jobDescription.jobDescription.text);
-        _$w('#qualificationsText').text = htmlToText(item.jobDescription.qualifications.text);
+        _$w('#companyDescriptionText').content = item.jobDescription.companyDescription;        
+        _$w('#responsibilitiesText').content = item.jobDescription.jobDescription;
+        _$w('#qualificationsText').content = item.jobDescription.qualifications;
         _$w('#relatedJobsTitleText').text = `More ${item.department} Positions`;
         if(isElementExistOnPage(_$w('#additionalInfoText')))
         {
-          _$w('#additionalInfoText').text = htmlToText(item.jobDescription.additionalInformation.text);
+          _$w('#additionalInfoText').content = item.jobDescription.additionalInformation;
         }
         if(isElementExistOnPage(_$w('#relatedJobsRepNoDepartment'))) // when there is no department, we filter based on category
         {
@@ -59,7 +57,7 @@ async function getCategoryValue(customValues) {
               _$w('#jobCategory').text = categoryValue.title;
             }
 
-        const relatedJobs = await getRelatedJobs({ categoryValueId:categoryValue._id, itemId: item._id ,limit:5});
+        const relatedJobs = await getRelatedJobs({ categoryValueId: categoryValue._id, itemId: item._id ,limit:5});
           _$w('#relatedJobsRepNoDepartment').onItemReady(($item, itemData) => {
             $item('#relatedJobTitle').text = itemData.title;
             $item('#relatedJobLocation').text = itemData.location.fullLocation;
@@ -125,8 +123,6 @@ async function getCategoryValue(customValues) {
   }
 
   async function getRelatedJobs({ categoryValueId, itemId, limit = 1000 }) {
-    
-
     const relatedJobs=await wixData.query(COLLECTIONS.JOBS).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES).hasSome(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES,[categoryValueId]).ne("_id",itemId).limit(limit).find();
     return relatedJobs.items;
   }

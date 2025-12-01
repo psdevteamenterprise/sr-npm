@@ -1,8 +1,9 @@
 const { fetch } = require('wix-fetch');
 const { TEMPLATE_TYPE,TOKEN_NAME } = require('./collectionConsts');
 const { getTokenFromCMS,getApiKeys } = require('./secretsData');
+
 async function makeSmartRecruitersRequest(path,templateType) {
-   const baseUrl = 'https://api.smartrecruiters.com';
+  const baseUrl = 'https://api.smartrecruiters.com';
   const fullUrl = `${baseUrl}${path}`;
   
   try {
@@ -113,11 +114,44 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
+async function htmlRichContentConverter(sections,richContentConverterToken) {
+  const richContentObject = {}
+  for (const [sectionTitle, sectionData] of Object.entries(sections)) {
+    if (sectionData.text) {
+      const raw = JSON.stringify({
+        content: sectionData.text,
+      });
+      const requestOptions = {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          Cookie: 'XSRF-TOKEN=1753949844|p--a7HsuVjR4',
+          Authorization: 'Bearer '+richContentConverterToken,
+        },
+        body: raw,
+      };
+      const response = await fetch(
+        'https://www.wixapis.com/data-sync/v1/abmp-content-converter',
+        requestOptions
+      );
+      if (response.ok) {
+        const data = await response.json();
+        richContentObject[sectionTitle] = data.richContent.richContent;
+      }
+      else {
+        throw new Error("Error converting html to rich content response: "+response);
+      }
+    }
+  }
+  return richContentObject;
+}
+
 
 
 
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
-  makeSmartRecruitersRequest
+  makeSmartRecruitersRequest,
+  htmlRichContentConverter
 };
