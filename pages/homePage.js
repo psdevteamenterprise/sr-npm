@@ -15,7 +15,7 @@ async function homePageOnReady(_$w,thisObject = null) {
     const siteconfig = queryResult.items[0];
 
     if(siteconfig.twg) {
-        const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+        const allvaluesobjects  = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         bindPrimarySearch(_$w, allvaluesobjects);
         loadPrimarySearchRepeater(_$w)
         console.log("siteconfig.twg: ",siteconfig.twg);

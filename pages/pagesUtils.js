@@ -84,19 +84,13 @@ function groupValuesByField(values, refKey) {
 
 function loadPrimarySearchRepeater(_$w) {
   
-  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-    if(!itemData.title) {
-      console.log("!!!!!!!!!!!! itemData has no title: ",itemData);
-    }
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';   
-  });
-  
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
     const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
     const clickedItemData = data.find(
       (item) => item._id === event.context.itemId,
       
     );
+    
     // 'link-jobs-title' or 'link-copy-of-jobs-title'
     const linkKey = Object.keys(clickedItemData).find(
       key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
@@ -127,7 +121,10 @@ function loadPrimarySearchRepeater(_$w) {
 
 function bindPrimarySearch(_$w, allvaluesobjects) {
 
-  const handleSearchInput = async () => { await primarySearch(_$w) } 
+  const handleSearchInput = async () => { 
+    const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
+    await primarySearch(_$w, query);
+  } 
 
   const primarySearchDebounced = debounce(() => handleSearchInput(), 400);
 
@@ -138,7 +135,8 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
 _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
   if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
-    await primarySearch(_$w);
+    const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
+    await primarySearch(_$w, query);
   }
   else {
     await loadCategoriesListPrimarySearch(_$w,allvaluesobjects);
@@ -193,9 +191,7 @@ async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
 }
 
-async function primarySearch(_$w) {
-  const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-
+async function primarySearch(_$w, query) {
   if(query === undefined || query === '') {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
     return false;
