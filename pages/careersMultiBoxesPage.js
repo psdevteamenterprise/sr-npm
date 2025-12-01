@@ -603,9 +603,9 @@ async function secondarySearch(_$w,query) {
 }
   function bindSearchInput(_$w) {
     try {
-       bindPrimarySearch(_$w, allvaluesobjects);
+      bindPrimarySearch(_$w, allvaluesobjects);
 
-    const secondarySearchDebounced = debounce(async () => {
+      const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
     }, 150);
