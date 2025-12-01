@@ -91,7 +91,7 @@ async function clearAll(_$w,urlOnChange=false) {
       console.log("inside clearAll removing url params");
       ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
-      
+
       await updateJobsAndNumbersAndFilters(_$w,true);
 
      // ActivateURLOnchange=true;
@@ -168,6 +168,7 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
     }
   
     if(urlParams.page) {
+      console.log("inside handleUrlParams page url param before pagination, ActivateURLOnchange: ",ActivateURLOnchange);
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
         console.warn("page number is invalid, removing page from url");
         queryParams.remove(["page"]);
@@ -563,6 +564,7 @@ function handlePaginationButtons(_$w)
 
 function handlePageUrlParam() {
   console.log("inside handlePageUrlParam ActivateURLOnchange ",ActivateURLOnchange);
+  ActivateURLOnchange=false;
   if(pagination.currentPage==1)
   {
     
