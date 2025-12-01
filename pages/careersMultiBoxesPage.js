@@ -134,19 +134,23 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
+    let items = [];
+    let data;
     _$w("#jobsDataset").onReady(async () => {
-      let items = [];
-      let data = await _$w("#jobsDataset").getItems(0, 1000);
+      try {
+        data = await _$w("#jobsDataset").getItems(0, 1000);
+      } catch (error) {
+        console.error('Failed to get items:', error);
+      }
       items.push(...data.items);
 
       while (_$w("#jobsDataset").hasNextPage()) {
         const nextItems = await _$w("#jobsDataset").nextPage();
         items.push(...nextItems);
       }
-      
-      currentJobs = items;   
-      keywordAllJobs = items;
     });
+    currentJobs = items;   
+    keywordAllJobs = items;
   }
   
   for (const url of possibleUrlParams)
@@ -160,10 +164,11 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
     }
     currentApplyFilterFlag=false;
   }
-    if(applyFiltering || keywordAllJobs || handleBackAndForth) {
-      await updateJobsAndNumbersAndFilters(_$w);
-      
-    }
+
+  if(applyFiltering || keywordAllJobs || handleBackAndForth) {
+    await updateJobsAndNumbersAndFilters(_$w);
+    
+  }
   
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -472,8 +477,7 @@ function getValueFromValueId(valueIds, value) {
     }
   }
 
-  async function applyJobFilters(_$w,clearAll=false) {
-   // if(!clearAll) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
@@ -525,8 +529,7 @@ function getValueFromValueId(valueIds, value) {
     }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
-  }
- // }
+}
 
 function handlePaginationButtons(_$w)
 {
