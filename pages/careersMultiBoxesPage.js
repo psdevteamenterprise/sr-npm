@@ -112,6 +112,18 @@ function handleFilterInMobile(_$w) {
   });
 }
 
+const q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
+  
+  
+const items = [];
+let res = await q.limit(1000).find();
+items.push(...res.items);
+
+while (res.hasNext()) {
+  res = await res.next();
+  items.push(...res.items);
+}
+return items;
 
 async function handleUrlParams(_$w,urlParams) {
   try { 
@@ -121,11 +133,20 @@ async function handleUrlParams(_$w,urlParams) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
-    let data = await _$w("#jobsDataset").getItems();
-    data = data.items || [];
-    
-    currentJobs = data;   
-    keywordAllJobs = data;
+    _$w("#jobsDataset").onReady(async () => {
+      let items = [];
+      let data = await _$w("#jobsDataset").getItems(0, 1000);
+      items.push(...data.items);
+
+      while (_$w("#jobsDataset").hasNext()) {
+        _$w("#jobsDataset").next();
+        const nextItems = await _$w("#jobsDataset").getItems(0, 1000);
+        items.push(...nextItems.items);
+      }
+      
+      currentJobs = items;   
+      keywordAllJobs = items;
+    });
   }
   
   for (const url of possibleUrlParams)
