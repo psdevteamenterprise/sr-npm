@@ -600,16 +600,15 @@ async function secondarySearch(_$w,query) {
     await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
 }
-   function bindSearchInput(_$w) {
+  function bindSearchInput(_$w) {
     try {
-       bindPrimarySearch(_$w,allvaluesobjects,alljobs);
+       bindPrimarySearch(_$w, allvaluesobjects);
 
     const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
     }, 150);
 
-   
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
   } catch (error) {

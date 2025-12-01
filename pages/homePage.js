@@ -4,7 +4,7 @@ const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
 const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
-const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
+const { bindPrimarySearch, getAllRecords, loadPrimarySearchRepeater } = require('./pagesUtils');
 
 let thisObjectVar;
 let searchByCityFlag=false;
@@ -15,9 +15,8 @@ async function homePageOnReady(_$w,thisObject = null) {
     const siteconfig = queryResult.items[0];
 
     if(siteconfig.twg) {
-        const allJobs=await getAllRecords(COLLECTIONS.JOBS);
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        bindPrimarySearch(_$w,allvaluesobjects,allJobs);
+        bindPrimarySearch(_$w, allvaluesobjects);
         loadPrimarySearchRepeater(_$w)
         console.log("siteconfig.twg: ",siteconfig.twg);
         if(siteconfig.twg==="external") {
