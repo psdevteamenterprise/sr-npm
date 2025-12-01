@@ -500,6 +500,7 @@ async function referenceJobs() {
 }
 
 async function syncJobsFast() {
+  try{
   console.log("Syncing jobs fast");
   await createCollections();
   await clearCollections();
@@ -516,6 +517,12 @@ async function syncJobsFast() {
   await aggregateJobs();
   await referenceJobs();
   console.log("syncing jobs fast finished successfully");
+  }
+  catch (error) {
+    error.message="Error syncing jobs: "+error.message;
+    throw error;
+  }
+  
 }
 
 

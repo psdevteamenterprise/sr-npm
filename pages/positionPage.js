@@ -15,7 +15,6 @@ const {
     console.log("positionPageOnReady called");
     await bind(_$w);
     
-    
 
   }
 
