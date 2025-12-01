@@ -75,7 +75,7 @@ async function handleBackAndForth(_$w){
 
 async function clearAll(_$w,urlOnChange=false) {
   console.log("inside clearAll activateURLOnchange: ",ActivateURLOnchange);
-  ActivateURLOnchange=false;
+  //ActivateURLOnchange=false;
   console.log("inside clearAll changing to false: ",ActivateURLOnchange);
   if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     
