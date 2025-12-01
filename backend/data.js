@@ -444,7 +444,6 @@ function fetchJobLocation(jobDetails) {
 
 async function createCollections() {
   throw new Error("test");
-
   console.log("Creating collections");
   await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
