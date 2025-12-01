@@ -134,21 +134,18 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
-    let items = [];
-    let data;
-    _$w("#jobsDataset").onReady(async () => {
-      try {
-        data = await _$w("#jobsDataset").getItems(0, 1000);
-      } catch (error) {
-        console.error('Failed to get items:', error);
-      }
-      items.push(...data.items);
+    
+    await _$w("#jobsDataset").onReadyAsync();
 
-      while (_$w("#jobsDataset").hasNextPage()) {
-        const nextItems = await _$w("#jobsDataset").nextPage();
-        items.push(...nextItems);
-      }
-    });
+    let items = [];
+    let data = await _$w("#jobsDataset").getItems(0, 1000);
+    items.push(...data.items);
+
+    while (_$w("#jobsDataset").hasNextPage()) {
+      const nextItems = await _$w("#jobsDataset").nextPage();
+      items.push(...nextItems);
+    }
+    
     currentJobs = items;   
     keywordAllJobs = items;
   }
