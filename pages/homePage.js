@@ -8,34 +8,37 @@ const { location } = require('@wix/site-location');
 const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
+
+
 let thisObjectVar;
 let searchByCityFlag=false;
 let loadedCategories=false;
-async function homePageOnReady(_$w,thisObject=null) {
 
+async function homePageOnReady(_$w,thisObject=null) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     const siteconfig = queryResult.items[0];
+
     if(siteconfig.twg) {
-        const allJobs=await getAllRecords(COLLECTIONS.JOBS);
-        const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        bindPrimarySearch(_$w,allvaluesobjects,allJobs);
+        const allJobs = await getAllRecords(COLLECTIONS.JOBS);
+        const allvaluesobjects = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+
+        bindPrimarySearch(_$w, allvaluesobjects, allJobs);
         loadPrimarySearchRepeater(_$w)
         console.log("siteconfig.twg: ",siteconfig.twg);
-        if(siteconfig.twg==="external") {
-        bindTeamRepeater(_$w)
-        bindViewAllButton(_$w)
+
+        if(siteconfig.twg === "external") {
+            bindTeamRepeater(_$w)
+            bindViewAllButton(_$w)
         }
     }
     else{
-
-    thisObjectVar=thisObject;
-    await bind(_$w);
-    await init(_$w);
+        thisObjectVar=thisObject;
+        bind(_$w);
+        init(_$w);
     }
-    
   }
 
-  function bind(_$w) {
+function bind(_$w) {
 
     bindTeamRepeater(_$w);
 
