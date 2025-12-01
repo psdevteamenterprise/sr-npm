@@ -76,7 +76,9 @@ async function handleBackAndForth(_$w){
 async function clearAll(_$w,urlOnChange=false) {
   console.log("inside clearAll activateURLOnchange: ",ActivateURLOnchange);
   console.log("inside clearAll changing to false: ",ActivateURLOnchange);
-  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
+  console.log("inside clearAll urlOnChange: ",urlOnChange);
+  console.log("inside clearAll queryParams.page: ",queryParams.page);
+  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || queryParams.page) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
