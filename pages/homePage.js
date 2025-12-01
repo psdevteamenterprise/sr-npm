@@ -14,14 +14,16 @@ async function homePageOnReady(_$w,thisObject = null) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     const siteconfig = queryResult.items[0];
 
+
     if(siteconfig.twg) {
         const allvaluesobjects  = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
         bindPrimarySearch(_$w, allvaluesobjects);
         loadPrimarySearchRepeater(_$w)
         console.log("siteconfig.twg: ",siteconfig.twg);
-        if(siteconfig.twg==="external") {
-        bindTeamRepeater(_$w)
-        bindViewAllButton(_$w)
+
+        if(siteconfig.twg === "external") {
+            bindTeamRepeater(_$w)
+            bindViewAllButton(_$w)
         }
     }
     else{

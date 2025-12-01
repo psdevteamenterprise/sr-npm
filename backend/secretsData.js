@@ -37,9 +37,14 @@ const elevatedQuery = auth.elevate(wixData.query);
   }
   
   async function getApiKeys() {
-    const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
-    const templateType = await getTemplateTypeFromCMS();
-    return {companyId,templateType};
+    try{
+      const companyId = await getTokenFromCMS(TOKEN_NAME.COMPANY_ID);
+      const templateType = await getTemplateTypeFromCMS();
+      return {companyId,templateType};
+    } catch (error) {
+      console.error("Error getting api keys: ", error);
+      throw error;
+    }
   }
 
   module.exports = {

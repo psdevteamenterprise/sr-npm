@@ -12,7 +12,7 @@ function groupValuesByField(values, refKey) {
       if (!map.has(ref)) map.set(ref, []);
       map.get(ref).push({
         label: v.title ,
-        value: v._id
+        value: v.valueId
       });
     }
     return map;
@@ -147,6 +147,9 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
   });
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+  });
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
     if( event.key === 'Enter') {
@@ -155,6 +158,14 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
         const baseUrl = await location.baseUrl();
         location.to(`${baseUrl}/search`);
 
+      } 
+      else {
+        let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
+        const baseUrl = await location.baseUrl();
+        location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
+      }
+    }
+  });
       } 
       else {
         let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
@@ -177,13 +188,13 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
   });
 }
 
-async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
+async function loadCategoriesListPrimarySearch(_$w, allvaluesobjects) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
   
   let categoryValues=[]
   for(const value of allvaluesobjects) {
-    if(value.customField===CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
-      categoryValues.push({title:value.title+` (${value.count})` ,_id:value._id});
+    if(value.customField === CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
+      categoryValues.push({title: value.title+` (${value.count})` , _id: value.valueId});
     }
   }
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
@@ -227,11 +238,13 @@ async function primarySearch(_$w, query) {
   return count > 0;
 }
 
-  async function getValueFromValueId(valueId) {
-    const result = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-    return result.find(value => value._id === valueId);
-    
-  }
+async function getValueFromValueId(valueId) {
+  const result = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+  console.log("result: ",result);
+  console.log("valueId: ",valueId);
+
+  return result.find(value => value.valueId === valueId);
+}
 
   async function getLatestJobsByValue(Value) {
     const jobs=Value.multiRefJobsCustomValues;
