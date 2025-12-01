@@ -86,7 +86,6 @@ async function clearAll(_$w,urlOnChange=false) {
 
       await updateJobsAndNumbersAndFilters(_$w,true);
     }
-    console.log("before updateJobsAndNumbersAndFilters");
     
     }
 }
@@ -494,7 +493,6 @@ function getValueFromValueId(valueIds,value) {
         finalFilteredJobs=tempFilteredJobs;
         tempFilteredJobs=[];
     }
-    console.log("finalFilteredJobs: ",finalFilteredJobs)
     secondarySearchIsFilled? currentSecondarySearchJobs=finalFilteredJobs:currentJobs=finalFilteredJobs;
    
     
