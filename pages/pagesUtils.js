@@ -166,14 +166,6 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
       }
     }
   });
-      } 
-      else {
-        let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-        const baseUrl = await location.baseUrl();
-        location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-      }
-    }
-  });
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
     if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
