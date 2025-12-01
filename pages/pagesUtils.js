@@ -223,6 +223,8 @@ async function primarySearch(_$w, query) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
     }
   }
+
+  return count > 0;
 }
 
   async function getValueFromValueId(valueId) {
