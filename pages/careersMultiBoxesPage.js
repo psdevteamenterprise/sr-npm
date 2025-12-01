@@ -62,10 +62,6 @@ async function handleBackAndForth(_$w){
       ActivateURLOnchange=false;
       console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
       await clearAll(_$w,true);
-     // selectedByField.clear();
-     if(newQueryParams.page) {
-      pagination.currentPage=Number(newQueryParams.page);
-    }
       await handleUrlParams(_$w,newQueryParams,true); 
       ActivateURLOnchange=true;
       console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
@@ -78,12 +74,7 @@ async function handleBackAndForth(_$w){
 }
 
 async function clearAll(_$w,urlOnChange=false) {
-  console.log("inside clearAll activateURLOnchange: ",ActivateURLOnchange);
-  console.log("inside clearAll changing to false: ",ActivateURLOnchange);
-  console.log("inside clearAll urlOnChange: ",urlOnChange);
-  console.log("inside clearAll queryParams.page: ",queryParams.page);
-  console.log("current page: ",pagination.currentPage);
-  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || pagination.currentPage>1) {
+  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
@@ -100,8 +91,6 @@ async function clearAll(_$w,urlOnChange=false) {
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
 
       await updateJobsAndNumbersAndFilters(_$w,true);
-
-     // ActivateURLOnchange=true;
     }
     console.log("before updateJobsAndNumbersAndFilters");
     
