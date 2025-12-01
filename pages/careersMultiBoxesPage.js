@@ -112,19 +112,6 @@ function handleFilterInMobile(_$w) {
   });
 }
 
-const q = wixData.query(collectionId).include(JOBS_COLLECTION_FIELDS.MULTI_REF_JOBS_CUSTOM_VALUES)
-  
-  
-const items = [];
-let res = await q.limit(1000).find();
-items.push(...res.items);
-
-while (res.hasNext()) {
-  res = await res.next();
-  items.push(...res.items);
-}
-return items;
-
 async function handleUrlParams(_$w,urlParams) {
   try { 
   let applyFiltering=false;
