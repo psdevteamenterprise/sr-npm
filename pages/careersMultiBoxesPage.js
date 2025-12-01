@@ -78,7 +78,8 @@ async function clearAll(_$w,urlOnChange=false) {
   console.log("inside clearAll changing to false: ",ActivateURLOnchange);
   console.log("inside clearAll urlOnChange: ",urlOnChange);
   console.log("inside clearAll queryParams.page: ",queryParams.page);
-  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || queryParams.page) {
+  console.log("current page: ",pagination.currentPage);
+  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || pagination.currentPage>1) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
