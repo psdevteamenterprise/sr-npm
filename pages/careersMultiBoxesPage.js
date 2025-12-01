@@ -91,6 +91,7 @@ async function clearAll(_$w,urlOnChange=false) {
       console.log("inside clearAll removing url params");
       ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
+      
      // ActivateURLOnchange=true;
     }
     console.log("before updateJobsAndNumbersAndFilters");
