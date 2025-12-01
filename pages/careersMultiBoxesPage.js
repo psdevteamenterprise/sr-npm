@@ -92,6 +92,7 @@ async function clearAll(_$w,urlOnChange=false) {
       ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
       await updateJobsAndNumbersAndFilters(_$w,true);
+      
      // ActivateURLOnchange=true;
     }
     console.log("before updateJobsAndNumbersAndFilters");
