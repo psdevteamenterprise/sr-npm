@@ -124,12 +124,14 @@ function loadPrimarySearchRepeater(_$w) {
 
 }
 
- function bindPrimarySearch(_$w,allvaluesobjects,alljobs) {
+function bindPrimarySearch(_$w, allvaluesobjects, alljobs) {
 
-  const primarySearchDebounced = debounce(async () => {
-    const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
-    await primarySearch(_$w, query, alljobs);
-  }, 400);
+  const handleSearchInput = async () => {
+            const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value || '').toLowerCase().trim();
+            await primarySearch(_$w, query, alljobs);
+          } 
+
+  const primarySearchDebounced = debounce(() => handleSearchInput(), 400);
 
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => {
     await primarySearchDebounced();
@@ -195,8 +197,8 @@ async function loadCategoriesListPrimarySearch(_$w,allvaluesobjects) {
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
 }
 
-async function primarySearch(_$w,query,alljobs) {
-  if(query.length===0 || query===undefined || query==='') {
+async function primarySearch(_$w, query, alljobs) {
+  if(query.length === 0 || query === undefined || query === '') {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
     return false;
   }
@@ -220,14 +222,12 @@ async function primarySearch(_$w,query,alljobs) {
 
   console.log("filteredJobs: ",filteredJobs);
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data = filteredJobs
-  return filteredJobs.length>0; 
+  return filteredJobs.length > 0; 
 }
 
   async function getValueFromValueId(valueId) {
-    const result=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-    console.log("result: ",result);
-    console.log("valueId: ",valueId);
-    return result.find(value=>value._id===valueId);
+    const result = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
+    return result.find(value => value._id === valueId);
     
   }
 

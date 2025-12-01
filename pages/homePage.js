@@ -1,20 +1,19 @@
-const {
-    debounce,
-    getFilter,
-  } = require('../public/filterUtils');
-  const { handleOnLocationClick } = require('../public/mapUtils');
-  const { filterBrokenMarkers } = require('../public/utils');
+const { debounce, getFilter } = require('../public/filterUtils');
+const { handleOnLocationClick } = require('../public/mapUtils');
+const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
 const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { bindPrimarySearch,getAllRecords,loadPrimarySearchRepeater } = require('./pagesUtils');
+
 let thisObjectVar;
 let searchByCityFlag=false;
 let loadedCategories=false;
-async function homePageOnReady(_$w,thisObject=null) {
 
+async function homePageOnReady(_$w,thisObject = null) {
     const queryResult = await wixData.query(COLLECTIONS.SITE_CONFIGS).find();
     const siteconfig = queryResult.items[0];
+
     if(siteconfig.twg) {
         const allJobs=await getAllRecords(COLLECTIONS.JOBS);
         const allvaluesobjects=await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
@@ -27,18 +26,15 @@ async function homePageOnReady(_$w,thisObject=null) {
         }
     }
     else{
-
-    thisObjectVar=thisObject;
-    await bind(_$w);
-    await init(_$w);
+        thisObjectVar = thisObject;
+        bind(_$w);
+        init(_$w);
     }
     
-  }
+}
 
-  function bind(_$w) {
-
+function bind(_$w) {
     bindTeamRepeater(_$w);
-
 
     _$w('#citiesDataset').onReady(async () => {
         const numOfItems = await _$w('#citiesDataset').getTotalCount();
@@ -53,8 +49,8 @@ async function homePageOnReady(_$w,thisObject=null) {
                     latitude: location.latitude,
                     longitude: location.longitude
                 },
-                 address: item.locationAddress.formatted,
-                 title: item.title,
+                address: item.locationAddress.formatted,
+                title: item.title,
                 link: cityLinkUrl,
                 linkTitle:`View ${item.count} Open Positions`
             };
@@ -103,7 +99,6 @@ function bindTeamRepeater(_$w) {
 }
 
 function bindViewAllButton(_$w) {
-            
     _$w('#viewAllCategoriesButton').onClick(()=>{
         if(!loadedCategories) {
             loadedCategories=true;
@@ -122,11 +117,11 @@ function bindViewAllButton(_$w) {
 
 
 function init(_$w) {
-    const debouncedInput = debounce(()=>handleSearchInput(_$w), 400,thisObjectVar);
+    const debouncedInput = debounce(() => handleSearchInput(_$w), 400, thisObjectVar);
 
     _$w('#searchInput').onInput(debouncedInput);
     _$w('#searchInput').maxLength = 40;
-    _$w('#searchButton').onClick(()=>handleSearch(_$w('#searchInput').value));
+    _$w('#searchButton').onClick(() => handleSearch(_$w('#searchInput').value));
 
     _$w('#searchInput').onKeyPress((event) => {
         if (event.key === 'Enter') {
@@ -171,17 +166,17 @@ async function handleSearchInput(_$w) {
     count = _$w('#jobsDataset').getTotalCount();
 
     if (count > 0) {
-        searchByCityFlag=false;
+        searchByCityFlag = false;
         _$w('#resultsContainer').expand();
         _$w('#searchMultiStateBox').changeState('results');
     } else {    
-        filter=await getFilter(searchByCity);
+        filter = await getFilter(searchByCity);
         await _$w('#jobsDataset').setFilter(filter);
         await _$w('#jobsDataset').refresh();
         count = _$w('#jobsDataset').getTotalCount();
-        if(count > 0)
+        if( count > 0 )
         {
-            searchByCityFlag=true;
+            searchByCityFlag = true;
             _$w('#resultsContainer').expand();
             _$w('#searchMultiStateBox').changeState('results');
         }
