@@ -53,22 +53,16 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
-  console.log("inside handleBackAndForth ActivateURLOnchange: ",ActivateURLOnchange);
   if(ActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
-    
-
       ActivateURLOnchange=false;
-      console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams,true); 
       ActivateURLOnchange=true;
-      console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
 
     }
     else{
-      console.log("inside handleBackAndForth ActivateURLOnchange is false, not doing anything");
       ActivateURLOnchange=true;
     }
 }
@@ -157,14 +151,11 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
     currentApplyFilterFlag=false;
   }
     if(applyFiltering || keywordAllJobs || handleBackAndForth) {
-      
-      console.log("inside handleUrlParams ActivateURLOnchange before: ",ActivateURLOnchange);
       await updateJobsAndNumbersAndFilters(_$w);
       
     }
   
     if(urlParams.page) {
-      console.log("inside handleUrlParams page url param before pagination, ActivateURLOnchange: ",ActivateURLOnchange);
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
         console.warn("page number is invalid, removing page from url");
         queryParams.remove(["page"]);
@@ -262,7 +253,6 @@ async function handleParams(_$w,param,values) {
             const field=getFieldById(fieldId,allfields);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-            console.log("inside loadSelectedValuesRepeater ActivateURLOnchange before: ",ActivateURLOnchange);
             ActivateURLOnchange=false;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
@@ -372,9 +362,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        console.log("inside checkbox onChange ActivateURLOnchange: ",ActivateURLOnchange);
         ActivateURLOnchange=false;
-        console.log("selected: ",selected)
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
@@ -421,19 +409,10 @@ function getValueFromValueId(valueIds,value) {
 }
  
   async function updateJobsAndNumbersAndFilters(_$w,clearAll=false) {
-    console.log("before applyJobFilters");
     await applyJobFilters(_$w,clearAll); // re-query jobs
-    console.log("after applyJobFilters");
-    console.log("before refreshFacetCounts");
     await refreshFacetCounts(_$w,clearAll);    // recompute and update counts in all lists
-    console.log("after refreshFacetCounts");
-    console.log("before updateSelectedValuesRepeater");
     await updateSelectedValuesRepeater(_$w);
-    console.log("after updateSelectedValuesRepeater");
-    console.log("before updateTotalJobsCountText");
     updateTotalJobsCountText(_$w);  
-    console.log("after updateTotalJobsCountText");
-    console.log("after updateJobsAndNumbersAndFilters");
   }
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
@@ -559,7 +538,6 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
-  console.log("inside handlePageUrlParam ActivateURLOnchange ",ActivateURLOnchange);
   ActivateURLOnchange=false;
   if(pagination.currentPage==1)
   {
