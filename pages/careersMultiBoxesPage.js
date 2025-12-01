@@ -121,7 +121,9 @@ async function handleUrlParams(_$w,urlParams) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
-    const data = _$w("#jobsDataset").getItems()?.items || [];
+    let data = await _$w("#jobsDataset").getItems();
+    data = data.items || [];
+    
     currentJobs = data;   
     keywordAllJobs = data;
   }
