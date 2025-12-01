@@ -62,7 +62,7 @@ async function handleBackAndForth(_$w){
       console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
       await clearAll(_$w,true);
      // selectedByField.clear();
-      await handleUrlParams(_$w,newQueryParams); 
+      await handleUrlParams(_$w,newQueryParams,true); 
       ActivateURLOnchange=true;
       console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
 
@@ -91,11 +91,11 @@ async function clearAll(_$w,urlOnChange=false) {
       console.log("inside clearAll removing url params");
       ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
-      
+      await updateJobsAndNumbersAndFilters(_$w,true);
      // ActivateURLOnchange=true;
     }
     console.log("before updateJobsAndNumbersAndFilters");
-    await updateJobsAndNumbersAndFilters(_$w,true);
+    
     }
 }
 
@@ -135,7 +135,7 @@ function handleFilterInMobile(_$w) {
 }
 
 
-async function handleUrlParams(_$w,urlParams) {
+async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   try { 
   let applyFiltering=false;
   let currentApplyFilterFlag=false;
@@ -158,7 +158,7 @@ async function handleUrlParams(_$w,urlParams) {
     }
     currentApplyFilterFlag=false;
   }
-    if(applyFiltering || keywordAllJobs) {
+    if(applyFiltering || keywordAllJobs || handleBackAndForth) {
       
       console.log("inside handleUrlParams ActivateURLOnchange before: ",ActivateURLOnchange);
       await updateJobsAndNumbersAndFilters(_$w);
