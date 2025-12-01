@@ -57,11 +57,15 @@ async function handleBackAndForth(_$w){
   if(ActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
+    
 
       ActivateURLOnchange=false;
       console.log("inside handleBackAndForth ActivateURLOnchange before all changes: ",ActivateURLOnchange);
       await clearAll(_$w,true);
      // selectedByField.clear();
+     if(newQueryParams.page) {
+      pagination.currentPage=Number(newQueryParams.page);
+    }
       await handleUrlParams(_$w,newQueryParams,true); 
       ActivateURLOnchange=true;
       console.log("inside handleBackAndForth ActivateURLOnchange after all changes: ",ActivateURLOnchange);
