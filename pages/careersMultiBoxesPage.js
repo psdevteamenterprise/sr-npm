@@ -603,12 +603,14 @@ async function refreshFacetCounts(_$w,clearAll=false) {
             }
         
         }
+        if(selectedByField.has(fieldId)) {
         for (const value of selectedByField.get(fieldId)) {
           if(countsByFieldId.get(fieldId).get(value)===undefined)
           {
             counter.set(value, 0);
           }
         }
+      }
         countsByFieldId.set(fieldId, counter);
     }
   }
