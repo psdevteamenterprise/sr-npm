@@ -7,7 +7,7 @@ const { debounce } = require('../pages/pagesUtils');
 async function handlePrimarySearch(_$w, allvaluesobjects) {
     // wait for the jobs dataset to be ready
     await _$w("#jobsDataset").onReadyAsync();
-    loadPrimarySearchRepeater(_$w);
+
     await bindPrimarySearch(_$w, allvaluesobjects);
 }
 
@@ -29,30 +29,36 @@ function loadPrimarySearchRepeater(_$w) {
   
 }
 
-async function bindPrimarySearch(_$w, allvaluesobjects) {
-    const handleSearchInput = async () => { 
-      const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-      await queryPrimarySearchResults(_$w, query);
-    } 
-    
-    const primarySearchDebounced = debounce(() => handleSearchInput(), 400);
-    
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => { 
-      await primarySearchDebounced();
-    });
-    
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
-      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-    
-      if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
+async function handleSearchInput(_$w, allvaluesobjects) {
+    const callQueryPrimarySearchResults = async () => { 
         const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
         await queryPrimarySearchResults(_$w, query);
-      }
-      else {
-        await loadCategoriesListPrimarySearch(_$w,allvaluesobjects);
-      }
-    });
-    
+      } 
+      
+      const primarySearchDebounced = debounce(() => callQueryPrimarySearchResults(), 400);
+      
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => { 
+        await primarySearchDebounced();
+      });
+      
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+      
+        if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
+          const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
+          await queryPrimarySearchResults(_$w, query);
+        }
+        else {
+          await loadCategoriesListPrimarySearch(_$w, allvaluesobjects);
+        }
+      });
+}
+async function bindPrimarySearch(_$w, allvaluesobjects) {
+
+    loadPrimarySearchRepeater(_$w);
+
+    await handleSearchInput(_$w, allvaluesobjects);
+
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
     });
