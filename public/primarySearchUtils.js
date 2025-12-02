@@ -34,6 +34,8 @@ function getSearchQuery(_$w) {
 }
 
 async function handleSearchInput(_$w, allvaluesobjects) {
+    _$w('primarySearchInput').enable();
+
     const callQueryPrimarySearchResults = async () => { 
         await queryPrimarySearchResults(_$w, getSearchQuery(_$w));
       } 
@@ -72,7 +74,6 @@ async function handleSearchInput(_$w, allvaluesobjects) {
 }
 
 async function bindPrimarySearch(_$w, allvaluesobjects) {
-
     loadPrimarySearchRepeater(_$w);
 
     await handleSearchInput(_$w, allvaluesobjects);
