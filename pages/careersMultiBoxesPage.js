@@ -479,7 +479,8 @@ function getValueFromValueId(valueIds, value) {
         const options = optionsByFieldId.get(fieldId) || [];
         const option = getCorrectOption(value,options,fieldTitle);
         if(option) {
-          selectedindices.push(option.index);
+          const optionIndex = getOptionIndexFromCheckBox(_$w(`#${FiltersIds[fieldTitle]}CheckBox`).options,option.value);
+          selectedindices.push(optionIndex);
         }
       }
       _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
