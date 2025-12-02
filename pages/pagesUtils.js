@@ -81,7 +81,7 @@ function getFieldByTitle(title,allFields) {
 
 function getCorrectOption(value,options,param) {
   const standardizedValue = normalizeString(value.toLowerCase())
-  if(param==="employmenttype" || param==="Employment Type") //employmenttype have a problematic value
+  if(param==="employmenttype" || param==="Employment Type") //employmenttype have a problematic value, added Employment Type for updateOptionsUI fuinction
   {
     return options.find(option=>normalizeString(option.value.toLowerCase())===standardizedValue);
   }
