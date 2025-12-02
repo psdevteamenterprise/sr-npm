@@ -483,7 +483,6 @@ function getValueFromValueId(valueIds, value) {
     clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
     if(visibleSet.size>0) {
       let selectedindices=[];
-      //selectedByField.get(fieldId)
       for(const  values of selectedByField.get(fieldId)) {
         for (const value of values) {
         const options = optionsByFieldId.get(fieldId) || [];
