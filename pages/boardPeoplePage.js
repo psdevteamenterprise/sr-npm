@@ -10,6 +10,7 @@ async function bindBoardPeopleRepeaters(_$w) {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dynamicDataset').getCurrentItem();
         location.to(`${clickedItemData['link-board-people-title_fld']}`);
+        
     });
 
     _$w('#executivesRepeaterItem').onClick(async (event) => {
