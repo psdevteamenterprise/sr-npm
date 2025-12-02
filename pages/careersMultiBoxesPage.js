@@ -605,7 +605,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
         }
         if(selectedByField.has(fieldId)) {
         for (const value of selectedByField.get(fieldId)) {
-          if(countsByFieldId.get(fieldId).get(value)===undefined)
+          console.log("value: ",value)
+          if(countsByFieldId.get(fieldId).get(value)===0)
           {
             counter.set(value, 0);
           }
