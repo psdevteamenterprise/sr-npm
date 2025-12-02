@@ -476,7 +476,7 @@ function getValueFromValueId(valueIds, value) {
     if(visibleSet.size>0) {
       let selectedindices=[];
       for(const value of visibleSet) {
-        options = optionsByFieldId.get(fieldId) || [];
+        const options = optionsByFieldId.get(fieldId) || [];
         const option = getCorrectOption(value,options,fieldTitle);
         if(option) {
           selectedindices.push(option.index);
@@ -485,6 +485,7 @@ function getValueFromValueId(valueIds, value) {
       _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
     }
   }
+}
 
   async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
