@@ -1,13 +1,12 @@
 const { location } = require("@wix/site-location");
 
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
 const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
     // wait for the jobs dataset to be ready
     await _$w("#jobsDataset").onReadyAsync();
-
     loadPrimarySearchRepeater(_$w);
     await bindPrimarySearch(_$w, allvaluesobjects);
 }
