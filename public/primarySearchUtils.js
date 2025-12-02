@@ -29,24 +29,25 @@ function loadPrimarySearchRepeater(_$w) {
   
 }
 
+function getSearchQuery(_$w) {
+    return _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
+}
+
 async function handleSearchInput(_$w, allvaluesobjects) {
     const callQueryPrimarySearchResults = async () => { 
-        const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-        await queryPrimarySearchResults(_$w, query);
+        await queryPrimarySearchResults(_$w, getSearchQuery(_$w));
       } 
-      
-    const primarySearchDebounced = debounce(() => callQueryPrimarySearchResults(), 400);
-    
+          
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => { 
-    await primarySearchDebounced();
+        await debounce(() => callQueryPrimarySearchResults(), 300)();
     });
     
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
     
-    if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
-        const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-        await queryPrimarySearchResults(_$w, query);
+    const searchQuery = getSearchQuery(_$w);
+    if(searchQuery!=='') {
+        await queryPrimarySearchResults(_$w, searchQuery);
     }
     else {
         await loadCategoriesListPrimarySearch(_$w, allvaluesobjects);
@@ -55,7 +56,7 @@ async function handleSearchInput(_$w, allvaluesobjects) {
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
     if( event.key === 'Enter') {
-        if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
+        if(getSearchQuery(_$w) === '') {
         // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
         const baseUrl = await location.baseUrl();
         location.to(`${baseUrl}/search`);
@@ -69,16 +70,19 @@ async function handleSearchInput(_$w, allvaluesobjects) {
     }
     });
 }
+
 async function bindPrimarySearch(_$w, allvaluesobjects) {
 
     loadPrimarySearchRepeater(_$w);
 
     await handleSearchInput(_$w, allvaluesobjects);
 
+    // on mouse out collapse the results container
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
     });
     
+    // handle the click on the search button
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_BUTTON).onClick(async () => {
       if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()==='') {
         const baseUrl = await location.baseUrl();
