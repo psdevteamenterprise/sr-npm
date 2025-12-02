@@ -15,7 +15,6 @@ async function bindBoardPeopleRepeaters(_$w) {
         const baseUrl = await location.baseUrl();
         console.log("base url: ",baseUrl);
         location.to(`${clickedItemData['link-board-people-title_fld']}`);
-
     });
 
     _$w('#executivesRepeaterItem').onClick(async (event) => {
