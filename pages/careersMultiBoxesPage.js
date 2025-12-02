@@ -484,14 +484,12 @@ function getValueFromValueId(valueIds, value) {
     if(visibleSet.size>0 && selectedByField.has(fieldId)) {
       let selectedindices=[];
       for(const  value of selectedByField.get(fieldId)) {
-        
         const options = optionsByFieldId.get(fieldId) || [];
         const option = getCorrectOption(value,options,fieldTitle);
         if(option) {
           const optionIndex = getOptionIndexFromCheckBox(_$w(`#${FiltersIds[fieldTitle]}CheckBox`).options,option.value);
           selectedindices.push(optionIndex);
         }
-      
       }
       _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
     }
