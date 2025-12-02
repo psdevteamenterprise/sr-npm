@@ -18,11 +18,9 @@ const { groupValuesByField,
         getFieldByTitle,
         getCorrectOption,
         getOptionIndexFromCheckBox,
-        loadPrimarySearchRepeater,
-        bindPrimarySearch,
-        primarySearch,
         getAllDatasetItems 
       } = require('./pagesUtils');
+const { loadPrimarySearchRepeater, bindPrimarySearch, primarySearch } = require('../public/primarySearchUtil');
 
 
 let dontUpdateThisCheckBox;

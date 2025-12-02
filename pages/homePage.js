@@ -4,7 +4,8 @@ const { filterBrokenMarkers } = require('../public/utils');
 const { location } = require('@wix/site-location');
 const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
-const { bindPrimarySearch, getAllRecords, loadPrimarySearchRepeater } = require('./pagesUtils');
+const { getAllRecords } = require('./pagesUtils');
+const { bindPrimarySearch, loadPrimarySearchRepeater } = require('../public/primarySearchUtil');
 
 let thisObjectVar;
 let searchByCityFlag=false;
