@@ -6,19 +6,15 @@ const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
     loadPrimarySearchRepeater(_$w);
-    bindPrimarySearch(_$w, allvaluesobjects);
+    await bindPrimarySearch(_$w, allvaluesobjects);
 }
 
 function loadPrimarySearchRepeater(_$w) {
     
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
-    //   const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
-    //   const clickedItemData = data.find(
-    //     (item) => item._id === event.context.itemId,
-    //   );
-
       const $item = _$w.at(event.context);
       const clickedItemData = $item("#jobsDataset").getCurrentItem();
+      console.log("clickedItemData: ", JSON.stringify(clickedItemData));
 
 
       if(!clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] && !clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]) {
@@ -45,7 +41,7 @@ function loadPrimarySearchRepeater(_$w) {
   
 }
 
-function bindPrimarySearch(_$w, allvaluesobjects) {
+async function bindPrimarySearch(_$w, allvaluesobjects) {
 
     const handleSearchInput = async () => { 
       const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
