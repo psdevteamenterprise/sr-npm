@@ -5,7 +5,18 @@ const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
-const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox,loadPrimarySearchRepeater,bindPrimarySearch,primarySearch } = require('./pagesUtils');
+const { groupValuesByField, 
+        debounce, 
+        getAllRecords, 
+        getFieldById, 
+        getFieldByTitle,
+        getCorrectOption,
+        getOptionIndexFromCheckBox,
+        loadPrimarySearchRepeater,
+        bindPrimarySearch,
+        primarySearch,
+        getAllDatasetItems 
+      } = require('./pagesUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -134,18 +145,9 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   if(urlParams.keyword) {
     applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
-    
-    await _$w("#jobsDataset").onReadyAsync();
 
-    let items = [];
-    let data = await _$w("#jobsDataset").getItems(0, 1000);
-    items.push(...data.items);
+    const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);
 
-    while (_$w("#jobsDataset").hasNextPage()) {
-      const nextItems = await _$w("#jobsDataset").nextPage();
-      items.push(...nextItems);
-    }
-    
     currentJobs = items;   
     keywordAllJobs = items;
   }
