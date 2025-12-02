@@ -1,7 +1,7 @@
 const { query } = require("wix-location-frontend");
 const { getPositionWithMultiRefField } = require('../backend/queries');
 const { COLLECTIONS,JOBS_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { JOBS_COLLECTION_FIELDS: TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
+const { TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { items: wixData } = require('@wix/data');
 const { location } = require("@wix/site-location");
 const{isElementExistOnPage} = require('psdev-utils');

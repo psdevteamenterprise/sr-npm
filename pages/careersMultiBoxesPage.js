@@ -9,7 +9,7 @@ const {
   FiltersIds,
   fieldTitlesInCMS,
   possibleUrlParams,
-  JOBS_COLLECTION_FIELDS
+  TWG_JOBS_COLLECTION_FIELDS
 } = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, 
         debounce, 
@@ -318,7 +318,7 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title;
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).onClick(() => {
-        location.to(itemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] || itemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
+        location.to(itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] || itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
       });
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_EMPLOYMENT_TYPE).text=itemData.employmentType

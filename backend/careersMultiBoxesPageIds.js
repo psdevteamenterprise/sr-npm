@@ -33,7 +33,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
 }
 
-const JOBS_COLLECTION_FIELDS={
+const TWG_JOBS_COLLECTION_FIELDS={
     LINK_JOBS_TITLE: 'link-jobs-title',
     LINK_JOBS_REF_ID_SLUG: 'link-jobs-refId-slug',
 }
@@ -80,5 +80,5 @@ module.exports = {
     fieldTitlesInCMS,   
     CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
     possibleUrlParams,
-    JOBS_COLLECTION_FIELDS,
+    TWG_JOBS_COLLECTION_FIELDS,
 }
