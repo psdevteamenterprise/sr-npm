@@ -93,16 +93,13 @@ function loadPrimarySearchRepeater(_$w) {
       (item) => item._id === event.context.itemId,
       
     );
-    // 'link-jobs-title' or 'link-copy-of-jobs-title'
-    const linkKey = Object.keys(clickedItemData).find(
-      key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
-    );
-    if (linkKey && clickedItemData[linkKey] ) {
-      if(clickedItemData[linkKey].includes("copy-of-jobs")) {
-        clickedItemData[linkKey]=clickedItemData[linkKey].replace("copy-of-jobs","jobs")
-      }
-      location.to(clickedItemData[linkKey]);
+    if(!clickedItemData['link-jobs-title'] && !clickedItemData['link-jobs-refId-slug']) {
+      console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
+      return;
     }
+
+    location.to(clickedItemData['link-jobs-title']||clickedItemData['link-jobs-refId-slug']);
+    
 
   });
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
