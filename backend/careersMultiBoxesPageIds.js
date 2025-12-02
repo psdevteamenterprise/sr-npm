@@ -69,10 +69,16 @@ const possibleUrlParams=[
     "storename",
 ]
 
+
+const LINK_JOBS_TITLE = "link-jobs-title";
+const LINK_JOBS_REF_ID_SLUG = "link-jobs-refId-slug";
+
 module.exports = {
     CAREERS_MULTI_BOXES_PAGE_CONSTS,
     FiltersIds,
     fieldTitlesInCMS,   
     CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
     possibleUrlParams,
+    LINK_JOBS_TITLE,
+    LINK_JOBS_REF_ID_SLUG,
 }

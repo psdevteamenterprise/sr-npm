@@ -109,12 +109,12 @@ function loadPrimarySearchRepeater(_$w) {
       (item) => item._id === event.context.itemId,
       
     );
-    if(!clickedItemData['link-jobs-title'] && !clickedItemData['link-jobs-refId-slug']) {
+    if(!clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] && !clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]) {
       console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
       return;
     }
 
-    location.to(clickedItemData['link-jobs-title']||clickedItemData['link-jobs-refId-slug']);
+    location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE]||clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
     
 
 });
