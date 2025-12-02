@@ -481,7 +481,7 @@ function getValueFromValueId(valueIds, value) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
-    if(visibleSet.size>0) {
+    if(visibleSet.size>0 && selectedByField.has(fieldId)) {
       let selectedindices=[];
       for(const  values of selectedByField.get(fieldId)) {
         for (const value of values) {
