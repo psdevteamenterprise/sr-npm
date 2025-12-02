@@ -445,6 +445,10 @@ function getValueFromValueId(valueIds, value) {
     {
         if(countsMap.get(element.value))
         {
+          if(countsMap.get(element.value)==-1)
+          {
+            countsMap.set(element.value,0);
+          }
             filteredbase.push(element)
         }
     }
