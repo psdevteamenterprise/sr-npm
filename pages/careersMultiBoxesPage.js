@@ -462,17 +462,17 @@ function getValueFromValueId(valueIds, value) {
       : withCounts;
 
     // Preserve currently selected values that are still visible
-    let prevSelected=[]
-    clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
+  //  let prevSelected=[]
+  //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    const preserved = prevSelected.filter(v => visibleSet.has(v));
+    //const preserved = prevSelected.filter(v => visibleSet.has(v));
     if(filtered.length===0) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}NoResults`);
     }
     else{
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
-    _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
+    clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
     }
   }
 
