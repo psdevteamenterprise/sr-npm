@@ -601,6 +601,12 @@ async function refreshFacetCounts(_$w,clearAll=false) {
                     counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
+            for (const value of selectedByField.get(fieldId)) {
+              if(countsByFieldId.get(fieldId).get(value)===undefined)
+              {
+                counter.set(value, 0);
+              }
+            }
         }
         countsByFieldId.set(fieldId, counter);
     }
