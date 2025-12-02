@@ -578,8 +578,8 @@ function handlePageUrlParam() {
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
-  secondarySearchIsFilled? countJobsPerField(currentSecondarySearchJobs):countJobsPerField(currentJobs);
-    for(const field of allfields) {
+  secondarySearchIsFilled? (currentSecondarySearchJobs):countJobsPerField(currentJobs);
+    for(const field of allfields) {countJobsPerField
 
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
         clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
@@ -606,7 +606,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
         if(selectedByField.has(fieldId)) {
         for (const value of selectedByField.get(fieldId)) {
           console.log("value: ",value)
-          if(countsByFieldId.get(fieldId).get(value)===0)
+          if(counter.get(value)===undefined)
           {
             counter.set(value, 0);
           }
