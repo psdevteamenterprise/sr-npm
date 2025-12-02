@@ -23,7 +23,7 @@ function getFilter(fieldsToSearch = [], mode = 'or') {
     return filter;
 }
 
-function debounce(fn, delay = 400,thisObject) {
+function debounce(fn, delay = 400, thisObject) {
     let timeout;
     return function (...args) {
         clearTimeout(timeout);
