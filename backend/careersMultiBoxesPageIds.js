@@ -1,5 +1,7 @@
 const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     JOBS_DATASET: '#jobsDataset',
+    LINK_JOBS_TITLE: 'link-jobs-title',
+    LINK_JOBS_REF_ID_SLUG: 'link-jobs-refId-slug',
     FILTER_REPEATER: '#filterReapter',
     JOBS_REPEATER: '#jobsReapter',
     JOBS_REPEATER_ITEM_TITLE: '#jobTitle',
