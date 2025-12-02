@@ -473,6 +473,16 @@ function getValueFromValueId(valueIds, value) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
     clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
+    if(visibleSet.size>0) {
+      let selectedindices=[];
+      for(const value of visibleSet) {
+        options = optionsByFieldId.get(fieldId) || [];
+        const option = getCorrectOption(value,options,fieldTitle);
+        if(option) {
+          selectedindices.push(option.index);
+        }
+      }
+      _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
     }
   }
 
