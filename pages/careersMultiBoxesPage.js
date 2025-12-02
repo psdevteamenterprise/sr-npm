@@ -437,8 +437,12 @@ function getValueFromValueId(valueIds, value) {
     const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(dontUpdateThisCheckBox===fieldId && !clearAll)
     {
-        dontUpdateThisCheckBox=null;
-        return;
+        if(selectedByField.has(fieldId))
+        {
+          dontUpdateThisCheckBox=null;
+          return;
+        }
+      
     }
     let filteredbase=[]
     for (const element of base)
@@ -582,8 +586,8 @@ function handlePageUrlParam() {
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
-  secondarySearchIsFilled? (currentSecondarySearchJobs):countJobsPerField(currentJobs);
-    for(const field of allfields) {countJobsPerField
+  secondarySearchIsFilled? countJobsPerField(currentSecondarySearchJobs):countJobsPerField(currentJobs);
+    for(const field of allfields) {
 
         const query = (_$w(`#${FiltersIds[field.title]}input`).value || '').toLowerCase().trim();
         clearAll? updateOptionsUI(_$w,field.title, field._id, '',true):updateOptionsUI(_$w,field.title, field._id, query);
