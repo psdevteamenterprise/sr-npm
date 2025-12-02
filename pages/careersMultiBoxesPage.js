@@ -5,7 +5,18 @@ const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
 const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
-const { groupValuesByField, debounce, getAllRecords, getFieldById, getFieldByTitle,getCorrectOption,getOptionIndexFromCheckBox,loadPrimarySearchRepeater,bindPrimarySearch,primarySearch } = require('./pagesUtils');
+const { groupValuesByField, 
+        debounce, 
+        getAllRecords, 
+        getFieldById, 
+        getFieldByTitle,
+        getCorrectOption,
+        getOptionIndexFromCheckBox,
+        loadPrimarySearchRepeater,
+        bindPrimarySearch,
+        primarySearch,
+        getAllDatasetItems 
+      } = require('./pagesUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -132,10 +143,13 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   let currentApplyFilterFlag=false;
   //apply this first to determine all jobs
   if(urlParams.keyword) {
-    applyFiltering=await primarySearch(_$w, decodeURIComponent(urlParams.keyword), alljobs);
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value=decodeURIComponent(urlParams.keyword);
-    currentJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;   
-    keywordAllJobs=_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+    applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
+
+    const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);
+
+    currentJobs = items;   
+    keywordAllJobs = items;
   }
   
   for (const url of possibleUrlParams)
@@ -149,10 +163,11 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
     }
     currentApplyFilterFlag=false;
   }
-    if(applyFiltering || keywordAllJobs || handleBackAndForth) {
-      await updateJobsAndNumbersAndFilters(_$w);
-      
-    }
+
+  if(applyFiltering || keywordAllJobs || handleBackAndForth) {
+    await updateJobsAndNumbersAndFilters(_$w);
+    
+  }
   
     if(urlParams.page) {
       if(Number.isNaN(Number(urlParams.page)) || Number(urlParams.page)<=1 || Number(urlParams.page)>Math.ceil(currentJobs.length/pagination.pageSize)) {
@@ -461,8 +476,7 @@ function getValueFromValueId(valueIds, value) {
     }
   }
 
-  async function applyJobFilters(_$w,clearAll=false) {
-   // if(!clearAll) {
+  async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
     let finalFilteredJobs=[];
     secondarySearchIsFilled? finalFilteredJobs=allsecondarySearchJobs:finalFilteredJobs=alljobs;
@@ -514,8 +528,7 @@ function getValueFromValueId(valueIds, value) {
     }
     pagination.currentPage=1;
     handlePaginationButtons(_$w);
-  }
- // }
+}
 
 function handlePaginationButtons(_$w)
 {
@@ -622,16 +635,15 @@ async function secondarySearch(_$w,query) {
     await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
 }
-   function bindSearchInput(_$w) {
+  function bindSearchInput(_$w) {
     try {
-       bindPrimarySearch(_$w,allvaluesobjects,alljobs);
+      bindPrimarySearch(_$w, allvaluesobjects);
 
-    const secondarySearchDebounced = debounce(async () => {
+      const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
     }, 150);
 
-   
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).onInput(secondarySearchDebounced);
 
   } catch (error) {
