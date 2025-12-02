@@ -475,13 +475,15 @@ function getValueFromValueId(valueIds, value) {
     clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
     if(visibleSet.size>0) {
       let selectedindices=[];
-      for(const value of visibleSet) {
+      for(const [key, values] of selectedByField.entries()) {
+        for (const value of values) {
         const options = optionsByFieldId.get(fieldId) || [];
         const option = getCorrectOption(value,options,fieldTitle);
         if(option) {
           const optionIndex = getOptionIndexFromCheckBox(_$w(`#${FiltersIds[fieldTitle]}CheckBox`).options,option.value);
           selectedindices.push(optionIndex);
         }
+      }
       }
       _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
     }
