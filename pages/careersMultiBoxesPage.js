@@ -20,7 +20,7 @@ const { groupValuesByField,
         getOptionIndexFromCheckBox,
         getAllDatasetItems 
       } = require('./pagesUtils');
-const { loadPrimarySearchRepeater, bindPrimarySearch, primarySearch } = require('../public/primarySearchUtil');
+const { handlePrimarySearch, primarySearch } = require('../public/primarySearchUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -50,7 +50,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 
   await loadData(_$w);
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
-  loadPrimarySearchRepeater(_$w);
+  handlePrimarySearch(_$w, allvaluesobjects);
   await loadFilters(_$w);
   loadSelectedValuesRepeater(_$w);
   bindSearchInput(_$w);
@@ -641,8 +641,6 @@ async function secondarySearch(_$w,query) {
 }
   function bindSearchInput(_$w) {
     try {
-      bindPrimarySearch(_$w, allvaluesobjects);
-
       const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);

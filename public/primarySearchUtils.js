@@ -3,6 +3,11 @@ const { location } = require("@wix/site-location");
 const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('./utils');
 
+async function handlePrimarySearch(_$w, allvaluesobjects) {
+    loadPrimarySearchRepeater(_$w);
+    bindPrimarySearch(_$w, allvaluesobjects);
+}
+
 function loadPrimarySearchRepeater(_$w) {
     
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
@@ -151,4 +156,5 @@ module.exports = {
   loadPrimarySearchRepeater,
   bindPrimarySearch,
   primarySearch,
+  handlePrimarySearch,
 }

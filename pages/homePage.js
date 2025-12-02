@@ -5,7 +5,7 @@ const { location } = require('@wix/site-location');
 const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { getAllRecords } = require('./pagesUtils');
-const { bindPrimarySearch, loadPrimarySearchRepeater } = require('../public/primarySearchUtil');
+const { handlePrimarySearch } = require('../public/primarySearchUtils');
 
 let thisObjectVar;
 let searchByCityFlag=false;
@@ -18,8 +18,7 @@ async function homePageOnReady(_$w,thisObject = null) {
 
     if(siteconfig.twg) {
         const allvaluesobjects  = await getAllRecords(COLLECTIONS.CUSTOM_VALUES);
-        bindPrimarySearch(_$w, allvaluesobjects);
-        loadPrimarySearchRepeater(_$w)
+        handlePrimarySearch(_$w, allvaluesobjects);
         console.log("siteconfig.twg: ",siteconfig.twg);
 
         if(siteconfig.twg === "external") {
