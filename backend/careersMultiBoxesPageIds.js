@@ -1,4 +1,5 @@
 const CAREERS_MULTI_BOXES_PAGE_CONSTS={
+    JOBS_DATASET: '#jobsDataset',
     FILTER_REPEATER: '#filterReapter',
     JOBS_REPEATER: '#jobsReapter',
     JOBS_REPEATER_ITEM_TITLE: '#jobTitle',
