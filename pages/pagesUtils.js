@@ -98,24 +98,24 @@ function getOptionIndexFromCheckBox(options,value) {
 }
 
 function loadPrimarySearchRepeater(_$w) {
-
-_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
-  const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
-  const clickedItemData = data.find(
-    (item) => item._id === event.context.itemId,
-    
-  );
   
-  // 'link-jobs-title' or 'link-copy-of-jobs-title'
-  const linkKey = Object.keys(clickedItemData).find(
-    key => key.startsWith('link') && key.includes('jobs') && key.includes('title')
-  );
-  if (linkKey && clickedItemData[linkKey] ) {
-    if(clickedItemData[linkKey].includes("copy-of-jobs")) {
-      clickedItemData[linkKey]=clickedItemData[linkKey].replace("copy-of-jobs","jobs")
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_POSITION_BUTTON).label = itemData.title || '';   
+  });
+  
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+      
+    );
+    if(!clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] && !clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]) {
+      console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
+      return;
     }
-    location.to(clickedItemData[linkKey]);
-  }
+
+    location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE]||clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+    
 
 });
 _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {

@@ -1,6 +1,7 @@
 const { query } = require("wix-location-frontend");
 const { getPositionWithMultiRefField } = require('../backend/queries');
 const { COLLECTIONS,JOBS_COLLECTION_FIELDS,CUSTOM_FIELDS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS } = require('../backend/careersMultiBoxesPageIds');
 const { items: wixData } = require('@wix/data');
 const { location } = require("@wix/site-location");
 const{isElementExistOnPage} = require('psdev-utils');
@@ -73,7 +74,7 @@ async function getCategoryValue(customValues) {
       const clickedItemData = data.find(
         (item) => item._id === event.context.itemId,
       );
-      location.to(clickedItemData["link-jobs-title"]);
+      location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] || clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
     });
   }
     if(isElementExistOnPage(_$w('#relatedJobsDataset')))
