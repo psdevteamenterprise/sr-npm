@@ -608,7 +608,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
           console.log("value: ",value)
           if(counter.get(value)===undefined)
           {
-            counter.set(value, 0);
+            //it is -1 as a flag, so in case it was selected and after selecting more filters from different field and  suddenly no more jobs have it, we will show 0
+            counter.set(value, -1);
           }
         }
       }
