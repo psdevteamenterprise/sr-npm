@@ -1,7 +1,7 @@
 const { getLatestJobsByValue, getValueFromValueId } = require('./pagesUtils');
 const { location } = require("@wix/site-location");
 const { supportTeamsPageIds,supportTeamsPageSections } = require('../backend/consts');
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS } = require('../backend/careersMultiBoxesPageIds');
+const { JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { getAllRecordsWithoutMultiRef } = require('./pagesUtils');
 
 let currentItem;
@@ -61,7 +61,7 @@ async function handleRecentJobsSection(_$w) {
         const clickedItemData = data.find(
           (item) => item._id === event.context.itemId,
         );
-        location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] || clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+        location.to(clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] || clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
       });
     
     _$w(supportTeamsPageIds.RECENT_JOBS_BUTTON).onClick( () => {

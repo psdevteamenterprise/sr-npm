@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { JOBS_COLLECTION_FIELDS,COLLECTIONS } = require('../backend/collectionConsts');
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
 const { normalizeString } = require('../backend/utils');
 const { getFilter } = require('../public/filterUtils');
@@ -109,12 +109,12 @@ function loadPrimarySearchRepeater(_$w) {
       (item) => item._id === event.context.itemId,
       
     );
-    if(!clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] && !clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]) {
+    if(!clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] && !clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]) {
       console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
       return;
     }
 
-    location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE]||clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+    location.to(clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE]||clickedItemData[JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
     
 
 });
