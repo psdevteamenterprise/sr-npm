@@ -18,11 +18,11 @@ async function bindBoardPeopleRepeaters(_$w) {
 
     });
 
-    _$w('#executivesRepeaterItem').onClick((event) => {
+    _$w('#executivesRepeaterItem').onClick(async (event) => {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dataset1').getCurrentItem();
         console.log("clickedItemData executives: ",clickedItemData);
-        location.to(`/${clickedItemData['link-board-people-title_fld']}`);
+        await location.to(`/${clickedItemData['link-board-people-title_fld']}`);
 
     });
 }
