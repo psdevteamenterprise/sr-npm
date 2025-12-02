@@ -4,7 +4,7 @@ const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('./utils');
 
 function loadPrimarySearchRepeater(_$w) {
-  
+    
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
     //   const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER).data;
     //   const clickedItemData = data.find(
@@ -110,38 +110,38 @@ async function loadCategoriesListPrimarySearch(_$w, allvaluesobjects) {
     }
     
 async function primarySearch(_$w, query) {
-if(query === undefined || query === '') {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
-    return false;
-}
+    if(query === undefined || query === '') {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
+        return false;
+    }
 
-const searchByTitle = [{field: 'title', searchTerm: query}];
-const searchByCity = [{field: 'location.fullLocation', searchTerm: query}];
+    const searchByTitle = [{field: 'title', searchTerm: query}];
+    const searchByCity = [{field: 'location.fullLocation', searchTerm: query}];
 
-let filter = await getFilter(searchByTitle);
+    let filter = await getFilter(searchByTitle);
 
-await _$w('#jobsDataset').setFilter(filter);
-await _$w('#jobsDataset').refresh();
-
-let count = _$w('#jobsDataset').getTotalCount();
-
-if( count > 0 ) {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
-}
-else {
-    filter = await getFilter(searchByCity);
     await _$w('#jobsDataset').setFilter(filter);
     await _$w('#jobsDataset').refresh();
 
-    count = _$w('#jobsDataset').getTotalCount();
-    if  (count > 0) {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
+    let count = _$w('#jobsDataset').getTotalCount();
+
+    if( count > 0 ) {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
     }
-    else{
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
-    }
+    else {
+        filter = await getFilter(searchByCity);
+        await _$w('#jobsDataset').setFilter(filter);
+        await _$w('#jobsDataset').refresh();
+
+        count = _$w('#jobsDataset').getTotalCount();
+        if  (count > 0) {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
+        }
+        else{
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
+        }
 }
 
 return count > 0;
