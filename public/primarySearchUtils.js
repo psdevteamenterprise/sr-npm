@@ -5,26 +5,15 @@ const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
+    // wait for the jobs dataset to be ready
+    await _$w("#jobsDataset").onReadyAsync();
+
     loadPrimarySearchRepeater(_$w);
     await bindPrimarySearch(_$w, allvaluesobjects);
 }
 
 function loadPrimarySearchRepeater(_$w) {
-    
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOB_RESULTS_REPEATER_ITEM).onClick((event) => {
-      const $item = _$w.at(event.context);
-      const clickedItemData = $item("#jobsDataset").getCurrentItem();
-      console.log("clickedItemData: ", JSON.stringify(clickedItemData));
-
-
-      if(!clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] && !clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]) {
-        console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
-        return;
-      }
-  
-      location.to( clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE]|| clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
-  });
-
+  // handle category state
   _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
     $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
   }); 
@@ -42,7 +31,6 @@ function loadPrimarySearchRepeater(_$w) {
 }
 
 async function bindPrimarySearch(_$w, allvaluesobjects) {
-
     const handleSearchInput = async () => { 
       const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
       await queryPrimarySearchResults(_$w, query);
