@@ -8,11 +8,13 @@ async function boardPeoplePageOnReady(_$w,) {
 
 async function bindBoardPeopleRepeaters(_$w) {
     console.log("bindBoardPeopleRepeaters");
-    _$w('#directorsRepeaterItem').onClick((event) => {
+    _$w('#directorsRepeaterItem').onClick(async (event) => {
         const $item = _$w.at(event.context);
         const clickedItemData = $item('#dynamicDataset').getCurrentItem();
         console.log("clickedItemData directors: ",clickedItemData);
-        location.to(`/${clickedItemData['link-board-people-title_fld']}`);
+        const baseUrl = await location.baseUrl();
+        console.log("base url: ",baseUrl);
+        location.to(`${clickedItemData['link-board-people-title_fld']}`);
 
     });
 
