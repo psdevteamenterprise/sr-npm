@@ -20,7 +20,7 @@ const { groupValuesByField,
         getOptionIndexFromCheckBox,
         getAllDatasetItems 
       } = require('./pagesUtils');
-const { handlePrimarySearch, primarySearch } = require('../public/primarySearchUtils');
+const { handlePrimarySearch, queryPrimarySearchResults } = require('../public/primarySearchUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -147,7 +147,7 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   let currentApplyFilterFlag=false;
   //apply this first to determine all jobs
   if(urlParams.keyword) {
-    applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+    applyFiltering = await queryPrimarySearchResults(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
 
     const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);

@@ -1,7 +1,8 @@
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
+
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { getFilter } = require('../public/filterUtils');
-const { debounce } = require('./utils');
+const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
     loadPrimarySearchRepeater(_$w);
@@ -48,7 +49,7 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
 
     const handleSearchInput = async () => { 
       const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-      await primarySearch(_$w, query);
+      await queryPrimarySearchResults(_$w, query);
     } 
     
     const primarySearchDebounced = debounce(() => handleSearchInput(), 400);
@@ -62,7 +63,7 @@ function bindPrimarySearch(_$w, allvaluesobjects) {
     
       if(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value.trim()!=='') {
         const query = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-        await primarySearch(_$w, query);
+        await queryPrimarySearchResults(_$w, query);
       }
       else {
         await loadCategoriesListPrimarySearch(_$w,allvaluesobjects);
@@ -114,7 +115,7 @@ async function loadCategoriesListPrimarySearch(_$w, allvaluesobjects) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
     }
     
-async function primarySearch(_$w, query) {
+async function queryPrimarySearchResults(_$w, query) {
     if(query === undefined || query === '') {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
         return false;
@@ -155,6 +156,6 @@ return count > 0;
 module.exports = {
   loadPrimarySearchRepeater,
   bindPrimarySearch,
-  primarySearch,
+  queryPrimarySearchResults,
   handlePrimarySearch,
 }
