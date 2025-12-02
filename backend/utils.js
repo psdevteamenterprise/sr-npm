@@ -61,7 +61,8 @@ function normalizeString(str) {
   return str
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
-    .replace(/[^A-Za-z0-9-]/g, '')
+    .replace(/-/g, '')                    // remove all hyphens
+    .replace(/[^A-Za-z0-9]/g, '')         // allow only alphanumerics (no hyphens now)
     .trim();
 }
 
