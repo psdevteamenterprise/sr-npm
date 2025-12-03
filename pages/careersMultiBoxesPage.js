@@ -41,6 +41,7 @@ const pagination = {
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   console.log("careersMultiBoxesPageOnReady registered");
   _$w(`#multiStateBox1`).changeState(`loading`);
+  
   //to handle back and forth , url changes
   console.log("onChange registered");
   onChange(async ()=>{
