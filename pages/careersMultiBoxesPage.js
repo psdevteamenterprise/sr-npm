@@ -4,7 +4,13 @@ const { CAREERS_PAGE_SELECTORS } = require('../public/selectors');
 const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
+const {
+  CAREERS_MULTI_BOXES_PAGE_CONSTS,
+  FiltersIds,
+  fieldTitlesInCMS,
+  possibleUrlParams,
+  TWG_JOBS_COLLECTION_FIELDS
+} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, 
         debounce, 
         getAllRecords, 
@@ -312,7 +318,7 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title;
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).onClick(() => {
-        location.to(itemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] || itemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+        location.to(itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] || itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
       });
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_EMPLOYMENT_TYPE).text=itemData.employmentType
