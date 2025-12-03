@@ -39,6 +39,7 @@ const pagination = {
 };
 
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
+  _$w(`#multiStateBox1`).changeState(`loading`);
   //to handle back and forth , url changes
   onChange(async ()=>{
     await handleBackAndForth(_$w);
@@ -60,6 +61,8 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
+
+    _$w(`#multiStateBox1`).changeState(`results`);
 
 }
 
