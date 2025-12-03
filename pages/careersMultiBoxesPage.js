@@ -41,27 +41,38 @@ const pagination = {
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   _$w(`#multiStateBox1`).changeState(`loading`);
   //to handle back and forth , url changes
+  console.log("onChange registered");
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
+  console.log("onChange registered");
   await loadData(_$w);
+  console.log("loadData registered");
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
+  console.log("loadJobsRepeater registered");
   loadPrimarySearchRepeater(_$w);
+  console.log("loadPrimarySearchRepeater registered");
   await loadFilters(_$w);
+  console.log("loadFilters registered");
   loadSelectedValuesRepeater(_$w);
+  console.log("loadSelectedValuesRepeater registered");
   bindSearchInput(_$w);
+  console.log("bindSearchInput registered");
   loadPaginationButtons(_$w);
-
+  console.log("loadPaginationButtons registered");
     if (await window.formFactor() === "Mobile") {
       handleFilterInMobile(_$w);
   }
-    
+  console.log("handleFilterInMobile registered");
     await handleUrlParams(_$w, urlParams);
+    console.log("handleUrlParams registered");
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
-
+    console.log("clearAll registered");
+    console.log("changing multiStateBox1 to results");
     _$w(`#multiStateBox1`).changeState(`results`);
+    console.log("multiStateBox1 changed to results");
 
 }
 
