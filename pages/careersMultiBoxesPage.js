@@ -44,7 +44,6 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   onChange(async ()=>{
     await handleBackAndForth(_$w);
   });
-
   await loadData(_$w);
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
   loadPrimarySearchRepeater(_$w);
