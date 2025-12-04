@@ -31,6 +31,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
     RESULTS_CONTAINER: '#resultsContainer',
     PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
+    RESULTS_MULTI_STATE_BOX: '#multiStateBox1',
 
 }
 
