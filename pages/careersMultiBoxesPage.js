@@ -273,7 +273,7 @@ async function handleParams(_$w,param,values) {
             const prevsize=selectedByField.size;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
-              if((prevsize===1 || prevsize===0) && selectedByField.size===1) {
+              if(prevsize===1 && selectedByField.size===1) {
                 considerAllJobs=false;
               }
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
@@ -282,9 +282,7 @@ async function handleParams(_$w,param,values) {
               if(prevsize===2 && selectedByField.size===1) {
                 considerAllJobs=true;
               }
-              if(prevsize===1 && selectedByField.size===1) {
-                considerAllJobs=false;
-              }
+            
               queryParams.remove([fieldTitle ]);
             }
 
@@ -397,7 +395,7 @@ async function loadJobsRepeater(_$w) {
 
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
-          if((prevsize===1 || prevsize===0) && selectedByField.size===1) {
+          if(prevsize===1 && selectedByField.size===1) {
             considerAllJobs=false;
           }
  
@@ -416,9 +414,7 @@ async function loadJobsRepeater(_$w) {
           if(prevsize===2 && selectedByField.size===1) {
             considerAllJobs=true;
           }
-          if(prevsize===1 && selectedByField.size===1) {
-            considerAllJobs=false;
-          }
+   
 
           queryParams.remove([fieldTitle ]);
         }
