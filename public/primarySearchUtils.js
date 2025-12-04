@@ -6,86 +6,28 @@ const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
     // load the categories list before clicking on the primary search input
+    loadCategoryRepeaterData(_$w, allvaluesobjects);
+
+    // wait for the jobs dataset to be ready
+    await _$w("#jobsDataset").onReadyAsync();
+
+    await bindPrimarySearch(_$w);
+}
+
+function loadCategoryRepeaterData(_$w, allvaluesobjects) {
     let categoryValues=[]
     for(const value of allvaluesobjects) {
       if(value.customField === CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
         categoryValues.push({title: value.title+` (${value.count})` , _id: value.valueId});
       }
     }
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
-
-    // wait for the jobs dataset to be ready
-    await _$w("#jobsDataset").onReadyAsync();
-
-    await bindPrimarySearch(_$w, allvaluesobjects);
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues; 
 }
 
-function loadPrimarySearchRepeater(_$w) {
-  // handle category state
-  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
-    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
-  }); 
-  
-  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER_ITEM).onClick(async (event) => {
-    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data;
-    const clickedItemData = data.find(
-      (item) => item._id === event.context.itemId,
-    );
-    const baseUrl = await location.baseUrl();
-      const encodedCategory=encodeURIComponent(clickedItemData._id);
-      location.to(`${baseUrl}/search?category=${encodedCategory}`);
-  });
-  
-}
+async function bindPrimarySearch(_$w) {
+    handleCategoryEvents(_$w);
 
-function getSearchQuery(_$w) {
-    return _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
-}
-
-async function handleSearchInput(_$w, allvaluesobjects) {
-    _$w('#primarySearchInput').enable();
-
-    const callQueryPrimarySearchResults = async () => { 
-        await queryPrimarySearchResults(_$w, getSearchQuery(_$w));
-      } 
-          
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => { 
-        await debounce(() => callQueryPrimarySearchResults(), 300)();
-    });
-    
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-        
-        const searchQuery = getSearchQuery(_$w);
-        if(searchQuery !== '') {
-            await queryPrimarySearchResults(_$w, searchQuery);
-        }
-        else {
-            await loadCategoriesListPrimarySearch(_$w, allvaluesobjects);
-        }
-    });
-
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
-    if( event.key === 'Enter') {
-        if(getSearchQuery(_$w) === '') {
-        // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
-        const baseUrl = await location.baseUrl();
-        location.to(`${baseUrl}/search`);
-    
-        } 
-        else {
-        let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
-        const baseUrl = await location.baseUrl();
-        location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
-        }
-    }
-    });
-}
-
-async function bindPrimarySearch(_$w, allvaluesobjects) {
-    loadPrimarySearchRepeater(_$w);
-
-    await handleSearchInput(_$w, allvaluesobjects);
+    await handleSearchInput(_$w);
 
     // on mouse out collapse the results container
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).onMouseOut(async () => {
@@ -106,16 +48,68 @@ async function bindPrimarySearch(_$w, allvaluesobjects) {
     });
 }
 
-async function loadCategoriesListPrimarySearch(_$w, allvaluesobjects) {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
-    
-    let categoryValues=[]
-    for(const value of allvaluesobjects) {
-      if(value.customField === CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
-        categoryValues.push({title: value.title+` (${value.count})` , _id: value.valueId});
-      }
-    }
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
+function handleCategoryEvents(_$w) {
+    // set the label of the category repeater item
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).onItemReady(async ($item, itemData) => {
+    $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_CATEGORY_BUTTON).label = itemData.title || '';
+  }); 
+  
+  // handle the category repeater item on click
+  _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER_ITEM).onClick(async (event) => {
+    const data = _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data;
+    const clickedItemData = data.find(
+      (item) => item._id === event.context.itemId,
+    );
+    const baseUrl = await location.baseUrl();
+      const encodedCategory=encodeURIComponent(clickedItemData._id);
+      location.to(`${baseUrl}/search?category=${encodedCategory}`);
+  });
+  
+}
+
+function getSearchQuery(_$w) {
+    return _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value?.toLowerCase().trim() || '';
+}
+
+async function handleSearchInput(_$w) {
+    _$w('#primarySearchInput').enable();
+
+    // on Input call the queryPrimarySearchResults function
+    const callQueryPrimarySearchResults = async () => { 
+        await queryPrimarySearchResults(_$w, getSearchQuery(_$w));
+      } 
+          
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onInput(async () => { 
+        await debounce(() => callQueryPrimarySearchResults(), 300)();
+    });
+
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+        
+        const searchQuery = getSearchQuery(_$w);
+        if(searchQuery !== '') {
+            await queryPrimarySearchResults(_$w, searchQuery);
+        }
+        else {
+            _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
+        }
+    });
+
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
+        if( event.key === 'Enter') {
+            if(getSearchQuery(_$w) === '') {
+            // _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).collapse();
+            const baseUrl = await location.baseUrl();
+            location.to(`${baseUrl}/search`);
+        
+            } 
+            else {
+            let encodedKeyWord=encodeURIComponent(_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value);
+            const baseUrl = await location.baseUrl();
+            location.to(`${baseUrl}/search?keyword=${encodedKeyWord}`);
+            }
+        }
+    });
 }
     
 async function queryPrimarySearchResults(_$w, query) {
@@ -157,8 +151,5 @@ return count > 0;
 }
 
 module.exports = {
-  loadPrimarySearchRepeater,
-  bindPrimarySearch,
-  queryPrimarySearchResults,
   handlePrimarySearch,
 }
