@@ -39,6 +39,7 @@ let currentSecondarySearchJobs=[] // current secondary search results that are d
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
 let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 let ActivateURLOnchange=true; // whether to activate the url onchange
+let considerAllJobs=false // for countJobsPerField, if true, we consider all jobs, if false, we consider only the jobs that are displayed in the jobs repeater
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -271,9 +272,21 @@ async function handleParams(_$w,param,values) {
             ActivateURLOnchange=false;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
+              if(selectedByField.size===1) {
+                considerAllJobs=true;
+              }
+              else {
+                considerAllJobs=false;
+              }
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
+              if(selectedByField.size===1) {
+                considerAllJobs=true;
+              }
+              else {
+                considerAllJobs=false;
+              }
               queryParams.remove([fieldTitle ]);
             }
 
@@ -383,7 +396,14 @@ async function loadJobsRepeater(_$w) {
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
         ActivateURLOnchange=false;
         if (selected && selected.length) {
+        
           selectedByField.set(field._id, selected); 
+          if(selectedByField.size===1) {
+            considerAllJobs=true;
+          }
+          else {
+            considerAllJobs=false;
+          }
           if(fieldTitle==="brand" || fieldTitle==="storename") {
             //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
@@ -394,7 +414,13 @@ async function loadJobsRepeater(_$w) {
           }
           
         } else {
-          selectedByField.delete(field._id);  
+          selectedByField.delete(field._id); 
+          if(selectedByField.size===1) {
+            considerAllJobs=true;
+          }
+          else {
+            considerAllJobs=false;
+          }
           queryParams.remove([fieldTitle ]);
         }
        
@@ -597,9 +623,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
     let currentJobsIds;
-    selectedByField.size===1 ?  currentJobsIds=alljobs.map(job=>job._id) :  currentJobsIds=jobs.map(job=>job._id)
-    
-    
+    considerAllJobs ? currentJobsIds=alljobs.map(job=>job._id) : currentJobsIds=jobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
         let currentoptions = optionsByFieldId.get(fieldId)
         let counter=new Map();
