@@ -73,7 +73,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     });
     console.log("clearAll registered");
     console.log("changing multiStateBox1 to results");
-    _$w(`#multiStateBox1`).changeState(`results`);
+    _$w("#multiStateBox1").changeState("results");
     console.log("multiStateBox1 changed to results");
 
 }
