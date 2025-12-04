@@ -1,6 +1,6 @@
 const { location } = require("@wix/site-location");
 
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, PRIMARY_SEARCH_STATES } = require('../backend/careersMultiBoxesPageIds');
 const { GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('../pages/pagesUtils');
@@ -73,7 +73,7 @@ function getSearchQuery(_$w) {
 }
 
 async function handleSearchInput(_$w) {
-    _$w('#primarySearchInput').enable();
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).enable();
 
     // on Input call the queryPrimarySearchResults function
     const callQueryPrimarySearchResults = async () => { 
@@ -92,7 +92,7 @@ async function handleSearchInput(_$w) {
             await queryPrimarySearchResults(_$w, searchQuery);
         }
         else {
-            _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
+            _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState(PRIMARY_SEARCH_STATES.CATEGORY_RESULTS);
         }
     });
 
@@ -115,14 +115,14 @@ async function handleSearchInput(_$w) {
     
 async function queryPrimarySearchResults(_$w, query) {
     if(query === undefined || query === '') {
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("categoryResults");
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState(PRIMARY_SEARCH_STATES.CATEGORY_RESULTS);
         return false;
     }
 
     const searchByTitle = [{field: 'title', searchTerm: query}];
     const searchByCity = [{field: 'location.fullLocation', searchTerm: query}];
 
-    let filter = await getFilter(searchByTitle);
+    let filter = await getFilter(searchByTitle);    
 
     await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter); 
     await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
@@ -131,7 +131,7 @@ async function queryPrimarySearchResults(_$w, query) {
 
     if( count > 0 ) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState(PRIMARY_SEARCH_STATES.JOB_RESULTS);
     }
     else {
         filter = await getFilter(searchByCity);
@@ -141,10 +141,10 @@ async function queryPrimarySearchResults(_$w, query) {
         count = _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
         if  (count > 0) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState(PRIMARY_SEARCH_STATES.JOB_RESULTS);
         }
         else{
-        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("noResults");
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState(PRIMARY_SEARCH_STATES.NO_RESULTS);
         }
 }
 
