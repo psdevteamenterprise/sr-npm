@@ -31,7 +31,7 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     PRIMARY_SEARCH_CATEGORY_BUTTON: '#primarySearchCategoryButton',
     RESULTS_CONTAINER: '#resultsContainer',
     PRIMARY_SEARCH_BUTTON: '#primarySearchButton',
-
+    RESULTS_MULTI_STATE_BOX: '#multiStateBox1',
 }
 
 const CATEGORY_CUSTOM_FIELD_ID_IN_CMS='5cd8c873c9e77c0008aa7d23';
