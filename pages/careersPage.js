@@ -6,7 +6,7 @@ const { location } = require("@wix/site-location");
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { careersMultiBoxesPageOnReady } = require('./careersMultiBoxesPage');
 const { debounce, getFilter} = require('../public/filterUtils');
-const { CAREERS_PAGE_SELECTORS, FILTER_FIELDS } = require('../public/selectors');
+const { CAREERS_PAGE_SELECTORS, FILTER_FIELDS, GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 const { filterBrokenMarkers } = require('../public/utils');
   
   let currentLoadedItems =100;
@@ -58,10 +58,10 @@ async function careersPageOnReady(_$w,thisObject=null,queryParams=null) {
   
 function activateAutoLoad(_$w)
 {
-    _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).onReady(() => {
+    _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).onReady(() => {
         updateCount(_$w);
         _$w(CAREERS_PAGE_SELECTORS.FOOTER).onViewportEnter(() => {
-            if (currentLoadedItems<_$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount()) {
+            if (currentLoadedItems<_$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount()) {
                 loadMoreJobs(_$w);  
             }   
             else {
@@ -81,7 +81,7 @@ async function loadMoreJobs(_$w) {
         pageParamSet = Number(pageParamSet) + 1;
     }
     if (shouldLoad) {
-        _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).loadMore();
+        _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).loadMore();
         console.log("loading more jobs");
 
         currentLoadedItems = currentLoadedItems + itemsPerPage;
@@ -148,7 +148,7 @@ async function handlePageParam(_$w) {
         //scrolls a bit to load the dataset data
         await window.scrollTo(0, 200,{scrollAnimation:false});
         for (let i = 2; i <= queryPageVar; i++) {
-           await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).loadMore();
+           await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).loadMore();
             currentLoadedItems=currentLoadedItems+itemsPerPage
         }
         // the timeout is to wait for the repeater to render, then scroll to the last item.
@@ -170,7 +170,7 @@ async function handlePageParam(_$w) {
 }
 
 async function bind(_$w) {
-	await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).onReady(async () => {
+	await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).onReady(async () => {
 		await updateCount(_$w);
         await updateMapMarkers(_$w);
 		
@@ -337,8 +337,8 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 	});
 	
 	const filter = await getFilter(filters, 'and');
-    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).setFilter(filter);
-    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).refresh();
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter);
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
     
 	const count = await updateCount(_$w);
     console.log("updating map markers");
@@ -357,8 +357,8 @@ async function applyFilters(_$w, skipUrlUpdate = false) {
 async function resetFilters(_$w) {
 	_$w(CAREERS_PAGE_SELECTORS.SEARCH_INPUT, CAREERS_PAGE_SELECTORS.DROPDOWN_DEPARTMENT, CAREERS_PAGE_SELECTORS.DROPDOWN_LOCATION, CAREERS_PAGE_SELECTORS.DROPDOWN_JOB_TYPE, CAREERS_PAGE_SELECTORS.DROPDOWN_BRAND).value = '';
 
-    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).setFilter(wixData.filter());
-    await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).refresh();
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(wixData.filter());
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
 
 	_$w(CAREERS_PAGE_SELECTORS.RESULTS_MULTI_STATE).changeState('results');
 
@@ -374,7 +374,7 @@ async function resetFilters(_$w) {
 }
 
 async function updateCount(_$w) {
-	const count = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount();
+	const count = await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
     _$w('#numOfPositionText').text = `Showing ${count} Open Positions`;
 
 	return count;
@@ -485,8 +485,8 @@ async function handleJobTypeParam(_$w,jobType) {
 }
 
 async function updateMapMarkers(_$w){
-    const numOfItems = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getTotalCount();
-    const items = await _$w(CAREERS_PAGE_SELECTORS.JOBS_DATASET).getItems(0, numOfItems);
+    const numOfItems = await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
+    const items = await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getItems(0, numOfItems);
     const markers = filterBrokenMarkers(items.items).map(item => {
             const location = item.locationAddress.location;
             return {

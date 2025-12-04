@@ -1,6 +1,7 @@
 const { location } = require("@wix/site-location");
 
 const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
+const { GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('../pages/pagesUtils');
 
@@ -9,7 +10,7 @@ async function handlePrimarySearch(_$w, allvaluesobjects) {
     loadCategoryRepeaterData(_$w, allvaluesobjects);
 
     // wait for the jobs dataset to be ready
-    await _$w("#jobsDataset").onReadyAsync();
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).onReadyAsync();
 
     await bindPrimarySearch(_$w);
 }
@@ -123,10 +124,10 @@ async function queryPrimarySearchResults(_$w, query) {
 
     let filter = await getFilter(searchByTitle);
 
-    await _$w('#jobsDataset').setFilter(filter);
-    await _$w('#jobsDataset').refresh();
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter); 
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
 
-    let count = _$w('#jobsDataset').getTotalCount();
+    let count = _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
 
     if( count > 0 ) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
@@ -134,10 +135,10 @@ async function queryPrimarySearchResults(_$w, query) {
     }
     else {
         filter = await getFilter(searchByCity);
-        await _$w('#jobsDataset').setFilter(filter);
-        await _$w('#jobsDataset').refresh();
+        await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter);
+        await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
 
-        count = _$w('#jobsDataset').getTotalCount();
+        count = _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
         if  (count > 0) {
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_MULTI_BOX).changeState("jobResults");

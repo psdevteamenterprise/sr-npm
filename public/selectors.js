@@ -26,17 +26,20 @@ const CAREERS_PAGE_SELECTORS = {
     OPEN_FILTERS_BUTTON: '#openFiltersButton',
     CLOSE_FILTERS_BUTTON: '#closeFiltersButton',
     RESET_FILTERS_BUTTON: '#resetFiltersButton',
-    RESET_FILTERS_BUTTON: '#resetFiltersButton',
 
     RESULTS_MULTI_STATE: '#resultsMultiState',
     BRANDS_DATASET: '#brandsDataset',
     DEPARTMENTS_DATASET: '#departmentsDataset',
     LOCATIONS_DATASET: '#locationsDataset',
     JOB_TYPES_DATASET: '#jobTypesDataset',
-    JOBS_DATASET: '#jobsDataset',
     
     GOOGLE_MAPS: '#googleMaps',
     FOOTER: '#footer',
+}
+
+const GLOBAL_SECTIONS_SELECTORS = {
+    JOBS_DATASET: '#jobsDataset',
+
 }
 
 const   FILTER_FIELDS = {
@@ -49,5 +52,6 @@ const   FILTER_FIELDS = {
 
 module.exports = {
     CAREERS_PAGE_SELECTORS,
+    GLOBAL_SECTIONS_SELECTORS,
     FILTER_FIELDS,
 }

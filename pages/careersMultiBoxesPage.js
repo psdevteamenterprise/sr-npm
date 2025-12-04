@@ -1,5 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { CAREERS_PAGE_SELECTORS } = require('../public/selectors');
+const { CAREERS_PAGE_SELECTORS, GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 
 const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
@@ -147,7 +147,7 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
     applyFiltering = await queryPrimarySearchResults(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
 
-    const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);
+    const items = await getAllDatasetItems(_$w, GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET);
 
     currentJobs = items;   
     keywordAllJobs = items;

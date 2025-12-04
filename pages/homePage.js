@@ -6,6 +6,7 @@ const {wixData} = require('wix-data');
 const { COLLECTIONS } = require('../backend/collectionConsts');
 const { getAllRecords } = require('./pagesUtils');
 const { handlePrimarySearch } = require('../public/primarySearchUtils');
+const { GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 
 let thisObjectVar;
 let searchByCityFlag=false;
@@ -161,10 +162,10 @@ async function handleSearchInput(_$w) {
     
     let filter = await getFilter(searchByTitle);
 
-    await _$w('#jobsDataset').setFilter(filter);
-    await _$w('#jobsDataset').refresh();
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter);
+    await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
 
-    count = _$w('#jobsDataset').getTotalCount();
+    count = _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
 
     if (count > 0) {
         searchByCityFlag = false;
@@ -172,9 +173,9 @@ async function handleSearchInput(_$w) {
         _$w('#searchMultiStateBox').changeState('results');
     } else {    
         filter = await getFilter(searchByCity);
-        await _$w('#jobsDataset').setFilter(filter);
-        await _$w('#jobsDataset').refresh();
-        count = _$w('#jobsDataset').getTotalCount();
+        await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).setFilter(filter);
+        await _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).refresh();
+        count = _$w(GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET).getTotalCount();
         if( count > 0 )
         {
             searchByCityFlag = true;
