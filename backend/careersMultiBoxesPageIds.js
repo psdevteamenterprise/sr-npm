@@ -34,6 +34,11 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     RESULTS_MULTI_STATE_BOX: '#multiStateBox1',
 }
 
+const TWG_JOBS_COLLECTION_FIELDS={
+    LINK_JOBS_TITLE: 'link-jobs-title',
+    LINK_JOBS_REF_ID_SLUG: 'link-jobs-refId-slug',
+}
+
 const CATEGORY_CUSTOM_FIELD_ID_IN_CMS='5cd8c873c9e77c0008aa7d23';
 
 // used for filters - don't add anything else here
