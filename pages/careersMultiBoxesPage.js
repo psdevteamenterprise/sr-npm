@@ -438,11 +438,12 @@ function getValueFromValueId(valueIds, value) {
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    if((dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )|| selectedByField.size===1)
+    if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
     {
           dontUpdateThisCheckBox=null;
           return;
     }
+
     let filteredbase=[]
     for (const element of base)
     {
@@ -595,7 +596,9 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
-    const currentJobsIds=jobs.map(job=>job._id);
+    let currentJobsIds;
+    selectedByField.size===1 ?  currentJobsIds=jobs.map(job=>job._id) :  currentJobsIds=alljobs.map(job=>job._id)
+    
     
     for (const fieldId of fieldIds) {
         let currentoptions = optionsByFieldId.get(fieldId)
