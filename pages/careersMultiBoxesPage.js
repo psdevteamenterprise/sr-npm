@@ -39,7 +39,7 @@ let currentSecondarySearchJobs=[] // current secondary search results that are d
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
 let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 let ActivateURLOnchange=true; // whether to activate the url onchange
-let considerAllJobs=false // for countJobsPerField, if true, we consider all jobs, if false, we consider only the jobs that are displayed in the jobs repeater
+
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -270,18 +270,14 @@ async function handleParams(_$w,param,values) {
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
             ActivateURLOnchange=false;
-            const prevsize=selectedByField.size;
+         
             if (updated.length) {
               selectedByField.set(fieldId, updated);
-              if(prevsize===1 && selectedByField.size===1) {
-                considerAllJobs=false;
-              }
+              
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
-              if(prevsize===2 && selectedByField.size===1) {
-                considerAllJobs=true;
-              }
+       
             
               queryParams.remove([fieldTitle ]);
             }
@@ -391,13 +387,10 @@ async function loadJobsRepeater(_$w) {
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
         ActivateURLOnchange=false;
-        const prevsize=selectedByField.size;
+        
 
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
-          if(prevsize===1 && selectedByField.size===1) {
-            considerAllJobs=false;
-          }
  
 
           if(fieldTitle==="brand" || fieldTitle==="storename") {
@@ -411,11 +404,7 @@ async function loadJobsRepeater(_$w) {
           
         } else {
           selectedByField.delete(field._id); 
-          if(prevsize===2 && selectedByField.size===1) {
-            considerAllJobs=true;
-          }
    
-
           queryParams.remove([fieldTitle ]);
         }
        
@@ -617,9 +606,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
-  //  const currentJobsIds=jobs.map(job=>job._id);
-    let currentJobsIds;
-    considerAllJobs ? currentJobsIds=alljobs.map(job=>job._id) : currentJobsIds=jobs.map(job=>job._id);
+  
+    const currentJobsIds=jobs.map(job=>job._id);
     for (const fieldId of fieldIds) {
         let currentoptions = optionsByFieldId.get(fieldId)
         let counter=new Map();
