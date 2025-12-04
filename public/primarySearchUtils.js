@@ -43,7 +43,7 @@ function getSearchQuery(_$w) {
 }
 
 async function handleSearchInput(_$w, allvaluesobjects) {
-    _$w('primarySearchInput').enable();
+    _$w('#primarySearchInput').enable();
 
     const callQueryPrimarySearchResults = async () => { 
         await queryPrimarySearchResults(_$w, getSearchQuery(_$w));
