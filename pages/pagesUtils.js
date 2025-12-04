@@ -1,6 +1,6 @@
 const { items: wixData } = require('@wix/data');
 const { JOBS_COLLECTION_FIELDS,COLLECTIONS } = require('../backend/collectionConsts');
-const { CAREERS_MULTI_BOXES_PAGE_CONSTS,CATEGORY_CUSTOM_FIELD_ID_IN_CMS } = require('../backend/careersMultiBoxesPageIds');
+const { CAREERS_MULTI_BOXES_PAGE_CONSTS, CATEGORY_CUSTOM_FIELD_ID_IN_CMS, TWG_JOBS_COLLECTION_FIELDS } = require('../backend/careersMultiBoxesPageIds');
 const { location } = require("@wix/site-location");
 const { normalizeString } = require('../backend/utils');
 const { getFilter } = require('../public/filterUtils');
@@ -81,10 +81,12 @@ function getFieldByTitle(title,allFields) {
 
 function getCorrectOption(value,options,param) {
   const standardizedValue = normalizeString(value.toLowerCase())
-  if(param==="employmenttype") //employmenttype have a problematic value
+  if(param==="employmenttype" || param==="Employment Type" || param==="Store Name") //employmenttype have a problematic value, added Employment Type for updateOptionsUI fuinction, added Store Name because Store name and location have for example   Blenheim
   {
+    //option.value is the id, 
     return options.find(option=>normalizeString(option.value.toLowerCase())===standardizedValue);
   }
+  //option.label is what we see live in the UI
   return options.find(option=>normalizeString(option.label.toLowerCase())===standardizedValue);
 }
 
@@ -109,12 +111,12 @@ function loadPrimarySearchRepeater(_$w) {
       (item) => item._id === event.context.itemId,
       
     );
-    if(!clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] && !clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]) {
+    if(!clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] && !clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]) {
       console.error("clickedItemData does not have link-jobs-title or link-jobs-refId-slug");
       return;
     }
 
-    location.to(clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE]||clickedItemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+    location.to( clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE]|| clickedItemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
     
 
 });

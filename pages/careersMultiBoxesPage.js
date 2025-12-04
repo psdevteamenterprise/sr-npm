@@ -4,7 +4,13 @@ const { CAREERS_PAGE_SELECTORS } = require('../public/selectors');
 const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
 const { location } = require("@wix/site-location");
-const {CAREERS_MULTI_BOXES_PAGE_CONSTS,FiltersIds,fieldTitlesInCMS,possibleUrlParams} = require('../backend/careersMultiBoxesPageIds');
+const {
+  CAREERS_MULTI_BOXES_PAGE_CONSTS,
+  FiltersIds,
+  fieldTitlesInCMS,
+  possibleUrlParams,
+  TWG_JOBS_COLLECTION_FIELDS
+} = require('../backend/careersMultiBoxesPageIds');
 const { groupValuesByField, 
         debounce, 
         getAllRecords, 
@@ -309,7 +315,7 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).onItemReady(($item, itemData) => {
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).text = itemData.title;
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_TITLE).onClick(() => {
-        location.to(itemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_TITLE] || itemData[CAREERS_MULTI_BOXES_PAGE_CONSTS.LINK_JOBS_REF_ID_SLUG]);
+        location.to(itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_TITLE] || itemData[TWG_JOBS_COLLECTION_FIELDS.LINK_JOBS_REF_ID_SLUG]);
       });
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_LOCATION).text=itemData.location.fullLocation
       $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER_ITEM_EMPLOYMENT_TYPE).text=itemData.employmentType
@@ -432,16 +438,20 @@ function getValueFromValueId(valueIds, value) {
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    if(dontUpdateThisCheckBox===fieldId && !clearAll)
+    if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
     {
-        dontUpdateThisCheckBox=null;
-        return;
+          dontUpdateThisCheckBox=null;
+          return;
     }
     let filteredbase=[]
     for (const element of base)
     {
         if(countsMap.get(element.value))
         {
+          if(countsMap.get(element.value)==-1)
+          {
+            countsMap.set(element.value,0);
+          }
             filteredbase.push(element)
         }
     }
@@ -459,19 +469,31 @@ function getValueFromValueId(valueIds, value) {
       : withCounts;
 
     // Preserve currently selected values that are still visible
-    let prevSelected=[]
-    clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
+  //  let prevSelected=[]
+  //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    const preserved = prevSelected.filter(v => visibleSet.has(v));
+    //const preserved = prevSelected.filter(v => visibleSet.has(v));
     if(filtered.length===0) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}NoResults`);
     }
     else{
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}Results`);
     _$w(`#${FiltersIds[fieldTitle]}CheckBox`).options = filtered;
-    _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = preserved;
+    clearAll?_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value=[]:_$w(`#${FiltersIds[fieldTitle]}CheckBox`).value = visibleSet
+    if(visibleSet.size>0 && selectedByField.has(fieldId)) {
+      let selectedindices=[];
+      for(const  value of selectedByField.get(fieldId)) {
+        const options = optionsByFieldId.get(fieldId) || [];
+        const option = getCorrectOption(value,options,fieldTitle);
+        if(option) {
+          const optionIndex = getOptionIndexFromCheckBox(_$w(`#${FiltersIds[fieldTitle]}CheckBox`).options,option.value);
+          selectedindices.push(optionIndex);
+        }
+      }
+      _$w(`#${FiltersIds[fieldTitle]}CheckBox`).selectedIndices = selectedindices;
     }
   }
+}
 
   async function applyJobFilters(_$w) {
     let tempFilteredJobs=[];
@@ -584,7 +606,18 @@ async function refreshFacetCounts(_$w,clearAll=false) {
                     counter.set(option.value, (counter.get(option.value) || 0) + 1);
                 }
             }
+        
         }
+        if(selectedByField.has(fieldId)) {
+        for (const value of selectedByField.get(fieldId)) {
+          console.log("value: ",value)
+          if(counter.get(value)===undefined)
+          {
+            //it is -1 as a flag, so in case it was selected and after selecting more filters from different field and  suddenly no more jobs have it, we will show 0
+            counter.set(value, -1);
+          }
+        }
+      }
         countsByFieldId.set(fieldId, counter);
     }
   }
