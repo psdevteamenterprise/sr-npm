@@ -5,6 +5,15 @@ const { getFilter } = require('../public/filterUtils');
 const { debounce } = require('../pages/pagesUtils');
 
 async function handlePrimarySearch(_$w, allvaluesobjects) {
+    // load the categories list before clicking on the primary search input
+    let categoryValues=[]
+    for(const value of allvaluesobjects) {
+      if(value.customField === CATEGORY_CUSTOM_FIELD_ID_IN_CMS) {
+        categoryValues.push({title: value.title+` (${value.count})` , _id: value.valueId});
+      }
+    }
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
+
     // wait for the jobs dataset to be ready
     await _$w("#jobsDataset").onReadyAsync();
 
@@ -45,15 +54,15 @@ async function handleSearchInput(_$w, allvaluesobjects) {
     });
     
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onClick(async () => {
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
-    
-    const searchQuery = getSearchQuery(_$w);
-    if(searchQuery!=='') {
-        await queryPrimarySearchResults(_$w, searchQuery);
-    }
-    else {
-        await loadCategoriesListPrimarySearch(_$w, allvaluesobjects);
-    }
+        _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_CONTAINER).expand();
+        
+        const searchQuery = getSearchQuery(_$w);
+        if(searchQuery !== '') {
+            await queryPrimarySearchResults(_$w, searchQuery);
+        }
+        else {
+            await loadCategoriesListPrimarySearch(_$w, allvaluesobjects);
+        }
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).onKeyPress(async (event) => {
@@ -107,7 +116,7 @@ async function loadCategoriesListPrimarySearch(_$w, allvaluesobjects) {
       }
     }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CATEGORY_RESULTS_REPEATER).data = categoryValues;
-    }
+}
     
 async function queryPrimarySearchResults(_$w, query) {
     if(query === undefined || query === '') {
