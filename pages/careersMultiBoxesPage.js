@@ -597,7 +597,7 @@ async function refreshFacetCounts(_$w,clearAll=false) {
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
     let currentJobsIds;
-    selectedByField.size===1 ?  currentJobsIds=jobs.map(job=>job._id) :  currentJobsIds=alljobs.map(job=>job._id)
+    selectedByField.size===1 ?  currentJobsIds=alljobs.map(job=>job._id) :  currentJobsIds=jobs.map(job=>job._id)
     
     
     for (const fieldId of fieldIds) {
