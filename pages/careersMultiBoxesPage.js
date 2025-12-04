@@ -438,7 +438,7 @@ function getValueFromValueId(valueIds, value) {
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     const countsMap = countsByFieldId.get(fieldId) || new Map();
-    if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
+    if((dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )|| selectedByField.size===1)
     {
           dontUpdateThisCheckBox=null;
           return;
