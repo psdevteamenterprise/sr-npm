@@ -61,10 +61,10 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
-    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_MULTI_STATE_BOX).changeState("results");
     if (await window.formFactor() === "Mobile") {
       handleFilterInMobile(_$w);
   }
+    _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_MULTI_STATE_BOX).changeState("results");
 }
 
 async function handleBackAndForth(_$w){
