@@ -93,8 +93,9 @@ function bindTeamRepeater(_$w) {
             }      
             else
             {
-                console.log("check SR templates  and do this ")
-               
+                const clickedItemData =  $item("#dataset1").getCurrentItem()
+                const department = encodeURIComponent(clickedItemData.title);
+                location.to(`/positions?department=${department}`);
             } 
       });
 
