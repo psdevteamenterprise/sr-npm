@@ -1,5 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { CAREERS_PAGE_SELECTORS } = require('../public/selectors');
+const { CAREERS_PAGE_SELECTORS, GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 
 const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
@@ -18,11 +18,9 @@ const { groupValuesByField,
         getFieldByTitle,
         getCorrectOption,
         getOptionIndexFromCheckBox,
-        loadPrimarySearchRepeater,
-        bindPrimarySearch,
-        primarySearch,
         getAllDatasetItems 
       } = require('./pagesUtils');
+const { handlePrimarySearch, queryPrimarySearchResults } = require('../public/primarySearchUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -51,7 +49,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   });
   await loadData(_$w);
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
-  loadPrimarySearchRepeater(_$w);
+  handlePrimarySearch(_$w, allvaluesobjects);
   await loadFilters(_$w);
   loadSelectedValuesRepeater(_$w);
   bindSearchInput(_$w);
@@ -146,10 +144,10 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   let currentApplyFilterFlag=false;
   //apply this first to determine all jobs
   if(urlParams.keyword) {
-    applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+    applyFiltering = await queryPrimarySearchResults(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
 
-    const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);
+    const items = await getAllDatasetItems(_$w, GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET);
 
     currentJobs = items;   
     keywordAllJobs = items;
@@ -667,8 +665,6 @@ async function secondarySearch(_$w,query) {
 }
   function bindSearchInput(_$w) {
     try {
-      bindPrimarySearch(_$w, allvaluesobjects);
-
       const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
