@@ -11,7 +11,6 @@ const {
   
   
 
-
   async function positionPageOnReady(_$w) {
     console.log("positionPageOnReady called");
     await bind(_$w);
