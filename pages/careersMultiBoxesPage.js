@@ -43,8 +43,6 @@ const pagination = {
 };
 
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
-  console.log("Refine search button rendered: ", _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).rendered);
-  console.log("Refine search button isVisible: ", _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).isVisible);
   //to handle back and forth , url changes
   onChange(async ()=>{
     await handleBackAndForth(_$w);
