@@ -137,6 +137,16 @@ function handleFilterInMobile(_$w) {
   _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).onClick(()=>{
       exitFilterBox();
   });
+
+  console.log("Filter box collapsed: ", _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapsed);
+  if(_$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapsed){
+    console.log("Filter box is collapsed, collapsing refine search button");
+    _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).collapse();
+  }
+  else{
+    console.log("Filter box is not collapsed, expanding refine search button");
+    _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).expand();
+  }
 }
 
 
