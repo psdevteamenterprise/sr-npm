@@ -404,8 +404,7 @@ async function handleDepartmentParam(_$w,department) {
         queryParams.remove(["department" ]);
 
     }
-    
-    
+     
      
 }
 
