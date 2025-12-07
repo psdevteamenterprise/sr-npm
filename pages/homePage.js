@@ -7,6 +7,7 @@ const { COLLECTIONS } = require('../backend/collectionConsts');
 const { getAllRecords } = require('./pagesUtils');
 const { handlePrimarySearch } = require('../public/primarySearchUtils');
 const { GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
+const { isElementExistOnPage } = require('psdev-utils');
 
 let thisObjectVar;
 let searchByCityFlag=false;
@@ -85,7 +86,7 @@ function bindTeamRepeater(_$w) {
        
             const $item = _$w.at(event.context);
             
-            if(_$w("#categoriesDataset")) {
+            if(isElementExistOnPage(_$w("#categoriesDataset"))) {
                 const clickedItemData = $item("#categoriesDataset").getCurrentItem();
                 const department = encodeURIComponent(clickedItemData.title);
                 location.to(`/search?category=${department}`);
