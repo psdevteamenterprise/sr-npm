@@ -66,20 +66,6 @@ function bind(_$w) {
 function bindTeamRepeater(_$w) {
     _$w('#teamRepeater').onItemReady(($item, itemData) => {
         $item('#teamButton').label = `View ${itemData.count} Open Positions`;
-       // const department = encodeURIComponent(itemData.title);
-        // if (itemData.customField) {
-        //     [$item('#teamButton'), $item('#teamButton2')].forEach(btn => {
-        //         btn.onClick(() => {
-        //             location.to(`/search?category=${department}`);
-        //         });
-        //     });
-
-        // }
-        // else{
-        //     $item('#teamButton').onClick(()=>{
-        //         location.to(`/positions?department=${department}`);
-        //     });
-        // }
     });
     
     _$w("#teamRepeaterItem").onClick((event) => {
