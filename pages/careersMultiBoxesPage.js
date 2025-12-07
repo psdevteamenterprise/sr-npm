@@ -116,16 +116,26 @@ function handleFilterInMobile(_$w) {
       CAREERS_PAGE_SELECTORS.SECTION_3, 
       CAREERS_PAGE_SELECTORS.LINE_3,
       CAREERS_PAGE_SELECTORS.FILTER_ICON];
+    
+  const mobileFilterBoxSelectors = [
+    CAREERS_PAGE_SELECTORS.FILTER_BOX,
+    CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON,
+    CAREERS_PAGE_SELECTORS.EXIT_BUTTON,
+  ];
 
   _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).expand();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).collapse();
       });
   });
 
   const exitFilterBox = () => {
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).collapse();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).expand();
       });
@@ -139,15 +149,10 @@ function handleFilterInMobile(_$w) {
       exitFilterBox();
   });
 
-  console.log("Filter box collapsed: ", _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapsed);
-  if(_$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapsed){
-    console.log("Filter box is collapsed, collapsing refine search button");
-    _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).collapse();
-  }
-  else{
-    console.log("Filter box is not collapsed, expanding refine search button");
-    _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).expand();
-  }
+  //onmobile we should collapse the filter box and the refine search button by default 
+  mobileFilterBoxSelectors.forEach(selector => {
+    _$w(selector).collapse();
+  });
 }
 
 
