@@ -492,6 +492,7 @@ function getValueFromValueId(valueIds, value) {
     console.log("filtered before sorting: ",filtered)
     filtered.sort((a, b) => (a.label || '').localeCompare(b.label || ''));
     console.log("filtered after sorting: ",filtered)
+    
     // Preserve currently selected values that are still visible
   //  let prevSelected=[]
   //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
