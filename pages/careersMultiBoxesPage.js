@@ -253,6 +253,9 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
+      console.log("scrolling to secondary search input");
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).scrollTo();
+      console.log("scrolled to secondary search input");
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
@@ -261,6 +264,9 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text =   pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
+      console.log("scrolling to secondary search input");
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).scrollTo();
+      console.log("scrolled to secondary search input");
     });
   } catch (error) {
     console.error('Failed to load pagination buttons:', error);
