@@ -114,13 +114,15 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function htmlRichContentConverter(sections,richContentConverterToken) {
+async function htmlRichContentConverter(sections,richContentConverterToken,title) {
+  console.log("title ====");
+  console.log(title);
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
-      const raw = JSON.stringify({
+      const raw = {
         content: sectionData.text,
-      });
+      };
       const requestOptions = {
         method: 'post',
         headers: {
@@ -137,11 +139,14 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
       if (response.ok) {
         const data = await response.json();
         const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
+        if(title===" Gardening Team Member - The Warehouse, Blenheim (Fixed Term)")
+        {
         console.log("richContentWithSpacing ====");
         console.log(richContentWithSpacing);
 
         console.log("data.richContent.richContent ====");
         console.log(data.richContent.richContent);
+        }
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
