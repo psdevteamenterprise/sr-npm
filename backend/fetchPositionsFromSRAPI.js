@@ -222,6 +222,7 @@ function addSpacingToRichContent(html, richContent) {
   };
   
   // Check if a paragraph contains text that should be split by <br>
+  
   const shouldSplitByBr = (node) => {
       if (node.type !== 'PARAGRAPH') return null;
       
