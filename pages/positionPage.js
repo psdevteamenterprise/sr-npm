@@ -10,8 +10,6 @@ const {
   } = require('../public/utils');
   
   
-
-
   async function positionPageOnReady(_$w) {
     console.log("positionPageOnReady called");
     await bind(_$w);
@@ -90,8 +88,14 @@ async function getCategoryValue(customValues) {
 }
 
   function handleReferFriendButton(_$w,item) {
-    if(!item.referFriendLink &&  isElementExistOnPage(_$w('#referFriendButton'))){
-      _$w('#referFriendButton').hide();
+    if(isElementExistOnPage(_$w('#referFriendButton'))){
+      if(!item.referFriendLink){
+        _$w('#referFriendButton').hide();
+      }
+      else {
+        _$w('#referFriendButton').target="_blank";
+        _$w('#referFriendButton').link=item.referFriendLink;
+      }
     }
   }
 

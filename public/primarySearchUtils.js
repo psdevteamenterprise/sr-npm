@@ -153,4 +153,5 @@ return count > 0;
 
 module.exports = {
   handlePrimarySearch,
+  queryPrimarySearchResults
 }
