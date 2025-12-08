@@ -117,6 +117,7 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 async function htmlRichContentConverter(sections,richContentConverterToken,title) {
   console.log("title ====");
   console.log(title);
+  
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
