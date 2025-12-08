@@ -463,7 +463,6 @@ function getValueFromValueId(valueIds, value) {
     //const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(considerAllJobs)
     {
-      
       const selectedFieldId=Array.from( selectedByField.keys() )[0]
       if(selectedFieldId===fieldId) {
         const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
