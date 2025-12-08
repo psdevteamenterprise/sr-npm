@@ -121,9 +121,9 @@ async function htmlRichContentConverter(sections,richContentConverterToken,title
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
-      const raw = {
+      const raw = JSON.stringify({
         content: sectionData.text,
-      };
+      });
       const requestOptions = {
         method: 'post',
         headers: {
