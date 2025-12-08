@@ -254,7 +254,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
       console.log("scrolling to secondary search input");
-      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).scrollTo();
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
       console.log("scrolled to secondary search input");
     });
 
@@ -265,7 +265,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
       console.log("scrolling to secondary search input");
-      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).scrollTo();
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
       console.log("scrolled to secondary search input");
     });
   } catch (error) {
@@ -488,6 +488,10 @@ function getValueFromValueId(valueIds, value) {
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
 
+    // Sort alphabetically by label
+    console.log("filtered before sorting: ",filtered)
+    filtered.sort((a, b) => (a.label || '').localeCompare(b.label || ''));
+    console.log("filtered after sorting: ",filtered)
     // Preserve currently selected values that are still visible
   //  let prevSelected=[]
   //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
