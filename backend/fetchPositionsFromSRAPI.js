@@ -139,6 +139,7 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
         const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
         console.log("richContentWithSpacing ====");
         console.log(richContentWithSpacing);
+        
         console.log("data.richContent.richContent ====");
         console.log(data.richContent.richContent);
         richContentObject[sectionTitle] = richContentWithSpacing
