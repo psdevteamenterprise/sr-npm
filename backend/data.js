@@ -287,7 +287,7 @@ async function saveJobsDescriptionsAndLocationApplyUrlReferencesToCMS() {
         const chunkPromises = chunk.map(async job => {
           try {
             const jobDetails = await fetchJobDescription(job._id);
-            const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections,richContentConverterToken,job.title);
+            const richContentDescription=await htmlRichContentConverter(jobDetails.jobAd.sections,richContentConverterToken);
             const jobLocation = fetchJobLocation(jobDetails);
             const {applyLink , referFriendLink} = fetchApplyAndReferFriendLink(jobDetails);
             const updatedJob = {
