@@ -461,7 +461,6 @@ function getValueFromValueId(valueIds, value) {
     let base = optionsByFieldId.get(fieldId) || [];
     let countsMap=countsByFieldId.get(fieldId) || new Map();
     //const countsMap = countsByFieldId.get(fieldId) || new Map();
-    
     if(considerAllJobs)
     {
       const selectedFieldId=Array.from( selectedByField.keys() )[0]
