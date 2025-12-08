@@ -458,16 +458,15 @@ function getValueFromValueId(valueIds, value) {
 
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
-    let countsMap;
+    let countsMap=countsByFieldId.get(fieldId) || new Map();
     //const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(considerAllJobs)
     {
       const selectedFieldId=Array.from( selectedByField.keys() )[0]
-      const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
-      countsMap = new Map(relevantFields.map(val=>[val.valueId, val.count]));
-    }
-    else{
-      countsMap = countsByFieldId.get(fieldId) || new Map();
+      if(selectedFieldId===fieldId) {
+        const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
+        countsMap = new Map(relevantFields.map(val=>[val.valueId, val.count]));
+      }
     }
     if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
     {
