@@ -139,7 +139,7 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
         const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
         console.log("richContentWithSpacing ====");
         console.log(richContentWithSpacing);
-        
+
         console.log("data.richContent.richContent ====");
         console.log(data.richContent.richContent);
         richContentObject[sectionTitle] = richContentWithSpacing
@@ -155,6 +155,9 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
 //Adds empty paragraph nodes between sections in rich content 
 // to create visual spacing that the Wix RICOS converter strips out
 function addSpacingToRichContent(html, richContent) {
+  if (!richContent || !richContent.nodes) {
+      return richContent;
+  }
 
   // Extract paragraph texts from HTML that end with &#xa0;
   const htmlParagraphsWithSpace = [];
@@ -192,9 +195,21 @@ function addSpacingToRichContent(html, richContent) {
   const newNodes = [];
   let nodeIdCounter = 0;
   
+  // Check if a paragraph is bold (has BOLD decoration)
+  const isBoldParagraph = (node) => {
+      if (node.type !== 'PARAGRAPH') return false;
+      const decorations = node.nodes?.[0]?.textData?.decorations || [];
+      return decorations.some(d => d.type === 'BOLD');
+  };
+  
   // Check if a paragraph node's text matches one with &#xa0; in HTML
   const needsSpacingAfter = (node) => {
       if (node.type !== 'PARAGRAPH') return false;
+      
+      // Add spacing after bold paragraphs
+      if (isBoldParagraph(node)) {
+          return true;
+      }
       
       const text = node.nodes?.[0]?.textData?.text || '';
       const trimmedText = text.trim();
