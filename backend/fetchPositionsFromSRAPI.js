@@ -327,8 +327,6 @@ function createEmptyParagraph(id) {
 
 
 
-
-
 module.exports = {
   fetchPositionsFromSRAPI,
   fetchJobDescription,
