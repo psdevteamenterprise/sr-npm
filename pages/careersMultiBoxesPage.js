@@ -274,6 +274,7 @@ async function handleParams(_$w,param,values) {
             const previousSelectedSize=selectedByField.size;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
+
               
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
@@ -467,6 +468,7 @@ function getValueFromValueId(valueIds, value) {
       if(selectedFieldId===fieldId) {
         const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
         countsMap = new Map(relevantFields.map(val=>[val.valueId, val.count]));
+        considerAllJobs=false;
       }
     }
     if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
