@@ -267,6 +267,7 @@ async function handleParams(_$w,param,values) {
       console.log("scrolling to secondary search input");
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).scrollTo();
       console.log("scrolled to secondary search input");
+      
     });
   } catch (error) {
     console.error('Failed to load pagination buttons:', error);
