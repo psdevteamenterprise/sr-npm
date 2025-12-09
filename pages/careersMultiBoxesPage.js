@@ -37,6 +37,8 @@ let currentSecondarySearchJobs=[] // current secondary search results that are d
 let secondarySearchIsFilled=false // whether the secondary search is filled with results
 let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 let ActivateURLOnchange=true; // whether to activate the url onchange
+let considerAllJobs=false; // whether to consider all jobs or not
+
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -285,11 +287,16 @@ async function handleParams(_$w,param,values) {
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
             ActivateURLOnchange=false;
+            const previousSelectedSize=selectedByField.size;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
+
+              
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
             } else {
               selectedByField.delete(fieldId);
+              handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
+            
               queryParams.remove([fieldTitle ]);
             }
 
@@ -398,8 +405,12 @@ async function loadJobsRepeater(_$w) {
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
         ActivateURLOnchange=false;
+        const previousSelectedSize=selectedByField.size;
+
         if (selected && selected.length) {
           selectedByField.set(field._id, selected); 
+ 
+
           if(fieldTitle==="brand" || fieldTitle==="storename") {
             //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
@@ -410,7 +421,8 @@ async function loadJobsRepeater(_$w) {
           }
           
         } else {
-          selectedByField.delete(field._id);  
+          selectedByField.delete(field._id); 
+          handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
           queryParams.remove([fieldTitle ]);
         }
        
@@ -451,14 +463,34 @@ function getValueFromValueId(valueIds, value) {
     updateTotalJobsCountText(_$w);  
   }
 
+  function handleConsiderAllJobs(previousSelectedSize,currentSelectedSize) {
+    if(previousSelectedSize===2 && currentSelectedSize===1) {
+
+      considerAllJobs=true;
+    }
+    else{
+      considerAllJobs=false;
+    }
+  }
+
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
-    const countsMap = countsByFieldId.get(fieldId) || new Map();
+    let countsMap=countsByFieldId.get(fieldId) || new Map();
+    if(considerAllJobs)
+    {
+      const selectedFieldId=Array.from( selectedByField.keys() )[0]
+      if(selectedFieldId===fieldId) {
+        const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
+        countsMap = new Map(relevantFields.map(val=>[val.valueId, val.count]));
+        considerAllJobs=false;
+      }
+    }
     if(dontUpdateThisCheckBox===fieldId && !clearAll && selectedByField.has(fieldId) )
     {
           dontUpdateThisCheckBox=null;
           return;
     }
+
     let filteredbase=[]
     for (const element of base)
     {
@@ -613,8 +645,8 @@ async function refreshFacetCounts(_$w,clearAll=false) {
 
   function countJobsPerField(jobs) {
     const fieldIds = Array.from(optionsByFieldId.keys());
+  
     const currentJobsIds=jobs.map(job=>job._id);
-    
     for (const fieldId of fieldIds) {
         let currentoptions = optionsByFieldId.get(fieldId)
         let counter=new Map();
