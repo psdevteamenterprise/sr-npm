@@ -532,13 +532,16 @@ async function syncJobsFast() {
 
 async function clearCollections() {
   console.log("clearing collections");
+  if(siteconfig===undefined) {
+    await getSiteConfig();
+  }
   await Promise.all([
     wixData.truncate(COLLECTIONS.CITIES),
     wixData.truncate(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
     wixData.truncate(COLLECTIONS.JOBS),
     wixData.truncate(COLLECTIONS.BRANDS),
-    wixData.truncate(COLLECTIONS.CUSTOM_VALUES),
-    wixData.truncate(COLLECTIONS.CUSTOM_FIELDS),
+    siteconfig.customFields==="true" ? wixData.truncate(COLLECTIONS.CUSTOM_VALUES) : null,
+    siteconfig.customFields==="true" ? wixData.truncate(COLLECTIONS.CUSTOM_FIELDS) : null,
   ]);
   console.log("cleared collections successfully");
 }
