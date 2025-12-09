@@ -54,13 +54,14 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   loadSelectedValuesRepeater(_$w);
   bindSearchInput(_$w);
   loadPaginationButtons(_$w);
-    if (await window.formFactor() === "Mobile") {
-      handleFilterInMobile(_$w);
-  }
+
     await handleUrlParams(_$w, urlParams);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
+    if (await window.formFactor() === "Mobile") {
+      handleFilterInMobile(_$w);
+  }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_MULTI_STATE_BOX).changeState("results");
 }
 
@@ -113,16 +114,26 @@ function handleFilterInMobile(_$w) {
       CAREERS_PAGE_SELECTORS.SECTION_3, 
       CAREERS_PAGE_SELECTORS.LINE_3,
       CAREERS_PAGE_SELECTORS.FILTER_ICON];
+    
+  const mobileFilterBoxSelectors = [
+    CAREERS_PAGE_SELECTORS.FILTER_BOX,
+    CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON,
+    CAREERS_PAGE_SELECTORS.EXIT_BUTTON,
+  ];
 
   _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).expand();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).collapse();
       });
   });
 
   const exitFilterBox = () => {
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).collapse();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).expand();
       });
@@ -134,6 +145,11 @@ function handleFilterInMobile(_$w) {
 
   _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).onClick(()=>{
       exitFilterBox();
+  });
+
+  //onmobile we should collapse the filter box and the refine search button by default 
+  mobileFilterBoxSelectors.forEach(selector => {
+    _$w(selector).collapse();
   });
 }
 
