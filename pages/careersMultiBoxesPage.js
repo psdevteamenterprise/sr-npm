@@ -253,6 +253,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
@@ -261,6 +262,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text =   pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
   } catch (error) {
     console.error('Failed to load pagination buttons:', error);
@@ -482,6 +484,8 @@ function getValueFromValueId(valueIds, value) {
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
 
+    // Sort alphabetically by label
+    filtered.sort((a, b) => (a.label || '').localeCompare(b.label || ''));
     // Preserve currently selected values that are still visible
   //  let prevSelected=[]
   //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
