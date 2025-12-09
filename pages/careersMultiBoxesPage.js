@@ -87,6 +87,7 @@ async function clearAll(_$w,urlOnChange=false) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
+      _$w(`#${FiltersIds[field.title]}input`).value='';
     }
     selectedByField.clear();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
