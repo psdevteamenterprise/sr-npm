@@ -463,14 +463,18 @@ function fetchJobLocation(jobDetails) {
 
 async function createCollections() {
   console.log("Creating collections");
+  if(siteconfig===undefined) {
+    await getSiteConfig();
+  }
+  
   await Promise.all(
   [createCollectionIfMissing(COLLECTIONS.JOBS, COLLECTIONS_FIELDS.JOBS,{ insert: 'ADMIN', update: 'ADMIN', remove: 'ADMIN', read: 'ANYONE' }),
   createCollectionIfMissing(COLLECTIONS.CITIES, COLLECTIONS_FIELDS.CITIES),
   createCollectionIfMissing(COLLECTIONS.AMOUNT_OF_JOBS_PER_DEPARTMENT, COLLECTIONS_FIELDS.AMOUNT_OF_JOBS_PER_DEPARTMENT),
   createCollectionIfMissing(COLLECTIONS.SECRET_MANAGER_MIRROR, COLLECTIONS_FIELDS.SECRET_MANAGER_MIRROR),
   createCollectionIfMissing(COLLECTIONS.BRANDS, COLLECTIONS_FIELDS.BRANDS),
-  createCollectionIfMissing(COLLECTIONS.CUSTOM_VALUES, COLLECTIONS_FIELDS.CUSTOM_VALUES),
-  createCollectionIfMissing(COLLECTIONS.CUSTOM_FIELDS, COLLECTIONS_FIELDS.CUSTOM_FIELDS)
+  siteconfig.customFields==="true" ? createCollectionIfMissing(COLLECTIONS.CUSTOM_VALUES, COLLECTIONS_FIELDS.CUSTOM_VALUES) : null,
+  siteconfig.customFields==="true" ? createCollectionIfMissing(COLLECTIONS.CUSTOM_FIELDS, COLLECTIONS_FIELDS.CUSTOM_FIELDS) : null
 ]);
   console.log("finished creating Collections");
 }
