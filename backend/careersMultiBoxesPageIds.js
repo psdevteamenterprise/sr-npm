@@ -34,6 +34,12 @@ const CAREERS_MULTI_BOXES_PAGE_CONSTS={
     RESULTS_MULTI_STATE_BOX: '#multiStateBox1',
 }
 
+const PRIMARY_SEARCH_STATES={
+    CATEGORY_RESULTS: 'categoryResults',
+    JOB_RESULTS: 'jobResults',
+    NO_RESULTS: 'noResults',
+}
+
 const TWG_JOBS_COLLECTION_FIELDS={
     LINK_JOBS_TITLE: 'link-jobs-title',
     LINK_JOBS_REF_ID_SLUG: 'link-jobs-refId-slug',
@@ -82,4 +88,5 @@ module.exports = {
     CATEGORY_CUSTOM_FIELD_ID_IN_CMS,
     possibleUrlParams,
     TWG_JOBS_COLLECTION_FIELDS,
+    PRIMARY_SEARCH_STATES,
 }

@@ -1,5 +1,5 @@
 const { COLLECTIONS,CUSTOM_VALUES_COLLECTION_FIELDS,JOBS_COLLECTION_FIELDS } = require('../backend/collectionConsts');
-const { CAREERS_PAGE_SELECTORS } = require('../public/selectors');
+const { CAREERS_PAGE_SELECTORS, GLOBAL_SECTIONS_SELECTORS } = require('../public/selectors');
 
 const { window } = require('@wix/site-window');
 const { queryParams,onChange} = require('wix-location-frontend');
@@ -18,11 +18,9 @@ const { groupValuesByField,
         getFieldByTitle,
         getCorrectOption,
         getOptionIndexFromCheckBox,
-        loadPrimarySearchRepeater,
-        bindPrimarySearch,
-        primarySearch,
         getAllDatasetItems 
       } = require('./pagesUtils');
+const { handlePrimarySearch, queryPrimarySearchResults } = require('../public/primarySearchUtils');
 
 
 let dontUpdateThisCheckBox;
@@ -53,18 +51,19 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   });
   await loadData(_$w);
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
-  loadPrimarySearchRepeater(_$w);
+  handlePrimarySearch(_$w, allvaluesobjects);
   await loadFilters(_$w);
   loadSelectedValuesRepeater(_$w);
   bindSearchInput(_$w);
   loadPaginationButtons(_$w);
-    if (await window.formFactor() === "Mobile") {
-      handleFilterInMobile(_$w);
-  }
+
     await handleUrlParams(_$w, urlParams);
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.CLEAR_ALL_BUTTON_ID).onClick(async () => {
       await clearAll(_$w);
     });
+    if (await window.formFactor() === "Mobile") {
+      handleFilterInMobile(_$w);
+  }
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.RESULTS_MULTI_STATE_BOX).changeState("results");
 }
 
@@ -117,16 +116,26 @@ function handleFilterInMobile(_$w) {
       CAREERS_PAGE_SELECTORS.SECTION_3, 
       CAREERS_PAGE_SELECTORS.LINE_3,
       CAREERS_PAGE_SELECTORS.FILTER_ICON];
+    
+  const mobileFilterBoxSelectors = [
+    CAREERS_PAGE_SELECTORS.FILTER_BOX,
+    CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON,
+    CAREERS_PAGE_SELECTORS.EXIT_BUTTON,
+  ];
 
   _$w(CAREERS_PAGE_SELECTORS.FILTER_ICON).onClick(()=>{
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).expand();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).expand();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).collapse();
       });
   });
 
   const exitFilterBox = () => {
-      _$w(CAREERS_PAGE_SELECTORS.FILTER_BOX).collapse();
+      mobileFilterBoxSelectors.forEach(selector => {
+        _$w(selector).collapse();
+      });
       searchResultsSelectors.forEach(selector => {
           _$w(selector).expand();
       });
@@ -139,6 +148,11 @@ function handleFilterInMobile(_$w) {
   _$w(CAREERS_PAGE_SELECTORS.REFINE_SEARCH_BUTTON).onClick(()=>{
       exitFilterBox();
   });
+
+  //onmobile we should collapse the filter box and the refine search button by default 
+  mobileFilterBoxSelectors.forEach(selector => {
+    _$w(selector).collapse();
+  });
 }
 
 
@@ -148,10 +162,10 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
   let currentApplyFilterFlag=false;
   //apply this first to determine all jobs
   if(urlParams.keyword) {
-    applyFiltering = await primarySearch(_$w, decodeURIComponent(urlParams.keyword));
+    applyFiltering = await queryPrimarySearchResults(_$w, decodeURIComponent(urlParams.keyword));
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value = decodeURIComponent(urlParams.keyword);
 
-    const items = await getAllDatasetItems(_$w, CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_DATASET);
+    const items = await getAllDatasetItems(_$w, GLOBAL_SECTIONS_SELECTORS.JOBS_DATASET);
 
     currentJobs = items;   
     keywordAllJobs = items;
@@ -241,6 +255,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
 
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).onClick(async () => {
@@ -249,6 +264,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text =   pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
+      await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
   } catch (error) {
     console.error('Failed to load pagination buttons:', error);
@@ -500,6 +516,8 @@ function getValueFromValueId(valueIds, value) {
       ? withCounts.filter(o => (o.label || '').toLowerCase().includes(searchQuery))
       : withCounts;
 
+    // Sort alphabetically by label
+    filtered.sort((a, b) => (a.label || '').localeCompare(b.label || ''));
     // Preserve currently selected values that are still visible
   //  let prevSelected=[]
   //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
@@ -699,8 +717,6 @@ async function secondarySearch(_$w,query) {
 }
   function bindSearchInput(_$w) {
     try {
-      bindPrimarySearch(_$w, allvaluesobjects);
-
       const secondarySearchDebounced = debounce(async () => {
       const query = (_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || '').toLowerCase().trim();
       await secondarySearch(_$w, query);
