@@ -95,6 +95,7 @@ async function clearAll(_$w,urlOnChange=false) {
     secondarySearchIsFilled=false;
     currentJobs=alljobs;
     keywordAllJobs=undefined;
+    
     if(!urlOnChange) {
       console.log("inside clearAll removing url params");
       ActivateURLOnchange=false;
