@@ -115,6 +115,7 @@ async function fetchJobDescription(jobId,testObject=undefined) {
 }
 
 async function htmlRichContentConverter(sections,richContentConverterToken) {
+  
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
@@ -136,7 +137,8 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
       );
       if (response.ok) {
         const data = await response.json();
-        richContentObject[sectionTitle] = data.richContent.richContent;
+        const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
+        richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
         throw new Error("Error converting html to rich content response: "+response);
@@ -145,6 +147,178 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
   }
   return richContentObject;
 }
+
+//Adds empty paragraph nodes between sections in rich content 
+// to create visual spacing that the Wix RICOS converter strips out
+function addSpacingToRichContent(html, richContent) {
+  if (!richContent || !richContent.nodes) {
+      return richContent;
+  }
+
+  // Extract paragraph texts from HTML that end with &#xa0;
+  const htmlParagraphsWithSpace = [];
+  // Extract paragraphs with <br> tags
+  const htmlParagraphsWithBr = new Map(); // text -> array of parts split by <br>
+  
+  const pTagRegex = /<p>(.*?)<\/p>/gi;
+  let match;
+  
+  while ((match = pTagRegex.exec(html)) !== null) {
+      const content = match[1];
+      
+      // Check if this paragraph ends with &#xa0; (before closing tags)
+      if (content.includes('&#xa0;')) {
+          const textOnly = content.replace(/<[^>]+>/g, '').trim();
+          htmlParagraphsWithSpace.push(textOnly);
+      }
+      
+      // Check if this paragraph contains <br> tags
+      if (content.includes('<br>') || content.includes('<br/>') || content.includes('<br />')) {
+          // Split by <br> tags and extract text parts
+          const parts = content.split(/<br\s*\/?>/i).map(part => 
+              part.replace(/<[^>]+>/g, '').trim()
+          ).filter(part => part.length > 0);
+          
+          if (parts.length > 1) {
+              // Store the parts for this paragraph
+              const fullText = content.replace(/<[^>]+>/g, '').replace(/\s+/g, '').trim();
+              htmlParagraphsWithBr.set(fullText, parts);
+          }
+      }
+  }
+
+  const nodes = richContent.nodes;
+  const newNodes = [];
+  let nodeIdCounter = 0;
+  
+  // Check if a paragraph is bold (has BOLD decoration)
+  const isBoldParagraph = (node) => {
+      if (node.type !== 'PARAGRAPH') return false;
+      const decorations = node.nodes?.[0]?.textData?.decorations || [];
+      return decorations.some(d => d.type === 'BOLD');
+  };
+  
+  // Check if a paragraph node's text matches one with &#xa0; in HTML
+  const needsSpacingAfter = (node) => {
+      if (node.type !== 'PARAGRAPH') return false;
+      
+      // Add spacing after bold paragraphs
+      if (isBoldParagraph(node)) {
+          return true;
+      }
+      
+      const text = node.nodes?.[0]?.textData?.text || '';
+      const trimmedText = text.trim();
+      
+      // Check if this text matches any HTML paragraph that had &#xa0;
+      return htmlParagraphsWithSpace.some(htmlText => {
+          const cleanHtml = htmlText.replace(/&#xa0;/g, ' ').trim();
+          return trimmedText.includes(cleanHtml) || cleanHtml.includes(trimmedText);
+      });
+  };
+  
+  // Check if a paragraph contains text that should be split by <br>
+  const shouldSplitByBr = (node) => {
+      if (node.type !== 'PARAGRAPH') return null;
+      
+      const text = node.nodes?.[0]?.textData?.text || '';
+      const normalizedText = text.replace(/\s+/g, '').trim();
+      
+      // Find matching HTML paragraph with <br>
+      for (const [htmlText, parts] of htmlParagraphsWithBr.entries()) {
+          if (normalizedText.includes(htmlText) || htmlText.includes(normalizedText)) {
+              return parts;
+          }
+      }
+      return null;
+  };
+  
+  // Add spacing after bulleted lists
+  const isListEnd = (currentNode, nextNode) => {
+      return currentNode.type === 'BULLETED_LIST' && 
+             nextNode && 
+             nextNode.type === 'PARAGRAPH';
+  };
+
+  for (let i = 0; i < nodes.length; i++) {
+      const currentNode = nodes[i];
+      const nextNode = nodes[i + 1];
+      
+      // Check if this paragraph should be split by <br>
+      const brParts = shouldSplitByBr(currentNode);
+      if (brParts && brParts.length > 1) {
+          // Split into multiple paragraphs and add spacing between them
+          const decorations = currentNode.nodes?.[0]?.textData?.decorations || [];
+          
+          brParts.forEach((part, idx) => {
+              newNodes.push({
+                  ...currentNode,
+                  id: `${currentNode.id}_split_${idx}`,
+                  nodes: [{
+                      type: "TEXT",
+                      id: "",
+                      nodes: [],
+                      textData: {
+                          text: part,
+                          decorations: decorations
+                      }
+                  }]
+              });
+              
+              // Add empty paragraph after each split part except the last
+              if (idx < brParts.length - 1) {
+                  newNodes.push(createEmptyParagraph(`empty_br_${nodeIdCounter++}`));
+              }
+          });
+          
+          // Add spacing after the split paragraphs if there's a next node
+          if (nextNode) {
+              newNodes.push(createEmptyParagraph(`empty_${nodeIdCounter++}`));
+          }
+      } else {
+          newNodes.push(currentNode);
+          
+          // Add empty paragraph ONLY after paragraphs with &#xa0; or after lists
+          if ((needsSpacingAfter(currentNode) || isListEnd(currentNode, nextNode)) && nextNode) {
+              newNodes.push(createEmptyParagraph(`empty_${nodeIdCounter++}`));
+          }
+      }
+  }
+  
+  return {
+      ...richContent,
+      nodes: newNodes
+  };
+}
+
+function createEmptyParagraph(id) {
+  return {
+      type: "PARAGRAPH",
+      id: id,
+      nodes: [
+          {
+              type: "TEXT",
+              id: "",
+              nodes: [],
+              textData: {
+                  text: "",
+                  decorations: []
+              }
+          }
+      ],
+      paragraphData: {
+          textStyle: {
+              textAlignment: "AUTO"
+          }
+      }
+  };
+}
+
+
+
+
+
+
 
 
 
