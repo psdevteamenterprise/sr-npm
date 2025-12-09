@@ -83,7 +83,8 @@ async function handleBackAndForth(_$w){
 }
 
 async function clearAll(_$w,urlOnChange=false) {
-  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
+
+//  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
@@ -95,7 +96,6 @@ async function clearAll(_$w,urlOnChange=false) {
     secondarySearchIsFilled=false;
     currentJobs=alljobs;
     keywordAllJobs=undefined;
-    
     if(!urlOnChange) {
       console.log("inside clearAll removing url params");
       ActivateURLOnchange=false;
@@ -104,7 +104,7 @@ async function clearAll(_$w,urlOnChange=false) {
       await updateJobsAndNumbersAndFilters(_$w,true);
     }
     
-    }
+  //  }
 }
 
 function handleFilterInMobile(_$w) {
