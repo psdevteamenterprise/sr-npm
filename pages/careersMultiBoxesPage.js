@@ -460,7 +460,6 @@ function getValueFromValueId(valueIds, value) {
   function updateOptionsUI(_$w,fieldTitle, fieldId, searchQuery,clearAll=false) {
     let base = optionsByFieldId.get(fieldId) || [];
     let countsMap=countsByFieldId.get(fieldId) || new Map();
-    //const countsMap = countsByFieldId.get(fieldId) || new Map();
     if(considerAllJobs)
     {
       const selectedFieldId=Array.from( selectedByField.keys() )[0]
