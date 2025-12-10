@@ -628,7 +628,6 @@ function handlePageUrlParam() {
   ActivateURLOnchange=false;
   if(pagination.currentPage==1 || pagination.currentPage==0)
   {
-    
       queryParams.remove(["page"]);
   }
   else{
