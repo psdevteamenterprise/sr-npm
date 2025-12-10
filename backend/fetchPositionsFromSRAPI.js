@@ -119,8 +119,10 @@ async function htmlRichContentConverter(sections,richContentConverterToken,jobNa
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
+      // Strip span tags but keep their content
+      const cleanedHtml = sectionData.text.replace(/<\/?span[^>]*>/gi, '');
       const raw = JSON.stringify({
-        content: sectionData.text,
+        content: cleanedHtml,
       });
       const requestOptions = {
         method: 'post',
@@ -137,8 +139,8 @@ async function htmlRichContentConverter(sections,richContentConverterToken,jobNa
       );
       if (response.ok) {
         const data = await response.json();
-       // const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
-       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(sectionData.text,data.richContent.richContent,jobName);
+       // const richContentWithSpacing=addSpacingToRichContent(cleanedHtml,data.richContent.richContent);
+       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(cleanedHtml,data.richContent.richContent,jobName);
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
