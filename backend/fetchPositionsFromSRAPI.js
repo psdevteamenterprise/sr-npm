@@ -332,6 +332,7 @@ function createEmptyParagraph(id) {
 
 // Adds empty paragraph nodes between consecutive paragraphs and before lists
 function addEmptyParagraphsBetweenConsecutive(html, richContent,jobName) {
+  
 if(jobName===" Apparel Team Member - The Warehouse, Dargaville")
 {
   console.log("rich content is : ",richContent);
