@@ -626,7 +626,7 @@ function handlePaginationButtons(_$w)
 
 function handlePageUrlParam() {
   ActivateURLOnchange=false;
-  if(pagination.currentPage==1)
+  if(pagination.currentPage==1 || pagination.currentPage==0)
   {
     
       queryParams.remove(["page"]);
