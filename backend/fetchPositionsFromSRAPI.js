@@ -159,6 +159,8 @@ function addSpacingToRichContent(html, richContent) {
   const htmlParagraphsWithSpace = [];
   // Extract paragraphs with <br> tags
   const htmlParagraphsWithBr = new Map(); // text -> array of parts split by <br>
+  // Check if HTML has consecutive paragraphs (</p><p> pattern)
+  const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
   
   const pTagRegex = /<p>(.*?)<\/p>/gi;
   let match;
@@ -199,11 +201,16 @@ function addSpacingToRichContent(html, richContent) {
   };
   
   // Check if a paragraph node's text matches one with &#xa0; in HTML
-  const needsSpacingAfter = (node) => {
+  const needsSpacingAfter = (node, nextNode) => {
       if (node.type !== 'PARAGRAPH') return false;
       
       // Add spacing after bold paragraphs
       if (isBoldParagraph(node)) {
+          return true;
+      }
+      
+      // If HTML has consecutive <p> tags and next node is also a paragraph, add spacing
+      if (hasConsecutiveParagraphs && nextNode && nextNode.type === 'PARAGRAPH') {
           return true;
       }
       
@@ -278,8 +285,8 @@ function addSpacingToRichContent(html, richContent) {
       } else {
           newNodes.push(currentNode);
           
-          // Add empty paragraph ONLY after paragraphs with &#xa0; or after lists
-          if ((needsSpacingAfter(currentNode) || isListEnd(currentNode, nextNode)) && nextNode) {
+          // Add empty paragraph after paragraphs with &#xa0;, consecutive paragraphs, or after lists
+          if ((needsSpacingAfter(currentNode, nextNode) || isListEnd(currentNode, nextNode)) && nextNode) {
               newNodes.push(createEmptyParagraph(`empty_${nodeIdCounter++}`));
           }
       }
