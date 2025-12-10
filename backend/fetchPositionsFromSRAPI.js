@@ -162,6 +162,8 @@ function addSpacingToRichContent(html, richContent) {
   const htmlParagraphsWithBr = new Map(); // text -> array of parts split by <br>
   // Check if HTML has consecutive paragraphs (</p><p> pattern)
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
+  // Check if HTML has paragraph followed by list (</p><ul> pattern)
+  const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
   
   const pTagRegex = /<p>(.*?)<\/p>/gi;
   let match;
@@ -212,6 +214,11 @@ function addSpacingToRichContent(html, richContent) {
       
       // If HTML has consecutive <p> tags and next node is also a paragraph, add spacing
       if (hasConsecutiveParagraphs && nextNode && nextNode.type === 'PARAGRAPH') {
+          return true;
+      }
+      
+      // If HTML has </p><ul> and next node is a list, add spacing
+      if (hasParagraphBeforeList && nextNode && nextNode.type === 'BULLETED_LIST') {
           return true;
       }
       
