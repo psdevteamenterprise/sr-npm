@@ -139,8 +139,10 @@ async function htmlRichContentConverter(sections,richContentConverterToken,jobNa
       );
       if (response.ok) {
         const data = await response.json();
-       // const richContentWithSpacing=addSpacingToRichContent(cleanedHtml,data.richContent.richContent);
-       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(cleanedHtml,data.richContent.richContent,jobName);
+        // Fix list items with nested paragraphs (causes line breaks after bold text)
+        const flattenedContent = flattenListItems(data.richContent.richContent);
+       // const richContentWithSpacing=addSpacingToRichContent(cleanedHtml,flattenedContent);
+       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(cleanedHtml,flattenedContent,jobName);
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
@@ -329,6 +331,42 @@ function createEmptyParagraph(id) {
               textAlignment: "AUTO"
           }
       }
+  };
+}
+
+// Flattens LIST_ITEM nodes by removing nested PARAGRAPH wrappers
+// Fixes Wix converter bug where bold text + regular text in <li> creates line breaks
+function flattenListItems(richContent) {
+  if (!richContent || !richContent.nodes) return richContent;
+  
+  const processNode = (node) => {
+    if (node.type === 'BULLETED_LIST' || node.type === 'ORDERED_LIST') {
+      return {
+        ...node,
+        nodes: node.nodes.map(listItem => {
+          if (listItem.type !== 'LIST_ITEM') return listItem;
+          
+          // Flatten: extract TEXT nodes from nested PARAGRAPHs
+          const flattenedChildren = [];
+          for (const child of listItem.nodes) {
+            if (child.type === 'PARAGRAPH' && child.nodes) {
+              // Pull TEXT nodes out of the PARAGRAPH
+              flattenedChildren.push(...child.nodes);
+            } else {
+              flattenedChildren.push(child);
+            }
+          }
+          
+          return { ...listItem, nodes: flattenedChildren };
+        })
+      };
+    }
+    return node;
+  };
+  
+  return {
+    ...richContent,
+    nodes: richContent.nodes.map(processNode)
   };
 }
 
