@@ -221,6 +221,7 @@ function addSpacingToRichContent(html, richContent) {
       if (hasParagraphBeforeList && nextNode && nextNode.type === 'BULLETED_LIST') {
           return true;
       }
+  
       
       const text = node.nodes?.[0]?.textData?.text || '';
       const trimmedText = text.trim();
