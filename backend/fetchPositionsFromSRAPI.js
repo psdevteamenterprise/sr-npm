@@ -155,14 +155,13 @@ function addSpacingToRichContent(html, richContent) {
       return richContent;
   }
 
-
+  
   // Extract paragraph texts from HTML that end with &#xa0;
   const htmlParagraphsWithSpace = [];
   // Extract paragraphs with <br> tags
   const htmlParagraphsWithBr = new Map(); // text -> array of parts split by <br>
   // Check if HTML has consecutive paragraphs (</p><p> pattern)
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
-  
   
   const pTagRegex = /<p>(.*?)<\/p>/gi;
   let match;
