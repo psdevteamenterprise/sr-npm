@@ -155,6 +155,7 @@ function addSpacingToRichContent(html, richContent) {
       return richContent;
   }
 
+  
   // Extract paragraph texts from HTML that end with &#xa0;
   const htmlParagraphsWithSpace = [];
   // Extract paragraphs with <br> tags
