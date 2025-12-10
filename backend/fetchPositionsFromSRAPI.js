@@ -137,7 +137,8 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
       );
       if (response.ok) {
         const data = await response.json();
-        const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
+       // const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
+       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(sectionData.text,data.richContent.richContent);
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
@@ -326,6 +327,43 @@ function createEmptyParagraph(id) {
               textAlignment: "AUTO"
           }
       }
+  };
+}
+
+// Adds empty paragraph nodes between consecutive paragraphs and before lists
+function addEmptyParagraphsBetweenConsecutive(html, richContent) {
+  if (!richContent || !richContent.nodes) return richContent;
+  
+  const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
+  const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
+  
+  if (!hasConsecutiveParagraphs && !hasParagraphBeforeList) return richContent;
+  
+  const nodes = richContent.nodes;
+  const newNodes = [];
+  let nodeIdCounter = 0;
+  
+  for (let i = 0; i < nodes.length; i++) {
+    const currentNode = nodes[i];
+    const nextNode = nodes[i + 1];
+    
+    newNodes.push(currentNode);
+    
+    if (currentNode.type === 'PARAGRAPH' && nextNode) {
+      // Add empty paragraph between consecutive paragraphs
+      if (hasConsecutiveParagraphs && nextNode.type === 'PARAGRAPH') {
+        newNodes.push(createEmptyParagraph(`empty_consecutive_${nodeIdCounter++}`));
+      }
+      // Add empty paragraph before list
+      if (hasParagraphBeforeList && nextNode.type === 'BULLETED_LIST') {
+        newNodes.push(createEmptyParagraph(`empty_before_list_${nodeIdCounter++}`));
+      }
+    }
+  }
+  
+  return {
+    ...richContent,
+    nodes: newNodes
   };
 }
 
