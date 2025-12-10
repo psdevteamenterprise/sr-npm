@@ -335,14 +335,12 @@ function createEmptyParagraph(id) {
 // Adds empty paragraph nodes between consecutive paragraphs and before lists
 function addEmptyParagraphsBetweenConsecutive(html, richContent,jobName) {
   console.log("jobName is : ",jobName);
-if(jobName.name===" Apparel Team Member - The Warehouse, Dargaville")
+if(jobName.name==="Assistant Store Manager - Noel Leeming Albany")
 {
   console.log("rich content is : ",richContent);
   console.log("html is : ",html);
 }
   if (!richContent || !richContent.nodes) return richContent;
-  html = html.replace(/<\/?span[^>]*>/gi, '');
-  console.log("html is after : ",html);
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
   const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
   const hasParagraphAfterList = /<\/ul>\s*<p/i.test(html);
