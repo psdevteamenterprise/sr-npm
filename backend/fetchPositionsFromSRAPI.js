@@ -339,7 +339,8 @@ if(jobName.name===" Apparel Team Member - The Warehouse, Dargaville")
   console.log("html is : ",html);
 }
   if (!richContent || !richContent.nodes) return richContent;
-  
+  html = html.replace(/<\/?span[^>]*>/gi, '');
+  console.log("html is after : ",html);
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
   const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
   const hasParagraphAfterList = /<\/ul>\s*<p/i.test(html);
