@@ -114,12 +114,12 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function htmlRichContentConverter(sections,richContentConverterToken,jobName) {
+async function htmlRichContentConverter(sections,richContentConverterToken) {
   
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
     if (sectionData.text) {
-      // Strip span tags but keep their content
+      // Strip span tags but keep their content , since <span> tags paragraphs are deleted by the converter
       const cleanedHtml = sectionData.text.replace(/<\/?span[^>]*>/gi, '');
       const raw = JSON.stringify({
         content: cleanedHtml,
@@ -142,7 +142,7 @@ async function htmlRichContentConverter(sections,richContentConverterToken,jobNa
         // Fix list items with nested paragraphs (causes line breaks after bold text)
         const flattenedContent = flattenListItems(data.richContent.richContent);
        // const richContentWithSpacing=addSpacingToRichContent(cleanedHtml,flattenedContent);
-       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(cleanedHtml,flattenedContent,jobName);
+       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(cleanedHtml,flattenedContent);
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
@@ -371,13 +371,7 @@ function flattenListItems(richContent) {
 }
 
 // Adds empty paragraph nodes between consecutive paragraphs and before lists
-function addEmptyParagraphsBetweenConsecutive(html, richContent,jobName) {
-  console.log("jobName is : ",jobName);
-if(jobName.name==="Assistant Store Manager - Noel Leeming Albany")
-{
-  console.log("rich content is : ",richContent);
-  console.log("html is : ",html);
-}
+function addEmptyParagraphsBetweenConsecutive(html, richContent) {
   if (!richContent || !richContent.nodes) return richContent;
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
   const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
