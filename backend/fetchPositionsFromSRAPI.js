@@ -114,7 +114,7 @@ async function fetchJobDescription(jobId,testObject=undefined) {
   return await makeSmartRecruitersRequest(`/v1/companies/${companyId}/postings/${jobId}`,templateType);
 }
 
-async function htmlRichContentConverter(sections,richContentConverterToken) {
+async function htmlRichContentConverter(sections,richContentConverterToken,jobName) {
   
   const richContentObject = {}
   for (const [sectionTitle, sectionData] of Object.entries(sections)) {
@@ -138,7 +138,7 @@ async function htmlRichContentConverter(sections,richContentConverterToken) {
       if (response.ok) {
         const data = await response.json();
        // const richContentWithSpacing=addSpacingToRichContent(sectionData.text,data.richContent.richContent);
-       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(sectionData.text,data.richContent.richContent);
+       const richContentWithSpacing=addEmptyParagraphsBetweenConsecutive(sectionData.text,data.richContent.richContent,jobName);
         richContentObject[sectionTitle] = richContentWithSpacing
       }
       else {
@@ -331,7 +331,11 @@ function createEmptyParagraph(id) {
 }
 
 // Adds empty paragraph nodes between consecutive paragraphs and before lists
-function addEmptyParagraphsBetweenConsecutive(html, richContent) {
+function addEmptyParagraphsBetweenConsecutive(html, richContent,jobName) {
+if(jobName===" Apparel Team Member - The Warehouse, Dargaville")
+{
+  console.log("rich content is : ",richContent);
+}
   if (!richContent || !richContent.nodes) return richContent;
   
   const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
