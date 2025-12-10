@@ -330,12 +330,15 @@ function createEmptyParagraph(id) {
   };
 }
 
-// Adds empty paragraph after each paragraph node if HTML contains <p> tags
+// Adds empty paragraph nodes between consecutive paragraphs and before lists
 function addEmptyParagraphsBetweenConsecutive(html, richContent) {
   if (!richContent || !richContent.nodes) return richContent;
   
-  const hasParagraphs = /<p[^>]*>.*?<\/p>/i.test(html);
-  if (!hasParagraphs) return richContent;
+  const hasConsecutiveParagraphs = /<\/p>\s*<p/i.test(html);
+  const hasParagraphBeforeList = /<\/p>\s*<ul/i.test(html);
+  const hasParagraphAfterList = /<\/ul>\s*<p/i.test(html);
+  
+  if (!hasConsecutiveParagraphs && !hasParagraphBeforeList && !hasParagraphAfterList) return richContent;
   
   const nodes = richContent.nodes;
   const newNodes = [];
@@ -347,9 +350,20 @@ function addEmptyParagraphsBetweenConsecutive(html, richContent) {
     
     newNodes.push(currentNode);
     
-    // Add empty paragraph after each paragraph if there's something after it
     if (currentNode.type === 'PARAGRAPH' && nextNode) {
-      newNodes.push(createEmptyParagraph(`empty_${nodeIdCounter++}`));
+      // Add empty paragraph between consecutive paragraphs
+      if (hasConsecutiveParagraphs && nextNode.type === 'PARAGRAPH') {
+        newNodes.push(createEmptyParagraph(`empty_consecutive_${nodeIdCounter++}`));
+      }
+      // Add empty paragraph before list
+      if (hasParagraphBeforeList && nextNode.type === 'BULLETED_LIST') {
+        newNodes.push(createEmptyParagraph(`empty_before_list_${nodeIdCounter++}`));
+      }
+    }
+    
+    // Add empty paragraph after list
+    if (hasParagraphAfterList && currentNode.type === 'BULLETED_LIST' && nextNode && nextNode.type === 'PARAGRAPH') {
+      newNodes.push(createEmptyParagraph(`empty_after_list_${nodeIdCounter++}`));
     }
   }
   
