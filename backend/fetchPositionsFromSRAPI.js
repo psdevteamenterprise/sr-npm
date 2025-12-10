@@ -336,6 +336,7 @@ function addEmptyParagraphsBetweenConsecutive(html, richContent,jobName) {
 if(jobName.name===" Apparel Team Member - The Warehouse, Dargaville")
 {
   console.log("rich content is : ",richContent);
+  console.log("html is : ",html);
 }
   if (!richContent || !richContent.nodes) return richContent;
   
