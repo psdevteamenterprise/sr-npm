@@ -73,7 +73,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
-  
+
   const newQueryParams=await location.query();
   await handleUrlParams(_$w,newQueryParams,true); 
   // if(ActivateURLOnchange) {
@@ -118,7 +118,7 @@ async function clearAll(_$w,urlOnChange=false) {
     keywordAllJobs=undefined;
     if(!urlOnChange) {
       console.log("inside clearAll removing url params");
-      ActivateURLOnchange=false;
+     // ActivateURLOnchange=false;
       queryParams.remove(possibleUrlParams.concat(["keyword", "page"]));
 
       await updateJobsAndNumbersAndFilters(_$w,true);
@@ -314,7 +314,7 @@ async function handleParams(_$w,param,values) {
             const field=getFieldById(fieldId,allfields);
             let fieldTitle=field.title.toLowerCase().replace(' ', '');
             fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-            ActivateURLOnchange=false;
+           // ActivateURLOnchange=false;
             const previousSelectedSize=selectedByField.size;
             if (updated.length) {
               selectedByField.set(fieldId, updated);
@@ -439,7 +439,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-        ActivateURLOnchange=false;
+       // ActivateURLOnchange=false;
         const previousSelectedSize=selectedByField.size;
 
         if (selected && selected.length) {
@@ -664,7 +664,7 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
-  ActivateURLOnchange=false;
+ // ActivateURLOnchange=false;
   if(pagination.currentPage==1 || pagination.currentPage==0)
   {
       queryParams.remove(["page"]);
