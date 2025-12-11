@@ -413,6 +413,7 @@ async function loadJobsRepeater(_$w) {
           const currentQueryParams=await location.query();
           if(currentQueryParams.page)
           {
+            //try instead of removing to add page = 1
             queryParams.remove(["page"]);
           }
           dontUpdateThisCheckBox=field._id;
