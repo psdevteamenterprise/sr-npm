@@ -334,13 +334,17 @@ async function handleParams(_$w,param,values) {
 
               
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
+              if(urlOnchangeIsActive){
               numbersofParamChanges++;
+              }
             } else {
               selectedByField.delete(fieldId);
               handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
             
               queryParams.remove([fieldTitle ]);
-              numbersofParamChanges++;
+              if(urlOnchangeIsActive){
+                numbersofParamChanges++;
+              }
             }
 
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
@@ -466,18 +470,26 @@ async function loadJobsRepeater(_$w) {
             //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
             queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
-            numbersofParamChanges++;
+            
+            if(urlOnchangeIsActive){
+              numbersofParamChanges++;
+            }
           }
           else{
             queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
-            numbersofParamChanges++;
+            if(urlOnchangeIsActive){
+              numbersofParamChanges++;
+            }
           }
           
         } else {
           selectedByField.delete(field._id); 
           handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
           queryParams.remove([fieldTitle ]);
-          numbersofParamChanges++;
+         
+          if(urlOnchangeIsActive){
+            numbersofParamChanges++;
+          }
         }
        
         console.log("selectedByField: ",selectedByField)
