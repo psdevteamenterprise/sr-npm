@@ -40,6 +40,7 @@ let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the
 let ActivateURLOnchange=true; // whether to activate the url onchange
 let considerAllJobs=false; // whether to consider all jobs or not
 let urlOnchangeIsActive=false
+let pageIsRemoved=false
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -75,10 +76,23 @@ async function handleBackAndForth(_$w){
   if(ActivateURLOnchange) {
     const newQueryParams=await location.query();
       console.log("newQueryParams: ", newQueryParams);
+      if(newQueryParams.page)
+        {
+            pageIsRemoved=false;
+        }
+        else
+        {
+          pageIsRemoved=true;
+        }
       ActivateURLOnchange=false;
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams,true); 
       ActivateURLOnchange=true;
+      if(pageIsRemoved)
+      {
+        handlePaginationButtons(_$w);
+        pageIsRemoved=false;
+      }
       
 
     }
