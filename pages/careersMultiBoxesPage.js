@@ -73,10 +73,14 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
-
+  if(ActivateURLOnchange) {
   const newQueryParams=await location.query();
   await clearAll(_$w,true);
   await handleUrlParams(_$w,newQueryParams,true); 
+  }
+  else{
+    ActivateURLOnchange=true;
+  }
   // if(ActivateURLOnchange) {
   //   const newQueryParams=await location.query();
   //     console.log("newQueryParams: ", newQueryParams);
@@ -228,6 +232,7 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
         const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
+        handlePageUrlParam();
 
       }
   } catch (error) {
@@ -278,6 +283,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = nextPageJobs;
       handlePaginationButtons(_$w);
+      handlePageUrlParam();
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
 
@@ -287,6 +293,7 @@ async function handleParams(_$w,param,values) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text =   pagination.currentPage.toString();
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = previousPageJobs;
       handlePaginationButtons(_$w);
+      handlePageUrlParam();
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).scrollTo();
     });
   } catch (error) {
@@ -380,6 +387,7 @@ async function loadJobsRepeater(_$w) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = Math.ceil(currentJobs.length/pagination.pageSize).toString();
     updateTotalJobsCountText(_$w);
     handlePaginationButtons(_$w);
+    handlePageUrlParam();
   } catch (error) {
     console.error('Failed to load jobs repeater:', error);
   }
@@ -635,9 +643,11 @@ function getValueFromValueId(valueIds, value) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
       pagination.currentPage=1;
     }
+    handlePaginationButtons(_$w);
     if(!urlOnchangeIsActive)
     {
-      handlePaginationButtons(_$w);
+      
+      handlePageUrlParam();
     }
     
 }
@@ -645,7 +655,7 @@ function getValueFromValueId(valueIds, value) {
 function handlePaginationButtons(_$w)
 {
   console.log("iamhere")
-  handlePageUrlParam();
+ // handlePageUrlParam();
 
   pagination.currentPage===1 || pagination.currentPage===0? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
   if(secondarySearchIsFilled) {
@@ -665,7 +675,7 @@ function handlePaginationButtons(_$w)
 }
 
 function handlePageUrlParam() {
- // ActivateURLOnchange=false;
+  ActivateURLOnchange=false;
   if(pagination.currentPage==1 || pagination.currentPage==0)
   {
       queryParams.remove(["page"]);
@@ -756,6 +766,7 @@ async function secondarySearch(_$w,query) {
     secondarySearchIsFilled=true
   }
     handlePaginationButtons(_$w);
+    handlePageUrlParam();
     updateTotalJobsCountText(_$w);
     await refreshFacetCounts(_$w); 
     return allsecondarySearchJobs;
