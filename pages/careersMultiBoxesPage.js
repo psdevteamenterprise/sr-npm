@@ -77,6 +77,10 @@ async function handleBackAndForth(_$w){
   const newQueryParams=await location.query();
   await clearAll(_$w,true);
   await handleUrlParams(_$w,newQueryParams,true); 
+  ActivateURLOnchange=true;
+  }
+  else{
+    ActivateURLOnchange=true;
   }
   // if(ActivateURLOnchange) {
   //   const newQueryParams=await location.query();
@@ -308,7 +312,7 @@ async function handleParams(_$w,param,values) {
             if(currentQueryParams.page)
             {
               //queryParams.remove(["page"]);
-              queryParams.add({ page: 1 });
+              queryParams.add({ ["page"]: 1 });
             }
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
@@ -439,7 +443,7 @@ async function loadJobsRepeater(_$w) {
           {
             //try instead of removing to add page = 1
             //queryParams.remove(["page"]);
-            queryParams.add({ page: 1 });
+            queryParams.add({ ["page"]: 1 });
           }
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
@@ -678,9 +682,8 @@ function handlePageUrlParam() {
       queryParams.remove(["page"]);
   }
   else{
-    queryParams.add({ page: pagination.currentPage });
+    queryParams.add({ ["page"]: pagination.currentPage });
   }
-  ActivateURLOnchange=true;
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
