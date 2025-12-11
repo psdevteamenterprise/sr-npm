@@ -78,9 +78,6 @@ async function handleBackAndForth(_$w){
   await clearAll(_$w,true);
   await handleUrlParams(_$w,newQueryParams,true); 
   }
-  else{
-    ActivateURLOnchange=true;
-  }
   // if(ActivateURLOnchange) {
   //   const newQueryParams=await location.query();
   //     console.log("newQueryParams: ", newQueryParams);
@@ -683,6 +680,7 @@ function handlePageUrlParam() {
   else{
     queryParams.add({ page: pagination.currentPage });
   }
+  ActivateURLOnchange=true;
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
 
