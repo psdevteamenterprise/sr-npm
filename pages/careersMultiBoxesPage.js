@@ -74,6 +74,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
+  //check the case when i click on a category then i click on 
   if(ActivateURLOnchange) {
   const newQueryParams=await location.query();
   await clearAll(_$w,true);
@@ -448,13 +449,16 @@ async function loadJobsRepeater(_$w) {
 
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
-          // const currentQueryParams=await location.query();
-          // if(currentQueryParams.page)
-          // {
+           const currentQueryParams=await location.query();
+           if(currentQueryParams.page)
+           {
           //   //try instead of removing to add page = 1
           //   //queryParams.remove(["page"]);
           //   queryParams.add({ ["page"]: 1 });
-          // }
+          pageIsRemoved=true
+          //save the selected param
+
+           }
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
