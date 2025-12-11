@@ -39,7 +39,7 @@ let secondarySearchIsFilled=false // whether the secondary search is filled with
 let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the keyword is filled
 let ActivateURLOnchange=true; // whether to activate the url onchange
 let considerAllJobs=false; // whether to consider all jobs or not
-
+let finishedUrlOnChange=false;
 const pagination = {
   pageSize: 10,
   currentPage: 1,
@@ -48,7 +48,8 @@ const pagination = {
 async function careersMultiBoxesPageOnReady(_$w,urlParams) {
   //to handle back and forth , url changes
   onChange(async ()=>{
-    await handleBackAndForth(_$w);
+    finishedUrlOnChange? finishedUrlOnChange=false : await handleBackAndForth(_$w);
+
   });
   await loadData(_$w);
   await loadJobsRepeater(_$w); // if we remove the await here the job list will be flaky , it doesn't fill it properly
@@ -75,8 +76,9 @@ async function handleBackAndForth(_$w){
       ActivateURLOnchange=false;
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams,true); 
-   //   ActivateURLOnchange=true;
-   
+      ActivateURLOnchange=true;
+      
+
     }
     else{
       ActivateURLOnchange=true;
@@ -206,6 +208,11 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
         const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
+        if(ActivateURLOnchange)
+        {
+          finishedUrlOnChange=true;
+        }
+
       }
   } catch (error) {
     console.error('Failed to handle url params:', error);
