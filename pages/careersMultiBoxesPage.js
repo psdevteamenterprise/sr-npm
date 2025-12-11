@@ -73,32 +73,35 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 }
 
 async function handleBackAndForth(_$w){
-  if(ActivateURLOnchange) {
-    const newQueryParams=await location.query();
-      console.log("newQueryParams: ", newQueryParams);
-      if(newQueryParams.page)
-        {
-            pageIsRemoved=false;
-        }
-        else
-        {
-          pageIsRemoved=true;
-        }
-      ActivateURLOnchange=false;
-      await clearAll(_$w,true);
-      await handleUrlParams(_$w,newQueryParams,true); 
-      ActivateURLOnchange=true;
-      if(pageIsRemoved)
-      {
-        handlePaginationButtons(_$w);
-        pageIsRemoved=false;
-      }
+  
+  const newQueryParams=await location.query();
+  await handleUrlParams(_$w,newQueryParams,true); 
+  // if(ActivateURLOnchange) {
+  //   const newQueryParams=await location.query();
+  //     console.log("newQueryParams: ", newQueryParams);
+  //     if(newQueryParams.page)
+  //       {
+  //           pageIsRemoved=false;
+  //       }
+  //       else
+  //       {
+  //         pageIsRemoved=true;
+  //       }
+  //     ActivateURLOnchange=false;
+  //     await clearAll(_$w,true);
+  //     await handleUrlParams(_$w,newQueryParams,true); 
+  //     ActivateURLOnchange=true;
+  //     if(pageIsRemoved)
+  //     {
+  //       handlePaginationButtons(_$w);
+  //       pageIsRemoved=false;
+  //     }
       
 
-    }
-    else{
-      ActivateURLOnchange=true;
-    }
+  //   }
+  //   else{
+  //     ActivateURLOnchange=true;
+  //   }
 }
 
 async function clearAll(_$w,urlOnChange=false) {
