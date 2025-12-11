@@ -285,7 +285,8 @@ async function handleParams(_$w,param,values) {
             const currentQueryParams=await location.query();
             if(currentQueryParams.page)
             {
-              queryParams.remove(["page"]);
+              //queryParams.remove(["page"]);
+              queryParams.add({ page: 1 });
             }
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
@@ -414,7 +415,8 @@ async function loadJobsRepeater(_$w) {
           if(currentQueryParams.page)
           {
             //try instead of removing to add page = 1
-            queryParams.remove(["page"]);
+            //queryParams.remove(["page"]);
+            queryParams.add({ page: 1 });
           }
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
