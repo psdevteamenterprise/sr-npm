@@ -75,7 +75,7 @@ async function handleBackAndForth(_$w){
       ActivateURLOnchange=false;
       await clearAll(_$w,true);
       await handleUrlParams(_$w,newQueryParams,true); 
-      ActivateURLOnchange=true;
+   //   ActivateURLOnchange=true;
 
     }
     else{
