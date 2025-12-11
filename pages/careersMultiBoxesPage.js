@@ -75,6 +75,7 @@ async function careersMultiBoxesPageOnReady(_$w,urlParams) {
 async function handleBackAndForth(_$w){
 
   const newQueryParams=await location.query();
+  await clearAll(_$w,true);
   await handleUrlParams(_$w,newQueryParams,true); 
   // if(ActivateURLOnchange) {
   //   const newQueryParams=await location.query();
