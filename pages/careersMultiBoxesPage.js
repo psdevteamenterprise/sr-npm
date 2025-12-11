@@ -40,6 +40,7 @@ let keywordAllJobs; // all jobs that are displayed in the jobs repeater when the
 let ActivateURLOnchange=true; // whether to activate the url onchange
 let considerAllJobs=false; // whether to consider all jobs or not
 let urlOnchangeIsActive=false
+let numbersofParamChanges=0;
 let pageIsRemoved=false
 const pagination = {
   pageSize: 10,
@@ -80,7 +81,10 @@ async function handleBackAndForth(_$w){
   ActivateURLOnchange=true;
   }
   else{
+    numbersofParamChanges--;
+    if(numbersofParamChanges===0) {
     ActivateURLOnchange=true;
+    }
   }
   // if(ActivateURLOnchange) {
   //   const newQueryParams=await location.query();
@@ -330,11 +334,13 @@ async function handleParams(_$w,param,values) {
 
               
               queryParams.add({ [fieldTitle] : updated.map(val=>encodeURIComponent(val)).join(',') });
+              numbersofParamChanges++;
             } else {
               selectedByField.delete(fieldId);
               handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
             
               queryParams.remove([fieldTitle ]);
+              numbersofParamChanges++;
             }
 
             const currentVals = _$w(`#${FiltersIds[field.title]}CheckBox`).value || [];
@@ -449,7 +455,7 @@ async function loadJobsRepeater(_$w) {
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
         fieldTitle==="brands"? fieldTitle="brand":fieldTitle;
-       // ActivateURLOnchange=false;
+        ActivateURLOnchange=false;
         const previousSelectedSize=selectedByField.size;
 
         if (selected && selected.length) {
@@ -460,15 +466,18 @@ async function loadJobsRepeater(_$w) {
             //in this case we need the label not valueid
             const valueLabels=getValueFromValueId(selected,value);
             queryParams.add({ [fieldTitle] : valueLabels.map(val=>encodeURIComponent(val)).join(',') });
+            numbersofParamChanges++;
           }
           else{
             queryParams.add({ [fieldTitle] : selected.map(val=>encodeURIComponent(val)).join(',') });
+            numbersofParamChanges++;
           }
           
         } else {
           selectedByField.delete(field._id); 
           handleConsiderAllJobs(previousSelectedSize,selectedByField.size);
           queryParams.remove([fieldTitle ]);
+          numbersofParamChanges++;
         }
        
         console.log("selectedByField: ",selectedByField)
@@ -680,9 +689,11 @@ function handlePageUrlParam() {
   if(pagination.currentPage==1 || pagination.currentPage==0)
   {
       queryParams.remove(["page"]);
+      numbersofParamChanges++;
   }
   else{
     queryParams.add({ ["page"]: pagination.currentPage });
+    numbersofParamChanges++;
   }
 }
 async function refreshFacetCounts(_$w,clearAll=false) { 
