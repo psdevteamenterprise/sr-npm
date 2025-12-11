@@ -208,7 +208,7 @@ async function handleUrlParams(_$w,urlParams,handleBackAndForth=false) {
         const jobsFirstPage=currentJobs.slice(startSlicIndex,endSlicIndex);
         _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_REPEATER).data = jobsFirstPage;
         handlePaginationButtons(_$w);
-        if(ActivateURLOnchange)
+        if(!ActivateURLOnchange)
         {
           finishedUrlOnChange=true;
         }
