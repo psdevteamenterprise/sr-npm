@@ -282,6 +282,11 @@ async function handleParams(_$w,param,values) {
         $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.SELECTED_VALUES_REPEATER_ITEM_LABEL).text = itemData.label || '';
         // Deselect this value from both the selected map and the multibox
           $item(CAREERS_MULTI_BOXES_PAGE_CONSTS.DESELECT_BUTTON_ID).onClick(async () => {
+            const currentQueryParams=await location.query();
+            if(currentQueryParams.page)
+            {
+              queryParams.remove(["page"]);
+            }
             const fieldId = itemData.fieldId;
             const valueId = itemData.valueId;
             dontUpdateThisCheckBox=fieldId;
@@ -405,6 +410,11 @@ async function loadJobsRepeater(_$w) {
 
         _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = []; // start empty
         _$w(`#${FiltersIds[field.title]}CheckBox`).onChange(async (ev) => {
+          const currentQueryParams=await location.query();
+          if(currentQueryParams.page)
+          {
+            queryParams.remove(["page"]);
+          }
           dontUpdateThisCheckBox=field._id;
         const selected = ev.target.value; // array of selected value IDs
         let fieldTitle=field.title.toLowerCase().replace(' ', '');
