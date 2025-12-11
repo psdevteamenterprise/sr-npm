@@ -30,6 +30,7 @@ const countsByFieldId = new Map(); // fieldId -> {valueId: count} map of counts 
 let allfields=[] // all fields in the database
 let alljobs=[] // all jobs in the database
 let allvaluesobjects=[] // all values in the database
+let cities=[] // all cities in the database
 let valueToJobs={} // valueId -> array of jobIds
 let currentJobs=[] // current jobs that are displayed in the jobs repeater
 let allsecondarySearchJobs=[] // secondary search results that are displayed in the jobs repeater
@@ -83,10 +84,10 @@ async function handleBackAndForth(_$w){
 }
 
 async function clearAll(_$w,urlOnChange=false) {
-  if(selectedByField.size>0 || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value || _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PRIMARY_SEARCH_INPUT).value) {
     
     for(const field of allfields) {
       _$w(`#${FiltersIds[field.title]}CheckBox`).selectedIndices = [];
+      _$w(`#${FiltersIds[field.title]}input`).value='';
     }
     selectedByField.clear();
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.SECONDARY_SEARCH_INPUT).value='';
@@ -102,7 +103,6 @@ async function clearAll(_$w,urlOnChange=false) {
       await updateJobsAndNumbersAndFilters(_$w,true);
     }
     
-    }
 }
 
 function handleFilterInMobile(_$w) {
@@ -364,7 +364,7 @@ async function loadJobsRepeater(_$w) {
   async function loadFilters(_$w) {
     try {
       // 1) Load all categories (fields)
-      const cities = await getAllRecords(COLLECTIONS.CITIES);
+      cities = await getAllRecords(COLLECTIONS.CITIES);
       for(const city of cities) {
         valueToJobs[city._id] = city.jobIds;
       }
@@ -480,8 +480,13 @@ function getValueFromValueId(valueIds, value) {
     {
       const selectedFieldId=Array.from( selectedByField.keys() )[0]
       if(selectedFieldId===fieldId) {
+        if(selectedFieldId==="Location") {
+          countsMap = new Map(cities.map(city=>[city._id, city.count]));
+        }
+        else{
         const relevantFields=allvaluesobjects.filter(val=>val.customField===selectedFieldId)
         countsMap = new Map(relevantFields.map(val=>[val.valueId, val.count]));
+        }
         considerAllJobs=false;
       }
     }
@@ -518,11 +523,7 @@ function getValueFromValueId(valueIds, value) {
 
     // Sort alphabetically by label
     filtered.sort((a, b) => (a.label || '').localeCompare(b.label || ''));
-    // Preserve currently selected values that are still visible
-  //  let prevSelected=[]
-  //  clearAll? prevSelected=[]:prevSelected= _$w(`#${FiltersIds[fieldTitle]}CheckBox`).value;
     const visibleSet = new Set(filtered.map(o => o.value));
-    //const preserved = prevSelected.filter(v => visibleSet.has(v));
     if(filtered.length===0) {
       _$w(`#${FiltersIds[fieldTitle]}MultiBox`).changeState(`${FiltersIds[fieldTitle]}NoResults`);
     }
@@ -591,11 +592,14 @@ function getValueFromValueId(valueIds, value) {
     _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationTotalCountText).text = secondarySearchIsFilled? Math.ceil(currentSecondarySearchJobs.length/pagination.pageSize).toString():Math.ceil(currentJobs.length/pagination.pageSize).toString();
     if(jobsFirstPage.length===0) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = "0";
+      pagination.currentPage=0;
     }
     else{
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
+      pagination.currentPage=1;
     }
-    pagination.currentPage=1;
+    
     handlePaginationButtons(_$w);
 }
 
@@ -603,7 +607,7 @@ function handlePaginationButtons(_$w)
 {
   handlePageUrlParam();
 
-  pagination.currentPage===1? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
+  pagination.currentPage===1 || pagination.currentPage===0? _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).disable():_$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_PREVIOUS).enable();
   if(secondarySearchIsFilled) {
     if(currentSecondarySearchJobs.length===0) {
       _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.PAGE_BUTTON_NEXT).disable();
@@ -622,9 +626,8 @@ function handlePaginationButtons(_$w)
 
 function handlePageUrlParam() {
   ActivateURLOnchange=false;
-  if(pagination.currentPage==1)
+  if(pagination.currentPage==1 || pagination.currentPage==0)
   {
-    
       queryParams.remove(["page"]);
   }
   else{
@@ -704,6 +707,8 @@ async function secondarySearch(_$w,query) {
 
     if(jobsFirstPage.length===0) {
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("noJobs");
+      _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.paginationCurrentText).text = "0";
+      pagination.currentPage=0;
     }
     else{
       await _$w(CAREERS_MULTI_BOXES_PAGE_CONSTS.JOBS_MULTI_STATE_BOX).changeState("searchResult");
@@ -728,6 +733,7 @@ async function secondarySearch(_$w,query) {
     console.error('Failed to bind search input:', error);
   }
 }
+
 
 
 module.exports = {
